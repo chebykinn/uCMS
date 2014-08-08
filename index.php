@@ -9,6 +9,6 @@ if(!file_exists("config.php")){
 	}
 }else{
 	require 'config.php';
-}
+} 
 require 'sys/main.php';
 ?>
