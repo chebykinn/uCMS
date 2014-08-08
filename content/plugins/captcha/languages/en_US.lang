@@ -1,3 +1,0 @@
-plugin.captcha.name=CAPTCHA
-plugin.captcha.description=Default uCMS CAPTCHA (image with code to check).
-plugin.captcha.enter_code.label=Enter the code from the image above: 

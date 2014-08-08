@@ -1,9 +1,0 @@
-table=links
-columns=`l`.*, `u`.`login` AS `author_login`, `u`.`group` AS `author_group`, `uf`.`value` AS `author_nickname` 
-join= AS `l` LEFT JOIN `@uc_prefix@users` AS `u` ON `u`.`id` = `l`.`author` LEFT JOIN `@uc_prefix@usersinfo` AS `uf` ON `uf`.`user_id` = `u`.`id` AND `uf`.`name` = 'nickname'
-where=`l`.`publish` > 0
-search_in_sql=`l`.`name`,`l`.`url`,`l`.`author`
-search_in=name,url,author
-sort_by=id,name,author,url,date
-highlight=name,url,author
-file=
