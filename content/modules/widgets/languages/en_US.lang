@@ -1,0 +1,52 @@
+module.widgets.name=Widgets
+module.widgets.description=Default uCMS widgets module.
+
+module.widgets.title=Widgets :: 
+module.widgets.header.label=Widgets
+module.widgets.sidebar.label=Widgets
+
+module.widgets.permission.level_0.label=No access
+module.widgets.permission.level_1.label=Read
+module.widgets.permission.level_2.label=Add widgets
+module.widgets.permission.level_3.label=Edit widgets
+module.widgets.permission.level_4.label=Delete widgets
+
+module.widgets.alert.success.updated=Widget has been successfully updated.
+module.widgets.alert.success.deleted=Widget has been successfully deleted.
+module.widgets.alert.success.deleted_multiple=Widgets have been successfully deleted.
+module.widgets.alert.success.added=Widget has been successfully installed.
+module.widgets.alert.success.activated=Widget has been successfully activated.
+module.widgets.alert.success.deactivated=Widget has been successfully deactivated.
+module.widgets.alert.success.activated_multiple=Widgets have been successfully activated.
+module.widgets.alert.success.deactivated_multiple=Widgets have been successfully deactivated.
+module.widgets.header.add.label=Add Widget:
+module.widgets.install.button=Install
+
+module.widgets.total.label=Widgets total: 
+module.widgets.sort_by.label=Sort by: 
+module.widgets.sort_by.name.label=Name  
+module.widgets.sort_by.author.label=Author 
+module.widgets.sort_by.date.label=Date 
+module.widgets.select_all.label=Select all:
+module.widgets.selected.option=Selected
+module.widgets.selected.activate.option=Enable
+module.widgets.selected.deactivate.option=Disable
+module.widgets.selected.delete.option=Delete
+module.widgets.selected.apply.button=Apply
+module.widgets.info.name.label=Name: 
+module.widgets.info.version.label=Version: 
+module.widgets.info.author.label=Author: 
+module.widgets.info.site.label=Site: 
+module.widgets.info.description.label=Description: 
+module.widgets.info.directory.label=Directory: 
+module.widgets.activate.button=Enable
+module.widgets.deactivate.button=Disable
+module.widgets.edit.button=Edit
+module.widgets.settings.button=Settings
+module.widgets.delete.button=Delete
+module.widgets.no_widgets.label=There is no widgets yet.
+module.widgets.error.unknown.label=An unknown error occurred.
+module.widgets.error.no_widget_in_archive.label=An error occurred: There is no widget in archive.
+module.widgets.error.opening_archive.label=An error occurred while opening the archive.
+
+module.widgets.load_error.label=<br>The widget is not found or disabled.<br>

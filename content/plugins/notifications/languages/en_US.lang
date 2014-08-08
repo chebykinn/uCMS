@@ -1,0 +1,19 @@
+plugin.notifications.name=E-mail notifications
+plugin.notifications.description=Different notifications by e-mail used in default modules.
+
+plugin.notifications.comment_added.subject=Comment was added on your site
+plugin.notifications.post_added.subject=Post was added on your site
+plugin.notifications.page_added.subject=Page was added on your site
+plugin.notifications.user_registered.subject=User @s was registered on your site
+plugin.notifications.user_logged_in.subject=User @s entered on your site
+
+plugin.notifications.comment_added.message.user=Hello Administrator. <br>At your site "<b>@s</b>" was added comment by user <a href="@s">@s</a> at @s.<br><br><b>Text:</b><br><hr>@s<br><hr> <a href="@sadmin/manage.php?module=comments">Approve or Delete</a>.
+plugin.notifications.comment_added.message.guest=Hello Administrator. <br>At your site "<b>@s</b>" was added comment by guest @s<br>Email: @s at @s.<br><br><b>Text:</b><br><hr>@s<br><hr> <a href="@sadmin/manage.php?module=comments">Approve or Delete</a>.
+
+plugin.notifications.post_added.message=Hello Administrator. <br>At your site "<b>@s</b>" was added post at @s.<br><br><b>Post Title:</b> @s<br><br><b>Author:</b> @s<br><br><b>Author Group:</b> @s<br><br><b>E-mail:</b> @s<br><br><a href="@sadmin/manage.php?module=posts">Go to Control Panel</a>.
+
+plugin.notifications.page_added.message=Hello Administrator. <br>At your site "<b>@s</b>" was added page at @s.<br><br><b>Page Title:</b> @s<br><br><b>Author:</b> @s<br><br><b>Author Group:</b> @s<br><br><b>E-mail:</b> @s<br><br><a href="@sadmin/manage.php?module=pages">Go to Control Panel</a>.
+
+plugin.notifications.user_registered.message=Hello Administrator. <br>At your site "<b>@s</b>" was registered user at @s.<br><br><b>Login:</b> @s<br><br><b>E-mail:</b> @s<br>Use this <a href="@sadmin/manage.php?module=users">link</a> to activate this user.
+
+plugin.notifications.user_logged_in.message=Hello Administrator. <br>At you site "<b>@s</b>", @s, entered user.<br><br><b>Login:</b> @s<br><br><b>Group:</b> @s<br><br><b>E-mail:</b> @s.

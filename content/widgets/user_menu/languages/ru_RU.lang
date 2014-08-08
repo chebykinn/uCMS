@@ -1,0 +1,9 @@
+widget.user_menu.name=Профиль
+widget.user_menu.description=Стандартный виджет uCMS.
+
+widget.user_menu.users_module_off=Модуль пользователей отключен.
+widget.user_menu.user_activated=Ваш аккаунт успешно активирован!
+widget.user_menu.profile_link=Профиль
+widget.user_menu.userlist_link=Список пользователей
+widget.user_menu.logout_link=Выход
+widget.user_menu.admin_panel_link=Панель управления

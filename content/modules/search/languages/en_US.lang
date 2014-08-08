@@ -1,0 +1,20 @@
+module.search.name=Search
+module.search.title=Search :: 
+module.search.description=Default search engine for your site.
+
+module.search.sidebar.settings.label=Search
+
+module.search.settings.header=Search settings
+module.search.settings.searchin.name=Allow to search in modules:
+module.search.settings.default_search_module.name=Where to search by default:
+module.search.settings.default_search_module.description=
+module.search.settings.searchin.description=What materials are allowed to search for.
+module.search.settings.results_on_page.name=Results per page:
+module.search.settings.results_on_page.description=
+module.search.settings.apply.button=Apply
+
+module.search.site.title=Searching for "@s"
+module.search.site.title.empty=Empty query
+module.search.form.input.placeholder=Search materials
+module.search.form.search.button=Search
+module.search.form.search_in.label=Search:

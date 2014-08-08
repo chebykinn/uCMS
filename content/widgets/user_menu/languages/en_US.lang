@@ -1,0 +1,9 @@
+widget.user_menu.name=User Profile
+widget.user_menu.description=uCMS default widget.
+
+widget.user_menu.users_module_off=Users module disabled.
+widget.user_menu.user_activated=Your account has been successfully activated!
+widget.user_menu.profile_link=Profile
+widget.user_menu.userlist_link=List of users
+widget.user_menu.logout_link=Logout
+widget.user_menu.admin_panel_link=Control Panel

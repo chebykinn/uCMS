@@ -1,0 +1,113 @@
+module.comments.name=Comments
+module.comments.header=Comments
+module.comments.title=Comments :: 
+module.comments.header.edit=Edit comment
+module.comments.description=Default uCMS comments module.
+
+module.comments.sidebar.label=Comments
+module.comments.sidebar.settings.label=Comments
+
+module.comments.permission.level_0.label=No access
+module.comments.permission.level_1.label=Read
+module.comments.permission.level_2.label=Add comments
+module.comments.permission.level_3.label=Edit, delete own comments
+module.comments.permission.level_4.label=Edit any comments, which weren't added by the administrators
+module.comments.permission.level_5.label=Delete any comments, which weren't added by the administrators
+module.comments.permission.level_6.label=Edit any comments
+module.comments.permission.level_7.label=Delete any comments
+
+module.comments.templates.back.button=Go back
+module.comments.template.duplicate-comment.header=Repeating comment
+module.comments.template.duplicate-comment.message=It seems that you have been said that already, haven't you?
+module.comments.template.empty-comment.header=Empty comment
+module.comments.template.empty-comment.message=You can't add an empty comment. Write something.
+module.comments.template.not-allowed-comment.header=You are not allowed to add comments.
+module.comments.template.not-allowed-comment.message=You are not allowed to add comments on this site.
+module.comments.template.wrong-code-comment.header=You've entered wrong code.
+module.comments.template.wrong-code-comment.message=Sorry, you've entered wrong code from the image, please try again.
+
+module.comments.add-form.comment.label=Write comment:
+module.comments.add-form.guest.name=Guest
+module.comments.add-form.guest.name.label=Name: 
+module.comments.add-form.guest.email.label=Email: 
+module.comments.add-form.submit.button=Send
+
+module.comments.search.header=<h3>Searching for "@s"</h3>
+
+module.comments.approve.button=Approve
+module.comments.edit.button=Edit
+module.comments.delete.button=Delete
+
+module.comments.alert.added.moderation=Your comment has been successfully added and will appear on the site after moderation.
+module.comments.alert.added=Your comment has been successfully added.
+module.comments.register_to_add.label=<br><a href="@s" >Register</a> to leave a comment.
+module.comments.not_allowed_to_add.label=You are not allowed to add comments.
+module.comments.alert.error.empty_comment=You can't add an empty comment.
+module.comments.alert.go_back.link=Go back
+module.comments.show.all.link=All comments
+module.comments.show.approved.link=Approved
+module.comments.show.not_approved.link=Not Approved
+module.comments.show.label=Show: 
+module.comments.selected.option=Selected
+module.comments.selected.approve.option=Approve
+module.comments.selected.hide.option=Hide
+module.comments.selected.delete.option=Delete
+module.comments.selected.repair.option=Fix missing parent comments
+module.comments.selected.apply.button=Apply
+module.comments.table.header.author=Author
+module.comments.table.header.comment=Comment
+module.comments.table.header.post=Post
+module.comments.table.header.email=Email
+module.comments.table.header.ip=IP
+module.comments.table.header.date=Date added
+module.comments.table.header.status=Status
+module.comments.table.header.manage=Manage
+module.comments.table.status.approved=Approved
+module.comments.table.status.not_approved=Not Approved
+module.comments.table.manage.approve=Approve
+module.comments.table.manage.edit=Edit
+module.comments.table.manage.delete=Delete
+module.comments.table.empty.label=There is no comments yet.
+
+module.comments.alert.success.approved=Comment has been successfully approved.
+module.comments.alert.success.hidden=Comment has been successfully hidden.
+module.comments.alert.success.updated=Comment has been successfully updated.
+module.comments.alert.success.deleted=Comment has been successfully deleted.
+module.comments.alert.success.approved_multiple=Comments have been successfully approved.
+module.comments.alert.success.hidden_multiple=Comments have been successfully hidden.
+module.comments.alert.success.deleted_multiple=Comments have been successfully deleted.
+module.comments.alert.success.fixed=Comments have been successfully fixed.
+
+module.comments.form.update.comment.label=Comment:
+module.comments.form.update.author.label=Author:
+module.comments.form.update.date.label=Date:
+module.comments.form.update.time_at.label=at
+module.comments.form.update.submit.button=Edit
+
+module.comments.settings.header=Comments settings
+
+module.comments.settings.comments_enabled.label=Enable comments
+module.comments.settings.comments_enabled.description=
+module.comments.settings.tree_comments.label=Enable tree comments
+module.comments.settings.tree_comments.description=
+module.comments.settings.comments_paging.label=Enable comments paging
+module.comments.settings.comments_paging.description=
+module.comments.settings.comments_on_page.label=Comments per page
+module.comments.settings.comments_on_page.description=
+module.comments.settings.comments_sort.label=Sort comments
+module.comments.settings.comments_sort.description=
+module.comments.settings.comments_sort.option.desc=New first
+module.comments.settings.comments_sort.option.asc=New last
+module.comments.settings.comments_notifications.label=Notify about new comments
+module.comments.settings.comments_notifications.description=
+module.comments.settings.comments_email.label=Email for notifications:
+module.comments.settings.comments_email.description=
+module.comments.settings.comments_observed_user_groups.label=Notify about new comments for such groups as:
+module.comments.settings.comments_observed_user_groups.description=
+module.comments.settings.comments_moderation.label=Send comments for moderation from such groups as:
+module.comments.settings.comments_moderation.description=
+module.comments.settings.apply.button=Apply
+
+module.comments.search.label=Search
+module.comments.not_approved.label=Not Approved
+module.comments.deleted_user_login=Deleted User

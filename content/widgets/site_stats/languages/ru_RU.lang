@@ -1,0 +1,6 @@
+widget.site_stats.name=Статистика
+widget.site_stats.description=Стандартный виджет uCMS.
+
+widget.site_stats.online=Сейчас онлайн:
+widget.site_stats.online.users=Пользователей:
+widget.site_stats.online.guests=Гостей:

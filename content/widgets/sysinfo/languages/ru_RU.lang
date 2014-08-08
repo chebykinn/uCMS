@@ -1,0 +1,24 @@
+widget.sysinfo.name=Системная информация
+widget.sysinfo.description=Виджет, выводящий системную информацию uCMS.
+
+widget.sysinfo.time=Время:
+widget.sysinfo.login=Ваш логин:
+widget.sysinfo.site_name=Название сайта:
+widget.sysinfo.site_desc=Описание сайта:
+widget.sysinfo.site_title=Заголовок сайта:
+widget.sysinfo.themename=Тема сайта:
+widget.sysinfo.site_domain=Домен сайта:
+widget.sysinfo.ucms_dir=Каталог uCMS:
+widget.sysinfo.uc_prefix=Префикс таблиц:
+widget.sysinfo.pages_count=Всего страниц:
+widget.sysinfo.posts_count=Всего постов:
+widget.sysinfo.categories_count=Всего категорий:
+widget.sysinfo.comments_count=Всего комментариев:
+widget.sysinfo.users_count=Всего пользователей:
+widget.sysinfo.groups_count=Всего групп:
+widget.sysinfo.messages_count=Всего сообщений:
+widget.sysinfo.links_count=Всего ссылок:
+widget.sysinfo.themes_count=Всего тем:
+widget.sysinfo.widgets_count=Всего виджетов:
+widget.sysinfo.modules_count=Всего модулей:
+widget.sysinfo.plugins_count=Всего плагинов:

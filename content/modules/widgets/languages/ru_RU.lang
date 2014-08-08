@@ -1,0 +1,52 @@
+module.widgets.name=Виджеты
+module.widgets.description=Стандартный модуль виджетов uCMS.
+
+module.widgets.title=Виджеты :: 
+module.widgets.header.label=Виджеты
+module.widgets.sidebar.label=Виджеты
+
+module.widgets.permission.level_0.label=Нет доступа
+module.widgets.permission.level_1.label=Чтение
+module.widgets.permission.level_2.label=Добавление виджетов
+module.widgets.permission.level_3.label=Изменение виджетов
+module.widgets.permission.level_4.label=Удаление виджетов
+
+module.widgets.alert.success.updated=Виджет успешно обновлен.
+module.widgets.alert.success.deleted=Виджет успешно удален.
+module.widgets.alert.success.deleted_multiple=Виджеты успешно удалены.
+module.widgets.alert.success.added=Виджет успешно установлен.
+module.widgets.alert.success.activated=Виджет успешно активирован.
+module.widgets.alert.success.deactivated=Виджет успешно отключен.
+module.widgets.alert.success.activated_multiple=Виджеты успешно активированы.
+module.widgets.alert.success.deactivated_multiple=Виджеты успешно отключены.
+module.widgets.header.add.label=Добавить виджет:
+module.widgets.install.button=Установить
+
+module.widgets.total.label=Всего виджетов: 
+module.widgets.sort_by.label=Сортировать по: 
+module.widgets.sort_by.name.label=Названию 
+module.widgets.sort_by.author.label=Автору 
+module.widgets.sort_by.date.label=Дате изменения 
+module.widgets.select_all.label=Отметить все:
+module.widgets.selected.option=Отмеченные
+module.widgets.selected.activate.option=Включить
+module.widgets.selected.deactivate.option=Отключить
+module.widgets.selected.delete.option=Удалить
+module.widgets.selected.apply.button=Применить
+module.widgets.info.name.label=Название: 
+module.widgets.info.version.label=Версия: 
+module.widgets.info.author.label=Автор: 
+module.widgets.info.site.label=Сайт: 
+module.widgets.info.description.label=Описание: 
+module.widgets.info.directory.label=Папка: 
+module.widgets.activate.button=Включить
+module.widgets.deactivate.button=Отключить
+module.widgets.edit.button=Редактировать
+module.widgets.settings.button=Настройки
+module.widgets.delete.button=Удалить
+module.widgets.no_widgets.label=Виджетов пока нет.
+module.widgets.error.unknown.label=Произошла ошибка.
+module.widgets.error.no_widget_in_archive.label=Ошибка: В архиве нет поддерживаемого виджета.
+module.widgets.error.opening_archive.label=Произошла ошибка при открытии архива.
+
+module.widgets.load_error.label=<br>Виджет не найден или отключен.<br>

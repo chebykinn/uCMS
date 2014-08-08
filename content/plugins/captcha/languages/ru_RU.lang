@@ -1,0 +1,3 @@
+plugin.captcha.name=Капча
+plugin.captcha.description=Стандартная капча(изображение с кодом) uCMS.
+plugin.captcha.enter_code.label=Введите код с картинки: 

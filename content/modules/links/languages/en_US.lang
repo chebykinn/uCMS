@@ -1,0 +1,65 @@
+module.links.name=Links
+module.links.description=Default uCMS links module.
+
+module.links.sidebar.label=Links
+module.links.header.label=Links
+module.links.title=Links :: 
+module.links.header.add=Add Link
+module.links.header.edit=Edit Link
+
+module.links.permission.level_0.label=No access
+module.links.permission.level_1.label=Read
+module.links.permission.level_2.label=Add links
+module.links.permission.level_3.label=Edit, delete own links
+module.links.permission.level_4.label=Edit any links, that weren't added by the administrators
+module.links.permission.level_5.label=Delete any links, that weren't added by the administrators
+module.links.permission.level_6.label=Edit any links
+module.links.permission.level_7.label=Delete any links
+
+module.links.alert.success.added=Link has been successfully added.
+module.links.alert.success.updated=Link has been successfully updated.
+module.links.alert.success.published=Link has been successfully published.
+module.links.alert.success.hidden=Link has been successfully hidden.
+module.links.alert.success.deleted=Link has been successfully deleted.
+module.links.alert.success.published_multiple=Links have been successfully published.
+module.links.alert.success.hidden_multiple=Links have been successfully hidden.
+module.links.alert.success.deleted_multiple=Links have been successfully deleted.
+
+module.links.add_link.button=Add Link
+
+module.links.show.label=Show: 
+module.links.all.link=All Links
+module.links.published.link=Published
+module.links.hidden.link=Hidden
+module.links.selected.option=Selected
+module.links.selected.publish.option=Publish
+module.links.selected.hide.option=Hide
+module.links.selected.delete.option=Delete
+module.links.selected.apply.button=Apply
+module.links.table.header.name=Name
+module.links.table.header.url=Address
+module.links.table.header.description=Description
+module.links.table.header.author=Author
+module.links.table.header.status=Status
+module.links.table.header.date=Date
+module.links.table.header.manage=Manage
+module.links.table.status.published=Published
+module.links.table.status.hidden=Hidden
+module.links.table.manage.edit=Edit
+module.links.table.manage.delete=Delete
+module.links.table.no_pages.label=There is no links yet.
+module.links.error.empty_fields.label=You need to fill required fields.
+
+module.links.search.header=<h3>Searching "@s"</h3><br>
+
+module.links.form.name.label=Name:
+module.links.form.url.label=URL:
+module.links.form.description.label=Description:
+module.links.form.author.label=Author:
+module.links.form.target.label=Open link:
+module.links.form.target.blank.radio=In the new window (tab)
+module.links.form.target.top.radio=In the same window
+module.links.form.publish.label=Publish
+module.links.form.add.button=Add Link
+module.links.form.update.button=Update Link
+module.links.search.label=Search

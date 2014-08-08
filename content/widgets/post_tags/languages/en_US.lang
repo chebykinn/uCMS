@@ -1,0 +1,4 @@
+widget.post_tags.name=Tag Cloud
+widget.post_tags.description=uCMS default widget.
+
+widget.post_tags.no_tags=There are no tags yet.

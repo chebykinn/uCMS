@@ -1,0 +1,4 @@
+widget.post_archives.name=Archives
+widget.post_archives.description=uCMS default widget.
+
+widget.post_archives.no_posts=There is no posts yet.

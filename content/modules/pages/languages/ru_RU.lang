@@ -1,0 +1,84 @@
+module.pages.name=Страницы
+module.pages.description=Стандартный модуль страниц uCMS.
+
+module.pages.title=Страницы :: 
+module.pages.sidebar.label=Страницы
+module.pages.sidebar.settings.label=Страницы
+
+module.pages.permission.level_0.label=Нет доступа
+module.pages.permission.level_1.label=Чтение
+module.pages.permission.level_2.label=Добавление, изменение своих записей
+module.pages.permission.level_3.label=Удаление своих записей
+module.pages.permission.level_4.label=Изменение всех записей, не принадлежащих администратору
+module.pages.permission.level_5.label=Удаление всех записей, не принадлежащих администратору
+module.pages.permission.level_6.label=Изменение всех записей
+module.pages.permission.level_7.label=Удаление всех записей
+
+module.pages.alert.success.added=Страница успешно добавлена.
+module.pages.alert.success.updated=Страница успешно обновлена.
+module.pages.alert.success.deleted=Страница успешно удалена.
+module.pages.alert.success.deleted_multiple=Страницы успешно удалены.
+module.pages.alert.success.published=Страница успешно опубликована.
+module.pages.alert.success.published_multiple=Страницы успешно опубликованы.
+module.pages.alert.success.drafted=Страница успешно сделана черновиком.
+module.pages.alert.success.drafted_multiple=Страницы успешно сделаны черновиками.
+module.pages.header.add_page=Добавить страницу
+module.pages.header.edit_page=Изменить страницу
+module.pages.header=Страницы
+module.pages.add_page.button=Добавить страницу
+
+module.pages.search.header=<h3>Поиск "@s"</h3><br>
+
+module.pages.editor.title.label=Заголовок:
+module.pages.editor.alias.label=Ссылка:
+module.pages.editor.body.label=Текст:
+module.pages.editor.author.label=Автор:
+module.pages.editor.date.label=Дата:
+module.pages.editor.day.placeholder=День
+module.pages.editor.year.placeholder=Год
+module.pages.editor.date.at.label= в 
+module.pages.editor.parent.label=Родительская страница:
+module.pages.editor.no_parent.option=Нет
+module.pages.editor.sort.label=Позиция
+module.pages.editor.publish.label=Опубликовать
+module.pages.editor.add.button=Добавить
+module.pages.editor.update.button=Изменить
+
+module.pages.empty_fields.error=Нужно обязательно заполнить поля "Заголовок" и "Текст".
+module.pages.show.label=Показывать: 
+module.pages.all.link=Все
+module.pages.published.link=Опубликованные
+module.pages.drafts.link=Черновики
+module.pages.parents.link=Только страницы верхнего уровня
+module.pages.selected.label=Отмеченные
+module.pages.selected.publish.option=Опубликовать
+module.pages.selected.draft.option=Сделать черновиками
+module.pages.selected.delete.option=Удалить
+module.pages.selected.fix-orphans.option=Исправить отсутствие родительской страницы
+module.pages.selected.apply.button=Применить
+module.pages.table.name.header=Название
+module.pages.table.author.header=Автор
+module.pages.table.status.header=Статус
+module.pages.table.date.header=Дата
+module.pages.table.manage.header=Управление
+module.pages.table.published.status=Опубликована
+module.pages.table.draft.status=Черновик
+module.pages.table.edit.button=Изменить
+module.pages.table.delete.button=Удалить
+module.pages.table.no_pages.label=Страниц пока нет.
+
+module.pages.table.parent.page.title=Родительская страница: @s
+module.pages.search.label=Искать
+module.pages.site.edit.button=Изменить
+
+module.pages.settings.header=Настройки страниц
+module.pages.settings.sef_link.label=Вид ссылок на страницы:
+module.pages.settings.sef_link.description=Редактировать красивые ссылки на страницы, можно добавлять разный текст или дополнительную информацию о странице, <a href="http://ucms.ivan4b.ru/other/sef-links-tags">подробнее.</a>
+module.pages.settings.notify.label=Уведомлять о новых страницах:
+module.pages.settings.notify.description=
+module.pages.settings.email.label=Email для уведомления о добавлении новой страницы:
+module.pages.settings.description=
+module.pages.settings.observed_groups.label=Уведомлять о добавленных страницах группами:
+module.pages.settings.observed_groups.description=
+module.pages.settings.update.button=Применить
+module.pages.draft.label=Черновик

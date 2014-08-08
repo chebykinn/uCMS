@@ -1,0 +1,300 @@
+module.users.name=Users
+module.users.description=Default uCMS users module.
+
+module.users.title=Users :: 
+module.users.groups.title=Groups :: 
+module.users.header.label=Users
+module.users.header.add.label=Add User
+module.users.header.update.label=Edit User
+module.users.search.header=Searching "@s"
+
+module.users.sidebar.label=Users
+module.users.sidebar.groups.label=@Groups
+module.users.sidebar.settings.label=Users
+
+module.users.permission.level_0.label=No access
+module.users.permission.level_1.label=Read
+module.users.permission.level_2.label=Edit own profile
+module.users.permission.level_3.label=Delete own profile
+module.users.permission.level_4.label=Edit any profile, except the administrators
+module.users.permission.level_5.label=Delete any profile, except the administrators
+module.users.permission.level_6.label=Edit any profile
+module.users.permission.level_7.label=Delete any profile
+
+module.users.group.admin.name=Administrator
+module.users.group.moderator.name=Moderator
+module.users.group.trusted.name=Trusted
+module.users.group.user.name=User
+module.users.group.banned.name=Banned
+module.users.group.guest.name=Guest
+
+module.users.alert.success.added=User has been successfully added.
+module.users.alert.success.updated=User has been successfully updated.
+module.users.alert.success.deleted=User has been successfully deleted.
+module.users.alert.success.deleted_multiple=Users have been successfully deleted.
+module.users.alert.success.activated_multiple=Users have been successfully activated.
+module.users.alert.success.deactivated_multiple=Users have been successfully deactivated.
+module.users.alert.success.activated=User has been successfully activated.
+module.users.alert.success.deactivated=User has been successfully deactivated.
+
+module.users.add.button=Add User
+module.users.error.update.label=Errors occurred during updating the user:
+module.users.error.add.label=Errors occurred during adding the user:
+
+module.users.error.missing_info.label=You need to fill all required fields.
+module.users.error.wrong_email.label=You're entered wrong е-mail.
+module.users.error.wrong_code.label=You're entered wrong code.
+module.users.error.unknown.label=An unknown error occurred. You weren't registered.
+module.users.error.login_size.label=Login must be at least @s characters length and not more than @s characters.
+module.users.error.password_size.label=Password must be at least @s characters length and not more than @s characters.
+module.users.error.login_registered.label=Sorry, this login is already registered.
+module.users.error.wrong_avatar.label=Avatar must be in <strong>JPG, GIF or PNG</strong> format.
+module.users.error.email_registered.label=Sorry, this e-mail is already registered.
+module.users.error.no_registration.label=Sorry, registration is disabled on this site.
+
+module.users.search.label=Search
+
+module.users.show.label=Show: 
+module.users.show.all.link=All Users
+module.users.show.activated.link=Activated
+module.users.show.deactivated.link=Not activated
+
+module.users.selected.option=Selected
+module.users.selected.activate.option=Activate
+module.users.selected.deactivate.option=Deactivate
+module.users.selected.delete.option=Delete
+module.users.selected.apply.button=Apply
+
+module.users.table.avatar.header=Avatar
+module.users.table.login.header=Login
+module.users.table.email.header=Email
+module.users.table.ip.header=IP
+module.users.table.logip.header=Last Login IP
+module.users.table.group.header=Group
+module.users.table.reg_date.header=Registration Date
+module.users.table.login_date.header=Last Login Date
+module.users.table.manage.header=Manage
+
+module.users.table.status.your_profile.label= (Your Profile)
+module.users.table.status.online.label= (Online)
+module.users.table.status.deactivated.label= (Not activated)
+
+module.users.table.manage.activate.button=Activate
+module.users.table.manage.edit.button=Edit
+module.users.table.manage.delete.button=Delete
+module.users.table.error.no_one_found=Nobody was found.
+
+module.users.form.login.label=Login:
+module.users.form.password.label=Password:
+module.users.form.email.label=Email:
+module.users.form.group.label=Group:
+module.users.form.avatar.label=Avatar:
+module.users.form.surname.label=Surname:
+module.users.form.firstname.label=First Name:
+module.users.form.nickname.label=Nickname:
+module.users.form.icq.label=ICQ:
+module.users.form.skype.label=Skype:
+module.users.form.pm_alert.label=Notify about personal messages by email:
+module.users.form.birthdate.label=Date of Birth:
+module.users.form.birthdate.day.placeholder=Day
+module.users.form.birthdate.year.placeholder=Year
+module.users.form.addinfo.label=Tell about yourself:
+module.users.form.add.button=Add User
+module.users.form.update.button=Update User
+
+module.users.groups.alert.success.added=Group has been successfully added.
+module.users.groups.alert.success.updated=Group has been successfully updated.
+module.users.groups.alert.success.deleted=Group has been successfully deleted.
+module.users.groups.alert.success.deleted_multiple=Groups have been successfully deleted.
+
+module.users.groups.header.label=Groups
+module.users.groups.header.add.label=Add Group
+module.users.groups.header.update.label=Edit Group
+module.users.groups.add.button=Add Group
+
+module.users.groups.form.name.label=Name
+module.users.groups.form.alias.label=Alias
+module.users.groups.form.add.button=Add Group
+module.users.groups.form.update.button=Update Group
+module.users.groups.form.important_note.label=*Each level includes permissions of previous ones.
+
+module.users.groups.total.label=<b>Groups Total:</b> @s
+
+module.users.groups.selected.option=Selected
+module.users.groups.selected.delete.option=Delete
+module.users.groups.selected.apply.button=Apply
+
+module.users.groups.table.header.name=Name
+module.users.groups.table.header.permissions=Permissions
+module.users.groups.table.header.users_in_group=Users in Group
+module.users.groups.table.header.manage=Manage
+module.users.groups.table.manage.edit.button=Edit
+module.users.groups.table.manage.delete.button=Delete
+
+module.users.settings.header.label=Users Settings
+module.users.settings.user_avatars.label=Use avatars:
+module.users.settings.user_avatars.description=Allow users to set their avatar.
+module.users.settings.avatar_size.label=Avatar Size:
+module.users.settings.avatar_size.description=Allowed Width and height of avatar.
+module.users.settings.user_messages.label=Personal Messaging:
+module.users.settings.user_messages.description=Allow users to send personal messages to each other.
+module.users.settings.allow_registration.label=Allow public registration:
+module.users.settings.allow_registration.description=
+module.users.settings.unique_emails.label=Deny usage of same e-mails:
+module.users.settings.unique_emails.description=Disallow usage of same e-mails for different users.
+module.users.settings.default_group.label=Default user group:
+module.users.settings.default_group.description=Group to send users after registration.
+module.users.settings.login_attempts_num.label=Maximum amount of attempts to login:
+module.users.settings.login_attempts_num.description=
+module.users.settings.after_failed_login_action.label=After exceeding login attempts:
+module.users.settings.after_failed_login_action.delay.option=Disable login for 15 minutes
+module.users.settings.after_failed_login_action.code.option=Require captcha code
+module.users.settings.after_failed_login_action.description=
+module.users.settings.use_captcha.label=Use CAPTCHA:
+module.users.settings.use_captcha.nowhere.option=No captcha
+module.users.settings.use_captcha.registration.option=At registration
+module.users.settings.use_captcha.guest_comment.option=At adding comment by guest
+module.users.settings.use_captcha.user_comment.option=At adding comment by group "User" and similar
+module.users.settings.use_captcha.description=Use image with code to check in forms.
+module.users.settings.users_activation.label=Allow users to activate their accounts by email:
+module.users.settings.users_activation.description=
+module.users.settings.login_size.label=Allowed login size:
+module.users.settings.login_min_size.placeholder=Min
+module.users.settings.login_max_size.placeholder=Max
+module.users.settings.login_size.from.label=From: 
+module.users.settings.login_size.to.label= to: 
+module.users.settings.login_size.characters.label= characters
+module.users.settings.login_size.description=
+module.users.settings.password_size.label=Allowed password size:
+module.users.settings.password_min_size.placeholder=Min
+module.users.settings.password_max_size.placeholder=Max
+module.users.settings.password_size.from.label=From: 
+module.users.settings.password_size.to.label= to: 
+module.users.settings.password_size.characters.label= characters
+module.users.settings.password_size.description=
+module.users.settings.new_users_notification.label=Notify about new users:
+module.users.settings.new_users_notification.description=
+module.users.settings.new_user_email.label=Email for notifications on new users:
+module.users.settings.new_user_email.description=
+module.users.settings.user_logged_in_notifications.label=Notify about entering users on the site:
+module.users.settings.user_logged_in_notifications.description=
+module.users.settings.user_logged_in_email.label=Email for notifications on users entered the site:
+module.users.settings.user_logged_in_email.description=
+module.users.settings.observed_user_groups.label=Notify about users entered the site from such groups as:
+module.users.settings.observed_user_groups.description=
+module.users.settings.allow_nicknames.label=Allow nicknames
+module.users.settings.allow_nicknames.description=Allow users to set nicknames instead of logins as their shown names.<br> (<b>Please note:</b> after disabling this setting all nicknames will be erased)
+module.users.settings.update.button=Apply
+
+module.users.error.edit.no_permissions=You don't have permissions to edit your profile.
+module.users.error.edit.alert.success.update_main=Your profile has been successfully updated.
+module.users.error.edit.alert.success.update_add=Your additional profile information has been successfully updated.
+
+module.users.site.title.login=Login
+module.users.site.title.profile=@s
+module.users.site.title.profile.posts=@s / Posts
+module.users.site.title.profile.comments=@s / Comments
+module.users.site.title.profile.messages=@s / Personal Messages
+module.users.site.title.profile.edit=@s / Edit
+module.users.site.title.registration=Registration
+module.users.site.title.userlist=List of Users
+module.users.site.title.reset=Reset Password
+
+module.users.login.error.empty_fields=You have to fill all required fields.
+module.users.login.error.failed_login_captcha=You had failed to login @s times in a row. Enter the code from image to login.
+module.users.login.error.failed_login_delay=You had failed to login @s times in a row. Wait 15 minutes until next attempt.
+module.users.login.error.wrong_login_or_password=Sorry, you've entered wrong login or password.
+
+module.users.pm.all_users.label=All Users
+module.users.pm.inbox_empty.local.label=<br><br>You don't have inbox messages.<br>
+module.users.pm.inbox_empty.user.label=<br><br>This user hasn't yet written anything for you.<br>
+module.users.pm.inbox.label=<br><b>Inbox:</b>
+module.users.pm.outbox.label=<br><b>Outbox:</b>
+module.users.pm.table.header.author=Author
+module.users.pm.table.header.message=Message
+module.users.pm.table.header.receiver=Receiver
+module.users.pm.no_outbox.label=<br><br>You haven't yet written anything.<br>
+
+module.users.pm.error.no_allowed_to_send=You can't send messages because you're banned.
+
+module.users.pm.send_form.receiver.label=To:
+module.users.pm.send_form.message.label=Message:
+module.users.pm.send_form.button=Send
+
+module.users.pm.receiver_login_link=Read
+
+module.users.pm.email.subject.label=You have received new personal message
+
+module.users.pm.email.message=Hello, @s!<br>You have personal message from @s:<br>@s<hr>@s<hr><br>Reply @s.<br> <br> Sincerely, Administration of "@s".
+module.users.pm.error.message_to_yourself=You can't send messages to yourself.
+module.users.pm.error.no_such_user=There is no such user.
+module.users.pm.error.empty_fields=You haven't filled the required fields.
+
+module.users.pm.alert.success.sent=Your message has been successfully sent.
+module.users.pm.alert.success.deleted=Your message has been successfully deleted.
+module.users.pm.alert.warning.unread_messages=Unread messages: @s
+
+module.users.registration.alert.success.registered.activate=You're successfully registered. To your e-mail were sent message with confirmation of registration.<br>
+module.users.registration.alert.success.registered.no_activate=You're successfully registered. You will be able to login after activation of your account by administration.<br>
+module.users.registration.errors_occurred=Errors occurred during registration:
+module.users.registration.activation_link=link
+module.users.registration.message.subject=Confirm your registration
+module.users.registration.message.text=Hello User! <br>Thank you for registration at @s!<br><br><b>Your Login:</b> @s<br><b>Your password you should know.</b><br><br>Use this @s, to activate your account. <br> <br> Sincerely, Administration of "@s".
+
+module.users.alert.success.user_activated=Your account has been successfully activated. Now you can login on our site @s.
+module.users.alert.error.user_activated=An unknown error occurred and your account hasn't been activated.
+module.users.guest_login=Guest
+
+module.users.alert.success.reset.stage1=A confirmation link of recovering your password was sent to your e-mail.
+module.users.alert.success.reset.stage2=New password has been successfully generated and sent to your e-mail.
+module.users.alert.error.reset.no_such_user=User with such login or email doesn't exist.
+module.users.reset.email.link.label=link
+module.users.reset.email.stage1.subject=Confirm your password recovery
+module.users.reset.email.stage1.message=Hello, @s. <br> You've requested new password. To get it, simply follow that @s. (expires after 1 hour) <br>If you don't know about that password recovery, you should just ignore this letter.
+module.users.reset.email.stage2.subject=Password Recovery
+module.users.reset.email.stage2.message=Hello, @s. <br> System has been generated new password for you, now you can login with it at @s. It's highly recommended to change this password after login.<br> <b>The Password:</b><br>@s
+module.users.reset.email.admin.subject=User restored password
+module.users.reset.email.admin.message=Hello, Administrator. <br> User @s restored password.
+module.users.alert.error.reset.wrong_code=You've entered wrong code or using outdated link.
+module.users.alert.success.profile.user_activated=Your account has been successfully activated.
+module.users.profile_menu.profile_link.label=Profile
+module.users.profile_menu.userlist_link.label=List of users
+module.users.profile_menu.logout_link.label=Logout
+module.users.profile_menu.panel_link.label=Control Panel
+module.users.alert.error.list_users.no_access.user=You don't have access to this page.
+module.users.alert.error.list_users.no_access.guest=You need to login or register to visit this page.
+module.users.form.edit-add.surname.label=Surname:
+module.users.form.edit-add.firstname.label=First Name:
+module.users.form.edit-add.icq.label=ICQ:
+module.users.form.edit-add.skype.label=Skype:
+module.users.form.edit-add.birthdate.label=Date of Birth:
+module.users.form.edit-add.birthdate.day.placeholder=Day
+module.users.form.edit-add.birthdate.year.placeholder=Year
+module.users.form.edit-add.nickname.label=Nickname:
+module.users.form.edit-add.pm_alert.label=Notify about personal messages by email:
+module.users.form.edit-add.addinfo.label=Tell about yourself:
+module.users.form.edit-add.update.button=Update
+
+module.users.form.edit-main.login.label=Login:
+module.users.form.edit-main.password.label=Password:
+module.users.form.edit-main.email.label=Email:
+module.users.form.edit-main.avatar.label=Avatar:
+module.users.form.edit-main.update.button=Update
+
+module.users.form.login.login.placeholder=Login or e-mail
+module.users.form.login.password.placeholder=Password
+module.users.form.login.remember.checkbox=Remember Me
+module.users.form.login.button=Login
+module.users.form.login.register.link=Register
+module.users.form.login.reset.link=Forgot password?
+
+module.users.form.registration.login.label=Your Login: 
+module.users.form.registration.password.label=Your Password: 
+module.users.form.registration.email.label=Your E-mail: 
+module.users.form.registration.avatar.label=Your Avatar: 
+module.users.form.registration.register.button=Register
+
+module.users.form.reset.login.label=Login: 
+module.users.form.reset.email.label=E-mail: 
+module.users.form.reset.send.button=Restore password
+module.users.table.nickname.header=Name

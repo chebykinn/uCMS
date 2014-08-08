@@ -1,0 +1,4 @@
+widget.site_links.name=Links
+widget.site_links.description=uCMS default widget.
+
+widget.site_links.no_links=There are no links yet.

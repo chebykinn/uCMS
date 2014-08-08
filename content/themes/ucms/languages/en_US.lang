@@ -1,0 +1,94 @@
+theme.ucms.description=Default uCMS Theme.
+theme.ucms.no_access.label=You don't have access to this page.
+theme.ucms.no_access_guest.label=Only registered users can access this page.
+
+theme.ucms.footer.queries_count= Queries count: 
+theme.ucms.footer.loadtime=Load time: @s seconds.
+
+theme.ucms.post.author.label=Author: 
+theme.ucms.post.published.label=Published: 
+theme.ucms.post.tags.label=Tags: 
+theme.ucms.post.comments_count.label=Comments 
+theme.ucms.post.no_comments.label=No comments
+theme.ucms.post.comments_disabled.label=Comments disabled
+theme.ucms.post.archives.title=<h2>Post Archives for @s of @s</h2>
+theme.ucms.post.tag.title=<h2>Posts by tag "@s"</h2>
+theme.ucms.post.category.title=<h2>Posts in category "@s"</h2>
+theme.ucms.no_posts.label=There are no posts yet.
+
+theme.ucms.comments.author.label= said:
+theme.ucms.comments.reply.label=Reply
+
+theme.ucms.page.author.label=Author: 
+theme.ucms.page.date.label=. Published: 
+theme.ucms.no_page.label=This page doesn't exist.
+
+theme.ucms.search.empty_query=You have entered an empty query.
+theme.ucms.search.nothing_found=Nothing was found.
+theme.ucms.search.query=<br><h3>Searching "@s"</h3><br>
+theme.ucms.search.num_found=<br><b>Found:</b> @s
+theme.ucms.search.sort_by.label=<b>Order by:</b><br>
+theme.ucms.search.sort_by.relevance=Relevance
+theme.ucms.search.sort_by.title=Title
+theme.ucms.search.sort_by.author=Author
+theme.ucms.search.sort_by.comments=Comments
+theme.ucms.search.sort_by.date=Date
+theme.ucms.search.sort_by.page_order=Page order
+theme.ucms.search.sort_by.rating=Rating
+theme.ucms.search.sort_by.login=Login
+theme.ucms.search.sort_by.lastlogin=Last visit date
+theme.ucms.search.sort_by.datereg=Registration date
+
+theme.ucms.login.header=Login
+theme.ucms.register.header=Registration
+theme.ucms.reset.header=Reset your password
+theme.ucms.userlist.header=List of users
+
+theme.ucms.user.not_found=There is no such user.
+theme.ucms.user.posts_count=Posts (@s)
+theme.ucms.user.post.author.label=Author: 
+theme.ucms.user.post.published.label=Published: 
+theme.ucms.user.post.tags.label=Tags: 
+theme.ucms.user.post.comments_count.label=Comments 
+theme.ucms.user.post.no_comments.label=No comments
+theme.ucms.user.post.comments_disabled.label=Comments disabled
+theme.ucms.user.no_posts.label=This user haven't added posts yet.
+
+theme.ucms.user.comments_count=Comments (@s)
+theme.ucms.user.comments.author.label= said:
+theme.ucms.user.no_comments.label=This user haven't added comments yet.
+
+theme.ucms.user.online.label= (Online)
+theme.ucms.user.profile.label=Profile
+theme.ucms.user.pm.label=Messages
+theme.ucms.user.edit_info.label=Edit profile
+theme.ucms.user.posts.label=Posts
+theme.ucms.user.comments.label=Comments
+theme.ucms.user.logout.label=Logout
+
+theme.ucms.user.profile_surname=Surname: 
+theme.ucms.user.profile_firstname=First Name: 
+theme.ucms.user.profile_icq=ICQ: 
+theme.ucms.user.profile_skype=Skype: 
+theme.ucms.user.profile_birthdate=Date of birth: 
+theme.ucms.user.profile_addinfo=About: 
+
+theme.ucms.error.404.header=404 Page Not Found.
+theme.ucms.error.404.message=<h2>Uh-oh, there is no such page. Maybe you did a typo in address. But you could also come here from internal link. Then tell about this <a href="mailto:@s">administrator</a>. Or he'll be very upset because of disappearing pages.</h2>
+
+theme.ucms.sidebar.user_menu=Profile
+theme.ucms.sidebar.post_categories=Categories
+theme.ucms.sidebar.post_archives=Archives
+theme.ucms.sidebar.post_tags=Tag Cloud
+theme.ucms.sidebar.site_stats=Statistics
+theme.ucms.sidebar.site_links=Links
+theme.ucms.pm.inbox_empty.local.label=<br><br>You don't have inbox messages.<br>
+theme.ucms.pm.inbox_empty.user.label=<br><br>This user hasn't yet written anything for you.<br>
+theme.ucms.pm.inbox.label=<br><b>Inbox:</b>
+theme.ucms.pm.outbox.label=<br><b>Outbox:</b>
+theme.ucms.pm.table.header.date=Date
+theme.ucms.pm.table.header.author=Author
+theme.ucms.pm.table.header.message=Message
+theme.ucms.pm.table.header.receiver=Receiver
+theme.ucms.pm.no_outbox.label=<br><br>You haven't yet written anything.<br>
+theme.ucms.pm.delete.button=Delete

@@ -1,0 +1,10 @@
+widget.new_materials.name=Обновления разделов
+widget.new_materials.description=Виджет, выводящий обновления разделов постов, комментариев, страниц, пользователей.
+
+widget.new_materials.edit.button=Изменить
+widget.new_materials.delete.button=Удалить
+
+widget.new_materials.posts.header=Новые посты
+widget.new_materials.comments.header=Новые комментарии
+widget.new_materials.pages.header=Новые страницы
+widget.new_materials.users.header=Новые пользователи

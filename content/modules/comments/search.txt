@@ -1,0 +1,9 @@
+table=comments
+columns=`c`.*, `c`.`id` AS `cid`, `c`.`author` AS `cauthor`, `c`.`date` AS `cdate`, `u`.`avatar` AS `comment_author_avatar`, `u`.`login` AS `comment_author_login`, `u`.`group` AS `comment_author_group`, `uf`.`value` AS `comment_author_nickname`, `p`.`id`, `p`.`title`, `p`.`alias`, `p`.`date`, `p`.`category`, `p`.`author`, `uu`.`login` AS `author_login`, `ca`.`name` AS `category_name`, `ca`.`alias` AS `category_alias`
+join=AS `c` FORCE INDEX (PRIMARY) LEFT JOIN `@uc_prefix@users` AS `u` ON `c`.`author` = `u`.`id` LEFT JOIN `@uc_prefix@usersinfo` AS `uf` ON `uf`.`user_id` = `u`.`id` AND `uf`.`name` = 'nickname' INNER JOIN `@uc_prefix@posts` AS `p` ON `p`.`id` = `c`.`post` LEFT JOIN `@uc_prefix@users` AS `uu` ON `p`.`author` = `uu`.`id` LEFT JOIN `@uc_prefix@categories` AS `ca` ON `ca`.`id` = `p`.`category`
+where=`c`.`approved` > 0
+search_in_sql=`c`.`comment`
+search_in=comment
+sort_by=id,post,author,comment,date,rating
+highlight=comment
+file=comments/comments.php
