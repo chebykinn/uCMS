@@ -1,0 +1,53 @@
+module.plugins.name=Plugins
+module.plugins.description=Default uCMS plugins module.
+
+module.plugins.sidebar.label=Plugins
+module.plugins.header.label=Plugins
+module.plugins.title=Plugins :: 
+
+module.plugins.permission.level_0.label=No access
+module.plugins.permission.level_1.label=Read
+module.plugins.permission.level_2.label=Add plugins
+module.plugins.permission.level_3.label=Edit plugins
+module.plugins.permission.level_4.label=Delete plugins
+
+module.plugins.alert.success.updated=Plugin has been successfully updated.
+module.plugins.alert.success.deleted=Plugin has been successfully deleted.
+module.plugins.alert.success.deleted_multiple=Plugin has been successfully deleted.
+module.plugins.alert.success.added=Plugin has been successfully installed.
+module.plugins.alert.success.activated=Plugin has been successfully activated.
+module.plugins.alert.success.deactivated=Plugin has been successfully deactivated.
+module.plugins.alert.success.activated_multiple=Plugins have been successfully activated.
+module.plugins.alert.success.deactivated_multiple=Plugins have been successfully deactivated.
+
+module.plugins.add.header=Add Plugin:
+module.plugins.add.button=Install
+
+module.plugins.error.unknown.label=An unknown error occurred.
+module.plugins.error.no_plugin_in_archive.label=An error occurred: There is no plugin in the archive.
+module.plugins.error.opening_archive.label=An error occurred while opening the archive.
+
+module.plugins.total.label=Plugins Total: 
+module.plugins.sort_by.label=Sort by: 
+module.plugins.sort_by.name=Name 
+module.plugins.sort_by.author=Author 
+module.plugins.sort_by.date=Date 
+module.plugins.select_all.label=Select all: 
+module.plugins.selected.option=Selected
+module.plugins.selected.activate.option=Enable
+module.plugins.selected.deactivate.option=Disable
+module.plugins.selected.delete.option=Delete
+module.plugins.selected.apply.button=Apply
+module.plugins.manage.activate.button=Enable
+module.plugins.manage.deactivate.button=Disable
+module.plugins.manage.edit.button=Edit
+module.plugins.settings.button=Settings
+module.plugins.manage.delete.button=Delete
+module.plugins.no_plugins.label=There is no plugins yet.
+
+module.plugins.info.name.label=Name: 
+module.plugins.info.version.label=Version: 
+module.plugins.info.author.label=Author: 
+module.plugins.info.site.label=Site: 
+module.plugins.info.description.label=Description: 
+module.plugins.info.dir.label=Directory: 

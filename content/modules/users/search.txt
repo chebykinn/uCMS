@@ -1,0 +1,9 @@
+table=users
+columns=`u`.*, `uf`.`value` AS `nickname`, `g`.`name` AS `group_name`
+join= AS `u` FORCE INDEX (PRIMARY) INNER JOIN `@uc_prefix@groups` AS `g` ON `g`.`id` = `u`.`group` LEFT JOIN `@uc_prefix@usersinfo` AS `uf` ON `uf`.`user_id` = `u`.`id` AND `uf`.`name` = 'nickname'
+where=`activation` > 0
+search_in_sql=`u`.`login`,`uf`.`value`
+search_in=login,nickname
+sort_by=id,login,date,lastlogin,online
+highlight=login,nickname
+file=none

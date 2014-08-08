@@ -1,0 +1,10 @@
+widget.new_materials.name=Sections updates
+widget.new_materials.description=Widget, that displaying updates of posts, comments, pages, users sections.
+
+widget.new_materials.edit.button=Edit
+widget.new_materials.delete.button=Delete
+
+widget.new_materials.posts.header=Recent Posts
+widget.new_materials.comments.header=Recent Comments
+widget.new_materials.pages.header=Recent Pages
+widget.new_materials.users.header=Recent Users

@@ -1,0 +1,65 @@
+module.links.name=Ссылки
+module.links.description=Стандартный модуль ссылок uCMS.
+
+module.links.sidebar.label=Ссылки
+module.links.header.label=Ссылки
+module.links.title=Ссылки :: 
+module.links.header.add=Добавить ссылку
+module.links.header.edit=Изменить ссылку
+
+module.links.permission.level_0.label=Нет доступа
+module.links.permission.level_1.label=Чтение
+module.links.permission.level_2.label=Добавление своих ссылок
+module.links.permission.level_3.label=Изменение, удаление своих ссылок
+module.links.permission.level_4.label=Изменение всех ссылок, не принадлежащих администратору
+module.links.permission.level_5.label=Удаление всех ссылок, не принадлежащих администратору
+module.links.permission.level_6.label=Изменение всех ссылок
+module.links.permission.level_7.label=Удаление всех ссылок
+
+module.links.alert.success.added=Ссылка успешно добавлена.
+module.links.alert.success.updated=Ссылка успешно обновлена.
+module.links.alert.success.published=Ссылка успешно опубликована.
+module.links.alert.success.hidden=Ссылка успешно скрыта.
+module.links.alert.success.deleted=Ссылка успешно удалена.
+module.links.alert.success.published_multiple=Ссылки успешно опубликованы.
+module.links.alert.success.hidden_multiple=Ссылки успешно скрыты.
+module.links.alert.success.deleted_multiple=Ссылки успешно удалены.
+
+module.links.add_link.button=Добавить ссылку
+
+module.links.show.label=Показывать: 
+module.links.all.link=Все
+module.links.published.link=Опубликованные
+module.links.hidden.link=Скрытые
+module.links.selected.option=Отмеченные
+module.links.selected.publish.option=Опубликовать
+module.links.selected.hide.option=Скрыть
+module.links.selected.delete.option=Удалить
+module.links.selected.apply.button=Применить
+module.links.table.header.name=Название
+module.links.table.header.url=Адрес
+module.links.table.header.description=Описание
+module.links.table.header.author=Автор 
+module.links.table.header.status=Статус
+module.links.table.header.date=Дата
+module.links.table.header.manage=Управление
+module.links.table.status.published=Опубликована
+module.links.table.status.hidden=Скрыта
+module.links.table.manage.edit=Изменить
+module.links.table.manage.delete=Удалить
+module.links.table.no_pages.label=Ссылок пока нет.
+module.links.error.empty_fields.label=Нужно заполнить все необходимые поля.
+
+module.links.search.header=<h3>Поиск "@s"</h3><br>
+
+module.links.form.name.label=Название:
+module.links.form.url.label=Адрес:
+module.links.form.description.label=Описание:
+module.links.form.author.label=Автор:
+module.links.form.target.label=Открывать ссылку:
+module.links.form.target.blank.radio=В новой вкладке
+module.links.form.target.top.radio=В том же окне
+module.links.form.publish.label=Опубликовать
+module.links.form.add.button=Добавить
+module.links.form.update.button=Изменить
+module.links.search.label=Искать

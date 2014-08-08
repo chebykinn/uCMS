@@ -1,0 +1,300 @@
+module.users.name=Пользователи
+module.users.description=Стандартный модуль пользователей uCMS.
+
+module.users.title=Пользователи :: 
+module.users.groups.title=Группы :: 
+module.users.header.label=Пользователи
+module.users.header.add.label=Добавить пользователя
+module.users.header.update.label=Изменить пользователя
+module.users.search.header=Поиск "@s"
+
+module.users.sidebar.label=Пользователи
+module.users.sidebar.groups.label=@Группы
+module.users.sidebar.settings.label=Пользователи
+
+module.users.permission.level_0.label=Нет доступа
+module.users.permission.level_1.label=Чтение
+module.users.permission.level_2.label=Изменение своего профиля
+module.users.permission.level_3.label=Удаление своего профиля
+module.users.permission.level_4.label=Изменение всех профилей, кроме администратора
+module.users.permission.level_5.label=Удаление всех профилей, кроме администратора
+module.users.permission.level_6.label=Изменение всех профилей
+module.users.permission.level_7.label=Удаление всех профилей
+
+module.users.group.admin.name=Администратор
+module.users.group.moderator.name=Модератор
+module.users.group.trusted.name=Проверенный
+module.users.group.user.name=Пользователь
+module.users.group.banned.name=Забаненный
+module.users.group.guest.name=Гость
+
+module.users.alert.success.added=Пользователь успешно добавлен.
+module.users.alert.success.updated=Пользователь успешно обновлен.
+module.users.alert.success.deleted=Пользователь успешно удален.
+module.users.alert.success.deleted_multiple=Пользователи успешно удалены.
+module.users.alert.success.activated_multiple=Пользователи успешно активированы.
+module.users.alert.success.deactivated_multiple=Пользователи успешно отключены.
+module.users.alert.success.activated=Пользователь успешно активирован.
+module.users.alert.success.deactivated=Пользователь успешно отключен.
+
+module.users.add.button=Добавить пользователя
+module.users.error.update.label=Во время изменения данных пользователя произошли следующие ошибки:
+module.users.error.add.label=Во время добавления пользователя произошли следующие ошибки:
+
+module.users.error.missing_info.label=Вы ввели не всю информацию, пожалуйста заполните все поля.
+module.users.error.wrong_email.label=Неправильно введен е-mail.
+module.users.error.wrong_code.label=Неправильно введен код с картинки.
+module.users.error.unknown.label=Произошла ошибка. Вы не зарегистрированы.
+module.users.error.login_size.label=Логин должен содержать не менее @s-х символов и не более @s.
+module.users.error.password_size.label=Пароль должен содержать не менее @s-х символов и не более @s.
+module.users.error.login_registered.label=Извините, введённый вами логин уже зарегистрирован.
+module.users.error.wrong_avatar.label=Аватар должен быть в формате <strong>JPG, GIF или PNG</strong>.
+module.users.error.email_registered.label=Извините, введённый вами е-mail уже зарегистрирован.
+module.users.error.no_registration.label=Извините, но регистрация на сайте ограничена.<br>
+
+module.users.search.label=Искать
+
+module.users.show.label=Показывать: 
+module.users.show.all.link=Все
+module.users.show.activated.link=Активированные
+module.users.show.deactivated.link=Неактивированные
+
+module.users.selected.option=Отмеченные
+module.users.selected.activate.option=Активировать
+module.users.selected.deactivate.option=Деактивировать
+module.users.selected.delete.option=Удалить
+module.users.selected.apply.button=Применить
+
+module.users.table.avatar.header=Аватар
+module.users.table.login.header=Логин
+module.users.table.email.header=Email
+module.users.table.ip.header=IP
+module.users.table.logip.header=IP при входе
+module.users.table.group.header=Группа
+module.users.table.reg_date.header=Дата регистрации
+module.users.table.login_date.header=Дата последнего входа
+module.users.table.manage.header=Управление
+
+module.users.table.status.your_profile.label= (Ваш профиль)
+module.users.table.status.online.label= (Онлайн)
+module.users.table.status.deactivated.label= (Не активирован)
+
+module.users.table.manage.activate.button=Активировать
+module.users.table.manage.edit.button=Изменить
+module.users.table.manage.delete.button=Удалить
+module.users.table.error.no_one_found=Никого не найдено.
+
+module.users.form.login.label=Логин:
+module.users.form.password.label=Пароль:
+module.users.form.email.label=Email:
+module.users.form.group.label=Группа:
+module.users.form.avatar.label=Аватар:
+module.users.form.surname.label=Фамилия:
+module.users.form.firstname.label=Имя:
+module.users.form.nickname.label=Псевдоним:
+module.users.form.icq.label=ICQ:
+module.users.form.skype.label=Skype:
+module.users.form.pm_alert.label=Уведомлять о личных сообщениях по email:
+module.users.form.birthdate.label=Дата рождения:
+module.users.form.birthdate.day.placeholder=День
+module.users.form.birthdate.year.placeholder=Год
+module.users.form.addinfo.label=О себе:
+module.users.form.add.button=Добавить
+module.users.form.update.button=Изменить
+
+module.users.groups.alert.success.added=Группа успешно добавлена.
+module.users.groups.alert.success.updated=Группа успешно обновлена.
+module.users.groups.alert.success.deleted=Группа успешно удалена.
+module.users.groups.alert.success.deleted_multiple=Группы успешно удалены.
+
+module.users.groups.header.label=Группы
+module.users.groups.header.add.label=Добавить группу
+module.users.groups.header.update.label=Изменить группу
+module.users.groups.add.button=Добавить группу
+
+module.users.groups.form.name.label=Название группы
+module.users.groups.form.alias.label=Ссылка
+module.users.groups.form.add.button=Добавить
+module.users.groups.form.update.button=Изменить
+module.users.groups.form.important_note.label=*Каждый последующий уровень включает в себя права предыдущих.
+
+module.users.groups.total.label=<b>Всего групп:</b> @s
+
+module.users.groups.selected.option=Отмеченные
+module.users.groups.selected.delete.option=Удалить
+module.users.groups.selected.apply.button=Применить
+
+module.users.groups.table.header.name=Название
+module.users.groups.table.header.permissions=Права
+module.users.groups.table.header.users_in_group=Пользователей в группе
+module.users.groups.table.header.manage=Управление
+module.users.groups.table.manage.edit.button=Изменить
+module.users.groups.table.manage.delete.button=Удалить
+
+module.users.settings.header.label=Настройки пользователей
+module.users.settings.user_avatars.label=Аватары:
+module.users.settings.user_avatars.description=Включить или выключить аватары для пользователей.
+module.users.settings.avatar_size.label=Размер аватара:
+module.users.settings.avatar_size.description=Ширина и высота аватара пользователя.
+module.users.settings.user_messages.label=Личные сообщения:
+module.users.settings.user_messages.description=Включить или выключить обмен личными сообщениями для пользователей.
+module.users.settings.allow_registration.label=Разрешить любому зарегистрироваться на сайте:
+module.users.settings.allow_registration.description=
+module.users.settings.unique_emails.label=Запретить одинаковые e-mail'ы:
+module.users.settings.unique_emails.description=Запретить или разрешить повторение e-mail'ов у разных пользователей.
+module.users.settings.default_group.label=Стандартная группа для пользователей:
+module.users.settings.default_group.description=Группа, куда будут попадать пользователи после регистрации.
+module.users.settings.login_attempts_num.label=Максимальное количество попыток входа на сайт:
+module.users.settings.login_attempts_num.description=
+module.users.settings.after_failed_login_action.label=После окончания попыток входа на сайт:
+module.users.settings.after_failed_login_action.delay.option=Запретить вход на 15 минут
+module.users.settings.after_failed_login_action.code.option=Требовать ввод кода с изображения
+module.users.settings.after_failed_login_action.description=
+module.users.settings.use_captcha.label=Использование изображения с кодом:
+module.users.settings.use_captcha.nowhere.option=Не использовать
+module.users.settings.use_captcha.registration.option=При регистрации
+module.users.settings.use_captcha.guest_comment.option=При добавлении комментария гостем
+module.users.settings.use_captcha.user_comment.option=При добавлении комментария обычным пользователем
+module.users.settings.use_captcha.description=Использовать проверочное изображение с кодом (капча) в формах.
+module.users.settings.users_activation.label=Разрешить пользователям самостоятельно активировать свои аккаунты:
+module.users.settings.users_activation.description=
+module.users.settings.login_size.label=Допустимый размер логина:
+module.users.settings.login_min_size.placeholder=Минимум
+module.users.settings.login_max_size.placeholder=Максимум
+module.users.settings.login_size.from.label=От: 
+module.users.settings.login_size.to.label= до: 
+module.users.settings.login_size.characters.label= символов
+module.users.settings.login_size.description=
+module.users.settings.password_size.label=Допустимый размер пароля:
+module.users.settings.password_min_size.placeholder=Минимум
+module.users.settings.password_max_size.placeholder=Максимум
+module.users.settings.password_size.from.label=От: 
+module.users.settings.password_size.to.label= до: 
+module.users.settings.password_size.characters.label= символов
+module.users.settings.password_size.description=
+module.users.settings.new_users_notification.label=Уведомлять о новых пользователях:
+module.users.settings.new_users_notification.description=
+module.users.settings.new_user_email.label=Email для уведомления о регистрации нового пользователя:
+module.users.settings.new_user_email.description=
+module.users.settings.user_logged_in_notifications.label=Уведомлять о входе пользователей на сайт:
+module.users.settings.user_logged_in_notifications.description=
+module.users.settings.user_logged_in_email.label=Email для уведомления о входе пользователей на сайт:
+module.users.settings.user_logged_in_email.description=
+module.users.settings.observed_user_groups.label=Уведомлять о входе пользователей из групп:
+module.users.settings.observed_user_groups.description=
+module.users.settings.allow_nicknames.label=Разрешить использовать псевдонимы
+module.users.settings.allow_nicknames.description=Разрешить пользователям использовать псевдонимы вместо логинов для отображения имени.<br> (<b>Внимание:</b> после отключении этой настройки все псевдонимы удалятся)
+module.users.settings.update.button=Применить
+
+module.users.error.edit.no_permissions=Вы не можете изменять свою страницу.
+module.users.error.edit.alert.success.update_main=Ваши основные данные успешно изменены.
+module.users.error.edit.alert.success.update_add=Ваши данные успешно изменены.
+
+module.users.site.title.login=Вход
+module.users.site.title.profile=@s
+module.users.site.title.profile.posts=@s / Посты
+module.users.site.title.profile.comments=@s / Комментарии
+module.users.site.title.profile.messages=@s / Личные сообщения
+module.users.site.title.profile.edit=@s / Редактирование профиля
+module.users.site.title.registration=Регистрация
+module.users.site.title.userlist=Список пользователей
+module.users.site.title.reset=Восстановление пароля
+
+module.users.login.error.empty_fields=Вы должны заполнить все необходимые поля.
+module.users.login.error.failed_login_captcha=Вы набрали логин или пароль неверно @s раз. Введите код с изображения, для того чтобы войти на сайт.
+module.users.login.error.failed_login_delay=Вы набрали логин или пароль неверно @s раз. Подождите 15 минут до следующей попытки.
+module.users.login.error.wrong_login_or_password=Извините, введённые вами логин или пароль неверные.
+
+module.users.pm.all_users.label=Все пользователи
+module.users.pm.inbox_empty.local.label=<br><br>Вам еще никто не писал.<br>
+module.users.pm.inbox_empty.user.label=<br><br>Пользователь вам еще не писал.<br>
+module.users.pm.inbox.label=<br><b>Входящие:</b>
+module.users.pm.outbox.label=<br><b>Отправленные:</b>
+module.users.pm.table.header.author=Отправитель
+module.users.pm.table.header.message=Текст сообщения
+module.users.pm.table.header.receiver=Получатель
+module.users.pm.no_outbox.label=<br><br>Вы еще не отправляли сообщений.<br>
+
+module.users.pm.error.no_allowed_to_send=Вы не можете писать сообщения, так как вы забанены.
+
+module.users.pm.send_form.receiver.label=Кому:
+module.users.pm.send_form.message.label=Текст:
+module.users.pm.send_form.button=Отправить
+
+module.users.pm.receiver_login_link=Прочитать
+
+module.users.pm.email.subject.label=Вам пришло личное сообщение
+
+module.users.pm.email.message=Здравствуйте, @s!<br>Вам пришло личное сообщение от @s:<br>@s<hr>@s<hr><br>Написать в ответ @s.<br> <br> С уважением, Администрация "@s".;
+module.users.pm.error.message_to_yourself=Вы не можете отправлять сообщения самому себе.
+module.users.pm.error.no_such_user=Такого пользователя не существует.
+module.users.pm.error.empty_fields=Вы заполнили не все поля.
+
+module.users.pm.alert.success.sent=Ваше сообщение было успешно отправлено.
+module.users.pm.alert.success.deleted=Ваше сообщение было успешно удалено.
+module.users.pm.alert.warning.unread_messages=Непрочитанных сообщений: @s
+
+module.users.registration.alert.success.registered.activate=Вы успешно зарегистрированы. На ваш е-mail было выслано сообщение с подтверждением регистрации.<br>
+module.users.registration.alert.success.registered.no_activate=Вы успешно зарегистрированы. Вы сможете войти на сайт после активации вашего аккаунта администрацией сайта.<br>
+module.users.registration.errors_occurred=Во время регистрации произошли следущие ошибки:
+module.users.registration.activation_link=ссылке
+module.users.registration.message.subject=Подтверждение регистрации
+module.users.registration.message.text=Здравствуйте, пользователь! <br>Спасибо за регистрацию на @s!<br><br><b>Ваш логин:</b> @s<br><b>Ваш пароль вы знаете сами.</b><br><br>Перейдите по @s, чтобы активировать ваш аккаунт. <br> <br> С уважением, Администрация @s.
+
+module.users.alert.success.user_activated=Ваш аккаунт подтвержден. Теперь вы можете зайти на сайт @s.
+module.users.alert.error.user_activated=Произошла ошибка и ваш аккаунт не был подтвержден.
+module.users.guest_login=Гость
+
+module.users.alert.success.reset.stage1=Ссылка на потверждение восстановления пароля была отправлена на указанный e-mail.
+module.users.alert.success.reset.stage2=Новый пароль успешно сгенерирован и выслан вам на e-mail.
+module.users.alert.error.reset.no_such_user=Пользователя с таким e-mail адресом или логином не существует.
+module.users.reset.email.link.label=ссылке
+module.users.reset.email.stage1.subject=Заявка на восстановление пароля
+module.users.reset.email.stage1.message=Здравствуйте, @s. <br> Вы давали заявку на смену пароля. Чтобы сменить его, перейдите по @s. (действительна 1 час) <br>Если вы этого не делали, то просто проигнорируйте письмо.
+module.users.reset.email.stage2.subject=Восстановление пароля
+module.users.reset.email.stage2.message=Здравствуйте, @s. <br> Система сгенерировала для Вас пароль, теперь Вы сможете войти на сайт @s, используя его. После входа желательно его сменить.<br> <b>Пароль:</b><br>@s
+module.users.reset.email.admin.subject=Пользователь восстановил пароль
+module.users.reset.email.admin.message=Здравствуйте, Администратор! <br> Пользователь @s восстановил пароль
+module.users.alert.error.reset.wrong_code=Введен неверный код или ссылка устарела.
+module.users.alert.success.profile.user_activated=Ваш профиль успешно активирован.
+module.users.profile_menu.profile_link.label=Ваш профиль
+module.users.profile_menu.userlist_link.label=Список пользователей
+module.users.profile_menu.logout_link.label=Выход
+module.users.profile_menu.panel_link.label=Панель управления
+module.users.alert.error.list_users.no_access.user=У вас нет доступа к этой странице.
+module.users.alert.error.list_users.no_access.guest=Вход на эту страницу разрешен только зарегистрированным пользователям.
+module.users.form.edit-add.surname.label=Фамилия:
+module.users.form.edit-add.firstname.label=Имя:
+module.users.form.edit-add.icq.label=ICQ:
+module.users.form.edit-add.skype.label=Skype:
+module.users.form.edit-add.birthdate.label=Дата рождения:
+module.users.form.edit-add.birthdate.day.placeholder=День
+module.users.form.edit-add.birthdate.year.placeholder=Год
+module.users.form.edit-add.nickname.label=Псевдоним:
+module.users.form.edit-add.pm_alert.label=Уведомлять о ЛС по email: 
+module.users.form.edit-add.addinfo.label=Что-нибудь о себе:
+module.users.form.edit-add.update.button=Изменить
+
+module.users.form.edit-main.login.label=Логин:
+module.users.form.edit-main.password.label=Пароль:
+module.users.form.edit-main.email.label=Email:
+module.users.form.edit-main.avatar.label=Аватар:
+module.users.form.edit-main.update.button=Изменить
+
+module.users.form.login.login.placeholder=Логин или e-mail
+module.users.form.login.password.placeholder=Пароль
+module.users.form.login.remember.checkbox=Запомнить меня
+module.users.form.login.button=Войти
+module.users.form.login.register.link=Зарегистрироваться
+module.users.form.login.reset.link=Забыли пароль?
+
+module.users.form.registration.login.label=Ваш логин: 
+module.users.form.registration.password.label=Ваш пароль: 
+module.users.form.registration.email.label=Ваш E-mail: 
+module.users.form.registration.avatar.label=Ваш аватар: 
+module.users.form.registration.register.button=Зарегистрироваться
+
+module.users.form.reset.login.label=Введите Ваш Логин: 
+module.users.form.reset.email.label=Введите Ваш E-mail: 
+module.users.form.reset.send.button=Восстановить
+module.users.table.nickname.header=Имя

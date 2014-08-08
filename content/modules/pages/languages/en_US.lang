@@ -1,0 +1,84 @@
+module.pages.name=Pages
+module.pages.description=Default uCMS pages module.
+
+module.pages.title=Pages :: 
+module.pages.sidebar.label=Pages
+module.pages.sidebar.settings.label=Pages
+
+module.pages.permission.level_0.label=No access
+module.pages.permission.level_1.label=Read
+module.pages.permission.level_2.label=Add, edit own pages
+module.pages.permission.level_3.label=Delete own pages
+module.pages.permission.level_4.label=Edit any pages, which don't belong to administrators
+module.pages.permission.level_5.label=Delete any pages, which don't belong to administrators
+module.pages.permission.level_6.label=Edit any pages
+module.pages.permission.level_7.label=Delete any pages
+
+module.pages.alert.success.added=Page has been successfully added.
+module.pages.alert.success.updated=Page has been successfully updated.
+module.pages.alert.success.deleted=Page has been successfully deleted.
+module.pages.alert.success.deleted_multiple=Pages have been successfully deleted.
+module.pages.alert.success.published=Page has been successfully published.
+module.pages.alert.success.published_multiple=Pages have been successfully published.
+module.pages.alert.success.drafted=Page has been successfully turned into draft.
+module.pages.alert.success.drafted_multiple=Pages have been successfully turned into draft.
+module.pages.header.add_page=Add Page
+module.pages.header.edit_page=Edit Page
+module.pages.header=Pages
+module.pages.add_page.button=Add Page
+
+module.pages.search.header=<h3>Searching "@s"</h3><br>
+
+module.pages.editor.title.label=Title:
+module.pages.editor.alias.label=Link to post:
+module.pages.editor.body.label=Page body:
+module.pages.editor.author.label=Author:
+module.pages.editor.date.label=Date:
+module.pages.editor.day.placeholder=Day
+module.pages.editor.year.placeholder=Year
+module.pages.editor.date.at.label= at 
+module.pages.editor.parent.label=Parent page:
+module.pages.editor.no_parent.option=None
+module.pages.editor.sort.label=Position
+module.pages.editor.publish.label=Publish
+module.pages.editor.add.button=Add page
+module.pages.editor.update.button=Update page
+
+module.pages.empty_fields.error=You need to fill "Title" and "Post body" fields.
+module.pages.show.label=Show: 
+module.pages.all.link=All Pages
+module.pages.published.link=Published
+module.pages.drafts.link=Drafts
+module.pages.parents.link=Only top level pages
+module.pages.selected.label=Selected
+module.pages.selected.publish.option=Publish
+module.pages.selected.draft.option=Hide
+module.pages.selected.delete.option=Delete
+module.pages.selected.fix-orphans.option=Fix missing page parent
+module.pages.selected.apply.button=Apply
+module.pages.table.name.header=Name
+module.pages.table.author.header=Author
+module.pages.table.status.header=Status
+module.pages.table.date.header=Date
+module.pages.table.manage.header=Manage
+module.pages.table.published.status=Published
+module.pages.table.draft.status=Draft
+module.pages.table.edit.button=Edit
+module.pages.table.delete.button=Delete
+module.pages.table.no_pages.label=There is no pages yet.
+
+module.pages.table.parent.page.title=Parent: @s
+module.pages.search.label=Search
+module.pages.site.edit.button=Edit
+
+module.pages.settings.header=Pages Settings
+module.pages.settings.sef_link.label=Pages links format:
+module.pages.settings.sef_link.description=Edit nice links for pages, you can add some text or additional information about the page, see <a href="http://ucms.ivan4b.ru/other/sef-links-tags">format</a>.
+module.pages.settings.notify.label=Notify about new pages:
+module.pages.settings.notify.description=
+module.pages.settings.email.label=Email for notifications about new pages:
+module.pages.settings.description=
+module.pages.settings.observed_groups.label=Notify about new pages for such groups as:
+module.pages.settings.observed_groups.description=
+module.pages.settings.update.button=Apply
+module.pages.draft.label=Draft

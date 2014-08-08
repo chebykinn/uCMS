@@ -1,0 +1,113 @@
+module.comments.name=Комментарии
+module.comments.header=Комментарии
+module.comments.title=Комментарии :: 
+module.comments.header.edit=Изменить комментарий
+module.comments.description=Стандартный модуль комментариев uCMS.
+
+module.comments.sidebar.label=Комментарии
+module.comments.sidebar.settings.label=Комментарии
+
+module.comments.permission.level_0.label=Нет доступа
+module.comments.permission.level_1.label=Чтение
+module.comments.permission.level_2.label=Добавление своих комментариев
+module.comments.permission.level_3.label=Изменение, удаление своих комментариев
+module.comments.permission.level_4.label=Изменение всех комментариев, не принадлежащих администратору
+module.comments.permission.level_5.label=Удаление всех комментариев, не принадлежащих администратору
+module.comments.permission.level_6.label=Изменение всех комментариев
+module.comments.permission.level_7.label=Удаление всех комментариев
+
+module.comments.templates.back.button=Вернуться назад
+module.comments.template.duplicate-comment.header=Повторяющийся комментарий
+module.comments.template.duplicate-comment.message=Кажется вы это уже писали?
+module.comments.template.empty-comment.header=Пустой комментарии
+module.comments.template.empty-comment.message=Нельзя добавить пустой комментарий, напишите что-нибудь.
+module.comments.template.not-allowed-comment.header=Вы не можете писать комментарии
+module.comments.template.not-allowed-comment.message=У вас нет прав писать комментарии на этом сайте.
+module.comments.template.wrong-code-comment.header=Неправильно введен код с картинки
+module.comments.template.wrong-code-comment.message=К сожалению, вы неправильно ввели код с картинки, попробуйте еще раз.
+
+module.comments.add-form.comment.label=Написать комментарий:
+module.comments.add-form.guest.name=Гость
+module.comments.add-form.guest.name.label=Ваше имя: 
+module.comments.add-form.guest.email.label=Ваш email: 
+module.comments.add-form.submit.button=Отправить
+
+module.comments.search.header=<h3>Поиск "@s"</h3>
+
+module.comments.approve.button=Одобрить
+module.comments.edit.button=Изменить
+module.comments.delete.button=Удалить
+
+module.comments.alert.added.moderation=Ваш комментарий был успешно добавлен и появится на сайте после проверки.
+module.comments.alert.added=Ваш комментарий был успешно добавлен.
+module.comments.register_to_add.label=<br><a href="@s" >Зарегистрируйтесь</a>, чтобы оставить комментарий.
+module.comments.not_allowed_to_add.label=Вы не можете добавлять комментарии.
+module.comments.alert.error.empty_comment=Комментарий не может быть пустым.
+module.comments.alert.go_back.link=Вернуться к редактированию
+module.comments.show.all.link=Все
+module.comments.show.approved.link=Одобренные
+module.comments.show.not_approved.link=Не одобренные
+module.comments.show.label=Показывать: 
+module.comments.selected.option=Отмеченные
+module.comments.selected.approve.option=Одобрить
+module.comments.selected.hide.option=Скрыть
+module.comments.selected.delete.option=Удалить
+module.comments.selected.repair.option=Исправить отсутствие комментария-родителя
+module.comments.selected.apply.button=Применить
+module.comments.table.header.author=Автор
+module.comments.table.header.comment=Текст комментария
+module.comments.table.header.post=Пост
+module.comments.table.header.email=Email
+module.comments.table.header.ip=IP
+module.comments.table.header.date=Дата
+module.comments.table.header.status=Статус
+module.comments.table.header.manage=Управление
+module.comments.table.status.approved=Одобрен
+module.comments.table.status.not_approved=Не одобрен
+module.comments.table.manage.approve=Одобрить
+module.comments.table.manage.edit=Изменить
+module.comments.table.manage.delete=Удалить
+module.comments.table.empty.label=Комментариев пока нет.
+
+module.comments.alert.success.approved=Комментарий успешно одобрен.
+module.comments.alert.success.hidden=Комментарий успешно скрыт.
+module.comments.alert.success.updated=Комментарий успешно обновлен.
+module.comments.alert.success.deleted=Комментарий успешно удален.
+module.comments.alert.success.approved_multiple=Комментарии успешно одобрены.
+module.comments.alert.success.hidden_multiple=Комментарии успешно скрыты.
+module.comments.alert.success.deleted_multiple=Комментарии успешно удалены.
+module.comments.alert.success.fixed=Комментарии успешно исправлены.
+
+module.comments.form.update.comment.label=Текст:
+module.comments.form.update.author.label=Автор:
+module.comments.form.update.date.label=Дата:
+module.comments.form.update.time_at.label=в
+module.comments.form.update.submit.button=Изменить
+
+module.comments.settings.header=Настройки комментариев
+
+module.comments.settings.comments_enabled.label=Включить комментарии
+module.comments.settings.comments_enabled.description=
+module.comments.settings.tree_comments.label=Включить древовидные комментарии
+module.comments.settings.tree_comments.description=
+module.comments.settings.comments_paging.label=Разбивать комментарии на страницы
+module.comments.settings.comments_paging.description=
+module.comments.settings.comments_on_page.label=Количество комментариев на странице
+module.comments.settings.comments_on_page.description=
+module.comments.settings.comments_sort.label=Сортировать комментарии
+module.comments.settings.comments_sort.description=
+module.comments.settings.comments_sort.option.desc=Новые сверху
+module.comments.settings.comments_sort.option.asc=Новые снизу
+module.comments.settings.comments_notifications.label=Уведомлять о новых комментариях
+module.comments.settings.comments_notifications.description=
+module.comments.settings.comments_email.label=Email для уведомления о добавлении нового комментария:
+module.comments.settings.comments_email.description=
+module.comments.settings.comments_observed_user_groups.label=Уведомлять о добавленных комментариях группами:
+module.comments.settings.comments_observed_user_groups.description=
+module.comments.settings.comments_moderation.label=Включить премодерацию комментариев для групп:
+module.comments.settings.comments_moderation.description=
+module.comments.settings.apply.button=Применить
+
+module.comments.search.label=Искать
+module.comments.not_approved.label=Не одобрен
+module.comments.deleted_user_login=Удаленный пользователь

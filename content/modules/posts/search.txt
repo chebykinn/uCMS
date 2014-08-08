@@ -1,0 +1,9 @@
+table=posts
+columns=`p`.*, `u`.`login` AS `author_login`, `u`.`group` AS `author_group`, `uf`.`value` AS `author_nickname`, `c`.`name` AS `category_name`, `c`.`alias` AS `category_alias`
+join=AS `p` FORCE INDEX (PRIMARY) LEFT JOIN `@uc_prefix@users` AS `u` ON `u`.`id` = `p`.`author` LEFT JOIN `@uc_prefix@usersinfo` AS `uf` ON `uf`.`user_id` = `u`.`id` AND `uf`.`name` = 'nickname' LEFT JOIN `@uc_prefix@categories` AS `c` ON `c`.`id` = `p`.`category`
+where=`p`.`publish` > 0
+search_in_sql=`p`.`title`,`p`.`body`,`p`.`keywords`
+search_in=title,body,keywords
+sort_by=id,title,author,comments,date
+highlight=title,body,keywords
+file=posts/posts.php

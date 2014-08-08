@@ -1,0 +1,6 @@
+widget.site_stats.name=Statistics
+widget.site_stats.description=uCMS default widget.
+
+widget.site_stats.online=Online:
+widget.site_stats.online.users=Users:
+widget.site_stats.online.guests=Guests:

@@ -1,0 +1,367 @@
+[info]
+name:Русский
+rtl:0
+[/info]
+
+# Updates #
+
+updates.title=Установка μCMS
+updates.header=Установка μCMS
+updates.welcome.text=Добро пожаловать в μCMS! Сейчас вам предстоит пройти несколько пунктов, и установка будет завершена.
+updates.welcome.button=Приступим!
+updates.fine.text=Все в порядке, μCMS уже установлена, если вы хотите переустановить её, то очистите таблицы.
+updates.fine.button=На главную
+
+updates.updated.text=μCMS была успешно обновлена.
+updates.updated.button=На главную
+
+updates.make_config.header=подключение к базе данных
+updates.make_config.dbserver.label=Сервер базы данных:
+updates.make_config.dbserver.description= - В большинстве случаев это localhost.
+updates.make_config.dbuser.label=Логин:
+updates.make_config.dbuser.description= - Логин пользователя базы данных, предоставляется хостингом.
+updates.make_config.dbpass.label=Пароль:
+updates.make_config.dbpass.description= - Пароль пользователя базы данных, предоставляется хостингом.
+updates.make_config.dbname.label=Название базы данных:
+updates.make_config.dbname.description= - База данных, куда вы хотите установить μCMS.
+updates.make_config.uc_prefix.label=Префикс таблиц:
+updates.make_config.uc_prefix.description= - Используется для того, чтобы устанавливать несколько копий μCMS в одну базу данных.
+updates.make_config.button=Далее
+
+updates.no_connect.header=ошибка подключения к базе данных
+updates.no_connect.text=Кажется вы ошиблись при вводе логина или пароля к базе данных и μCMS не удалось подключиться.
+updates.no_connect.button=Еще раз
+
+updates.make_tables.text=Таблиц не существует, надо создать!
+updates.make_tables.button=Давайте!
+
+updates.fill_settings_form.header=Основные настройки
+updates.fill_settings_form.description=Еще пара пунктов и все, честно!
+updates.fill_settings_form.site_name.label=Название сайта:
+updates.fill_settings_form.site_name.description= - Назовите свой сайт, например: "Сайт Ивана".
+updates.fill_settings_form.site_description.label=Описание сайта:
+updates.fill_settings_form.site_description.description= - Опишите свой сайт, например: "Крутой сайт обо мне".
+updates.fill_settings_form.site_title.label=Заголовок сайта:
+updates.fill_settings_form.site_title.description= - Отображается в заголовке страницы в браузере, например: "Сайт Ивана - крутейший сайт на свете!".
+updates.fill_settings_form.domain.label=Домен сайта:
+updates.fill_settings_form.domain.description= - Домен, на котором находится сайт, если он совпадает с тем, что в адресной строке, то не изменяйте его.
+updates.fill_settings_form.dir.label=Каталог для μCMS (если есть):
+updates.fill_settings_form.dir.description= - Папка в которой лежит μCMS - @s/ucms - папка "/ucms". Если нет, то оставьте пустым.
+updates.fill_settings_form.button=Далее
+updates.fill_settings_form.site_name.default=Сайт на μCMS
+updates.fill_settings_form.site_description.default=Это Ваш сайт
+updates.fill_settings_form.site_title.default=Сайт на μCMS
+
+updates.fill_users_form.header=Создание администратора
+updates.fill_users_form.description=Давайте создадим вам администратора!
+updates.fill_users_form.setup-email.label=E-mail:
+updates.fill_users_form.setup-email.description= - Ваш e-mail, на него будут приходить все уведомления (вы можете изменить это потом).
+updates.fill_users_form.setup-login.label=Логин:
+updates.fill_users_form.setup-login.description= - Назовите администратора.
+updates.fill_users_form.setup-password.label=Пароль:
+updates.fill_users_form.setup-password.description= - Задайте сложный пароль: безопасность сайта зависит от этого.
+updates.fill_users_form.button=Далее
+
+updates.form.error.empty_fields=Вы заполнили не все необходимые поля.
+updates.form.error.login=Логин должен содержать не менее 4-х символов и не более 16.
+updates.form.error.password=Пароль должен содержать не менее 6-х символов и не более 20.
+updates.form.error.email=Неправильно введен е-mail.
+
+updates.success.header=Все!
+updates.success.text=Ура, μCMS успешно установлена, теперь Вы можете использовать Ваш сайт!
+updates.success.button=Хочу на сайт!
+
+updates.add_data.default_category=Без категории
+updates.add_data.default_post_title=Привет, мир!
+updates.add_data.default_post_body=Это ваш первый пост!
+updates.add_data.default_post_tags=первый, пост, сайт
+updates.add_data.default_comment=А это ваш первый комментарий!
+updates.add_data.default_page_title=Страница
+updates.add_data.default_page_body=А это ваша первая страница!
+
+# Admin Main #
+
+admin.title=Панель управления μCMS @UCMS_VERSION@
+admin.sidebar.main=Главная
+admin.sidebar.modules=Модули
+admin.sidebar.settings=Настройки
+admin.sidebar.updates=Обновления
+admin.sidebar.phpmyadmin=PHPMyAdmin
+admin.sidebar.sitelink=Перейти к сайту
+admin.footer.queries=Запросов:
+admin.footer.loadtime=Время загрузки: @s секунд.
+admin.footer.version=Версия:
+admin.error.access_denied=Доступ запрещен
+admin.main_page.link=Главная Страница
+admin.alert.warning.maintenance=Внимание, на сайте включён режим техобслуживания.
+admin.alert.warning.update_available=Доступно обновление: μCMS @s
+
+# Admin Settings #
+
+admin.settings.title=Настройки
+admin.settings.header=Настройки
+
+admin.settings.error=Произошла ошибка при изменении параметров.
+admin.settings.success=Настройки успешно изменены.
+
+admin.settings.site_name.label=Название сайта:
+admin.settings.site_name.description=
+
+admin.settings.site_description.label=Описание сайта:
+admin.settings.site_description.description=
+
+admin.settings.site_additional_name.label=Заголовок:
+admin.settings.site_additional_name.description=Отображается в заголовке странице.
+
+admin.settings.site_author.label=Автор сайта:
+admin.settings.site_author.description=Указать кто является автором этого сайта.
+
+admin.settings.language.label=Язык:
+admin.settings.language.description=
+
+admin.settings.ucms_maintenance.label=Включить режим техобслуживания сайта:
+admin.settings.ucms_maintenance.description=Выключить сайт для всех, кроме администраторов.
+
+admin.settings.nice_links.label=Человекопонятные ссылки:
+admin.settings.nice_links.description=Красивые ссылки, например: @SITE_DOMAIN@/super-cool-post.
+
+admin.settings.embedding_allowed.label=Разрешить встраивание сайта:
+admin.settings.embedding_allowed.description=Разрешить использование сайта в блоке iframe на любом другом домене.
+
+admin.settings.domain.label=Домен сайта:
+admin.settings.domain.description=Адрес на котором находится сайт.
+
+admin.settings.ucms_dir.label=Каталог μCMS:
+admin.settings.ucms_dir.description=Папка, в которой находится μCMS (если есть), например: @SITE_DOMAIN@/ucms - папка /ucms.
+
+admin.settings.timezone.label=Часовой пояс:
+admin.settings.timezone.description=Часовой пояс для региона в котором вы находитесь.
+
+admin.settings.date_format.label=Формат даты:
+admin.settings.date_format.manual.label=<b>Свой:</b>
+admin.settings.date_format.description=Настроика формата даты, показываемой на сайте, смотрите <a href="http://php.net/manual/function.strftime.php" target="_blank">формат</a> на сайте документации PHP.
+admin.settings.time_format.label=Формат времени:
+admin.settings.time_format.manual.label=<b>Свой:</b>
+admin.settings.time_format.description=Настроика формата времени, показываемого на сайте, смотрите <a href="http://php.net/manual/function.strftime.php" target="_blank">формат</a> на сайте документации PHP.
+
+admin.settings.phpmyadmin.label=Ссылка на PHPMyAdmin:
+admin.settings.phpmyadmin.description=
+
+admin.settings.enable_modules.label=Включить модули:
+admin.settings.enable_modules.description=Включить возможность полноценно управлять модулями для μCMS.
+
+admin.settings.admin_email.label=Email администратора:
+admin.settings.admin_email.description=
+
+admin.settings.submit.button=Применить
+
+# Admin Updates #
+
+admin.updates.title=Обновления :: 
+admin.updates.header=Обновления
+admin.updates.add.submit.button=Загрузить обновление
+admin.updates.update_by_upload.label=Установить обновление из файла:
+admin.updates.new_version=<br><h3>Доступно обновление: μCMS @s</h3>
+admin.updates.new_version_in_file=<b>Определен пакет обновления: μCMS @s</b>
+admin.updates.no_update_available=<b>У вас установлена самая последняя версия μCMS.</b>
+admin.updates.submit.button=Обновить
+admin.updates.incorrect_file=Этот файл не является пакетом обновления для μCMS.
+admin.updates.reinstall.label=<br><br><b>Вы можете переустановить текущую версию μCMS если что-то работает не так. Это не повлияет на ваши темы, виджеты, плагины или модули.</b>
+admin.updates.reinstall.button=Переустановить
+admin.updates.error_opening_update=Произошла ошибка при открытии пакета обновления.
+admin.updates.themes.header=<h2>Темы</h2>
+admin.updates.widgets.header=<h2>Виджеты</h2>
+admin.updates.plugins.header=<h2>Плагины</h2>
+admin.updates.modules.header=<h2>Модули</h2>
+admin.updates.themes.no_update_available=<br>У ваших тем нет обновлений.<br><br>
+admin.updates.widgets.no_update_available=<br>У ваших виджетов нет обновлений.<br><br>
+admin.updates.plugins.no_update_available=<br>У ваших плагинов нет обновлений.<br><br>
+admin.updates.modules.no_update_available=<br>У ваших модулей нет обновлений.<br><br>
+admin.updates.themes.update_available=<br><b>Доступно обновление для некоторых ваших тем.</b><br><br>Внимание: все внесенные вами изменения будут утеряны после обновления.<br><br>
+admin.updates.widgets.update_available=<br><b>Доступно обновление для некоторых ваших виджетов.</b><br><br>Внимание: все внесенные вами изменения будут утеряны после обновления.<br><br>
+admin.updates.plugins.update_available=<br><b>Доступно обновление для некоторых ваших плагинов.</b><br><br>Внимание: все внесенные вами изменения будут утеряны после обновления.<br><br>
+admin.updates.modules.update_available=<br><b>Доступно обновление для некоторых ваших модулей.</b><br><br>Внимание: все внесенные вами изменения будут утеряны после обновления.<br><br>
+admin.updates.update.name=Название
+admin.updates.update.version=Версия
+admin.updates.version.old=<b>Старая версия:</b> 
+admin.updates.version.new=<br><b>Новая версия:</b> 
+admin.updates.extentions.submit.button=Обновить отмеченные
+admin.updates.no_item_selected=Вы должны выбрать обновления из списка.
+admin.updates.success=μCMS успешно обновлена.
+
+# Admin Modules #
+
+admin.modules.title=Модули
+admin.modules.header=Модули
+
+admin.modules.success.add=Модуль успешно установлен.
+admin.modules.success.upd=Модуль успешно обновлён.
+admin.modules.success.del=Модуль успешно удалён.
+admin.modules.success.delm=Модули успешно удалены.
+admin.modules.success.act=Модуль успешно активирован.
+admin.modules.success.actm=Модули успешно активированы.
+admin.modules.success.deact=Модуль успешно отключен.
+admin.modules.success.deactm=Модули успешно отключены.
+
+admin.modules.add.label=Добавить модуль:
+admin.modules.add.submit.button=Установить
+
+admin.modules.button.apply=Применить
+admin.modules.button.activate=Включить
+admin.modules.button.deactivate=Отключить
+admin.modules.button.edit=Редактировать
+admin.modules.button.settings=Настройки
+admin.modules.button.delete=Удалить
+
+admin.modules.label.count=Всего модулей:
+admin.modules.label.sort_by=Сортировать по:
+admin.modules.label.select_all=Отметить все:
+
+admin.modules.sort.name=Названию
+admin.modules.sort.author=Автору
+admin.modules.sort.date=Дате добавления
+
+admin.modules.option.selected=Отмеченные
+admin.modules.option.activate=Включить
+admin.modules.option.deactivate=Отключить
+admin.modules.option.delete=Удалить
+
+admin.modules.label.name=Название:
+admin.modules.label.version=Версия:
+admin.modules.label.author=Автор:
+admin.modules.label.site=Сайт:
+admin.modules.label.description=Описание:
+admin.modules.label.dir=Папка:
+admin.modules.no_modules.label=Модулей пока нет.
+admin.modules.alert.error.unknown=Произошла ошибка.
+admin.modules.alert.error.no_module=Ошибка: В архиве нет поддерживаемого модуля.
+admin.modules.alert.error.opening=Произошла ошибка при открытии архива.
+
+# File Editor #
+
+admin.editor.success=Файл успешно изменен.
+admin.editor.title=Редактор файлов
+admin.editor.sidebar=Редактор
+admin.editor.header=Редактор файлов
+admin.editor.header.themes=Редактор файлов тем
+admin.editor.header.widgets=Редактор файлов виджетов
+admin.editor.header.modules=Редактор файлов модулей
+admin.editor.header.plugins=Редактор файлов плагинов
+admin.editor.file_editing=Редактирование файла "@s"
+admin.editor.files_in_folder=Файлы в папке:
+admin.editor.button.edit_file=Изменить файл
+admin.editor.button.back= ← Назад
+admin.editor.new_file.name=Новый_файл
+
+# μCMS Class #
+
+ucms.template_not_found.message=Шаблон не существует по адресу: @s
+ucms.page_not_found.title=404 страница не найдена
+ucms.page_not_found.message=Ошибка 404: Страница не найдена.
+ucms.remove_dir.error=Удаляемой папки не существует или это файл.
+ucms.template.no_iframe.title=Встраивание запрещено
+ucms.template.no_iframe.message=Встраивание этого сайта запрещено.
+ucms.panic.err404.action.label=<br><b>Action:</b> @s <b>URL:</b> @s<br><br>
+ucms.panic.err404.message.theme=<br>Сообщение об ошибке 404 загружено из файла темы <b>@s:</b><br><br>
+ucms.panic.err404.message.default=<br>Стандартное сообщение об ошибке 404 загружено из файла <b>@s:</b><br><br>
+
+# Admin Text Editor #
+
+admin.text-editor.error.iframe=Пожалуйста, обновите ваш браузер.
+admin.text-editor.read_more.label=Читать далее
+
+admin.text-editor.add_image.header=Добавить изображение
+admin.text-editor.update-images.button=Обновить
+admin.text-editor.add_link.header=Добавить ссылку
+admin.text-editor.add_link.address=Адрес:
+admin.text-editor.add_link.add.button=Добавить
+
+admin.text-editor.title=Заголовок
+admin.text-editor.title.h1=Заголовок 1 &lt;h1&gt;
+admin.text-editor.title.h2=Заголовок 2 &lt;h2&gt;
+admin.text-editor.title.h3=Заголовок 3 &lt;h3&gt;
+admin.text-editor.title.h4=Заголовок 4 &lt;h4&gt;
+admin.text-editor.title.h5=Заголовок 5 &lt;h5&gt;
+admin.text-editor.title.h6=Заголовок 6 &lt;h6&gt;
+
+admin.text-editor.fontsize=Размер текста
+admin.text-editor.fontsize.one=Маленький
+admin.text-editor.fontsize.two=Небольшой
+admin.text-editor.fontsize.three=Нормальный
+admin.text-editor.fontsize.four=Больше среднего
+admin.text-editor.fontsize.five=Большой
+admin.text-editor.fontsize.six=Очень большой
+admin.text-editor.fontsize.seven=Огромный
+
+admin.text-editor.forecolor=Цвет текста
+admin.text-editor.forecolor.red=Красный
+admin.text-editor.forecolor.blue=Синий
+admin.text-editor.forecolor.green=Зеленый
+admin.text-editor.forecolor.white=Белый
+admin.text-editor.forecolor.black=Черный
+admin.text-editor.forecolor.yellow=Желтый
+
+admin.text-editor.backcolor=Цвет фона
+admin.text-editor.backcolor.red=Красный
+admin.text-editor.backcolor.blue=Синий
+admin.text-editor.backcolor.green=Зеленый
+admin.text-editor.backcolor.white=Белый
+admin.text-editor.backcolor.black=Черный
+admin.text-editor.backcolor.yellow=Желтый
+
+admin.text-editor.undo=Отменить
+admin.text-editor.redo=Повторить
+admin.text-editor.cut=Вырезать
+admin.text-editor.copy=Копировать
+admin.text-editor.paste=Вставить
+admin.text-editor.bold=Жирный
+admin.text-editor.italic=Курсив
+admin.text-editor.underline=Подчеркнутый
+admin.text-editor.hyperlink=Вставить ссылку
+admin.text-editor.image=Вставить изображение
+admin.text-editor.justifyleft=Выровнять по левому краю
+admin.text-editor.justifycenter=Выровнять текст по центру
+admin.text-editor.justifyright=Выровнять по правому краю
+admin.text-editor.dottedlist=Вставить список
+admin.text-editor.numberedlist=Вставить нумерованный список
+admin.text-editor.quote=Цитировать
+admin.text-editor.indent=Добавить отступ
+admin.text-editor.outdent=Удалить отступ
+admin.text-editor.clean=Очистить форматирование
+admin.text-editor.more=Добавить ссылку "читать далее" и обрезать пост
+admin.text-editor.html=Показать редактор HTML
+admin.text-editor.visual=Показать визуальный редактор
+
+# Users Min Class #
+
+users_min.login=Пользователь
+users_min.group=Пользователь
+users_min.module_disabled.message=Модуль пользователей отключен.
+
+# Other #
+
+title.user_banned=У вас нет доступа к сайту, вы забанены. — 
+rss_link.title=Лента постов — 
+title.page_num= — Страница 
+timezone.europe=Европа
+timezone.asia=Азия
+timezone.usa=США
+timezone.canada=Канада
+timezone.america=Америка
+timezone.africa=Африка
+timezone.antarctica=Антарктида
+timezone.arctic=Арктика
+timezone.atlantic=Атлантика
+timezone.australia=Австралия
+timezone.indiana=Индиана
+timezone.pacific=Тихоокеанский регион
+timezone.brazil=Бразилия
+timezone.other=Другие
+
+# Templates #
+
+template.login.header=Вход
+template.registration.header=Регистрация
+template.reset_password.header=Восстановление пароля
+template.maintenance.title=Сайт на техобслуживании
+template.maintenance.message=<h2>"@s" на техобслуживании.</h2><br>Администрация приносит свои извинения за неудобства.<br><br><a href="@s/admin">Вход для администраторов</a>

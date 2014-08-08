@@ -1,0 +1,19 @@
+plugin.notifications.name=E-mail уведомления
+plugin.notifications.description=Различные уведомления по e-mail для модулей.
+
+plugin.notifications.comment_added.subject=На сайте был добавлен комментарий
+plugin.notifications.post_added.subject=На сайте был добавлен пост
+plugin.notifications.page_added.subject=На сайте была добавлена страница
+plugin.notifications.user_registered.subject=Был зарегистрирован пользователь @s
+plugin.notifications.user_logged_in.subject=Пользователь @s зашел на сайт
+
+plugin.notifications.comment_added.message.user=Здравствуйте, Администратор. <br>На Вашем сайте "<b>@s</b>" был добавлен комментарий пользователем <a href="@s">@s</a>, @s.<br><br><b>Текст:</b><br><hr>@s<br><hr> <a href="@sadmin/manage.php?module=comments">Удалить или одобрить</a>.
+plugin.notifications.comment_added.message.guest=Здравствуйте, Администратор. <br>На Вашем сайте "<b>@s</b>" был добавлен комментарий гостем @s<br>Email: @s, @s.<br><br><b>Текст:</b><br><hr>@s<br><hr> <a href="@sadmin/manage.php?module=comments">Удалить или одобрить</a>.
+
+plugin.notifications.post_added.message=Здравствуйте, Администратор. <br>На вашем сайте "<b>@s</b>" был добавлен пост, @s.<br><br><b>Название поста:</b> @s<br><br><b>Автор:</b> @s<br><br><b>Группа автора:</b> @s<br><br><b>E-mail:</b> @s<br><br><a href="@sadmin/manage.php?module=posts">Перейти в панель управления</a>.
+
+plugin.notifications.page_added.message=Здравствуйте, Администратор. <br>На вашем сайте "<b>@s</b>" была добавлена страница, @s.<br><br><b>Название страницы:</b> @s<br><br><b>Автор:</b> @s<br><br><b>Группа автора:</b> @s<br><br><b>E-mail:</b> @s<br><br><a href="@sadmin/manage.php?module=pages">Перейти в панель управления</a>.
+
+plugin.notifications.user_registered.message=Здравствуйте, Администратор. <br><br>На вашем сайте "<b>@s</b>" зарегистрировался пользователь, @s.<br><br><b>Логин:</b> @s<br><br><b>E-mail:</b> @s<br>Перейдите по <a href="@sadmin/manage.php?module=users">ссылке</a>, чтобы активировать пользователя.
+
+plugin.notifications.user_logged_in.message=Здравствуйте, Администратор. <br>На ваш сайт "<b>@s</b>", @s, зашел пользователь.<br><br><b>Логин:</b> @s<br><br><b>Группа:</b> @s<br><br><b>E-mail:</b> @s.

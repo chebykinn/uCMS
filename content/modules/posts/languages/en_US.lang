@@ -1,0 +1,153 @@
+module.posts.name=Posts
+module.posts.description=Default uCMS posts module.
+module.posts.admin.title=Posts :: 
+module.posts.admin.categories.title=Categories :: 
+
+module.posts.header.label=Posts
+module.posts.header.categories.label=Categories
+module.posts.header.add_post.label=New Post
+module.posts.header.update_post.label=Edit Post
+module.posts.header.categories.add.label=New Category:
+module.posts.header.categories.update.label=Edit Category:
+module.posts.sidebar.label=Posts
+module.posts.sidebar.categories.label=@Categories
+module.posts.sidebar.settings.label=Posts
+
+module.posts.post.edit.button=Edit
+module.posts.add_post.button=Add Post
+
+module.posts.permission.level_0.label=No access
+module.posts.permission.level_1.label=Read
+module.posts.permission.level_2.label=Add, edit own posts
+module.posts.permission.level_3.label=Delete own posts
+module.posts.permission.level_4.label=Edit any posts, which don't belong to administrators
+module.posts.permission.level_5.label=Delete any posts, which don't belong to administrators
+module.posts.permission.level_6.label=Edit any posts
+module.posts.permission.level_7.label=Delete any posts
+
+module.posts.form.title.label=Title:
+module.posts.form.alias.label=Link to post:
+module.posts.form.editor.label=Post body:
+module.posts.form.keywords.label=Tags:
+module.posts.form.category.label=Category:
+module.posts.form.author.label=Author:
+module.posts.form.date.label=Date:
+module.posts.form.day.placeholder=Day
+module.posts.form.year.placeholder=Year
+module.posts.form.time.label=at
+module.posts.form.pin.label=Pinned:
+module.posts.form.publish.label=Publish:
+module.posts.form.comment.label=Disable comments:
+module.posts.form.add.button=Add Post
+module.posts.form.update.button=Update Post
+
+module.posts.alert.deleted=Post has been successfully deleted.
+module.posts.alert.deleted_multiple=Posts have been successfully deleted.
+module.posts.alert.added=Post has been successfully added.
+module.posts.alert.updated=Post has been successfully updated.
+module.posts.alert.published=Post has been successfully published.
+module.posts.alert.published_multiple=Posts have been successfully published.
+module.posts.alert.drafted=Post has been successfully hidden.
+module.posts.alert.drafted_multiple=Posts have been successfully hidden.
+module.posts.alert.pinned=Post has been successfully pinned.
+module.posts.alert.pinned_multiple=Posts have been successfully pinned.
+
+module.posts.empty_fields.error=You can't leave "Title" or "Post body" empty.
+module.posts.empty_fields.categories.error=You can't leave any empty fields.
+module.posts.adding_post.error=An error occurred while adding post.
+module.posts.updating_post.error=An error occurred while updating post.
+module.posts.deleting_post.error=An error occurred while deleting post.
+module.posts.adding_category.error=An error occurred while adding category.
+module.posts.updating_category.error=An error occurred while updating category.
+module.posts.deleting_category.error=An error occurred while deleting category.
+
+module.posts.lall.label=All Posts
+module.posts.lpublished.label=Published
+module.posts.ldraft.label=Drafts
+module.posts.lpinned.label=Pinned
+module.posts.show.label=Show:
+
+module.posts.selected.label=Selected
+module.posts.selected.publish.label=Publish
+module.posts.selected.pin.label=Pin
+module.posts.selected.draft.label=Hide
+module.posts.selected.delete.label=Delete
+
+module.posts.apply.button=Apply
+
+module.posts.table.header.title=Title
+module.posts.table.header.category=Category
+module.posts.table.header.author=Author
+module.posts.table.header.comments=Comments
+module.posts.table.header.tags=Tags
+module.posts.table.header.status=Status
+module.posts.table.header.date=Date Published
+module.posts.table.header.manage=Manage
+
+module.posts.status.draft=Draft
+module.posts.status.published=Published
+module.posts.status.pinned=Pinned
+module.posts.status.closed_comments=Comments closed
+
+module.posts.actions.edit.label=Edit
+module.posts.actions.delete.label=Delete
+
+module.posts.no_posts.label=There are no posts yet.
+
+module.posts.categories_total.label=Categories total:
+module.posts.selected.recount_posts.label=Recount posts
+module.posts.selected.fix-orphans.label=Fix missing category parent
+module.posts.table.header.name=Name
+module.posts.table.header.alias=Link
+module.posts.table.header.posts_num=Posts
+module.posts.no_categories.label=There are no categories yet.
+
+module.posts.categories.alert.added=Category has been successfully added.
+module.posts.categories.alert.updated=Category has been successfully updated.
+module.posts.categories.alert.updated_multiple=Categories have been successfully updated.
+module.posts.categories.alert.deleted=Category has been successfully deleted.
+module.posts.categories.alert.deleted_multiple=Categories have been successfully deleted.
+
+module.posts.categories.form.name.label=Name:
+module.posts.categories.form.alias.label=Link:
+module.posts.categories.form.parent.label=Parent category:
+module.posts.categories.form.no_parent.option=No parent
+module.posts.categories.form.sort.label=Position:
+module.posts.categories.form.add.button=Add
+module.posts.categories.form.edit.button=Edit
+
+module.posts.more_link.label=Read more
+module.posts.rss.lang=en-us
+
+module.posts.archive.title=Posts archive for @s of @s
+module.posts.no_archive.title=There is no archive for that time
+module.posts.category.title=Posts in category "@s"
+module.posts.no_category.title=There is no such category
+module.posts.tag.title=Posts by tag "@s"
+
+module.posts.settings.header=Posts Settings
+module.posts.settings.post_sef_link.name=Nice links for posts:
+module.posts.settings.post_sef_link.description=Edit nice links for posts, you can add some text or additional information about the post, see <a href="http://ucms.ivan4b.ru/other/sef-links-tags">format</a>.
+module.posts.settings.category_sef_prefix.name=Category link prefix:
+module.posts.settings.category_sef_prefix.description=You can add any text, that will appear before category link, don't leave empty this field.
+module.posts.settings.tag_sef_prefix.name=Tag link prefix:
+module.posts.settings.tag_sef_prefix.description=Exactly the same as for categories.
+module.posts.settings.posts_sort.name=Posts order
+module.posts.settings.posts_sort.description=
+module.posts.settings.posts_sort.desc.option=New first
+module.posts.settings.posts_sort.asc.option=New last
+module.posts.settings.posts_on_page.name=Posts per page:
+module.posts.settings.posts_on_page.description=
+module.posts.settings.posts_notification.name=Notify about new posts
+module.posts.settings.posts_notification.description=
+module.posts.settings.posts_email.name=Email for notifications about new posts:
+module.posts.settings.posts_email.description=
+module.posts.settings.posts_observed_user_groups.name=Notify about new posts for such groups as:
+module.posts.settings.posts_observed_user_groups.description=
+module.posts.settings.edit.button=Apply
+
+module.posts.uncategorized.name=Uncategorized
+module.posts.search.header=<h3>Searching "@s"</h3><br>
+module.posts.search.label=Search
+module.posts.draft.label=Draft
+module.posts.no_tags.label=none
