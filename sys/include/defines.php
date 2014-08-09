@@ -268,23 +268,23 @@ function define_settings(){	//настраиваемые константы
 function site_info($type){
 	switch ($type) {
 		case 'title':
-			echo SITE_TITLE;
+			echo htmlspecialchars(SITE_TITLE);
 		break;
 		
 		case 'description':
-			echo SITE_DESCRIPTION;
+			echo htmlspecialchars(SITE_DESCRIPTION);
 		break;
 
 		case 'name':
-			echo SITE_NAME;
+			echo htmlspecialchars(SITE_NAME);
 		break;
 
 		case 'author':
-			echo SITE_AUTHOR;
+			echo htmlspecialchars(SITE_AUTHOR);
 		break;
 
 		case 'domain':
-			echo SITE_DOMAIN;
+			echo htmlspecialchars(SITE_DOMAIN);
 		break;
 
 		default:
