@@ -43,13 +43,20 @@ if($user->has_access("comments")){
 			case 'update':
 				echo '<h2>'.$ucms->cout("module.comments.header.edit", true).'</h2><br>';
 				if($user->has_access("comments", 3) and $id) update_comment_form($id);
-				break;
+			break;
+
 			case 'delete':
 				if($user->has_access("comments", 3) and $id) delete_comment($id);
-				break;
+			break;
+
 			case 'approve':
 				if($user->has_access("comments", 4) and $id) approve_comment($id);
-				break;
+			break;
+
+			default:
+				header("Location: manage.php?module=comments");
+				exit;
+			break;
 		}
 	}else{
 		if(isset($_POST['update']))

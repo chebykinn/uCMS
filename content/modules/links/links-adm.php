@@ -53,6 +53,11 @@ if(isset($_GET['action'])){
 		case 'delete':
 			if($user->has_access("links", 3) and $id) delete_link($id);
 		break;
+
+		default:
+			header("Location: manage.php?module=links");
+			exit;
+		break;
 	}
 }else{
 	echo "<h2>".$ucms->cout("module.links.header.label", true)."</h2><br>";

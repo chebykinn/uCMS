@@ -30,12 +30,19 @@ if(isset($_GET['action'])){
 			echo "<h2>".$ucms->cout("module.users.groups.header.add.label", true)."</h2><br>";
 			if($user->has_access("users", 6)) add_group_form();
 		break;
+
 		case 'update':
 			echo "<h2>".$ucms->cout("module.users.groups.header.update.label", true)."</h2><br>";
 			if($user->has_access("users", 6) and $id) update_group_form($id);
 		break;
+
 		case 'delete':
 			if($user->has_access("users", 7) and $id) delete_group($id);
+		break;
+
+		default:
+			header("Location: manage.php?module=users&section=groups");
+			exit;
 		break;
 	}
 }else{

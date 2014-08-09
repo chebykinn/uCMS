@@ -96,6 +96,11 @@ if($user->has_access('fileman', 1)){
 				extract_archive();
 			break;
 
+			default:
+				header("Location: manage.php?module=fileman");
+				exit;
+			break;
+
 		}
 	}else{
 		echo "<h2>".$ucms->cout("module.fileman.header", true)."</h2><br>";

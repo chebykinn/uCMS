@@ -55,6 +55,11 @@ if(isset($_GET['action'])){
 		case 'delete':
 			if($user->has_access("pages", 3) and $id) delete_page($id);
 		break;
+
+		default:
+			header("Location: manage.php?module=pages");
+			exit;
+		break;
 	}
 }else{
 	echo '<h2>'.$ucms->cout('module.pages.header', true).'</h2><br>';

@@ -62,6 +62,11 @@ if(isset($_GET['action'])){
 		case 'delete':
 			if($user->has_access("posts", 3) and $id) delete_post($id);
 		break;
+
+		default:
+			header("Location: manage.php?module=posts");
+			exit;
+		break;
 	}
 }else{
 	echo '<h2>'.$ucms->cout("module.posts.header.label", true).'</h2><br>';
