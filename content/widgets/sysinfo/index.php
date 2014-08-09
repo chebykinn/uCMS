@@ -15,11 +15,11 @@ $plugins_count = is_activated_module('plugins') ? $plugin->get_plugins_count() :
 <table class="info">
 	<tr>
 		<td><b><?php $ucms->cout("widget.sysinfo.time"); ?></b></td>
-		<td><?php echo $ucms->date_format(time(), DATE_FORMAT.", ".TIME_FORMAT); ?></td>
+		<td><?php echo htmlspecialchars($ucms->date_format(time(), DATE_FORMAT.", ".TIME_FORMAT)); ?></td>
 	</tr>
 	<tr>
 		<td><b><?php $ucms->cout("widget.sysinfo.login"); ?></b></td>
-		<td><?php echo $user->get_user_login(); ?></td>
+		<td><?php echo htmlspecialchars($user->get_user_login()); ?></td>
 	</tr>
 	<tr>
 		<td><b><?php $ucms->cout("widget.sysinfo.site_name"); ?></b></td>
@@ -35,7 +35,7 @@ $plugins_count = is_activated_module('plugins') ? $plugin->get_plugins_count() :
 	</tr>
 	<tr>
 		<td><b><?php $ucms->cout("widget.sysinfo.themename"); ?></b></td>
-		<td><?php echo THEMENAME; ?></td>
+		<td><?php echo htmlspecialchars(THEMENAME); ?></td>
 	</tr>
 	<tr>
 		<td><b><?php $ucms->cout("widget.sysinfo.site_domain"); ?></b></td>
