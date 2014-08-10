@@ -39,10 +39,18 @@ function manage_widgets(){
 
 				case 3:
 					if($user->has_access("widgets", 4)){
+						$c = 0;
 						foreach ($items as $id) {
-							delete_widget($id, false);
+							$del = delete_widget($id, false);
+							if($del) $c++;
 						}
-						header("Location: ".UCMS_DIR."/admin/manage.php?module=widgets&alert=deleted_multiple");
+						if($c > 0){
+							header("Location: ".UCMS_DIR."/admin/manage.php?module=widgets&alert=deleted_multiple");
+						}
+						else{
+							header("Location: ".UCMS_DIR."/admin/manage.php?module=widgets");
+						}
+
 					}
 				break;
 				
@@ -177,6 +185,8 @@ function delete_widget($id, $notify = true){
 		}else{
 			header("Location: ".UCMS_DIR."/admin/manage.php?module=widgets");
 		}
+	}else{
+		return false;
 	}
 }
 

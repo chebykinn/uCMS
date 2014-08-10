@@ -1,7 +1,7 @@
 <?php
 $modules = get_modules();
 
-if($modules){
+if(!empty($modules) and is_array($modules)){
 	for ($module_itor = 0; $module_itor < count($modules); $module_itor++) { 
 		if($modules[$module_itor]['activated']){
 			$ucms->set_language(ABSPATH.MODULES_PATH.$modules[$module_itor]['dir'].'/languages/'.SYSTEM_LANGUAGE.'.lang');
@@ -19,6 +19,4 @@ if($modules){
 		} 
 	}
 }
-
-
 ?>
