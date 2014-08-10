@@ -40,9 +40,15 @@ function manage_plugins(){
 
 				case 3:
 					$event->do_actions("plugin.before.deleted_multiple", $items);
+					$plugins = $activated_plugins;
 					foreach ($items as $id) {
+						if($plugin->is_activated_plugin($id)){
+							$key = array_search($id, $activated_plugins);
+							unset($plugins[$key]);
+						}
 						delete_plugin($id, false);
 					}
+					$upd = $ucms->update_setting("activated_plugins", implode(",", $plugins));
 					header("Location: ".UCMS_DIR."/admin/manage.php?module=plugins&alert=deleted_multiple".(isset($_GET['show_all']) ? "&show_all" : ""));
 				break;
 				
@@ -189,7 +195,6 @@ function delete_plugin($id, $notify = true){
 	$default_plugins = $plugin->get_default_plugins();
 	if(!in_array($id, $default_plugins)){
 		if($plugin->is_plugin($id)){
-			deactivate_plugin($id);
 			$ucms->remove_dir(ABSPATH.PLUGINS_PATH.$id);
 			$event->do_actions("plugin.deleted");
 			if($notify){
@@ -208,8 +213,8 @@ function activate_plugin($id, $notify = true){
 		global $udb, $plugin, $ucms, $event;
 		$plugins = $plugin->get_activated_plugins();
 		if(!$plugin->is_activated_plugin($id)){
-				$plugins[] = $id;
-				$upd = $ucms->update_setting("activated_plugins", implode(",", $plugins));
+			$plugins[] = $id;
+			$upd = $ucms->update_setting("activated_plugins", implode(",", $plugins));
 			$event->do_actions("plugin.activated", array($id));
 			if($notify){
 				if($upd){
@@ -230,8 +235,8 @@ function deactivate_plugin($id, $notify = true){
 		return false;
 	}else{
 		global $udb, $plugin, $ucms, $event;
-		$plugins = $plugin->get_activated_plugins();
-		if($plugin->is_plugin($id)){
+		if($plugin->is_activated_plugin($id)){
+			$plugins = $plugin->get_activated_plugins();
 			$key = array_search($id, $plugins);
 			$name = $plugins[$key];
 			unset($plugins[$key]);
@@ -244,7 +249,9 @@ function deactivate_plugin($id, $notify = true){
 					echo "<div class=\"error\">".$ucms->cout("module.plugins.error.unknown.label", true)."</div>";
 			}
 		}else{
-			header("Location: ".UCMS_DIR."/admin/manage.php?module=plugins".(isset($_GET['show_all']) ? "&show_all" : ""));
+			if($notify){
+				header("Location: ".UCMS_DIR."/admin/manage.php?module=plugins".(isset($_GET['show_all']) ? "&show_all" : ""));
+			}
 		}
 	}
 }

@@ -61,7 +61,10 @@ if($user->has_access("plugins", 1)){
 				if($id and $user->has_access("plugins", 3)) deactivate_plugin($id);
 			break;
 			case 'delete':
-				if($id and $user->has_access("plugins", 4)) delete_plugin($id);
+				if($id and $user->has_access("plugins", 4)) {
+					deactivate_plugin($id, false);
+					delete_plugin($id);
+				}
 			break;
 		}
 	}
