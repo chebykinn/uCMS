@@ -235,7 +235,7 @@ function do_update($p){
 			}
 		}
 		$ucms->remove_dir(ABSPATH."admin/update");
-		header("Location: ".SITE_DOMAIN.'/'.UCMS_DIR."admin/update.php?alert=success");
+		header("Location: ".SITE_DOMAIN.UCMS_DIR."/admin/update.php?alert=success");
 		return true;
 	}
 	return false;
