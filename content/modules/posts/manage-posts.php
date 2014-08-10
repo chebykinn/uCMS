@@ -33,7 +33,7 @@
 		}
 	}
 
-	function category_posts_number($type, $id){
+	function category_posts_amount($type, $id){
 		global $udb;
 		if($type == "add"){
 			$udb->query("UPDATE `".UC_PREFIX."categories` SET `posts` = `posts` + 1 WHERE `id` = '$id'");
@@ -42,7 +42,7 @@
 		}
 		$parent_id = $udb->get_val("SELECT `parent` FROM `".UC_PREFIX."categories` WHERE `id` = '$id'");
 		if( (int) $parent_id != 0 ){
-			category_posts_number($type, $parent_id);
+			category_posts_amount($type, $parent_id);
 		}
 	}
 
@@ -96,7 +96,7 @@
 				$alias .= "-$i";
 			}
 			if($publish > 0){
-				category_posts_number("add", $category);
+				category_posts_amount("add", $category);
 			}
 			$sql = "INSERT INTO `".UC_PREFIX."posts` (`id`, `title`, `body`, `keywords`, `publish`, `alias`, `author`, `category`, `comments`, `date`) 
 			VALUES (null, '$title','$body', '$keywords', '$publish', '$alias', '$author', '$category', '$comment', '$date')";
@@ -504,8 +504,8 @@
 				if($test['publish'] == 0 and $publish >= 1) $udb->query("UPDATE `".UC_PREFIX."categories` SET `posts` = `posts` + 1 WHERE `id` = '$category'");
 				else if($test['publish'] > 0 and $publish == 0) $udb->query("UPDATE `".UC_PREFIX."categories` SET `posts` = `posts` - 1 WHERE `id` = '$category'");
 				if($test['category'] != $category and $test['publish'] > 0){
-					category_posts_number("add", $category);
-					category_posts_number("delete", $test['category']);
+					category_posts_amount("add", $category);
+					category_posts_amount("delete", $test['category']);
 				}
 				if($comment > -1){
 					$comment = $udb->num_rows("SELECT `id` FROM `".UC_PREFIX."comments` WHERE `post` = '$id'");
