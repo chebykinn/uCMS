@@ -139,7 +139,7 @@ function manage_themes(){
 }
 
 function delete_theme($id, $alert = true){
-	global $udb, $ucms, $theme;
+	global $udb, $ucms, $theme, $event;
 	if(!$id){
 		return false; 
 	}
@@ -147,8 +147,8 @@ function delete_theme($id, $alert = true){
 		if($theme->is_theme($id)){
 			$ucms->remove_dir(ABSPATH.UC_THEMES_PATH.$id);
 			if(THEMEDIR == $id){
-				$ucms->update_setting("themedir", UC_DEFAULT_THEME_NAME);
-				$ucms->update_setting("themename", UC_DEFAULT_THEME_DIR);
+				$ucms->update_setting("themedir", UC_DEFAULT_THEME_DIR);
+				$ucms->update_setting("themename", UC_DEFAULT_THEME_NAME);
 			}
 			$event->do_actions("theme.deleted");
 			if($alert)
