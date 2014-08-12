@@ -21,7 +21,11 @@
 						if($name and is_activated_module($dir)){
 							echo "<tr>";
 							$module_path = ABSPATH.MODULES_PATH.$dir;
-							$ucms->set_language($module_path.'/languages/'.SYSTEM_LANGUAGE.'.lang');
+							if(SYSTEM_LANGUAGE != 'en_US' and file_exists($module_path.'/languages/'.SYSTEM_LANGUAGE.'.lang')){
+								$ucms->set_language($module_path.'/languages/'.SYSTEM_LANGUAGE.'.lang');
+							}else{
+								$ucms->set_language($module_path.'/languages/en_US.lang');
+							}
 							echo "<td><b>$name</b></td>";
 							echo "<td><select name=\"permissions[]\">";
 							for($level = 0; $level < MAX_PERMISSION_LEVEL+1; $level++){
@@ -101,7 +105,11 @@
 						if($name and is_activated_module($dir)){
 							echo "<tr>";
 							$module_path = ABSPATH.MODULES_PATH.$dir;
-							$ucms->set_language($module_path.'/languages/'.SYSTEM_LANGUAGE.'.lang');
+							if(SYSTEM_LANGUAGE != 'en_US' and file_exists($module_path.'/languages/'.SYSTEM_LANGUAGE.'.lang')){
+								$ucms->set_language($module_path.'/languages/'.SYSTEM_LANGUAGE.'.lang');
+							}else{
+								$ucms->set_language($module_path.'/languages/en_US.lang');
+							}
 							echo "<td><b>$name</b></td>";
 							echo "<td><select name=\"permissions[]\">";
 							for($level = 0; $level < MAX_PERMISSION_LEVEL+1; $level++){
@@ -296,7 +304,11 @@
 			if($name and is_activated_module($dir)){
 				echo "<br><b>$name</b><br>";
 				$module_path = ABSPATH.MODULES_PATH.$dir;
-				$ucms->set_language($module_path.'/languages/'.SYSTEM_LANGUAGE.'.lang');
+				if(SYSTEM_LANGUAGE != 'en_US' and file_exists($module_path.'/languages/'.SYSTEM_LANGUAGE.'.lang')){
+					$ucms->set_language($module_path.'/languages/'.SYSTEM_LANGUAGE.'.lang');
+				}else{
+					$ucms->set_language($module_path.'/languages/en_US.lang');
+				}
 				if($ucms->is_language_string_id("module.$dir.permission.level_$level.label")){
 					$ucms->cout("module.$dir.permission.level_$level.label");
 				}
