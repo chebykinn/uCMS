@@ -201,8 +201,6 @@ if(isset($_GET['action'])) {
 							$status = 0;
 					}
 
-					$hotfix = $udb->query("UPDATE `".UC_PREFIX."settings` SET `name` = 'cron_schedule' WHERE `name` = 'cron_shedule'", true);
-
 					if(preg_match("/\/admin\/update.php/", $_SERVER["HTTP_REFERER"]))
 						$status = 2;
 					switch ($status) {
