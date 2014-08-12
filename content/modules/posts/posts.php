@@ -38,12 +38,12 @@ if(!isset($no_query)){
 
 			if($pinned and count($pinned) > 0){ 
 				$pinned_count = count($pinned);
-				$pinned_list = array();
-				$pinned_posts_started = false;
 			}else{
 				$pinned_count = 0;
 				$pinned = array();
 			}
+			$pinned_posts_started = false;
+			$pinned_list = array();
 			$posts = array_merge($pinned, $posts);
 			$posts_count += $pinned_count;
 		}else{
