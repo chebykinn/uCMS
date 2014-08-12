@@ -287,7 +287,7 @@ function update_available($type = ''){
 			return true;
 		}
 	}else{
-		if(!is_activated_module($type)) return false;
+		if(!is_activated_module($type) and ($type == 'modules' AND !MODULES_ENABLED)) return false;
 		switch ($type) {
 			case 'themes':
 				global $theme;
