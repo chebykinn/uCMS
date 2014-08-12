@@ -58,10 +58,24 @@ if(isset($_GET['alert'])){
 			switch ($action) {
 				case 'activate':
 					if($id) activate_module($id);
-					break;
+				break;
+
 				case 'delete':
-					if($id) delete_module($id);
-					break;
+					if(!empty($id)){
+						$modules = get_activated_modules();
+						if(is_activated_module($id)){
+							$key = array_search($id, $modules);
+							unset($modules[$key]);
+							$upd = $ucms->update_setting("activated_modules", implode(",", $modules));
+						}
+						delete_module($id);
+					}
+				break;
+
+				default:
+					header("Location: modules.php");
+					exit;
+				break; 
 			}
 		}
 		echo "<br><br>";

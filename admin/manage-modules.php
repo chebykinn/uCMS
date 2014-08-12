@@ -38,9 +38,15 @@ function manage_modules(){
 				break;
 
 				case 3:
+					$modules = $activated_modules;
 					foreach ($items as $id) {
-						delete_module($id);
+						if(is_activated_module($id)){
+							$key = array_search($id, $activated_modules);
+							unset($modules[$key]);
+						}
+						delete_module($id, false);
 					}
+					$upd = $ucms->update_setting("activated_modules", implode(",", $modules));
 					if(!isset($_SESSION['no_del'])){
 						if (count($items) > 1) {
 							header("Location: ".UCMS_DIR."/admin/modules.php?alert=deleted_multiple".(isset($_GET['show_all']) ? "&show_all" : ""));
@@ -169,20 +175,15 @@ function manage_modules(){
 		echo '</table></form>';
 }
 
-function delete_module($id){
+function delete_module($id, $notify = true){
 	global $udb, $ucms;
 	if(!$id || !is_module($id)){
 		return false; 
 	}
 	if(!in_array($id, get_default_modules())){
 		$ucms->remove_dir(ABSPATH.MODULES_PATH.$id);
-		$modules = get_activated_modules();
-		if(is_activated_module($id)){
-			$key = array_search($id, $modules);
-			unset($modules[$key]);
-			$upd = $ucms->update_setting("activated_modules", implode(",", $modules));
-		}
-		header("Location: ".UCMS_DIR."/admin/modules.php?alert=deleted".(isset($_GET['show_all']) ? "&show_all" : ""));
+		if(!$notify)
+			header("Location: ".UCMS_DIR."/admin/modules.php?alert=deleted".(isset($_GET['show_all']) ? "&show_all" : ""));
 	}
 }
 
