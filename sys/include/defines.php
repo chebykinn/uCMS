@@ -31,7 +31,7 @@ $uc_tables = array(			// Complete list of tables for current version of uCMS
 function init_constants(){
 
 	if(!defined("UCMS_VERSION")){
-		define("UCMS_VERSION", "1.3 Beta 9");						// uCMS version
+		define("UCMS_VERSION", "1.3 Beta 9 Hotfix");						// uCMS version
 	}
 
 	if(!defined("UCMS_MIN_PHP_VERSION")){							
