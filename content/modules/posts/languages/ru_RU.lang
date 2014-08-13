@@ -144,6 +144,10 @@ module.posts.settings.posts_email.name=Email для уведомления о д
 module.posts.settings.posts_email.description=
 module.posts.settings.posts_observed_user_groups.name=Уведомлять о добавленных постах группами:
 module.posts.settings.posts_observed_user_groups.description=
+module.posts.settings.posts_theme_file.name=Файл темы для показа списка постов:
+module.posts.settings.posts_theme_file.description=Файл и ссылка, по которой будут показываться посты, <a href="http://ucms.ivan4b.ru/other/posts-theme-file">подробнее.</a>
+module.posts.settings.posts_list_title.name=Заголовок страницы с постами:
+module.posts.settings.posts_list_title.description=Заголовок страницы, на которой будут показываться посты, <a href="http://ucms.ivan4b.ru/other/posts-theme-file">подробнее.</a>
 module.posts.settings.edit.button=Применить
 
 module.posts.uncategorized.name=Без категории

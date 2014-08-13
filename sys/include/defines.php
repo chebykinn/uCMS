@@ -149,7 +149,7 @@ function init_constants(){
 	}
 
 	if (!defined("SETTINGS_NUM")){
-		define("SETTINGS_NUM", 68);									// Default number of settings
+		define("SETTINGS_NUM", 70);									// Default number of settings
 	}
 
 	if (!defined("UCMS_SITE_URL")){

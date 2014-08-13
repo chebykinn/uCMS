@@ -1,7 +1,6 @@
 <?php
 $cat_select = '';
 $page = get_current_page();
-
 if(!NICE_LINKS){
 	if(isset($_GET['p']) and $_GET['p'] > 0){
 		$action = 'pages';
@@ -37,6 +36,10 @@ if(!NICE_LINKS){
 		}
 	}
 }else{
+	$is_post_page = false;
+	if(POSTS_THEME_FILE != 'index' and is_url_key(2)){
+		$is_post_page = true;
+	}
 	if(in_url(CATEGORY_SEF_PREFIX)){
 		$category = $udb->parse_value(get_url_action_value(CATEGORY_SEF_PREFIX, 0));
 		$cat = $udb->get_row("SELECT `id`,`name` FROM `".UC_PREFIX."categories` WHERE `alias` = '$category' AND `posts` > 0");
@@ -50,7 +53,7 @@ if(!NICE_LINKS){
 			$category_name = '';
 		}
 		$cat_select = "AND `p`.`category` = '$category'";
-	}elseif(!empty($action) and ($action == 'other' || !in_array($action, $url_actions))){
+	}elseif(!empty($action) and ($is_post_page || $action == 'other' || !in_array($action, $url_actions))){
 		$post_alias = $udb->parse_value(urldecode($url));
 		$post_alias = mb_substr($post_alias, 1, mb_strlen($post_alias, "UTF-8"), "UTF-8");
 		$sources = explode("/", POST_SEF_LINK);
@@ -82,7 +85,6 @@ if(!NICE_LINKS){
 			}
 			$i++;
 		}
-
 		if(!isset($post_page)) $post_page = false;
 		if(!$post_page){
 			if(PAGE_SEF_PREFIX == "" and !get_url_action_value('page', false)){
@@ -90,7 +92,7 @@ if(!NICE_LINKS){
 				exit;
 			}else{
 				if(in_url('page')){
-					$action = 'index';
+					$action = POSTS_THEME_FILE;
 				}else{
 					$ucms->panic(404);
 				}
@@ -139,5 +141,9 @@ if(is_activated_module('pages'))
 //if(POSTS_MODULE)
 	require_once POSTS_MODULE_PATH.'posts.php';
 
-require $theme->get_path().'index.php';
+if($action != 'index'){
+	add_title(POSTS_THEME_FILE, POSTS_LIST_TITLE);
+}
+
+require $theme->get_path().POSTS_THEME_FILE.'.php';
 ?>

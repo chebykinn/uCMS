@@ -23,6 +23,18 @@
 		</tr>
 		<?php } ?>
 		<tr>
+		<td><?php $ucms->cout("module.posts.settings.posts_theme_file.name"); ?></td>
+		<td><input type="text" name="posts_theme_file" value="<?php echo POSTS_THEME_FILE ?>"></td>
+		<td><?php $ucms->cout("module.posts.settings.posts_theme_file.description"); ?></td>
+		</tr>
+		<?php if(POSTS_THEME_FILE != 'index'){ ?>
+		<tr>
+		<td><?php $ucms->cout("module.posts.settings.posts_list_title.name"); ?></td>
+		<td><input type="text" name="posts_list_title" value="<?php echo POSTS_LIST_TITLE ?>"></td>
+		<td><?php $ucms->cout("module.posts.settings.posts_list_title.description"); ?></td>
+		</tr>
+		<?php } ?>
+		</tr>
 		<tr>
 			<td><?php $ucms->cout("module.posts.settings.posts_sort.name"); ?></td>
 			<td><select name="posts_sort">
@@ -31,6 +43,7 @@
 			</select></td>
 			<td><?php $ucms->cout("module.posts.settings.posts_sort.description"); ?></td>
 		</tr>
+		<tr>
 		<td><?php $ucms->cout("module.posts.settings.posts_on_page.name"); ?></td>
 		<td><input type="number" name="posts_on_page" min="1" value="<?php echo POSTS_ON_PAGE; ?>"></td>
 		<td><?php $ucms->cout("module.posts.settings.posts_on_page.description"); ?></td>

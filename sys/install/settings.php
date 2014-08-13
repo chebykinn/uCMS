@@ -69,6 +69,8 @@ $default_settings_array = array(
 64 => array("name" => "login_max_size",                "value" => "20",                         "owner" => "m:users"),
 65 => array("name" => "password_min_size",             "value" => "6",                          "owner" => "m:users"),
 66 => array("name" => "password_max_size",             "value" => "20",                         "owner" => "m:users"),
-67 => array("name" => "allow_nicknames",               "value" => "1",                          "owner" => "m:users")
+67 => array("name" => "allow_nicknames",               "value" => "1",                          "owner" => "m:users"),
+68 => array("name" => "posts_theme_file",              "value" => "index",                      "owner" => "m:posts"),
+69 => array("name" => "posts_list_title",              "value" => "",                           "owner" => "m:posts")
 );
 ?>

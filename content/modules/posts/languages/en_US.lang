@@ -144,6 +144,10 @@ module.posts.settings.posts_email.name=Email for notifications about new posts:
 module.posts.settings.posts_email.description=
 module.posts.settings.posts_observed_user_groups.name=Notify about new posts for such groups as:
 module.posts.settings.posts_observed_user_groups.description=
+module.posts.settings.posts_theme_file.name=Theme file to list your posts:
+module.posts.settings.posts_theme_file.description=File and URL-link, where your posts will be listed, <a href="http://ucms.ivan4b.ru/other/posts-theme-file">more info.</a>
+module.posts.settings.posts_list_title.name=Posts page title:
+module.posts.settings.posts_list_title.description=Title of a page with posts list, which you've selected above, <a href="http://ucms.ivan4b.ru/other/posts-theme-file">more info.</a>
 module.posts.settings.edit.button=Apply
 
 module.posts.uncategorized.name=Uncategorized

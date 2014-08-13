@@ -1,5 +1,5 @@
 <?php
-add_url_action("index", POSTS_MODULE_PATH, 'posts-load.php');
+add_url_action(POSTS_THEME_FILE, POSTS_MODULE_PATH, 'posts-load.php');
 add_url_action("category", POSTS_MODULE_PATH, 'posts-load.php');
 add_url_action("archive", POSTS_MODULE_PATH);
 add_url_action("rss", POSTS_MODULE_PATH, 'rss.php');
