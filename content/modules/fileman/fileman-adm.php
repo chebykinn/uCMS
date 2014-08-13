@@ -1,5 +1,6 @@
 <?php
 include get_module("path", $module_accessID).'manage-files.php';
+if(!is_dir(ABSPATH.UPLOADS_PATH)) mkdir(ABSPATH.UPLOADS_PATH);
 if(isset($_GET['alert'])){
 	switch ($_GET['alert']) {
 		case 'deleted':
