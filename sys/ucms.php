@@ -25,7 +25,7 @@ class uCMS{
 						$value = $udb->parse_value($values[$key."_default"]);
 					}
 				}
-				$value = htmlspecialchars($value);
+				$value = strip_tags($value);
 				switch ($key) {
 					case 'nice_links':
 						$nice_links = $value;
