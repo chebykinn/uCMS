@@ -22,7 +22,7 @@ include $theme->get_path().'nav.php';
 		</div> 
 	<?php
 	else:
-		if($user->has_access(3, 1))
+		if($user->has_access("pages", 1))
 			echo '<div class="warning">'.$ucms->cout("theme.ucms.no_page.label", true).'</div>';
 		else
 			echo '<div class="error">'.$ucms->cout("theme.ucms.no_access.label", true).'</div>';
