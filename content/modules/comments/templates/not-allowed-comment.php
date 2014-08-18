@@ -1,6 +1,7 @@
+<!DOCTYPE html>
 <html>
 <head>
-<meta charset="utf8">
+<meta charset="utf-8">
 <title><?php $ucms->cout("module.comments.template.not-allowed-comment.header"); ?></title>
 </head>
 <body>

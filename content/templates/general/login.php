@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="utf8">
+<meta charset="utf-8">
 <title><?php title(); ?></title>
 </head>
 <body>
@@ -58,6 +58,16 @@ input[type=password]{
 	border: 1px #D93030 solid;
 	width: 500px;
 	background: #E6A3A3;
+	color: #000;
+	padding: 10px;
+	margin: 0 auto;
+}
+
+.success{
+	border-radius: 2px;
+	border: 1px #168A24 solid;
+	width: 500px;
+	background: #74D96F;
 	color: #000;
 	padding: 10px;
 	margin: 0 auto;
