@@ -83,7 +83,7 @@ if(!isset($install)){
 	require ABSPATH.UC_INCLUDES_PATH."modules_autoload.php"; // Loading modules
 
 	if(UC_CRON)
-		run_sheduled_events(); // Run cron events
+		run_scheduled_events(); // Run cron events
 
 	$event->do_actions("site.loaded");
 }

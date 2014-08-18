@@ -18,65 +18,65 @@ function time_sort($a, $b){
 }
 
 /**
-* Take cron shedule from settings table
+* Take cron schedule from settings table
 * @version 1.3
 * @since 1.3
 * @return array
 *
 */
-function get_cron_shedule(){
+function get_cron_schedule(){
 	global $ucms;
-	$cron = $ucms->get_setting_value('cron_shedule');
+	$cron = $ucms->get_setting_value('cron_schedule');
 	if(!empty($cron)){
 		return unserialize($cron);
 	}else return array();
 }
 
 /**
-* Update cron shedule in settings table
+* Update cron schedule in settings table
 * @version 1.3
 * @since 1.3
 * @return bool
 *
 */
-function update_cron_shedule($cron){
+function update_cron_schedule($cron){
 	global $ucms;
-	return $ucms->update_setting('cron_shedule', serialize($cron));
+	return $ucms->update_setting('cron_schedule', serialize($cron));
 }
 
 /**
-* Clear cron shedule in settings table
+* Clear cron schedule in settings table
 * @version 1.3
 * @since 1.3
 * @return bool
 *
 */
-function clear_cron_shedule(){
+function clear_cron_schedule(){
 	global $ucms;
-	return $ucms->update_setting('cron_shedule', '');
+	return $ucms->update_setting('cron_schedule', '');
 }
 
 /**
-* Check if function is in cron shedule
+* Check if function is in cron schedule
 * @version 1.3
 * @since 1.3
 * @return bool
 *
 */
-function is_sheduled_cron_event($handler){
-	$cron = get_cron_shedule();
-	return !empty($cron[$handler]);
+function is_scheduled_cron_event($key){
+	$cron = get_cron_schedule();
+	return !empty($cron[$key]);
 }
 
 /**
-* Shedule cron event
+* schedule cron event
 * @version 1.3
 * @since 1.3
 * @return bool
 *
 */
-function shedule_cron_event($timestamp, $period, $handler, $args = array()){
-	$cron = get_cron_shedule();
+function schedule_cron_event($key, $timestamp, $period, $handler, $args = array()){
+	$cron = get_cron_schedule();
 	$periods = get_periods();
 
 	if(!isset($periods[$period]) && (int) $period === 0)
@@ -88,43 +88,43 @@ function shedule_cron_event($timestamp, $period, $handler, $args = array()){
 		$p = $periods[$period];
 	}
 
-	$cron[$handler] = array('args' => $args, 'timestamp' => $timestamp, 'period' => $p);
+	$cron[$key] = array('handler' => $handler, 'args' => $args, 'timestamp' => $timestamp, 'period' => $p);
 	uasort($cron, 'time_sort');
 
-	return update_cron_shedule($cron);
+	return update_cron_schedule($cron);
 	
 }
 
 /**
-* Change the time of deploying for sheduled function
+* Change the time of deploying for scheduled function
 * @version 1.3
 * @since 1.3
 * @return bool
 *
 */
-function reshedule_cron_event($timestamp, $handler){
-	$cron = get_cron_shedule();
+function reschedule_cron_event($timestamp, $key){
+	$cron = get_cron_schedule();
 
-	$cron[$handler]['timestamp'] = $timestamp;
+	$cron[$key]['timestamp'] = $timestamp;
 	uasort($cron, 'time_sort');
 
-	return update_cron_shedule($cron);
+	return update_cron_schedule($cron);
 	
 }
 
 /**
-* Remove function from shedule
+* Remove function from schedule
 * @version 1.3
 * @since 1.3
 * @return bool
 *
 */
-function unshedule_cron_event($handler){
-	$cron = get_cron_shedule();
+function unschedule_cron_event($key){
+	$cron = get_cron_schedule();
 
-	unset($cron[$handler]);
+	unset($cron[$key]);
 
-	return update_cron_shedule($cron);
+	return update_cron_schedule($cron);
 	
 }
 
@@ -146,27 +146,27 @@ function get_periods(){
 }
 
 /**
-* Run all the sheduled events at specified time
+* Run all the scheduled events at specified time
 * @version 1.3
 * @since 1.3
 * @return nothing
 *
 */
-function run_sheduled_events(){
+function run_scheduled_events(){
 	global $cron_lock;
-	$cron = get_cron_shedule();
+	$cron = get_cron_schedule();
 	$time = time();
-	foreach ($cron as $handler => $data) {
+	foreach ($cron as $key => $data) {
 		if($data["timestamp"] > $time)
 			break;
 
-		call_user_func_array($handler, $data["args"]);
+		call_user_func_array($data["handler"] , $data["args"]);
 
 		if($data['period'] != 0){
-			reshedule_cron_event(time()+$data['period'], $handler);
+			reschedule_cron_event(time()+$data['period'], $key);
 		}
 		else{
-			unshedule_cron_event($handler);
+			unschedule_cron_event($key);
 		}
 		if(!empty($cron_lock) and $cron_lock != $ucms->get_setting_value('cron_lock'))
 			break;

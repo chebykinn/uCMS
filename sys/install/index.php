@@ -201,8 +201,9 @@ if(isset($_GET['action'])) {
 							$status = 0;
 					}
 
-					if(preg_match("/\/admin\/update.php/", $_SERVER["HTTP_REFERER"]))
+					if(preg_match("/\/admin\/update.php/", $_SERVER["HTTP_REFERER"])){
 						$status = 2;
+					}
 					switch ($status) {
 						case 0:
 							add_data();
@@ -219,6 +220,7 @@ if(isset($_GET['action'])) {
 							fclose($log);
 							delete_tables();
 							updated();
+							clear_cron_schedule();
 							$maintenance = $udb->query("UPDATE `".UC_PREFIX."settings` SET `value` = '0' WHERE `name` = 'ucms_maintenance'", true);
 							if(isset($_SESSION['modules_enabled'])){
 								$udb->query("UPDATE `".UC_PREFIX."settings` SET `value` = '1' WHERE `name` = 'modules_enabled'", true);

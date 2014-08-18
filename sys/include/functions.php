@@ -180,8 +180,8 @@ function rss_link(){
  *
 */
 function loaded(){
-	if(!is_sheduled_cron_event('check_ucms_update'))
-		shedule_cron_event(time(), 'daily', 'check_ucms_update');
+	if(!is_scheduled_cron_event('check_ucms_update'))
+		schedule_cron_event('check_ucms_update', time(), 'daily', 'check_ucms_update');
 }
 
 /**

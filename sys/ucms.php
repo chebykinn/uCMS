@@ -148,7 +148,7 @@ class uCMS{
 			$owner = "m:".$module_accessID;
 		}
 		$owner = preg_match('#(admin/settings.php)#', $_SERVER['PHP_SELF']) ? $setting_owner : $owner;
-		if($owner == $setting_owner){
+		if($owner == $setting_owner or $setting_owner == 'all'){
 			$upd = $udb->query("UPDATE `".UC_PREFIX."settings` SET `value` = '$value', `update` = NOW() WHERE `name` = '$name'");
 			return $upd;
 		}

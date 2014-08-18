@@ -18,8 +18,8 @@ function update_visitors_count(){
 	$ucms->update_setting("visitors_count", $visitors_count);
 }
 
-if(!is_sheduled_cron_event('update_visitors_count'))
-	shedule_cron_event(time(), MINUTE_IN_SECONDS * 10, 'update_visitors_count');
+if(!is_scheduled_cron_event('update_visitors_count'))
+	schedule_cron_event('update_visitors_count', time(), MINUTE_IN_SECONDS * 10, 'update_visitors_count');
 
 $user->guest();
 

@@ -62,7 +62,7 @@ $default_settings_array = array(
 57 => array("name" => "tree_comments",                 "value" => "1",                          "owner" => "m:comments"),
 58 => array("name" => "comments_notification",         "value" => "1",                          "owner" => "m:comments"),
 59 => array("name" => "embedding_allowed",             "value" => "0",                          "owner" => "system"),
-60 => array("name" => "cron_schedule",                 "value" => "",                           "owner" => "system"),
+60 => array("name" => "cron_schedule",                 "value" => "",                           "owner" => "all"),
 61 => array("name" => "cron_lock",                     "value" => "",                           "owner" => "system"),
 62 => array("name" => "login_min_size",                "value" => "4",                          "owner" => "m:users"),
 63 => array("name" => "default_search_module",         "value" => "posts",                      "owner" => "m:search"),

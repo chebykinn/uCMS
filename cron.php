@@ -28,7 +28,7 @@ if(!defined(ABSPATH)){
 
 $time = time();
 
-if(empty(get_cron_shedule()))
+if(empty(get_cron_schedule()))
 	exit;
 
 $temp_cron_lock = $ucms->get_setting_value('cron_lock');
@@ -44,19 +44,19 @@ if(empty($cron_lock)){
 	}
 }
 
-$cron = get_cron_shedule();
-foreach ($cron as $handler => $data) {
+$cron = get_cron_schedule();
+foreach ($cron as $key => $data) {
 
 	if($data["timestamp"] > $time)
 		break;
 
-	call_user_func_array($handler, $data["args"]);
+	call_user_func_array($data["handler"], $data["args"]);
 
 	if($data['period'] != 0){
-		reshedule_cron_event(time()+$data['period'], $handler);
+		reschedule_cron_event(time()+$data['period'], $key);
 	}
 	else{
-		unshedule_cron_event($handler);
+		unschedule_cron_event($key);
 	}
 
 	if($cron_lock != $ucms->get_setting_value('cron_lock'))
