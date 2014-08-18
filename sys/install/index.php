@@ -220,6 +220,7 @@ if(isset($_GET['action'])) {
 							fclose($log);
 							delete_tables();
 							updated();
+							include ABSPATH.UC_INCLUDES_PATH.'cron.php';
 							clear_cron_schedule();
 							$maintenance = $udb->query("UPDATE `".UC_PREFIX."settings` SET `value` = '0' WHERE `name` = 'ucms_maintenance'", true);
 							if(isset($_SESSION['modules_enabled'])){
