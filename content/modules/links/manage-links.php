@@ -222,7 +222,7 @@ function update_link_form($id){
 
 
 function add_link($p){
-	global $udb, $user, $event;
+	global $udb, $user, $event, $ucms;
 	$title = $udb->parse_value($p['title']);
 	$description = $udb->parse_value($p['body']);
 	$author = $user->get_user_id($udb->parse_value($p['author']));
