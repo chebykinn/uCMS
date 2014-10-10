@@ -18,11 +18,15 @@ $login_link = NICE_LINKS ? UCMS_DIR.'/login' : UCMS_DIR.'/?action=login';
 			<tr>
 				<td><button type="submit" name="submit" class="ubutton"><?php $ucms->cout("module.users.form.login.button") ?></button></td>
 			</tr>
-			<?php if(ALLOW_REGISTRATION){ ?><tr>
-				<td><a href="<?php echo $register_link; ?>"><?php $ucms->cout("module.users.form.login.register.link") ?></a></td> 
-			</tr><?php } ?>
-			<tr>
-				<td><a href="<?php echo $reset_link; ?>"><?php $ucms->cout("module.users.form.login.reset.link") ?></a> 
-			</tr>
+			<?php 
+			if(!UCMS_MAINTENANCE){
+				if(ALLOW_REGISTRATION){ ?>
+				<tr>
+					<td><a href="<?php echo $register_link; ?>"><?php $ucms->cout("module.users.form.login.register.link") ?></a></td> 
+				</tr><?php } ?>
+				<tr>
+					<td><a href="<?php echo $reset_link; ?>"><?php $ucms->cout("module.users.form.login.reset.link") ?></a> 
+				</tr>
+			<?php } ?>
 		</table>
 </form>
