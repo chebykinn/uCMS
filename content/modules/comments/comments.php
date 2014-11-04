@@ -335,6 +335,7 @@
 		}
 		global $user, $group, $ucms;
 		$admin = false;
+		$column = !empty($comments[$comment]['cauthor']) ? 'cauthor' : 'author';
 		$author = $comments[$comment]['comment_author_login'];
 		$nickname = $comments[$comment]['comment_author_nickname'];
 		$post_author = defined("POST_AUTHOR") ? POST_AUTHOR : "";
@@ -351,6 +352,11 @@
 			else
 				return; '<span style="color: '.$color.';">'.(!empty($nickname) ? $nickname : $author).'</span>';
 			$admin = false;
+		}elseif((int) ($comments[$comment][$column]) === 0){
+			if(!$return)
+				echo '<b>'.$comments[$comment][$column].'</b>';
+			else
+				return '<b>'.$comments[$comment][$column].'</b>';
 		}else{
 			if(!$return)
 				echo $author;
