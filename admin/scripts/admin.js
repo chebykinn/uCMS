@@ -7,12 +7,12 @@ $(document).ready(function(){
 			table.find($('input[type=checkbox]:not(:checked)')).not($(this)).prop("checked", "checked");
 	});
 
-	$('a[class=delete]').click(function(){
-		var sure = confirm();
-		if(!sure){
-			return false;
-		}
-	});
+	// $('a[class=delete]').click(function(){
+	// 	var sure = confirm();
+	// 	if(!sure){
+	// 		return false;
+	// 	}
+	// });
 
 	$('input[type=checkbox]').not($('input[name=select-all]')).click(function(){
 		var table = $(this).parent().parent().parent();
