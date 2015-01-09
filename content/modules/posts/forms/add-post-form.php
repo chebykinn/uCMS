@@ -60,7 +60,7 @@ $editor = new editor();
 					}
 					?>
 				</select>
-				<input type="number" name="year" min="1900" max="2014" style="width:50px;" placeholder="<?php $ucms->cout("module.posts.form.year.placeholder"); ?>" value="<?php echo date("Y") ?>">
+				<input type="number" name="year" min="1900" max="<?php echo date("Y") ?>" style="width:50px;" placeholder="<?php $ucms->cout("module.posts.form.year.placeholder"); ?>" value="<?php echo date("Y") ?>">
 				<?php $ucms->cout("module.posts.form.time.label"); ?>
 				<input type="text" name="hour" style="width: 15px; height: 15px;" value="<?php echo date("H"); ?>"> :
 				<input type="text" name="minute" style="width: 15px; height: 15px;" value="<?php echo date("i"); ?>"> :

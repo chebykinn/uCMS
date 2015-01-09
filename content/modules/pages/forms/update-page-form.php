@@ -57,7 +57,7 @@ if($page and count($page) > 0){
 						}
 						?>
 					</select>
-					<input type="number" name="year" min="1900" max="2014" style="width:50px;" placeholder="<?php $ucms->cout("module.pages.editor.year.placeholder") ?>" value="<?php echo $date[0]; ?>">
+					<input type="number" name="year" min="1900" max="<?php echo date("Y") ?>" style="width:50px;" placeholder="<?php $ucms->cout("module.pages.editor.year.placeholder") ?>" value="<?php echo $date[0]; ?>">
 					<?php $ucms->cout("module.pages.editor.date.at.label") ?>
 					<input type="text" name="hour" style="width: 15px; height: 15px;" value="<?php echo $time[0]; ?>"> :
 					<input type="text" name="minute" style="width: 15px; height: 15px;" value="<?php echo $time[1]; ?>"> :
