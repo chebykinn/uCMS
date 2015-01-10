@@ -29,11 +29,13 @@ $categories[0] = array(
 	"alias", 
 	"posts",
 	"parent",
-	"sort"); 
+	"sort",
+	"hidden"); 
 $categories[1] = array(
 	"int(11) NOT NULL AUTO_INCREMENT", 
 	"varchar(75) NOT NULL", 
 	"varchar(75) NOT NULL", 
+	"int(11) NOT NULL",
 	"int(11) NOT NULL",
 	"int(11) NOT NULL",
 	"int(11) NOT NULL"); 

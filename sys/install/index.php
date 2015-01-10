@@ -152,18 +152,7 @@ if(isset($_GET['action'])) {
 				header("Location: index.php?action=make-config");
 				exit;
 			}
-			$test   = $udb->query("SELECT `ip` FROM `".UC_PREFIX."attempts`   LIMIT 1", true);
-			$test2  = $udb->query("SELECT `id` FROM `".UC_PREFIX."categories` LIMIT 1", true);
-			$test3  = $udb->query("SELECT `id` FROM `".UC_PREFIX."comments`   LIMIT 1", true);
-			$test4  = $udb->query("SELECT `id` FROM `".UC_PREFIX."groups`     LIMIT 1", true);
-			$test5  = $udb->query("SELECT `id` FROM `".UC_PREFIX."messages`   LIMIT 1", true);
-			$test6  = $udb->query("SELECT `id` FROM `".UC_PREFIX."pages`      LIMIT 1", true);
-			$test7  = $udb->query("SELECT `id` FROM `".UC_PREFIX."posts`      LIMIT 1", true);
-			$test8  = $udb->query("SELECT `id` FROM `".UC_PREFIX."users`      LIMIT 1", true);
-			$test9  = $udb->query("SELECT `id` FROM `".UC_PREFIX."settings`   LIMIT 1", true);
-			$test10 = $udb->query("SELECT `id` FROM `".UC_PREFIX."usersinfo`  LIMIT 1", true);
-			$test11 = $udb->query("SELECT `id` FROM `".UC_PREFIX."links`      LIMIT 1", true);
-			if(!$test or !$test2 or !$test3 or !$test4 or !$test5 or !$test6 or !$test7 or !$test8 or !$test9 or !$test10 or !$test11){
+			if(!check_tables()){
 				make_tables();
 			}else{
 				$settings = $udb->num_rows("SELECT `id` FROM `".UC_PREFIX."settings`", true);
@@ -175,9 +164,8 @@ if(isset($_GET['action'])) {
 					header("Location: index.php?action=fill-users");
 					exit;
 				}else{
-					$status = 1;
+					$status = update_tables();
 					if($settings < count($default_settings_array)){
-						$status = update_tables();
 						if($settings < 30){ // before uCMS 1.2
 							update_users();
 						}else{

@@ -204,4 +204,17 @@
 		fclose($log);
 		return true;
 	}
+ 
+	function check_tables(){
+		global  $udb;
+		include 'tables.php';
+		$i = 0;
+		foreach($tables as $table){
+			$test = $udb->query("SELECT `".$exfields[$i][0][0]."` FROM `$table` LIMIT 1", true);
+			if(!$test) return false;
+			$i++;
+		}
+		return true;
+	}
+
 ?>
