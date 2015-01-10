@@ -585,6 +585,7 @@
 				<th><a href="<?php echo $link1; ?>"><?php $ucms->cout("module.posts.table.header.name"); ?> <?php echo $mark; ?></a></th>
 				<th><?php $ucms->cout("module.posts.table.header.alias"); ?></th>
 				<th style="width: 50px;"><a href="<?php echo $link2; ?>"><?php $ucms->cout("module.posts.table.header.posts_num"); ?> <?php echo $mark; ?></a></th>
+				<th><?php $ucms->cout("module.posts.table.header.hidden"); ?></th>
 				<th style="width: 115px;"><?php $ucms->cout("module.posts.table.header.manage"); ?></th>
 			</tr>
 			<?php
@@ -604,7 +605,8 @@
 							<td style="width: 300px;"><?php echo $category[$i]['name']; ?></td>
 							<td><?php echo $category[$i]['alias']; ?></td>
 							<td><?php echo $category[$i]['posts']; ?></td>
-							<td><span class="actions"><a href="manage.php?module=posts&amp;section=categories&amp;update=<?php echo $category[$i]['id']; ?>"><?php $ucms->cout("module.posts.	actions.edit.label"); ?></a> | <a href="manage.php?module=posts&amp;section=categories&amp;delete=<?php echo $category[$i]['id']; ?>"><?php $ucms->cout("module.	posts.actions.delete.label"); ?></a></span></td>
+							<td><?php echo ($category['hidden'] == 1 ? $ucms->cout("yes", true) : $ucms->cout("module.posts.categories.hidden.nono", true) ); ?></td>
+							<td><span class="actions"><a href="manage.php?module=posts&amp;section=categories&amp;update=<?php echo $category[$i]['id']; ?>"><?php $ucms->cout("module.posts.actions.edit.label"); ?></a> | <a href="manage.php?module=posts&amp;section=categories&amp;delete=<?php echo $category[$i]['id']; ?>"><?php $ucms->cout("module.posts.actions.delete.label"); ?></a></span></td>
 						</tr>
 						<?php
 					}
@@ -666,6 +668,8 @@
 						<td style="width: 300px;">'.$parent.$category['name'].'</td>
 						<td>'.$category['alias'].'</td>
 						<td>'.$category['posts'].'</td>
+						<td>'.($category['hidden'] == 1 ? $ucms->cout("yes", true) 
+							: $ucms->cout("no", true) ).'</td>
 						<td><span class="actions"><a href="manage.php?module=posts&amp;section=categories&amp;update='.$category['id'].'">'.$ucms->cout("module.posts.actions.edit.label", true).'</a> | <a href="manage.php?module=posts&amp;section=categories&amp;delete='.$category['id'].'">'.$ucms->cout("module.posts.actions.delete.label", true).'</a></span></td>
 					</tr>'.$children_menu;
 				}
@@ -687,6 +691,7 @@
 		$alias = $udb->parse_value($p['alias']);
 		$parent = $udb->parse_value($p['parent']);
 		$sort = $udb->parse_value($p['sort']);
+		$hidden = $udb->parse_value($p['hidden']);
 		$alias = strtolower(preg_replace('/\s/', "_", $alias));
 		$alias = strtolower(preg_replace(URL_REGEXP, "", $alias));
 		if($name != '' and $alias != ''){
@@ -702,8 +707,8 @@
 				}
 				$alias .= "-$i";
 			}
-			$add = $udb->query("INSERT IGNORE INTO `".UC_PREFIX."categories` (`id`, `name`, `alias`, `posts`, `parent`, `sort`)
-				VALUES (null, '$name', '$alias', '0', '$parent', '$sort')");
+			$add = $udb->query("INSERT IGNORE INTO `".UC_PREFIX."categories` (`id`, `name`, `alias`, `posts`, `parent`, `sort`, `hidden`)
+				VALUES (null, '$name', '$alias', '0', '$parent', '$sort', $hidden)");
 			if($add) {
 				$event->do_actions("category.added");
 				header("Location: ".get_current_url("alert", 'delete', 'update')."&alert=added");
@@ -719,7 +724,7 @@
 		$alias = $udb->parse_value($p['alias']);
 		$parent = $udb->parse_value($p['parent']);
 		$sort = $udb->parse_value($p['sort']);
-		
+		$hidden = $udb->parse_value($p['hidden']);
 		if($name != ''){
 			$update = $udb->query("UPDATE `".UC_PREFIX."categories` SET `name` = '$name' WHERE `id` = '$id'");
 		}
@@ -746,6 +751,7 @@
 		if($sort != ''){
 			$update = $udb->query("UPDATE `".UC_PREFIX."categories` SET `sort` = '$sort' WHERE `id` = '$id'");
 		}
+		$update = $udb->query("UPDATE `".UC_PREFIX."categories` SET `hidden` = '$hidden' WHERE `id` = '$id'");
 		if($update) {
 			$event->do_actions("category.updated");
 			header("Location: ".UCMS_DIR."/admin/manage.php?module=posts&section=categories&alert=updated");

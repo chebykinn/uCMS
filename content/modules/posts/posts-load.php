@@ -1,5 +1,5 @@
 <?php
-$cat_select = '';
+$cat_select = 'AND `c`.`hidden` != 1';
 $page = get_current_page();
 if(!NICE_LINKS){
 	if(isset($_GET['p']) and $_GET['p'] > 0){
@@ -119,7 +119,8 @@ if($action == 'other'){
 if(!isset($id)) $id = 0;
 if(empty($page)) $page = 1;
 // if($id !== 0){
-	$count = $udb->num_rows("SELECT `id` FROM `".UC_PREFIX."posts` AS `p` WHERE `p`.`publish` > 0 $cat_select");
+	$count = $udb->num_rows("SELECT `p`.`id`  FROM `".UC_PREFIX."posts` AS `p` 
+					LEFT JOIN `".UC_PREFIX."categories` AS `c` ON `c`.`id` = `p`.`category` WHERE `p`.`publish` > 0 $cat_select");
 	if($count != 0){ 
 		$pages_count = ceil($count / POSTS_ON_PAGE); 
 		if ($page > $pages_count):

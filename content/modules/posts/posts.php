@@ -16,7 +16,7 @@ if(!isset($no_query)){
 			LEFT JOIN `".UC_PREFIX."users` AS `u` ON `u`.`id` = `p`.`author`
 			LEFT JOIN `".UC_PREFIX."usersinfo` AS `uf` ON `uf`.`user_id` = `u`.`id` AND `uf`.`name` = 'nickname'
 			LEFT JOIN `".UC_PREFIX."categories` AS `c` ON `c`.`id` = `p`.`category`
-			WHERE `p`.`publish` > 0 ORDER BY `p`.`date` DESC, `p`.`id` DESC LIMIT 0, ".POSTS_ON_PAGE;
+			WHERE `p`.`publish` > 0 AND `c`.`hidden` != 1 ORDER BY `p`.`date` DESC, `p`.`id` DESC LIMIT 0, ".POSTS_ON_PAGE;
 		}
 		if(!isset($results))
 			$posts = $udb->get_rows($post_sql);
@@ -32,7 +32,7 @@ if(!isset($no_query)){
 				LEFT JOIN `".UC_PREFIX."users` AS `u` ON `u`.`id` = `p`.`author`
 				LEFT JOIN `".UC_PREFIX."usersinfo` AS `uf` ON `uf`.`user_id` = `u`.`id` AND `uf`.`name` = 'nickname'
 				LEFT JOIN `".UC_PREFIX."categories` AS `c` ON `c`.`id` = `p`.`category`
-				WHERE `p`.`publish` = 2 ORDER BY `p`.`date` DESC, `p`.`id` DESC LIMIT 100");
+				WHERE `p`.`publish` = 2 AND `c`.`hidden` != 1 ORDER BY `p`.`date` DESC, `p`.`id` DESC LIMIT 100");
 			}
 
 

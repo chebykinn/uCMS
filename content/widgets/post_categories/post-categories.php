@@ -1,8 +1,12 @@
 <?php
 $categories = $args[0];
 
-if($categories){
+if($categories and count($categories) > 0){
 	echo category_tree($categories, 0);
+}else{
+	echo "<br><b>";
+	$ucms->cout("widget.post_categories.no_categories");
+	echo "</b><br><br>";
 }
 
 function category_tree($menu, $root){

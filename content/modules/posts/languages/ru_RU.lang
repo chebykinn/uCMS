@@ -83,6 +83,7 @@ module.posts.table.header.tags=Теги
 module.posts.table.header.status=Статус
 module.posts.table.header.date=Дата добавления
 module.posts.table.header.manage=Управление
+module.posts.table.header.hidden=Скрыта
 
 module.posts.status.draft=Черновик
 module.posts.status.published=Опубликован
@@ -113,6 +114,7 @@ module.posts.categories.form.alias.label=Ссылка:
 module.posts.categories.form.parent.label=Родительская категория:
 module.posts.categories.form.no_parent.option=Нет
 module.posts.categories.form.sort.label=Позиция:
+module.posts.categories.form.hidden.label=Скрытая категория:
 module.posts.categories.form.add.button=Добавить
 module.posts.categories.form.edit.button=Изменить
 

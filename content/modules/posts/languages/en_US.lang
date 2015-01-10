@@ -83,6 +83,7 @@ module.posts.table.header.tags=Tags
 module.posts.table.header.status=Status
 module.posts.table.header.date=Date Published
 module.posts.table.header.manage=Manage
+module.posts.table.header.hidden=Hidden
 
 module.posts.status.draft=Draft
 module.posts.status.published=Published
@@ -113,6 +114,7 @@ module.posts.categories.form.alias.label=Link:
 module.posts.categories.form.parent.label=Parent category:
 module.posts.categories.form.no_parent.option=No parent
 module.posts.categories.form.sort.label=Position:
+module.posts.categories.form.hidden.label=Hidden category:
 module.posts.categories.form.add.button=Add
 module.posts.categories.form.edit.button=Edit
 

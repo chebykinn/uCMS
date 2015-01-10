@@ -89,6 +89,7 @@ if($user->has_access("posts", 4)){
 					<h3><?php $ucms->cout("module.posts.header.categories.add.label"); ?></h3>
 					<form class="forms" action="manage.php?module=posts&amp;section=categories" method="post">
 					<input type="hidden" name="add" value="add"><br>
+					<input type="hidden" name="hidden" value="0">
 					<label for="name"><b><?php $ucms->cout("module.posts.categories.form.name.label"); ?></b></label><br>
 					<input type="text" name="name" style="width: 200px; height: 20px;"><br>
 					<label for="alias"><b><?php $ucms->cout("module.posts.categories.form.alias.label"); ?></b></label><br>
@@ -102,7 +103,9 @@ if($user->has_access("posts", 4)){
 						?>
 					</select><br>
 					<label for="sort"><b><?php $ucms->cout("module.posts.categories.form.sort.label"); ?></b></label><br>
-					<input type="number" name="sort" value="0">
+					<input type="number" name="sort" value="0"><br>
+					<label for="hidden"><b><?php $ucms->cout("module.posts.categories.form.hidden.label"); ?></b></label><br>
+					<input type="checkbox" name="hidden" value="1">
 					<br><br>
 					<input type="submit" value="<?php echo $ucms->cout("module.posts.categories.form.add.button", true); ?>" class="ucms-button-submit">
 					</form>
@@ -116,6 +119,7 @@ if($user->has_access("posts", 4)){
 					<h3><?php $ucms->cout("module.posts.header.categories.update.label"); ?></h3>
 					<form class="forms" action="manage.php?module=posts&amp;section=categories" method="post">
 					<input type="hidden" name="id" value="<?php echo $id; ?>">
+					<input type="hidden" name="hidden" value="0">
 					<input type="hidden" name="update" value="update"><br>
 					<label for="name"><b><?php $ucms->cout("module.posts.categories.form.name.label"); ?></b></label><br>
 					<input type="text" name="name" style="width: 200px; height: 20px;" value="<?php echo $category['name']; ?>"><br>
@@ -130,7 +134,9 @@ if($user->has_access("posts", 4)){
 						?>
 					</select><br>
 					<label for="sort"><b><?php $ucms->cout("module.posts.categories.form.sort.label"); ?></b></label><br>
-					<input type="number" name="sort" value="<?php echo $category['sort']; ?>">
+					<input type="number" name="sort" value="<?php echo $category['sort']; ?>"><br>
+					<label for="hidden"><b><?php $ucms->cout("module.posts.categories.form.hidden.label"); ?></b></label><br>
+					<input type="checkbox" name="hidden" value="1" <?php if($category['hidden'] == 1) echo "checked"; ?>>
 					<br><br>
 					<input type="submit" value="<?php $ucms->cout("module.posts.categories.form.edit.button"); ?>" class="ucms-button-submit">
 					</form>

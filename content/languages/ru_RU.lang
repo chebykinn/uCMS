@@ -357,6 +357,8 @@ timezone.indiana=Индиана
 timezone.pacific=Тихоокеанский регион
 timezone.brazil=Бразилия
 timezone.other=Другие
+yes=Да
+no=Нет
 
 # Templates #
 

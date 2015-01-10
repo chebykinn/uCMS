@@ -357,6 +357,8 @@ timezone.indiana=Indiana
 timezone.pacific=Pacific
 timezone.brazil=Brazil
 timezone.other=Other
+yes=Yes
+no=No
 
 # Templates #
 
