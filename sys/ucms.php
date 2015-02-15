@@ -787,8 +787,8 @@ RewriteRule . index.php [L]
 			$file = explode("/", $template_path);
 			$file = array_reverse($file);
 			$file = $file[0];
-			if(file_exists($theme->get_path().'forms/'.$file)){
-				include $theme->get_path().'forms/'.$file;
+			if(file_exists(ABSPATH.$theme->get_path().'forms/'.$file)){
+				include ABSPATH.$theme->get_path().'forms/'.$file;
 				return true;
 			}
 		}
