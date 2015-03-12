@@ -167,7 +167,8 @@ function title(){
 */
 function rss_link(){
 	global $ucms;
-	echo "<link href=\"".UCMS_DIR.(NICE_LINKS ? "/rss" : "/?action=rss")."\" rel=\"alternate\" type=\"application/rss+xml\" title=\"".$ucms->cout("rss_link.title", true).SITE_TITLE."\">\n";
+	echo "<link href=\"".UCMS_DIR.(NICE_LINKS ? "/rss" : "/?action=rss")."\" 
+	rel=\"alternate\" type=\"application/rss+xml\" title=\"".$ucms->cout("rss_link.title", true).htmlspecialchars(SITE_TITLE)."\">\n";
 }
 
 /**
