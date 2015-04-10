@@ -1,9 +1,10 @@
 <?php
 get_header();
 get_sidebar();
-echo get_current_action();
 ?>
-ЕГГОГ 404
+<div id="content">
+	settings body
+</div>
 <?php
 get_footer();
 ?>

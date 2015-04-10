@@ -1,0 +1,14 @@
+{
+	"version": "1.0",
+	"coreVersion": "2.x",
+	"info": {
+		"displayname": "µCMS Default",
+		"description": "The default theme",
+		"author": "µCMS",
+		"site": "http://ucms.ivan4b.ru",
+		"header": "head.php",
+		"sidebar": "sidebar.php",
+		"footer": "footer.php",
+		"style": "style.css"
+	}
+}

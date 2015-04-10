@@ -1,9 +1,0 @@
-table=pages
-columns=`p`.*, `pa`.`id` AS `parent_id`, `pa`.`alias` AS `parent_alias`, `pa`.`title` AS `parent_title`, `u`.`login` AS `author_login`, `u`.`group` AS `author_group`, `uf`.`value` AS `author_nickname`
-join= AS `p` FORCE INDEX (PRIMARY) LEFT JOIN `@uc_prefix@pages` AS `pa` ON `pa`.`id` = `p`.`parent` LEFT JOIN `@uc_prefix@users` AS `u` ON `u`.`id` = `p`.`author` LEFT JOIN `@uc_prefix@usersinfo` AS `uf` ON `uf`.`user_id` = `u`.`id` AND `name` = 'nickname'
-where=`p`.`publish` > 0
-search_in_sql=`p`.`title`,`p`.`body`
-search_in=title,body
-sort_by=id,title,author,sort,date
-highlight=title,body
-file=pages/pages.php

@@ -1,0 +1,31 @@
+{
+	"version": "1.0",
+	"coreVersion": "2.x",
+	"dependencies": [
+		"fileman"
+	],
+	"actions": [
+		"user",
+		"profile",
+		"users"
+	],
+	"admin": {
+		"Users": "users",
+		"@Groups": "groups",
+		"#Users": "settings/users"
+	},
+	"includes": [
+		"include/permissions.php",
+		"include/group.php",
+		"include/user.php",
+		"include/userManagement.php"
+	],
+
+	"info": {
+		"displayname": "Users",
+		"description": "Users system extention",
+		"author": "µCMS",
+		"site": "http://ucms.ivan4b.ru",
+		"updateURL": "http://ucms.ivan4b.ru/pub/extentions/users"
+	}
+}

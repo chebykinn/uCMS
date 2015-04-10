@@ -1,0 +1,28 @@
+{
+	"version": "1.0",
+	"coreVersion": "2.x",
+	"dependencies": [
+		"fileman",
+		"users"
+	],
+	"actions": [
+		"index",
+		"other"
+	],
+	"admin": {
+		"Posts": "posts",
+		"@Categories": "categories",
+		"#Posts": "settings/posts"
+	},
+	"includes": [
+		"include/user.php"
+	],
+
+	"info": {
+		"displayname": "Posts",
+		"description": "Posts system extention",
+		"author": "µCMS",
+		"site": "http://ucms.ivan4b.ru",
+		"updateURL": "http://ucms.ivan4b.ru/pub/extentions/posts"
+	}
+}

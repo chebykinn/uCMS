@@ -1,0 +1,436 @@
+[22-Mar-2015 17:29:40 Europe/Moscow] PHP Fatal error:  Uncaught exception 'Exception' with message 'mysqli_connect(): (HY000/1045): Access denied for user 'ivan4bs'@'localhost' (using password: YES)' in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/database.php:19
+Stack trace:
+#0 /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/ucms.php(18): Database->connect()
+#1 /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/index.php(4): uCMS->init()
+#2 {main}
+  thrown in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/database.php on line 19
+[22-Mar-2015 17:33:34 Europe/Moscow] PHP Fatal error:  Call to undefined method Exception::getType() in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/ucms.php on line 21
+[23-Mar-2015 18:08:34 Europe/Moscow] PHP Fatal error:  Call to a member function doQuery() on null in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/database/query.php on line 88
+[23-Mar-2015 19:48:54 Europe/Moscow] PHP Fatal error:  Cannot access private property uCMS::$database in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/test.php on line 10
+[23-Mar-2015 19:48:54 Europe/Moscow] PHP Fatal error:  Cannot access private property uCMS::$database in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/test.php on line 10
+[23-Mar-2015 23:54:43 Europe/Moscow] PHP Fatal error:  Call to a member function getDatabase() on null in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/ucms.php on line 62
+[23-Mar-2015 23:54:44 Europe/Moscow] PHP Fatal error:  Call to a member function getDatabase() on null in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/ucms.php on line 62
+[23-Mar-2015 23:54:44 Europe/Moscow] PHP Fatal error:  Call to a member function getDatabase() on null in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/ucms.php on line 62
+[23-Mar-2015 23:54:45 Europe/Moscow] PHP Fatal error:  Call to a member function getDatabase() on null in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/ucms.php on line 62
+[24-Mar-2015 00:09:07 Europe/Moscow] PHP Warning:  Invalid callback uCMS::errorHandler, cannot access private method uCMS::errorHandler() in Unknown on line 0
+[24-Mar-2015 00:09:07 Europe/Moscow] PHP Warning:  (Registered shutdown functions) Unable to call uCMS::handleFatalError() - function does not exist in Unknown on line 0
+[24-Mar-2015 00:09:08 Europe/Moscow] PHP Warning:  Invalid callback uCMS::errorHandler, cannot access private method uCMS::errorHandler() in Unknown on line 0
+[24-Mar-2015 00:09:08 Europe/Moscow] PHP Warning:  (Registered shutdown functions) Unable to call uCMS::handleFatalError() - function does not exist in Unknown on line 0
+[24-Mar-2015 00:09:08 Europe/Moscow] PHP Warning:  Invalid callback uCMS::errorHandler, cannot access private method uCMS::errorHandler() in Unknown on line 0
+[24-Mar-2015 00:09:08 Europe/Moscow] PHP Warning:  (Registered shutdown functions) Unable to call uCMS::handleFatalError() - function does not exist in Unknown on line 0
+[24-Mar-2015 00:09:08 Europe/Moscow] PHP Warning:  Invalid callback uCMS::errorHandler, cannot access private method uCMS::errorHandler() in Unknown on line 0
+[24-Mar-2015 00:09:08 Europe/Moscow] PHP Warning:  (Registered shutdown functions) Unable to call uCMS::handleFatalError() - function does not exist in Unknown on line 0
+[24-Mar-2015 00:09:09 Europe/Moscow] PHP Warning:  Invalid callback uCMS::errorHandler, cannot access private method uCMS::errorHandler() in Unknown on line 0
+[24-Mar-2015 00:09:09 Europe/Moscow] PHP Warning:  (Registered shutdown functions) Unable to call uCMS::handleFatalError() - function does not exist in Unknown on line 0
+[24-Mar-2015 00:09:09 Europe/Moscow] PHP Warning:  Invalid callback uCMS::errorHandler, cannot access private method uCMS::errorHandler() in Unknown on line 0
+[24-Mar-2015 00:09:09 Europe/Moscow] PHP Warning:  (Registered shutdown functions) Unable to call uCMS::handleFatalError() - function does not exist in Unknown on line 0
+[24-Mar-2015 00:09:40 Europe/Moscow] PHP Warning:  Invalid callback uCMS::errorHandler, cannot access private method uCMS::errorHandler() in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/index.php on line 8
+[24-Mar-2015 00:09:40 Europe/Moscow] PHP Notice:  Use of undefined constant asds - assumed 'asds' in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/index.php on line 8
+[24-Mar-2015 00:09:40 Europe/Moscow] PHP Warning:  Invalid callback uCMS::errorHandler, cannot access private method uCMS::errorHandler() in Unknown on line 0
+[24-Mar-2015 00:09:40 Europe/Moscow] PHP Warning:  (Registered shutdown functions) Unable to call uCMS::handleFatalError() - function does not exist in Unknown on line 0
+[24-Mar-2015 00:09:41 Europe/Moscow] PHP Warning:  Invalid callback uCMS::errorHandler, cannot access private method uCMS::errorHandler() in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/index.php on line 8
+[24-Mar-2015 00:09:41 Europe/Moscow] PHP Notice:  Use of undefined constant asds - assumed 'asds' in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/index.php on line 8
+[24-Mar-2015 00:09:41 Europe/Moscow] PHP Warning:  Invalid callback uCMS::errorHandler, cannot access private method uCMS::errorHandler() in Unknown on line 0
+[24-Mar-2015 00:09:41 Europe/Moscow] PHP Warning:  (Registered shutdown functions) Unable to call uCMS::handleFatalError() - function does not exist in Unknown on line 0
+[24-Mar-2015 00:09:41 Europe/Moscow] PHP Warning:  Invalid callback uCMS::errorHandler, cannot access private method uCMS::errorHandler() in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/index.php on line 8
+[24-Mar-2015 00:09:41 Europe/Moscow] PHP Notice:  Use of undefined constant asds - assumed 'asds' in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/index.php on line 8
+[24-Mar-2015 00:09:41 Europe/Moscow] PHP Warning:  Invalid callback uCMS::errorHandler, cannot access private method uCMS::errorHandler() in Unknown on line 0
+[24-Mar-2015 00:09:41 Europe/Moscow] PHP Warning:  (Registered shutdown functions) Unable to call uCMS::handleFatalError() - function does not exist in Unknown on line 0
+[24-Mar-2015 00:09:41 Europe/Moscow] PHP Warning:  Invalid callback uCMS::errorHandler, cannot access private method uCMS::errorHandler() in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/index.php on line 8
+[24-Mar-2015 00:09:41 Europe/Moscow] PHP Notice:  Use of undefined constant asds - assumed 'asds' in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/index.php on line 8
+[24-Mar-2015 00:09:41 Europe/Moscow] PHP Warning:  Invalid callback uCMS::errorHandler, cannot access private method uCMS::errorHandler() in Unknown on line 0
+[24-Mar-2015 00:09:41 Europe/Moscow] PHP Warning:  (Registered shutdown functions) Unable to call uCMS::handleFatalError() - function does not exist in Unknown on line 0
+[24-Mar-2015 00:09:42 Europe/Moscow] PHP Warning:  Invalid callback uCMS::errorHandler, cannot access private method uCMS::errorHandler() in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/index.php on line 8
+[24-Mar-2015 00:09:42 Europe/Moscow] PHP Notice:  Use of undefined constant asds - assumed 'asds' in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/index.php on line 8
+[24-Mar-2015 00:09:42 Europe/Moscow] PHP Warning:  Invalid callback uCMS::errorHandler, cannot access private method uCMS::errorHandler() in Unknown on line 0
+[24-Mar-2015 00:09:42 Europe/Moscow] PHP Warning:  (Registered shutdown functions) Unable to call uCMS::handleFatalError() - function does not exist in Unknown on line 0
+[24-Mar-2015 00:10:37 Europe/Moscow] PHP Warning:  Invalid callback uCMS::errorHandler, cannot access private method uCMS::errorHandler() in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/index.php on line 6
+[24-Mar-2015 00:10:37 Europe/Moscow] PHP Notice:  Undefined variable: e in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/index.php on line 6
+[24-Mar-2015 00:10:37 Europe/Moscow] PHP Warning:  Invalid callback uCMS::errorHandler, cannot access private method uCMS::errorHandler() in Unknown on line 0
+[24-Mar-2015 00:10:37 Europe/Moscow] PHP Warning:  (Registered shutdown functions) Unable to call uCMS::handleFatalError() - function does not exist in Unknown on line 0
+[24-Mar-2015 00:10:38 Europe/Moscow] PHP Warning:  Invalid callback uCMS::errorHandler, cannot access private method uCMS::errorHandler() in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/index.php on line 6
+[24-Mar-2015 00:10:38 Europe/Moscow] PHP Notice:  Undefined variable: e in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/index.php on line 6
+[24-Mar-2015 00:10:38 Europe/Moscow] PHP Warning:  Invalid callback uCMS::errorHandler, cannot access private method uCMS::errorHandler() in Unknown on line 0
+[24-Mar-2015 00:10:38 Europe/Moscow] PHP Warning:  (Registered shutdown functions) Unable to call uCMS::handleFatalError() - function does not exist in Unknown on line 0
+[24-Mar-2015 00:10:38 Europe/Moscow] PHP Warning:  Invalid callback uCMS::errorHandler, cannot access private method uCMS::errorHandler() in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/index.php on line 6
+[24-Mar-2015 00:10:38 Europe/Moscow] PHP Notice:  Undefined variable: e in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/index.php on line 6
+[24-Mar-2015 00:10:38 Europe/Moscow] PHP Warning:  Invalid callback uCMS::errorHandler, cannot access private method uCMS::errorHandler() in Unknown on line 0
+[24-Mar-2015 00:10:38 Europe/Moscow] PHP Warning:  (Registered shutdown functions) Unable to call uCMS::handleFatalError() - function does not exist in Unknown on line 0
+[24-Mar-2015 00:10:43 Europe/Moscow] PHP Warning:  Invalid callback uCMS::errorHandler, cannot access private method uCMS::errorHandler() in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/index.php on line 6
+[24-Mar-2015 00:10:43 Europe/Moscow] PHP Notice:  Undefined variable: e in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/index.php on line 6
+[24-Mar-2015 00:10:43 Europe/Moscow] PHP Warning:  Invalid callback uCMS::errorHandler, cannot access private method uCMS::errorHandler() in Unknown on line 0
+[24-Mar-2015 00:10:43 Europe/Moscow] PHP Warning:  (Registered shutdown functions) Unable to call uCMS::handleFatalError() - function does not exist in Unknown on line 0
+[24-Mar-2015 00:10:43 Europe/Moscow] PHP Warning:  Invalid callback uCMS::errorHandler, cannot access private method uCMS::errorHandler() in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/index.php on line 6
+[24-Mar-2015 00:10:43 Europe/Moscow] PHP Notice:  Undefined variable: e in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/index.php on line 6
+[24-Mar-2015 00:10:43 Europe/Moscow] PHP Warning:  Invalid callback uCMS::errorHandler, cannot access private method uCMS::errorHandler() in Unknown on line 0
+[24-Mar-2015 00:10:43 Europe/Moscow] PHP Warning:  (Registered shutdown functions) Unable to call uCMS::handleFatalError() - function does not exist in Unknown on line 0
+[24-Mar-2015 00:11:26 Europe/Moscow] PHP Warning:  Invalid callback uCMS::errorHandler, cannot access private method uCMS::errorHandler() in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/index.php on line 6
+[24-Mar-2015 00:11:26 Europe/Moscow] PHP Notice:  Undefined variable: e in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/index.php on line 6
+[24-Mar-2015 00:11:26 Europe/Moscow] PHP Warning:  Invalid callback uCMS::errorHandler, cannot access private method uCMS::errorHandler() in Unknown on line 0
+[24-Mar-2015 00:11:26 Europe/Moscow] PHP Warning:  (Registered shutdown functions) Unable to call uCMS::handleFatalError() - function does not exist in Unknown on line 0
+[24-Mar-2015 00:11:33 Europe/Moscow] PHP Warning:  Invalid callback uCMS::errorHandler, cannot access private method uCMS::errorHandler() in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/index.php on line 6
+[24-Mar-2015 00:11:33 Europe/Moscow] PHP Notice:  Undefined variable: easdas in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/index.php on line 6
+[24-Mar-2015 00:11:33 Europe/Moscow] PHP Warning:  Invalid callback uCMS::errorHandler, cannot access private method uCMS::errorHandler() in Unknown on line 0
+[24-Mar-2015 00:11:33 Europe/Moscow] PHP Warning:  (Registered shutdown functions) Unable to call uCMS::handleFatalError() - function does not exist in Unknown on line 0
+[24-Mar-2015 00:11:33 Europe/Moscow] PHP Warning:  Invalid callback uCMS::errorHandler, cannot access private method uCMS::errorHandler() in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/index.php on line 6
+[24-Mar-2015 00:11:33 Europe/Moscow] PHP Notice:  Undefined variable: easdas in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/index.php on line 6
+[24-Mar-2015 00:11:33 Europe/Moscow] PHP Warning:  Invalid callback uCMS::errorHandler, cannot access private method uCMS::errorHandler() in Unknown on line 0
+[24-Mar-2015 00:11:33 Europe/Moscow] PHP Warning:  (Registered shutdown functions) Unable to call uCMS::handleFatalError() - function does not exist in Unknown on line 0
+[24-Mar-2015 00:11:43 Europe/Moscow] PHP Fatal error:  Call to undefined function get_lulz() in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/index.php on line 6
+[24-Mar-2015 00:11:43 Europe/Moscow] PHP Warning:  Invalid callback uCMS::errorHandler, cannot access private method uCMS::errorHandler() in Unknown on line 0
+[24-Mar-2015 00:11:43 Europe/Moscow] PHP Warning:  (Registered shutdown functions) Unable to call uCMS::handleFatalError() - function does not exist in Unknown on line 0
+[24-Mar-2015 00:11:43 Europe/Moscow] PHP Fatal error:  Call to undefined function get_lulz() in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/index.php on line 6
+[24-Mar-2015 00:11:43 Europe/Moscow] PHP Warning:  Invalid callback uCMS::errorHandler, cannot access private method uCMS::errorHandler() in Unknown on line 0
+[24-Mar-2015 00:11:43 Europe/Moscow] PHP Warning:  (Registered shutdown functions) Unable to call uCMS::handleFatalError() - function does not exist in Unknown on line 0
+[24-Mar-2015 00:11:43 Europe/Moscow] PHP Fatal error:  Call to undefined function get_lulz() in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/index.php on line 6
+[24-Mar-2015 00:11:43 Europe/Moscow] PHP Warning:  Invalid callback uCMS::errorHandler, cannot access private method uCMS::errorHandler() in Unknown on line 0
+[24-Mar-2015 00:11:43 Europe/Moscow] PHP Warning:  (Registered shutdown functions) Unable to call uCMS::handleFatalError() - function does not exist in Unknown on line 0
+[24-Mar-2015 00:11:57 Europe/Moscow] PHP Fatal error:  Call to undefined function get_lulz() in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/index.php on line 6
+[24-Mar-2015 00:12:07 Europe/Moscow] PHP Fatal error:  Call to undefined function get_lulz() in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/index.php on line 6
+[24-Mar-2015 22:08:48 Europe/Moscow] PHP Fatal error:  Class Users contains 1 abstract method and must therefore be declared abstract or implement the remaining methods (Extention::__construct) in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/extention.php on line 0
+[24-Mar-2015 22:08:49 Europe/Moscow] PHP Fatal error:  Class Users contains 1 abstract method and must therefore be declared abstract or implement the remaining methods (Extention::__construct) in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/extention.php on line 0
+[24-Mar-2015 22:11:14 Europe/Moscow] PHP Fatal error:  Declaration of Users::__construct() must be compatible with Extention::__construct($name, $type, $directory) in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/extention.php on line 0
+[24-Mar-2015 22:11:15 Europe/Moscow] PHP Fatal error:  Declaration of Users::__construct() must be compatible with Extention::__construct($name, $type, $directory) in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/extention.php on line 0
+[24-Mar-2015 22:11:15 Europe/Moscow] PHP Fatal error:  Declaration of Users::__construct() must be compatible with Extention::__construct($name, $type, $directory) in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/extention.php on line 0
+[24-Mar-2015 22:11:15 Europe/Moscow] PHP Fatal error:  Declaration of Users::__construct() must be compatible with Extention::__construct($name, $type, $directory) in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/extention.php on line 0
+[24-Mar-2015 22:11:33 Europe/Moscow] PHP Fatal error:  Declaration of Users::__construct() must be compatible with Extention::__construct($name, $type, $directory) in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/extention.php on line 0
+[24-Mar-2015 22:11:33 Europe/Moscow] PHP Fatal error:  Declaration of Users::__construct() must be compatible with Extention::__construct($name, $type, $directory) in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/extention.php on line 0
+[24-Mar-2015 22:11:33 Europe/Moscow] PHP Fatal error:  Declaration of Users::__construct() must be compatible with Extention::__construct($name, $type, $directory) in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/extention.php on line 0
+[24-Mar-2015 22:11:47 Europe/Moscow] PHP Fatal error:  Declaration of Users::__construct() must be compatible with Extention::__construct($name, $type, $directory) in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/extention.php on line 0
+[24-Mar-2015 22:11:47 Europe/Moscow] PHP Fatal error:  Declaration of Users::__construct() must be compatible with Extention::__construct($name, $type, $directory) in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/extention.php on line 0
+[24-Mar-2015 22:11:48 Europe/Moscow] PHP Fatal error:  Declaration of Users::__construct() must be compatible with Extention::__construct($name, $type, $directory) in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/extention.php on line 0
+[24-Mar-2015 22:11:51 Europe/Moscow] PHP Fatal error:  Declaration of Users::__construct() must be compatible with Extention::__construct($name, $type, $directory) in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/extention.php on line 0
+[24-Mar-2015 22:11:51 Europe/Moscow] PHP Fatal error:  Declaration of Users::__construct() must be compatible with Extention::__construct($name, $type, $directory) in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/extention.php on line 0
+[24-Mar-2015 22:11:52 Europe/Moscow] PHP Fatal error:  Declaration of Users::__construct() must be compatible with Extention::__construct($name, $type, $directory) in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/extention.php on line 0
+[24-Mar-2015 22:11:55 Europe/Moscow] PHP Fatal error:  Declaration of Users::__construct() must be compatible with Extention::__construct($name, $type, $directory) in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/extention.php on line 0
+[24-Mar-2015 22:11:56 Europe/Moscow] PHP Fatal error:  Declaration of Users::__construct() must be compatible with Extention::__construct($name, $type, $directory) in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/extention.php on line 0
+[24-Mar-2015 22:11:56 Europe/Moscow] PHP Fatal error:  Declaration of Users::__construct() must be compatible with Extention::__construct($name, $type, $directory) in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/extention.php on line 0
+[24-Mar-2015 22:11:57 Europe/Moscow] PHP Fatal error:  Declaration of Users::__construct() must be compatible with Extention::__construct($name, $type, $directory) in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/extention.php on line 0
+[24-Mar-2015 22:11:57 Europe/Moscow] PHP Fatal error:  Declaration of Users::__construct() must be compatible with Extention::__construct($name, $type, $directory) in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/extention.php on line 0
+[26-Mar-2015 20:17:57 Europe/Moscow] PHP Fatal error:  Declaration of Users::setDependencies() must be compatible with Extention::setDependencies($extentions = NULL) in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/extention.php on line 26
+[26-Mar-2015 20:17:58 Europe/Moscow] PHP Fatal error:  Declaration of Users::setDependencies() must be compatible with Extention::setDependencies($extentions = NULL) in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/extention.php on line 26
+[26-Mar-2015 20:17:59 Europe/Moscow] PHP Fatal error:  Declaration of Users::setDependencies() must be compatible with Extention::setDependencies($extentions = NULL) in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/extention.php on line 26
+[26-Mar-2015 20:17:59 Europe/Moscow] PHP Fatal error:  Declaration of Users::setDependencies() must be compatible with Extention::setDependencies($extentions = NULL) in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/extention.php on line 26
+[26-Mar-2015 20:18:05 Europe/Moscow] PHP Fatal error:  Declaration of Users::setDependencies() must be compatible with Extention::setDependencies($extentions = NULL) in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/extention.php on line 26
+[26-Mar-2015 20:18:05 Europe/Moscow] PHP Fatal error:  Declaration of Users::setDependencies() must be compatible with Extention::setDependencies($extentions = NULL) in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/extention.php on line 26
+[26-Mar-2015 20:18:06 Europe/Moscow] PHP Fatal error:  Declaration of Users::setDependencies() must be compatible with Extention::setDependencies($extentions = NULL) in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/extention.php on line 26
+[26-Mar-2015 20:19:34 Europe/Moscow] PHP Fatal error:  Declaration of Users::setDependencies() must be compatible with Extention::setDependencies($extentions = NULL) in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/extention.php on line 0
+[26-Mar-2015 20:19:34 Europe/Moscow] PHP Fatal error:  Declaration of Users::setDependencies() must be compatible with Extention::setDependencies($extentions = NULL) in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/extention.php on line 0
+[26-Mar-2015 20:19:44 Europe/Moscow] PHP Fatal error:  Declaration of Users::setDependencies() must be compatible with Extention::setDependencies($extentions = NULL) in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/extention.php on line 0
+[26-Mar-2015 20:19:45 Europe/Moscow] PHP Fatal error:  Declaration of Users::setDependencies() must be compatible with Extention::setDependencies($extentions = NULL) in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/extention.php on line 0
+[26-Mar-2015 20:20:16 Europe/Moscow] PHP Fatal error:  Declaration of Users::setDependencies() must be compatible with Extention::setDependencies($extentions = NULL) in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/extention.php on line 0
+[26-Mar-2015 20:20:17 Europe/Moscow] PHP Fatal error:  Declaration of Users::setDependencies() must be compatible with Extention::setDependencies($extentions = NULL) in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/extention.php on line 0
+[26-Mar-2015 20:20:24 Europe/Moscow] PHP Fatal error:  Declaration of Users::setDependencies() must be compatible with Extention::setDependencies($extentions = NULL) in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/extention.php on line 0
+[26-Mar-2015 20:20:25 Europe/Moscow] PHP Fatal error:  Declaration of Users::setDependencies() must be compatible with Extention::setDependencies($extentions = NULL) in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/extention.php on line 0
+[26-Mar-2015 20:20:30 Europe/Moscow] PHP Fatal error:  Declaration of Users::setDependencies() must be compatible with Extention::setDependencies($extentions = NULL) in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/extention.php on line 0
+[26-Mar-2015 20:20:31 Europe/Moscow] PHP Fatal error:  Declaration of Users::setDependencies() must be compatible with Extention::setDependencies($extentions = NULL) in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/extention.php on line 0
+[26-Mar-2015 20:20:31 Europe/Moscow] PHP Fatal error:  Declaration of Users::setDependencies() must be compatible with Extention::setDependencies($extentions = NULL) in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/extention.php on line 0
+[26-Mar-2015 20:20:36 Europe/Moscow] PHP Fatal error:  Declaration of Users::setDependencies() must be compatible with Extention::setDependencies($extentions = NULL) in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/extention.php on line 0
+[26-Mar-2015 20:21:52 Europe/Moscow] PHP Fatal error:  Declaration of Users::setDependencies() must be compatible with Extention::setDependencies($extentions = NULL) in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/extention.php on line 0
+[26-Mar-2015 20:22:20 Europe/Moscow] PHP Fatal error:  Declaration of Users::setDependencies() must be compatible with Extention::setDependencies($extentions = NULL) in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/extention.php on line 0
+[26-Mar-2015 20:22:21 Europe/Moscow] PHP Fatal error:  Declaration of Users::setDependencies() must be compatible with Extention::setDependencies($extentions = NULL) in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/extention.php on line 0
+[26-Mar-2015 20:22:21 Europe/Moscow] PHP Fatal error:  Declaration of Users::setDependencies() must be compatible with Extention::setDependencies($extentions = NULL) in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/extention.php on line 0
+[26-Mar-2015 20:22:21 Europe/Moscow] PHP Fatal error:  Declaration of Users::setDependencies() must be compatible with Extention::setDependencies($extentions = NULL) in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/extention.php on line 0
+[26-Mar-2015 20:22:25 Europe/Moscow] PHP Fatal error:  Declaration of Users::setDependencies() must be compatible with Extention::setDependencies($extentions = NULL) in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/extention.php on line 0
+[26-Mar-2015 20:22:35 Europe/Moscow] PHP Fatal error:  Declaration of Users::setDependencies() must be compatible with Extention::setDependencies($extentions = NULL) in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/extention.php on line 0
+[26-Mar-2015 20:22:35 Europe/Moscow] PHP Fatal error:  Declaration of Users::setDependencies() must be compatible with Extention::setDependencies($extentions = NULL) in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/extention.php on line 0
+[26-Mar-2015 20:22:36 Europe/Moscow] PHP Fatal error:  Declaration of Users::setDependencies() must be compatible with Extention::setDependencies($extentions = NULL) in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/extention.php on line 0
+[26-Mar-2015 20:22:36 Europe/Moscow] PHP Fatal error:  Declaration of Users::setDependencies() must be compatible with Extention::setDependencies($extentions = NULL) in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/extention.php on line 0
+[26-Mar-2015 20:22:36 Europe/Moscow] PHP Fatal error:  Declaration of Users::setDependencies() must be compatible with Extention::setDependencies($extentions = NULL) in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/extention.php on line 0
+[26-Mar-2015 20:22:37 Europe/Moscow] PHP Fatal error:  Declaration of Users::setDependencies() must be compatible with Extention::setDependencies($extentions = NULL) in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/extention.php on line 0
+[26-Mar-2015 20:22:55 Europe/Moscow] PHP Fatal error:  Declaration of Users::setDependencies() must be compatible with Extention::setDependencies($extentions = NULL) in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/extention.php on line 0
+[26-Mar-2015 20:22:57 Europe/Moscow] PHP Fatal error:  Declaration of Users::setDependencies() must be compatible with Extention::setDependencies($extentions = NULL) in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/extention.php on line 0
+[26-Mar-2015 20:25:14 Europe/Moscow] PHP Fatal error:  Declaration of Users::setDependencies() must be compatible with Extention::setDependencies($extentions = NULL) in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/extention.php on line 0
+[26-Mar-2015 20:25:15 Europe/Moscow] PHP Fatal error:  Declaration of Users::setDependencies() must be compatible with Extention::setDependencies($extentions = NULL) in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/extention.php on line 0
+[26-Mar-2015 20:25:15 Europe/Moscow] PHP Fatal error:  Declaration of Users::setDependencies() must be compatible with Extention::setDependencies($extentions = NULL) in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/extention.php on line 0
+[26-Mar-2015 20:25:16 Europe/Moscow] PHP Fatal error:  Declaration of Users::setDependencies() must be compatible with Extention::setDependencies($extentions = NULL) in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/extention.php on line 0
+[26-Mar-2015 20:25:16 Europe/Moscow] PHP Fatal error:  Declaration of Users::setDependencies() must be compatible with Extention::setDependencies($extentions = NULL) in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/extention.php on line 0
+[26-Mar-2015 20:25:17 Europe/Moscow] PHP Fatal error:  Declaration of Users::setDependencies() must be compatible with Extention::setDependencies($extentions = NULL) in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/extention.php on line 0
+[26-Mar-2015 20:25:18 Europe/Moscow] PHP Fatal error:  Declaration of Users::setDependencies() must be compatible with Extention::setDependencies($extentions = NULL) in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/extention.php on line 0
+[26-Mar-2015 20:25:19 Europe/Moscow] PHP Fatal error:  Declaration of Users::setDependencies() must be compatible with Extention::setDependencies($extentions = NULL) in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/extention.php on line 0
+[26-Mar-2015 20:25:19 Europe/Moscow] PHP Fatal error:  Declaration of Users::setDependencies() must be compatible with Extention::setDependencies($extentions = NULL) in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/extention.php on line 0
+[26-Mar-2015 20:25:20 Europe/Moscow] PHP Fatal error:  Declaration of Users::setDependencies() must be compatible with Extention::setDependencies($extentions = NULL) in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/extention.php on line 0
+[26-Mar-2015 20:25:21 Europe/Moscow] PHP Fatal error:  Declaration of Users::setDependencies() must be compatible with Extention::setDependencies($extentions = NULL) in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/extention.php on line 0
+[26-Mar-2015 20:25:33 Europe/Moscow] PHP Fatal error:  Declaration of Users::setDependencies() must be compatible with Extention::setDependencies($extentions = NULL) in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/extention.php on line 0
+[26-Mar-2015 20:26:09 Europe/Moscow] PHP Fatal error:  Declaration of Users::setDependencies() must be compatible with Extention::setDependencies($extentions = NULL) in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/extention.php on line 0
+[26-Mar-2015 20:26:28 Europe/Moscow] PHP Fatal error:  Declaration of Users::setDependencies() must be compatible with Extention::setDependencies($extentions = NULL) in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/extention.php on line 0
+[26-Mar-2015 21:28:23 Europe/Moscow] PHP Fatal error:  Uncaught exception 'InvalidArgumentException' with message 'Не удалось получить информацию о расширении' in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/extention.php:33
+Stack trace:
+#0 /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/extention.php(12): Extention->loadInfo()
+#1 /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/extentionController.php(14): Extention->__construct('users')
+#2 /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/ucms.php(51): ExtentionController->load('users')
+#3 /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/index.php(9): uCMS->init()
+#4 {main}
+  thrown in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/extention.php on line 33
+[26-Mar-2015 21:43:07 Europe/Moscow] PHP Fatal error:  Class Users contains 2 abstract methods and must therefore be declared abstract or implement the remaining methods (Extention::install, Extention::uninstall) in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/extention.php on line 0
+[26-Mar-2015 21:43:07 Europe/Moscow] PHP Fatal error:  Class Users contains 2 abstract methods and must therefore be declared abstract or implement the remaining methods (Extention::install, Extention::uninstall) in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/extention.php on line 0
+[26-Mar-2015 21:47:37 Europe/Moscow] PHP Fatal error:  Class Users contains 2 abstract methods and must therefore be declared abstract or implement the remaining methods (Extention::install, Extention::uninstall) in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/extention.php on line 0
+[26-Mar-2015 21:47:37 Europe/Moscow] PHP Fatal error:  Class Users contains 2 abstract methods and must therefore be declared abstract or implement the remaining methods (Extention::install, Extention::uninstall) in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/extention.php on line 0
+[26-Mar-2015 22:42:44 Europe/Moscow] PHP Fatal error:  Users cannot implement Extention - it is not an interface in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/extention.php on line 2
+[26-Mar-2015 22:42:45 Europe/Moscow] PHP Fatal error:  Users cannot implement Extention - it is not an interface in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/extention.php on line 2
+[26-Mar-2015 23:43:36 Europe/Moscow] PHP Fatal error:  Class 'URLManagement' not found in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/ucms.php on line 71
+[27-Mar-2015 00:03:49 Europe/Moscow] PHP Fatal error:  Call to undefined function isKeyInURL() in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/urlManagement.php on line 28
+[27-Mar-2015 00:03:50 Europe/Moscow] PHP Fatal error:  Call to undefined function isKeyInURL() in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/urlManagement.php on line 28
+[27-Mar-2015 18:44:03 Europe/Moscow] PHP Fatal error:  Uncaught exception 'InvalidArgumentException' with message 'Can't get extention information' in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/extention.php:50
+Stack trace:
+#0 /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/extention.php(13): Extention->loadInfo()
+#1 /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/ucms.php(70): Extention->__construct('')
+#2 /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/index.php(11): uCMS->runSite()
+#3 {main}
+  thrown in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/extention.php on line 50
+[27-Mar-2015 18:44:04 Europe/Moscow] PHP Fatal error:  Uncaught exception 'InvalidArgumentException' with message 'Can't get extention information' in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/extention.php:50
+Stack trace:
+#0 /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/extention.php(13): Extention->loadInfo()
+#1 /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/ucms.php(70): Extention->__construct('')
+#2 /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/index.php(11): uCMS->runSite()
+#3 {main}
+  thrown in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/extention.php on line 50
+[27-Mar-2015 19:00:39 Europe/Moscow] PHP Fatal error:  Call to undefined function getFilePath() in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/extention.php on line 35
+[27-Mar-2015 19:00:41 Europe/Moscow] PHP Fatal error:  Call to undefined function getFilePath() in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/extention.php on line 35
+[27-Mar-2015 19:03:16 Europe/Moscow] PHP Fatal error:  Call to a member function getDatabase() on null in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/themes/ucms/index.php on line 3
+[27-Mar-2015 19:03:17 Europe/Moscow] PHP Fatal error:  Call to a member function getDatabase() on null in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/themes/ucms/index.php on line 3
+[27-Mar-2015 19:03:27 Europe/Moscow] PHP Fatal error:  Call to a member function getDatabase() on null in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/themes/ucms/index.php on line 3
+[27-Mar-2015 19:04:38 Europe/Moscow] PHP Fatal error:  Call to a member function getDatabase() on null in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/themes/ucms/index.php on line 3
+[27-Mar-2015 19:04:38 Europe/Moscow] PHP Fatal error:  Call to a member function getDatabase() on null in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/themes/ucms/index.php on line 3
+[27-Mar-2015 19:04:49 Europe/Moscow] PHP Fatal error:  Call to a member function getDatabase() on null in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/themes/ucms/index.php on line 3
+[27-Mar-2015 19:04:50 Europe/Moscow] PHP Fatal error:  Call to a member function getDatabase() on null in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/themes/ucms/index.php on line 3
+[27-Mar-2015 19:05:24 Europe/Moscow] PHP Fatal error:  Call to a member function getDatabase() on null in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/themes/ucms/index.php on line 3
+[27-Mar-2015 19:05:24 Europe/Moscow] PHP Fatal error:  Call to a member function getDatabase() on null in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/themes/ucms/index.php on line 3
+[27-Mar-2015 19:05:25 Europe/Moscow] PHP Fatal error:  Call to a member function getDatabase() on null in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/themes/ucms/index.php on line 3
+[27-Mar-2015 19:05:26 Europe/Moscow] PHP Fatal error:  Call to a member function getDatabase() on null in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/themes/ucms/index.php on line 3
+[27-Mar-2015 19:19:26 Europe/Moscow] PHP Fatal error:  Call to protected method Theme::getURLFilePath() from context '' in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/themesFunctions.php on line 30
+[27-Mar-2015 19:19:27 Europe/Moscow] PHP Fatal error:  Call to protected method Theme::getURLFilePath() from context '' in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/themesFunctions.php on line 30
+[27-Mar-2015 19:19:27 Europe/Moscow] PHP Fatal error:  Call to protected method Theme::getURLFilePath() from context '' in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/themesFunctions.php on line 30
+[27-Mar-2015 19:19:28 Europe/Moscow] PHP Fatal error:  Call to protected method Theme::getURLFilePath() from context '' in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/themesFunctions.php on line 30
+[27-Mar-2015 23:13:49 Europe/Moscow] PHP Fatal error:  Cannot access private property URLManager::$rawURL in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/functions.php on line 21
+[27-Mar-2015 23:13:50 Europe/Moscow] PHP Fatal error:  Cannot access private property URLManager::$rawURL in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/functions.php on line 21
+[27-Mar-2015 23:17:43 Europe/Moscow] PHP Parse error:  syntax error, unexpected ':' in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/themes/admin/admin.php on line 17
+[27-Mar-2015 23:17:43 Europe/Moscow] PHP Parse error:  syntax error, unexpected ':' in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/themes/admin/admin.php on line 17
+[28-Mar-2015 19:52:00 Europe/Moscow] PHP Fatal error:  Call to a member function getName() on null in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/themesFunctions.php on line 43
+[28-Mar-2015 19:52:01 Europe/Moscow] PHP Fatal error:  Call to a member function getName() on null in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/themesFunctions.php on line 43
+[28-Mar-2015 19:52:01 Europe/Moscow] PHP Fatal error:  Call to a member function getName() on null in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/themesFunctions.php on line 43
+[28-Mar-2015 19:52:01 Europe/Moscow] PHP Fatal error:  Call to a member function getName() on null in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/themesFunctions.php on line 43
+[28-Mar-2015 19:52:02 Europe/Moscow] PHP Fatal error:  Call to a member function getName() on null in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/themesFunctions.php on line 43
+[31-Mar-2015 17:31:59 Europe/Moscow] PHP Parse error:  syntax error, unexpected 'var' (T_VAR), expecting variable (T_VARIABLE) in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/admin.php on line 3
+[31-Mar-2015 17:32:00 Europe/Moscow] PHP Parse error:  syntax error, unexpected 'var' (T_VAR), expecting variable (T_VARIABLE) in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/admin.php on line 3
+[31-Mar-2015 17:32:00 Europe/Moscow] PHP Parse error:  syntax error, unexpected 'var' (T_VAR), expecting variable (T_VARIABLE) in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/admin.php on line 3
+[31-Mar-2015 17:32:01 Europe/Moscow] PHP Parse error:  syntax error, unexpected 'var' (T_VAR), expecting variable (T_VARIABLE) in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/admin.php on line 3
+[31-Mar-2015 17:39:37 Europe/Moscow] PHP Fatal error:  Call to a member function getSidebar() on null in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/themes/admin/sidebar.php on line 2
+[31-Mar-2015 17:39:37 Europe/Moscow] PHP Fatal error:  Call to a member function getSidebar() on null in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/themes/admin/sidebar.php on line 2
+[31-Mar-2015 17:39:38 Europe/Moscow] PHP Fatal error:  Call to a member function getSidebar() on null in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/themes/admin/sidebar.php on line 2
+[31-Mar-2015 17:39:38 Europe/Moscow] PHP Fatal error:  Call to a member function getSidebar() on null in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/themes/admin/sidebar.php on line 2
+[31-Mar-2015 17:39:38 Europe/Moscow] PHP Fatal error:  Call to a member function getSidebar() on null in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/themes/admin/sidebar.php on line 2
+[31-Mar-2015 17:39:38 Europe/Moscow] PHP Fatal error:  Call to a member function getSidebar() on null in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/themes/admin/sidebar.php on line 2
+[31-Mar-2015 17:39:39 Europe/Moscow] PHP Fatal error:  Call to a member function getSidebar() on null in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/themes/admin/sidebar.php on line 2
+[31-Mar-2015 17:40:33 Europe/Moscow] PHP Fatal error:  Call to a member function getSidebar() on null in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/themes/admin/sidebar.php on line 2
+[31-Mar-2015 17:40:33 Europe/Moscow] PHP Fatal error:  Call to a member function getSidebar() on null in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/themes/admin/sidebar.php on line 2
+[31-Mar-2015 17:40:34 Europe/Moscow] PHP Fatal error:  Call to a member function getSidebar() on null in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/themes/admin/sidebar.php on line 2
+[31-Mar-2015 17:40:34 Europe/Moscow] PHP Fatal error:  Call to a member function getSidebar() on null in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/themes/admin/sidebar.php on line 2
+[31-Mar-2015 17:40:34 Europe/Moscow] PHP Fatal error:  Call to a member function getSidebar() on null in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/themes/admin/sidebar.php on line 2
+[31-Mar-2015 17:40:34 Europe/Moscow] PHP Fatal error:  Call to a member function getSidebar() on null in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/themes/admin/sidebar.php on line 2
+[31-Mar-2015 17:40:35 Europe/Moscow] PHP Fatal error:  Call to a member function getSidebar() on null in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/themes/admin/sidebar.php on line 2
+[31-Mar-2015 17:40:35 Europe/Moscow] PHP Fatal error:  Call to a member function getSidebar() on null in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/themes/admin/sidebar.php on line 2
+[31-Mar-2015 17:40:35 Europe/Moscow] PHP Fatal error:  Call to a member function getSidebar() on null in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/themes/admin/sidebar.php on line 2
+[31-Mar-2015 17:40:35 Europe/Moscow] PHP Fatal error:  Call to a member function getSidebar() on null in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/themes/admin/sidebar.php on line 2
+[31-Mar-2015 17:40:35 Europe/Moscow] PHP Fatal error:  Call to a member function getSidebar() on null in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/themes/admin/sidebar.php on line 2
+[31-Mar-2015 17:40:35 Europe/Moscow] PHP Fatal error:  Call to a member function getSidebar() on null in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/themes/admin/sidebar.php on line 2
+[31-Mar-2015 17:40:35 Europe/Moscow] PHP Fatal error:  Call to a member function getSidebar() on null in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/themes/admin/sidebar.php on line 2
+[31-Mar-2015 17:40:35 Europe/Moscow] PHP Fatal error:  Call to a member function getSidebar() on null in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/themes/admin/sidebar.php on line 2
+[31-Mar-2015 17:40:35 Europe/Moscow] PHP Fatal error:  Call to a member function getSidebar() on null in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/themes/admin/sidebar.php on line 2
+[31-Mar-2015 17:40:35 Europe/Moscow] PHP Fatal error:  Call to a member function getSidebar() on null in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/themes/admin/sidebar.php on line 2
+[31-Mar-2015 17:40:35 Europe/Moscow] PHP Fatal error:  Call to a member function getSidebar() on null in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/themes/admin/sidebar.php on line 2
+[31-Mar-2015 17:40:35 Europe/Moscow] PHP Fatal error:  Call to a member function getSidebar() on null in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/themes/admin/sidebar.php on line 2
+[31-Mar-2015 17:40:35 Europe/Moscow] PHP Fatal error:  Call to a member function getSidebar() on null in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/themes/admin/sidebar.php on line 2
+[31-Mar-2015 17:40:35 Europe/Moscow] PHP Fatal error:  Call to a member function getSidebar() on null in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/themes/admin/sidebar.php on line 2
+[31-Mar-2015 17:40:35 Europe/Moscow] PHP Fatal error:  Call to a member function getSidebar() on null in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/themes/admin/sidebar.php on line 2
+[31-Mar-2015 17:40:35 Europe/Moscow] PHP Fatal error:  Call to a member function getSidebar() on null in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/themes/admin/sidebar.php on line 2
+[31-Mar-2015 17:40:35 Europe/Moscow] PHP Fatal error:  Call to a member function getSidebar() on null in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/themes/admin/sidebar.php on line 2
+[31-Mar-2015 17:41:06 Europe/Moscow] PHP Fatal error:  Constructor AdminPanel::__construct() cannot be static in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/admin.php on line 22
+[31-Mar-2015 17:41:06 Europe/Moscow] PHP Fatal error:  Constructor AdminPanel::__construct() cannot be static in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/admin.php on line 22
+[31-Mar-2015 17:41:07 Europe/Moscow] PHP Fatal error:  Constructor AdminPanel::__construct() cannot be static in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/admin.php on line 22
+[31-Mar-2015 17:41:07 Europe/Moscow] PHP Fatal error:  Constructor AdminPanel::__construct() cannot be static in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/admin.php on line 22
+[31-Mar-2015 17:41:07 Europe/Moscow] PHP Fatal error:  Constructor AdminPanel::__construct() cannot be static in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/admin.php on line 22
+[31-Mar-2015 17:41:08 Europe/Moscow] PHP Fatal error:  Constructor AdminPanel::__construct() cannot be static in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/admin.php on line 22
+[31-Mar-2015 17:42:49 Europe/Moscow] PHP Fatal error:  Call to a member function getSidebar() on null in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/themes/admin/sidebar.php on line 2
+[31-Mar-2015 17:42:51 Europe/Moscow] PHP Fatal error:  Call to a member function getSidebar() on null in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/themes/admin/sidebar.php on line 2
+[31-Mar-2015 17:43:04 Europe/Moscow] PHP Fatal error:  Using $this when not in object context in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/admin.php on line 6
+[31-Mar-2015 17:43:04 Europe/Moscow] PHP Fatal error:  Using $this when not in object context in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/admin.php on line 6
+[31-Mar-2015 17:43:05 Europe/Moscow] PHP Fatal error:  Using $this when not in object context in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/admin.php on line 6
+[31-Mar-2015 17:43:05 Europe/Moscow] PHP Fatal error:  Using $this when not in object context in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/admin.php on line 6
+[31-Mar-2015 17:43:07 Europe/Moscow] PHP Fatal error:  Using $this when not in object context in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/admin.php on line 6
+[31-Mar-2015 17:43:08 Europe/Moscow] PHP Fatal error:  Using $this when not in object context in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/admin.php on line 6
+[31-Mar-2015 17:43:43 Europe/Moscow] PHP Fatal error:  Call to a member function getSidebar() on null in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/themes/admin/sidebar.php on line 2
+[31-Mar-2015 17:43:44 Europe/Moscow] PHP Fatal error:  Call to a member function getSidebar() on null in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/themes/admin/sidebar.php on line 2
+[31-Mar-2015 17:43:44 Europe/Moscow] PHP Fatal error:  Call to a member function getSidebar() on null in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/themes/admin/sidebar.php on line 2
+[31-Mar-2015 17:43:59 Europe/Moscow] PHP Fatal error:  Using $this when not in object context in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/admin.php on line 20
+[31-Mar-2015 17:44:00 Europe/Moscow] PHP Fatal error:  Using $this when not in object context in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/admin.php on line 20
+[31-Mar-2015 17:44:00 Europe/Moscow] PHP Fatal error:  Using $this when not in object context in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/admin.php on line 20
+[31-Mar-2015 17:44:01 Europe/Moscow] PHP Fatal error:  Using $this when not in object context in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/admin.php on line 20
+[31-Mar-2015 17:44:13 Europe/Moscow] PHP Fatal error:  Undefined class constant 'sidebar' in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/admin.php on line 20
+[31-Mar-2015 17:44:13 Europe/Moscow] PHP Fatal error:  Undefined class constant 'sidebar' in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/admin.php on line 20
+[31-Mar-2015 18:10:03 Europe/Moscow] PHP Parse error:  syntax error, unexpected ',' in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/admin.php on line 21
+[31-Mar-2015 18:10:04 Europe/Moscow] PHP Parse error:  syntax error, unexpected ',' in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/admin.php on line 21
+[31-Mar-2015 18:10:04 Europe/Moscow] PHP Parse error:  syntax error, unexpected ',' in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/admin.php on line 21
+[31-Mar-2015 18:11:34 Europe/Moscow] PHP Parse error:  syntax error, unexpected ',' in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/admin.php on line 21
+[31-Mar-2015 18:13:06 Europe/Moscow] PHP Parse error:  syntax error, unexpected ',' in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/admin.php on line 21
+[31-Mar-2015 18:13:18 Europe/Moscow] PHP Parse error:  syntax error, unexpected ',' in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/admin.php on line 21
+[31-Mar-2015 18:13:19 Europe/Moscow] PHP Parse error:  syntax error, unexpected ',' in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/admin.php on line 21
+[31-Mar-2015 18:13:20 Europe/Moscow] PHP Parse error:  syntax error, unexpected ',' in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/admin.php on line 21
+[31-Mar-2015 19:42:56 Europe/Moscow] PHP Parse error:  syntax error, unexpected 'const' (T_CONST), expecting variable (T_VARIABLE) in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/admin.php on line 4
+[31-Mar-2015 19:42:57 Europe/Moscow] PHP Parse error:  syntax error, unexpected 'const' (T_CONST), expecting variable (T_VARIABLE) in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/admin.php on line 4
+[31-Mar-2015 19:42:57 Europe/Moscow] PHP Parse error:  syntax error, unexpected 'const' (T_CONST), expecting variable (T_VARIABLE) in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/admin.php on line 4
+[31-Mar-2015 19:42:58 Europe/Moscow] PHP Parse error:  syntax error, unexpected 'const' (T_CONST), expecting variable (T_VARIABLE) in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/admin.php on line 4
+[31-Mar-2015 19:42:58 Europe/Moscow] PHP Parse error:  syntax error, unexpected 'const' (T_CONST), expecting variable (T_VARIABLE) in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/admin.php on line 4
+[31-Mar-2015 19:43:04 Europe/Moscow] PHP Parse error:  syntax error, unexpected '$SETTINGS_INDEX' (T_VARIABLE), expecting identifier (T_STRING) in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/admin.php on line 4
+[31-Mar-2015 19:43:04 Europe/Moscow] PHP Parse error:  syntax error, unexpected '$SETTINGS_INDEX' (T_VARIABLE), expecting identifier (T_STRING) in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/admin.php on line 4
+[31-Mar-2015 19:43:10 Europe/Moscow] PHP Parse error:  syntax error, unexpected 'var' (T_VAR), expecting identifier (T_STRING) in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/admin.php on line 4
+[31-Mar-2015 19:43:10 Europe/Moscow] PHP Parse error:  syntax error, unexpected 'var' (T_VAR), expecting identifier (T_STRING) in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/admin.php on line 4
+[31-Mar-2015 19:43:11 Europe/Moscow] PHP Parse error:  syntax error, unexpected 'var' (T_VAR), expecting identifier (T_STRING) in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/admin.php on line 4
+[31-Mar-2015 19:43:17 Europe/Moscow] PHP Parse error:  syntax error, unexpected '$SETTINGS_INDEX' (T_VARIABLE), expecting identifier (T_STRING) in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/admin.php on line 4
+[31-Mar-2015 19:43:17 Europe/Moscow] PHP Parse error:  syntax error, unexpected '$SETTINGS_INDEX' (T_VARIABLE), expecting identifier (T_STRING) in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/admin.php on line 4
+[31-Mar-2015 19:43:39 Europe/Moscow] PHP Parse error:  syntax error, unexpected 'const' (T_CONST), expecting variable (T_VARIABLE) in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/admin.php on line 4
+[31-Mar-2015 19:43:39 Europe/Moscow] PHP Parse error:  syntax error, unexpected 'const' (T_CONST), expecting variable (T_VARIABLE) in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/admin.php on line 4
+[31-Mar-2015 19:43:40 Europe/Moscow] PHP Parse error:  syntax error, unexpected 'const' (T_CONST), expecting variable (T_VARIABLE) in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/admin.php on line 4
+[31-Mar-2015 19:43:40 Europe/Moscow] PHP Parse error:  syntax error, unexpected 'const' (T_CONST), expecting variable (T_VARIABLE) in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/admin.php on line 4
+[31-Mar-2015 19:55:36 Europe/Moscow] PHP Parse error:  syntax error, unexpected ')' in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/themes/admin/sidebar.php on line 10
+[31-Mar-2015 19:55:37 Europe/Moscow] PHP Parse error:  syntax error, unexpected ')' in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/themes/admin/sidebar.php on line 10
+[31-Mar-2015 20:09:56 Europe/Moscow] PHP Parse error:  syntax error, unexpected 'else' (T_ELSE) in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/admin.php on line 23
+[31-Mar-2015 20:09:57 Europe/Moscow] PHP Parse error:  syntax error, unexpected 'else' (T_ELSE) in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/admin.php on line 23
+[31-Mar-2015 20:10:05 Europe/Moscow] PHP Fatal error:  Undefined class constant 'SETTINGS_INDEX' in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/themes/admin/sidebar.php on line 10
+[31-Mar-2015 20:10:06 Europe/Moscow] PHP Fatal error:  Undefined class constant 'SETTINGS_INDEX' in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/themes/admin/sidebar.php on line 10
+[31-Mar-2015 20:15:18 Europe/Moscow] PHP Fatal error:  Call to undefined function printSidebar() in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/admin.php on line 45
+[31-Mar-2015 20:15:18 Europe/Moscow] PHP Fatal error:  Call to undefined function printSidebar() in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/admin.php on line 45
+[31-Mar-2015 20:15:29 Europe/Moscow] PHP Fatal error:  Call to undefined function printSidebar() in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/admin.php on line 45
+[31-Mar-2015 20:15:40 Europe/Moscow] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 72 bytes) in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/admin.php on line 43
+[31-Mar-2015 20:15:41 Europe/Moscow] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 130968 bytes) in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/admin.php on line 45
+[31-Mar-2015 20:15:42 Europe/Moscow] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 130968 bytes) in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/admin.php on line 45
+[31-Mar-2015 20:16:02 Europe/Moscow] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 130968 bytes) in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/admin.php on line 45
+[31-Mar-2015 20:30:39 Europe/Moscow] PHP Fatal error:  Call to a member function getDatabase() on null in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/database/query.php on line 9
+[31-Mar-2015 20:30:39 Europe/Moscow] PHP Fatal error:  Call to a member function getDatabase() on null in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/database/query.php on line 9
+[31-Mar-2015 20:30:40 Europe/Moscow] PHP Fatal error:  Call to a member function getDatabase() on null in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/database/query.php on line 9
+[31-Mar-2015 20:30:40 Europe/Moscow] PHP Fatal error:  Call to a member function getDatabase() on null in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/database/query.php on line 9
+[31-Mar-2015 20:30:41 Europe/Moscow] PHP Fatal error:  Call to a member function getDatabase() on null in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/database/query.php on line 9
+[31-Mar-2015 20:30:51 Europe/Moscow] PHP Fatal error:  Call to a member function getDatabase() on null in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/database/query.php on line 9
+[31-Mar-2015 20:30:52 Europe/Moscow] PHP Fatal error:  Call to a member function getDatabase() on null in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/database/query.php on line 9
+[31-Mar-2015 20:32:55 Europe/Moscow] PHP Fatal error:  Call to a member function getDatabase() on null in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/database/query.php on line 9
+[31-Mar-2015 20:32:55 Europe/Moscow] PHP Fatal error:  Call to a member function getDatabase() on null in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/database/query.php on line 9
+[31-Mar-2015 20:32:56 Europe/Moscow] PHP Fatal error:  Call to a member function getDatabase() on null in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/database/query.php on line 9
+[31-Mar-2015 20:32:56 Europe/Moscow] PHP Fatal error:  Call to a member function getDatabase() on null in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/database/query.php on line 9
+[31-Mar-2015 20:32:57 Europe/Moscow] PHP Fatal error:  Call to a member function getDatabase() on null in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/database/query.php on line 9
+[31-Mar-2015 20:32:58 Europe/Moscow] PHP Fatal error:  Call to a member function getDatabase() on null in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/database/query.php on line 9
+[31-Mar-2015 20:32:58 Europe/Moscow] PHP Fatal error:  Call to a member function getDatabase() on null in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/database/query.php on line 9
+[31-Mar-2015 20:33:31 Europe/Moscow] PHP Fatal error:  Call to a member function getLanguage() on null in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/functions.php on line 13
+[31-Mar-2015 20:33:31 Europe/Moscow] PHP Fatal error:  Call to a member function getLanguage() on null in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/functions.php on line 13
+[31-Mar-2015 20:33:32 Europe/Moscow] PHP Fatal error:  Call to a member function getLanguage() on null in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/functions.php on line 13
+[31-Mar-2015 20:33:32 Europe/Moscow] PHP Fatal error:  Call to a member function getLanguage() on null in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/functions.php on line 13
+[31-Mar-2015 20:34:13 Europe/Moscow] PHP Fatal error:  Call to a member function getExtentions() on null in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/admin.php on line 13
+[31-Mar-2015 20:34:14 Europe/Moscow] PHP Fatal error:  Call to a member function getExtentions() on null in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/admin.php on line 13
+[31-Mar-2015 20:34:14 Europe/Moscow] PHP Fatal error:  Call to a member function getExtentions() on null in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/admin.php on line 13
+[31-Mar-2015 20:34:37 Europe/Moscow] PHP Fatal error:  Call to a member function getCurrentTheme() on null in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/themesFunctions.php on line 15
+[31-Mar-2015 20:34:38 Europe/Moscow] PHP Fatal error:  Call to a member function getCurrentTheme() on null in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/themesFunctions.php on line 15
+[31-Mar-2015 20:35:29 Europe/Moscow] PHP Fatal error:  Call to a member function getExtentions() on null in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/themes/admin/admin.php on line 22
+[31-Mar-2015 20:35:30 Europe/Moscow] PHP Fatal error:  Call to a member function getExtentions() on null in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/themes/admin/admin.php on line 22
+[31-Mar-2015 22:33:50 Europe/Moscow] PHP Fatal error:  Call to a member function escapeString() on null in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/database/query.php on line 117
+[31-Mar-2015 22:33:51 Europe/Moscow] PHP Fatal error:  Call to a member function escapeString() on null in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/database/query.php on line 117
+[31-Mar-2015 22:34:02 Europe/Moscow] PHP Fatal error:  Call to a member function escapeString() on null in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/database/query.php on line 117
+[31-Mar-2015 22:34:03 Europe/Moscow] PHP Fatal error:  Call to a member function escapeString() on null in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/database/query.php on line 117
+[31-Mar-2015 22:34:04 Europe/Moscow] PHP Fatal error:  Call to a member function escapeString() on null in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/database/query.php on line 117
+[31-Mar-2015 22:34:05 Europe/Moscow] PHP Fatal error:  Call to a member function escapeString() on null in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/database/query.php on line 117
+[31-Mar-2015 22:34:06 Europe/Moscow] PHP Fatal error:  Call to a member function escapeString() on null in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/database/query.php on line 117
+[31-Mar-2015 22:34:06 Europe/Moscow] PHP Fatal error:  Call to a member function escapeString() on null in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/database/query.php on line 117
+[31-Mar-2015 23:22:48 Europe/Moscow] PHP Fatal error:  Cannot access empty property in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/language.php on line 37
+[01-Apr-2015 00:45:03 Europe/Moscow] PHP Fatal error:  Cannot access empty property in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/language.php on line 37
+[01-Apr-2015 00:47:07 Europe/Moscow] PHP Fatal error:  Cannot access empty property in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/language.php on line 37
+[01-Apr-2015 00:47:08 Europe/Moscow] PHP Fatal error:  Cannot access empty property in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/language.php on line 37
+[01-Apr-2015 00:47:08 Europe/Moscow] PHP Fatal error:  Cannot access empty property in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/language.php on line 37
+[01-Apr-2015 20:39:40 Europe/Moscow] PHP Fatal error:  Call to a member function select() on null in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/test.php on line 19
+[02-Apr-2015 23:14:32 Europe/Moscow] PHP Parse error:  syntax error, unexpected '"name"' (T_CONSTANT_ENCAPSED_STRING), expecting ')' in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/include/userManager.php on line 8
+[02-Apr-2015 23:14:33 Europe/Moscow] PHP Parse error:  syntax error, unexpected '"name"' (T_CONSTANT_ENCAPSED_STRING), expecting ')' in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/include/userManager.php on line 8
+[04-Apr-2015 18:34:41 Europe/Moscow] PHP Fatal error:  Class 'User' not found in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/include/userManager.php on line 2
+[04-Apr-2015 18:35:36 Europe/Moscow] PHP Fatal error:  Non-abstract method User::current() must contain body in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/include/user.php on line 12
+[04-Apr-2015 18:35:36 Europe/Moscow] PHP Fatal error:  Non-abstract method User::current() must contain body in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/include/user.php on line 12
+[04-Apr-2015 18:35:37 Europe/Moscow] PHP Fatal error:  Non-abstract method User::current() must contain body in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/include/user.php on line 12
+[04-Apr-2015 18:35:37 Europe/Moscow] PHP Fatal error:  Non-abstract method User::current() must contain body in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/include/user.php on line 12
+[04-Apr-2015 18:35:37 Europe/Moscow] PHP Fatal error:  Non-abstract method User::current() must contain body in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/include/user.php on line 12
+[04-Apr-2015 18:35:38 Europe/Moscow] PHP Fatal error:  Non-abstract method User::current() must contain body in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/include/user.php on line 12
+[04-Apr-2015 18:35:38 Europe/Moscow] PHP Fatal error:  Non-abstract method User::current() must contain body in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/include/user.php on line 12
+[04-Apr-2015 18:38:54 Europe/Moscow] PHP Fatal error:  Access to undeclared static property: User::$instance in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/include/user.php on line 5
+[04-Apr-2015 18:39:07 Europe/Moscow] PHP Fatal error:  Access to undeclared static property: User::$instance in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/include/user.php on line 5
+[04-Apr-2015 19:19:05 Europe/Moscow] PHP Fatal error:  Call to undefined method Session::getCurrent() in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/ucms.php on line 105
+[04-Apr-2015 19:19:06 Europe/Moscow] PHP Fatal error:  Call to undefined method Session::getCurrent() in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/ucms.php on line 105
+[04-Apr-2015 19:19:06 Europe/Moscow] PHP Fatal error:  Call to undefined method Session::getCurrent() in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/ucms.php on line 105
+[04-Apr-2015 19:19:06 Europe/Moscow] PHP Fatal error:  Call to undefined method Session::getCurrent() in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/ucms.php on line 105
+[04-Apr-2015 19:19:07 Europe/Moscow] PHP Fatal error:  Call to undefined method Session::getCurrent() in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/ucms.php on line 105
+[04-Apr-2015 19:19:07 Europe/Moscow] PHP Fatal error:  Call to undefined method Session::getCurrent() in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/ucms.php on line 105
+[04-Apr-2015 19:19:09 Europe/Moscow] PHP Fatal error:  Call to undefined method Session::getCurrent() in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/ucms.php on line 105
+[04-Apr-2015 19:19:10 Europe/Moscow] PHP Fatal error:  Call to undefined method Session::getCurrent() in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/ucms.php on line 105
+[04-Apr-2015 19:19:10 Europe/Moscow] PHP Fatal error:  Call to undefined method Session::getCurrent() in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/ucms.php on line 105
+[04-Apr-2015 19:30:54 Europe/Moscow] PHP Fatal error:  Call to a member function load() on null in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/ucms.php on line 51
+[04-Apr-2015 19:30:56 Europe/Moscow] PHP Fatal error:  Call to a member function load() on null in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/ucms.php on line 51
+[04-Apr-2015 19:30:56 Europe/Moscow] PHP Fatal error:  Call to a member function load() on null in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/ucms.php on line 51
+[04-Apr-2015 19:31:00 Europe/Moscow] PHP Fatal error:  Call to a member function load() on null in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/ucms.php on line 51
+[04-Apr-2015 20:24:38 Europe/Moscow] PHP Fatal error:  Class 'UserManager' not found in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/test.php on line 46
+[04-Apr-2015 22:57:47 Europe/Moscow] PHP Fatal error:  Class 'UserManager' not found in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/test.php on line 46
+[04-Apr-2015 23:10:11 Europe/Moscow] PHP Fatal error:  Class 'User' not found in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/extention.php on line 33
+[04-Apr-2015 23:10:12 Europe/Moscow] PHP Fatal error:  Class 'User' not found in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/extention.php on line 33
+[04-Apr-2015 23:10:48 Europe/Moscow] PHP Fatal error:  Call to undefined method User::current() in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/extention.php on line 33
+[04-Apr-2015 23:10:48 Europe/Moscow] PHP Fatal error:  Call to undefined method User::current() in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/extention.php on line 33
+[04-Apr-2015 23:10:49 Europe/Moscow] PHP Fatal error:  Call to undefined method User::current() in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/extention.php on line 33
+[04-Apr-2015 23:27:00 Europe/Moscow] PHP Fatal error:  Call to undefined method Session::getIP() in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/include/userManagement.php on line 20
+[05-Apr-2015 00:35:02 Europe/Moscow] PHP Parse error:  syntax error, unexpected '=' in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/include/group.php on line 32
+[05-Apr-2015 00:35:02 Europe/Moscow] PHP Parse error:  syntax error, unexpected '=' in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/include/group.php on line 32
+[05-Apr-2015 00:44:22 Europe/Moscow] PHP Parse error:  syntax error, unexpected '->' (T_OBJECT_OPERATOR) in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/include/group.php on line 68
+[05-Apr-2015 00:44:22 Europe/Moscow] PHP Parse error:  syntax error, unexpected '->' (T_OBJECT_OPERATOR) in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/include/group.php on line 68
+[05-Apr-2015 00:44:23 Europe/Moscow] PHP Parse error:  syntax error, unexpected '->' (T_OBJECT_OPERATOR) in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/include/group.php on line 68
+[05-Apr-2015 00:55:38 Europe/Moscow] PHP Parse error:  syntax error, unexpected '->' (T_OBJECT_OPERATOR) in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/include/group.php on line 68
+[05-Apr-2015 01:26:15 Europe/Moscow] PHP Parse error:  syntax error, unexpected '->' (T_OBJECT_OPERATOR) in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/include/group.php on line 68
+[05-Apr-2015 23:31:10 Europe/Moscow] PHP Parse error:  syntax error, unexpected 'if' (T_IF) in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/include/userManagement.php on line 74
+[05-Apr-2015 23:31:11 Europe/Moscow] PHP Parse error:  syntax error, unexpected 'if' (T_IF) in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/include/userManagement.php on line 74
+[05-Apr-2015 23:40:46 Europe/Moscow] PHP Fatal error:  Using $this when not in object context in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/session.php on line 75
+[05-Apr-2015 23:40:47 Europe/Moscow] PHP Fatal error:  Using $this when not in object context in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/session.php on line 75
+[05-Apr-2015 23:40:48 Europe/Moscow] PHP Fatal error:  Using $this when not in object context in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/session.php on line 75
+[06-Apr-2015 19:56:56 Europe/Moscow] PHP Fatal error:  Call to undefined function generateSessionHash() in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/include/userManagement.php on line 36
+[06-Apr-2015 19:56:56 Europe/Moscow] PHP Fatal error:  Call to undefined function generateSessionHash() in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/include/userManagement.php on line 36
+[06-Apr-2015 20:07:54 Europe/Moscow] PHP Fatal error:  Call to undefined method User::getCurrent() in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/extention.php on line 19
+[06-Apr-2015 20:07:55 Europe/Moscow] PHP Fatal error:  Call to undefined method User::getCurrent() in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/extention.php on line 19
+[06-Apr-2015 20:07:56 Europe/Moscow] PHP Fatal error:  Call to undefined method User::getCurrent() in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/extention.php on line 19
+[06-Apr-2015 20:15:13 Europe/Moscow] PHP Fatal error:  Call to a member function getID() on string in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/extention.php on line 18
+[06-Apr-2015 20:15:14 Europe/Moscow] PHP Fatal error:  Call to a member function getID() on string in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/extention.php on line 18
+[06-Apr-2015 20:18:15 Europe/Moscow] PHP Fatal error:  Call to a member function getID() on string in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/extention.php on line 18
+[06-Apr-2015 20:18:16 Europe/Moscow] PHP Fatal error:  Call to a member function getID() on string in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/extention.php on line 18
+[06-Apr-2015 20:25:44 Europe/Moscow] PHP Fatal error:  Call to a member function getName() on string in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/extention.php on line 18
+[06-Apr-2015 20:25:45 Europe/Moscow] PHP Fatal error:  Call to a member function getName() on string in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/extention.php on line 18
+[06-Apr-2015 20:25:45 Europe/Moscow] PHP Fatal error:  Call to a member function getName() on string in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/extention.php on line 18
+[06-Apr-2015 20:25:46 Europe/Moscow] PHP Fatal error:  Call to a member function getName() on string in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/extention.php on line 18
+[06-Apr-2015 20:25:47 Europe/Moscow] PHP Fatal error:  Call to a member function getName() on string in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/extention.php on line 18
+[06-Apr-2015 20:26:01 Europe/Moscow] PHP Fatal error:  Call to a member function getName() on string in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/extention.php on line 18
+[06-Apr-2015 20:26:28 Europe/Moscow] PHP Fatal error:  Call to a member function getName() on string in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/extention.php on line 18
+[06-Apr-2015 20:26:29 Europe/Moscow] PHP Fatal error:  Call to a member function getName() on string in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/extention.php on line 18
+[06-Apr-2015 20:26:29 Europe/Moscow] PHP Fatal error:  Call to a member function getName() on string in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/extention.php on line 18
+[06-Apr-2015 20:26:29 Europe/Moscow] PHP Fatal error:  Call to a member function getName() on string in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/extention.php on line 18
+[06-Apr-2015 20:26:30 Europe/Moscow] PHP Fatal error:  Call to a member function getName() on string in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/extention.php on line 18
+[06-Apr-2015 20:26:36 Europe/Moscow] PHP Fatal error:  Call to a member function getName() on string in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/extention.php on line 18
+[06-Apr-2015 20:26:36 Europe/Moscow] PHP Fatal error:  Call to a member function getName() on string in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/extention.php on line 18
+[06-Apr-2015 20:26:50 Europe/Moscow] PHP Fatal error:  Call to a member function hasPermission() on null in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/include/user.php on line 141
+[06-Apr-2015 20:26:50 Europe/Moscow] PHP Fatal error:  Call to a member function hasPermission() on null in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/include/user.php on line 141
+[06-Apr-2015 20:26:50 Europe/Moscow] PHP Fatal error:  Call to a member function hasPermission() on null in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/include/user.php on line 141
+[06-Apr-2015 20:26:50 Europe/Moscow] PHP Fatal error:  Call to a member function hasPermission() on null in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/include/user.php on line 141
+[06-Apr-2015 20:26:51 Europe/Moscow] PHP Fatal error:  Call to a member function hasPermission() on null in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/include/user.php on line 141
+[06-Apr-2015 20:26:51 Europe/Moscow] PHP Fatal error:  Call to a member function hasPermission() on null in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/include/user.php on line 141
+[06-Apr-2015 20:26:52 Europe/Moscow] PHP Fatal error:  Call to a member function hasPermission() on null in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/include/user.php on line 141
+[07-Apr-2015 15:17:41 Europe/Moscow] PHP Fatal error:  Call to a member function delete() on null in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/session.php on line 116
+[07-Apr-2015 15:29:23 Europe/Moscow] PHP Fatal error:  Using $this when not in object context in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/session.php on line 73
+[07-Apr-2015 19:26:53 Europe/Moscow] PHP Parse error:  syntax error, unexpected ')' in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/include/userManagement.php on line 89
+[07-Apr-2015 19:26:53 Europe/Moscow] PHP Parse error:  syntax error, unexpected ')' in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/include/userManagement.php on line 89
+[07-Apr-2015 19:26:54 Europe/Moscow] PHP Parse error:  syntax error, unexpected ')' in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/include/userManagement.php on line 89
+[07-Apr-2015 19:26:54 Europe/Moscow] PHP Parse error:  syntax error, unexpected ')' in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/include/userManagement.php on line 89
+[08-Apr-2015 01:18:39 Europe/Moscow] PHP Fatal error:  Call to a member function getRaw() on null in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/admin.php on line 50
+[08-Apr-2015 01:18:40 Europe/Moscow] PHP Fatal error:  Call to a member function getRaw() on null in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/core/include/admin.php on line 50
+[08-Apr-2015 15:09:49 Europe/Moscow] PHP Fatal error:  Can't use method return value in write context in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/include/user.php on line 136
+[08-Apr-2015 15:09:50 Europe/Moscow] PHP Fatal error:  Can't use method return value in write context in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/include/user.php on line 136
+[08-Apr-2015 15:09:51 Europe/Moscow] PHP Fatal error:  Can't use method return value in write context in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/include/user.php on line 136
+[08-Apr-2015 15:10:27 Europe/Moscow] PHP Fatal error:  Can't use method return value in write context in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/include/userManagement.php on line 7
+[08-Apr-2015 15:10:28 Europe/Moscow] PHP Fatal error:  Can't use method return value in write context in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/include/userManagement.php on line 7
+[08-Apr-2015 15:10:28 Europe/Moscow] PHP Fatal error:  Can't use method return value in write context in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/include/userManagement.php on line 7
+[08-Apr-2015 15:10:28 Europe/Moscow] PHP Fatal error:  Can't use method return value in write context in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/include/userManagement.php on line 7
+[08-Apr-2015 15:27:22 Europe/Moscow] PHP Fatal error:  Class 'Manage' not found in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/themes/admin/extentions.php on line 4
