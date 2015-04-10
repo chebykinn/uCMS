@@ -17,8 +17,8 @@
 			}
 		}
 		$search_in = explode(",", SEARCH_IN);
-
-		if( !in_array(DEFAULT_SEARCH_MODULE, $search_in) and DEFAULT_SEARCH_MODULE != "" ){
+		$default = DEFAULT_SEARCH_MODULE;
+		if(!in_array(DEFAULT_SEARCH_MODULE, $search_in) and !empty($default)){
 			$upd = $ucms->update_setting("default_search_module", $search_in[0]);
 			header("Location: settings.php?module=search");
 		}
