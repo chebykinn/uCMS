@@ -434,3 +434,5 @@ Stack trace:
 [08-Apr-2015 15:10:28 Europe/Moscow] PHP Fatal error:  Can't use method return value in write context in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/include/userManagement.php on line 7
 [08-Apr-2015 15:10:28 Europe/Moscow] PHP Fatal error:  Can't use method return value in write context in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/extentions/users/include/userManagement.php on line 7
 [08-Apr-2015 15:27:22 Europe/Moscow] PHP Fatal error:  Class 'Manage' not found in /home/users1/i/ivan4b/domains/nucms.ivan4b.ru/content/themes/admin/extentions.php on line 4
+[11-Apr-2015 15:54:13 Europe/Moscow] PHP Fatal error:  Call to a member function printTable() on a non-object in /home/ivan/uCMSdev/uCMS/content/themes/admin/extentions.php on line 5
+[11-Apr-2015 15:54:14 Europe/Moscow] PHP Fatal error:  Call to a member function printTable() on a non-object in /home/ivan/uCMSdev/uCMS/content/themes/admin/extentions.php on line 5
