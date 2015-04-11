@@ -60,7 +60,9 @@ class Session{
 		if( isset($_SERVER['HTTP_X_CLIENT_IP']) ){
 			$ip = $_SERVER['HTTP_X_CLIENT_IP'];
 		}
-		if (empty($ip)) $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+		else if( isset($_SERVER['HTTP_X_FORWARDED_FOR']) ){
+			$ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+		}
 		if (!empty($ip)) {
 			$ip = explode(",", $ip);
 			$ip = $ip[0];
