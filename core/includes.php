@@ -15,6 +15,6 @@ require_once INCLUDE_PATH.'themesFunctions.php';
 require_once INCLUDE_PATH.'extentionController.php';
 require_once INCLUDE_PATH.'urlManager.php';
 require_once INCLUDE_PATH.'settings.php';
-require_once INCLUDE_PATH.'management.php';
+require_once INCLUDE_PATH.'adminPage.php';
 require_once CORE_PATH.'ucms.php';
 ?>
