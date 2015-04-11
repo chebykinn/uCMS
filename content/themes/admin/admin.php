@@ -1,12 +1,20 @@
 <?php
 // Admin theme control center
+$defaultActions = array('settings', 'extentions', 'phpinfo');
+$url = new URLManager();
+$currentAction = $url->getCurrentAdminAction();
+$adminActions = array_merge($defaultActions, uCMS::getInstance()->getExtentions()->getUsedAdminActions());
+if( !empty($currentAction) && !in_array($currentAction, $adminActions) ){
+	error_404();
+}
 if( User::current()->can('access control panel') ){
 	include INCLUDE_PATH.'admin.php';
-	$url = new URLManager();
 	AdminPanel::init();
 	$adminTitle = $this->getTitle().' :: ';
 	//check permissions
-	switch ( $url->getCurrentAdminAction() ) {
+	get_header();
+	get_sidebar();
+	switch ( $currentAction ) {
 		case '':
 			$this->setTitle($adminTitle.tr('Home'));
 			$this->loadTemplate('index');
@@ -21,15 +29,16 @@ if( User::current()->can('access control panel') ){
 			$this->setTitle($adminTitle.tr('Extentions'));
 			$this->loadTemplate('extentions');
 		break;
+
+		case 'phpinfo':
+			$this->loadTemplate('phpinfo');
+		break;
 		
 		default:
-			if( !in_array($url->getCurrentAdminAction(), uCMS::getInstance()->getExtentions()->getUsedAdminActions()) ){
-				error_404();
-			}else{
-				$this->loadTemplate('extention');
-			}
+			$this->loadTemplate('extention');
 		break;
 	}
+	get_footer();
 }else{
 	if( !User::current()->isLoggedIn() ){
 		$this->loadTemplate('login');
