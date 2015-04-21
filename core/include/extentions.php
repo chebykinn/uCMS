@@ -1,13 +1,13 @@
 <?php
-class ExtentionController{
-	private $list;
-	private $usedActions;
-	private $usedAdminActions;
+class Extentions{
+	private static $list;
+	private static $usedActions;
+	private static $usedAdminActions;
 
-	public function create($extentions){
-		$this->list = array();
-		$this->usedActions = array();
-		$this->usedAdminActions = array();
+	public static function create($extentions){
+		self::$list = array();
+		self::$usedActions = array();
+		self::$usedAdminActions = array();
 		if( !is_array($extentions) ){
 			$extentions = array($extentions);
 		}
@@ -16,7 +16,7 @@ class ExtentionController{
 				include EXTENTIONS_PATH.$extention.'/extention.php';
 				if( class_exists($extention) ){
 					try{
-						$this->list[$extention] = new $extention($extention);
+						self::$list[$extention] = new $extention($extention);
 					}catch(InvalidArgumentException $e){
 						p("[@s]: ".$e->getMessage(), $extention);
 					}catch(RuntimeException $e){
@@ -29,30 +29,30 @@ class ExtentionController{
 		}
 	}
 
-	public function load(){
-		if( is_array($this->list) ){
+	public static function load(){
+		if( is_array(self::$list) ){
 			$extentionActions = $extentionAdminActions = array();
-			foreach ($this->list as $name => $extention) {
+			foreach (self::$list as $name => $extention) {
 				if( is_object($extention) ){
 					$extention->load();
 					
 					$extentionActions = is_array($extention->getActions()) ? $extention->getActions() : array();
 					$extentionAdminActions = is_array($extention->getAdminActions()) ? $extention->getAdminActions() : array();
-					$this->usedActions = array_merge($this->usedActions, $extentionActions);
-					$this->usedAdminActions = array_merge($this->usedAdminActions, $extentionAdminActions);
+					self::$usedActions = array_merge(self::$usedActions, $extentionActions);
+					self::$usedAdminActions = array_merge(self::$usedAdminActions, $extentionAdminActions);
 				}
 			}
-			$this->usedActions = array_unique($this->usedActions);
-			$this->usedAdminActions = array_unique($this->usedAdminActions);
+			self::$usedActions = array_unique(self::$usedActions);
+			self::$usedAdminActions = array_unique(self::$usedAdminActions);
 		}
 	}
 
-	public function loadOnAction($action){
-		if( is_array($this->list) ){
+	public static function loadOnAction($action){
+		if( is_array(self::$list) ){
 			$count = 0;
 			$templateData = "";
-			foreach ($this->list as $name => $extention) {
-				if( !in_array($action, $this->usedActions) ) $action = OTHER_ACTION;
+			foreach (self::$list as $name => $extention) {
+				if( !in_array($action, self::$usedActions) ) $action = OTHER_ACTION;
 				if( is_object($extention) && in_array($action, $extention->getActions())){
 					$templateData = $extention->doAction($action);
 					$count++;
@@ -64,10 +64,10 @@ class ExtentionController{
 		return "";
 	}
 
-	public function loadOnAdminAction($action){
-		if( is_array($this->list) ){
+	public static function loadOnAdminAction($action){
+		if( is_array(self::$list) ){
 			$title = "";
-			foreach ($this->list as $name => $extention) {
+			foreach (self::$list as $name => $extention) {
 				if( is_object($extention) && in_array($action, $extention->getAdminActions()) ){
 					$title = $extention->doAdminAction($action);
 				}
@@ -77,24 +77,24 @@ class ExtentionController{
 		return array( "template" => ADMIN_ACTION, "title" => tr("μCMS Control Panel$title") );
 	}
 
-	public function getUsedAdminActions(){
-		return $this->usedAdminActions;
+	public static function getUsedAdminActions(){
+		return self::$usedAdminActions;
 	}
 
-	public function getUsedActions(){
-		return $this->usedActions;
+	public static function getUsedActions(){
+		return self::$usedActions;
 	}
 
-	public function get($name){
-		if( !empty($this->list[$name]) && is_object($this->list[$name]) ){
-			return $this->list[$name];
+	public static function get($name){
+		if( !empty(self::$list[$name]) && is_object(self::$list[$name]) ){
+			return self::$list[$name];
 		}
 		return '';
 	}
 
-	public function getLoadedExtentions(){
+	public static function getLoadedExtentions(){
 		$names = array();
-		foreach ($this->list as $name => $extention) {
+		foreach (self::$list as $name => $extention) {
 			if( is_object($extention) ){
 				$names[] = $name;
 			}
