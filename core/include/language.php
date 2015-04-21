@@ -1,19 +1,31 @@
 <?php
 class Language{
+	private static $instance;
 	private $langStrings;
 
-	public function __construct($name){
-		$set = setlocale(LC_ALL, $name.".utf8");
+	public static function getInstance(){
+		if ( is_null( self::$instance ) ){
+			self::$instance = new self();
+		}
+		return self::$instance;
+	}
+
+	public function __construct(){
+		
+		//$this->load($langFile);
+	}
+
+	public function load($langName){
+		$set = setlocale(LC_ALL, $langName.".utf8");
 		putenv('LC_ALL=en_US.utf8');
 		if($set === false){
 			putenv('LC_ALL=en_US.utf8');
 			setlocale(LC_ALL, "en_US.utf8");	
 		} // Setting locale for date and other stuff
-		$langFile = LANGUAGES_PATH.$name.'/core.po';
-		//$this->load($langFile);
+		$langFile = LANGUAGES_PATH.$langName.'/core.po';
 	}
 
-	public function load($langFile){
+	public function loadStrings($langFile){
 		if( file_exists($langFile) ){
 			// parse headers
 			$msgid = "";
