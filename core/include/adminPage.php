@@ -1,5 +1,6 @@
 <?php
 class AdminPage{
+	private $action;
 	private $data;
 	private $perpage;
 	private $order;
