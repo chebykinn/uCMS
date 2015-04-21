@@ -1,6 +1,19 @@
 <?php
 class Theme extends Extention{
+	private static $instance;
 	private $title;
+
+	public static function setCurrent($themeName){
+		self::$instance = new self($themeName);
+	}
+
+	public static function getCurrent(){
+		if ( is_null( self::$instance ) ){
+			log_add(tr("Theme is not loaded"), UC_LOG_CRITICAL);
+			return false;
+		}
+		return self::$instance;
+	}
 
 	protected function getFilePath($file){
 		return THEMES_PATH."$this->name/$file";
