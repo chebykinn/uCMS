@@ -1,31 +1,31 @@
 <?php
 class Settings{
-	private $list;
-	public function add($name, $value){
+	private static $list;
+
+	public static function add($name, $value){
 		$query = new Query('{settings}');
 		$query->insert(array('name' => $name, 'value' => $value))->execute();
 	}
 
-	public function load(){
+	public static function load(){
 		$query = new Query('{settings}');
-		$this->list = $query->select(array('name', 'value'))->execute();
+		self::$list = $query->select(array('name', 'value'))->execute();
 	} 
 
-	public function get($name){
-		foreach ($this->list as $setting) {
+	public static function get($name){
+		if( empty(self::$list) ) return false;
+		foreach (self::$list as $setting) {
 			if($setting['name'] === $name) return $setting['value'];
 		}
 		return "";
 	}
 
-	public function set($name, $value){
+	public static function set($name, $value){
 	
 	}
 
-	public function remove($name, $value){
+	public static function remove($name, $value){
 
 	}
-
-
 }
 ?>
