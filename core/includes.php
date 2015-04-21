@@ -12,7 +12,7 @@ require_once INCLUDE_PATH.'session.php';
 require_once INCLUDE_PATH.'extention.php';
 require_once INCLUDE_PATH.'theme.php';
 require_once INCLUDE_PATH.'themesFunctions.php';
-require_once INCLUDE_PATH.'extentionController.php';
+require_once INCLUDE_PATH.'extentions.php';
 require_once INCLUDE_PATH.'urlManager.php';
 require_once INCLUDE_PATH.'settings.php';
 require_once INCLUDE_PATH.'adminPage.php';
