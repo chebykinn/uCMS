@@ -3,16 +3,16 @@
 
 function p($string){
 	$args = func_get_args();
-	echo call_user_func_array(array(uCMS::getInstance()->getLanguage(), 'get'), $args);
+	echo call_user_func_array(array(Language::getInstance(), 'get'), $args);
 }
 
 function tr($string){
 	$args = func_get_args();
-	return call_user_func_array(array(uCMS::getInstance()->getLanguage(), 'get'), $args);
+	return call_user_func_array(array(Language::getInstance(), 'get'), $args);
 }
 
 function get_setting($name){
-	return uCMS::getInstance()->getSettings()->get($name);
+	return Settings::get($name);
 }
 
 function get_theme_path($name){
