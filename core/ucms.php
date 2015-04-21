@@ -2,12 +2,7 @@
 // The God Object of uCMS
 class uCMS{
 	private static $instance;
-	private $database;
-	private $settings;
-	private $language;
-	private $tables;
-	private $theme;
-	private $extentions;
+	private $databases;
 	private $startTime = 0;
 	private $stopTime = 0;
 
@@ -33,35 +28,63 @@ class uCMS{
 		}else{
 			error_reporting(E_ALL ^ (E_DEPRECATED | E_NOTICE | E_STRICT));
 		}
-		// TODO: check php version
-		$this->setTables();
-		
-		try{
-			$this->database = new DatabaseConnection(DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, UC_PREFIX);
-			
-			// TODO: check mysql version
-		}catch(Exception $e){
-			if($e->getCode() == 1045){
-				// TODO: install
-				echo "install";
-			}else{
-				uCMS::exceptionHandler($e);
+
+		/**
+		* @todo check php version
+		*/
+		global $databases;
+		if( empty($databases) || !is_array($databases) ){
+			/**
+			* @todo install
+			*/
+			log_add(tr("install, no config"), UC_LOG_CRITICAL);
+		}
+		foreach ($databases as $dbName => $dbData) {
+			try{
+				$fields = array('server', 'user', 'password', 'name', 'port', 'prefix');
+				foreach ($fields as $field) {
+					if( !isset($dbData[$field]) ){
+						/**
+						* @todo install
+						*/
+						log_add(tr("install, wrong config"), UC_LOG_CRITICAL);
+					}
+				}
+				$database = new DatabaseConnection($dbData["server"], 
+												   $dbData["user"], 
+												   $dbData["password"], 
+												   $dbData["name"], 
+												   $dbData["port"], 
+												   $dbData["prefix"],
+												   $dbName);	
+				// echo "asdasdas".$database;
+				/**
+				* @todo check mysql version
+				*/
+				$this->databases[$dbName] = $database;
+			}catch(Exception $e){
+				if( $e->getCode() == 1045 ){
+					/**
+					* @todo install
+					*/
+					log_add(tr("install, wrong config"), UC_LOG_CRITICAL);
+				}else{
+					uCMS::exceptionHandler($e);
+				}
 			}
 		}
 		Session::getCurrent()->load();
-		$this->settings = new Settings();
-		$this->settings->load();
-		$lang = $this->settings->get('language');
+		Settings::load();
+		$lang = Settings::get('language');
 
 		// TODO: language
-		$this->language = new Language($lang);
+		Language::getInstance()->load($lang);
 
-		$enabledExtentions = $this->settings->get('extentions');
+		$enabledExtentions = Settings::get('extentions');
 		$enabledExtentions = explode(',', $enabledExtentions);
 
-		$this->extentions = new ExtentionController();
-		$this->extentions->create($enabledExtentions);
-		$this->extentions->load();
+		Extentions::create($enabledExtentions);
+		Extentions::load();
 		
 	}
 
@@ -70,16 +93,16 @@ class uCMS{
 		//parse url, get page and get extention responsible for current page
 		$templateData = false;
 		if( $url->getCurrentAction() != ADMIN_ACTION ){
-			$themeName = $this->settings->get('theme');
+			$themeName = Settings::get('theme');
 			if( empty($themeName) ) $themeName = DEFAULT_THEME;
-			$templateData = $this->extentions->loadOnAction( $url->getCurrentAction() );
+			$templateData = Extentions::loadOnAction( $url->getCurrentAction() );
 		}else{
 			$themeName = ADMIN_THEME;
-			$templateData = $this->extentions->loadOnAdminAction( $url->getCurrentAdminAction() );
+			$templateData = Extentions::loadOnAdminAction( $url->getCurrentAdminAction() );
 		} // load admin panel
 
 		try{
-			$this->theme = new Theme($themeName);
+			Theme::setCurrent($themeName);
 		}catch(InvalidArgumentException $e){
 			p("[@s]: ".$e->getMessage(), $themeName);
 		}catch(RuntimeException $e){
@@ -95,8 +118,8 @@ class uCMS{
 
 		}
 
-		$this->theme->setTitle($title);
-		$this->theme->loadTemplate($template);
+		Theme::getCurrent()->setTitle($title);
+		Theme::getCurrent()->loadTemplate($template);
 		$this->shutdown();
 	}
 
@@ -188,28 +211,6 @@ class uCMS{
    		uCMS::errorHandler($e->getCode(), $e->getMessage(), $e->getFile(), $e->getLine());
 	}
 
-	public function getDatabase(){
-		return $this->database;
-	}
-
-	public function getTable($name){
-		foreach ($this->tables as $table) {
-			if($table === $name){
-				return $this->database->getPrefix().$table;
-			}
-		}
-	}
-
-	public function setTables(){
-		$this->tables = array('settings');
-	}
-
-
-	// ?
-	public function getSettings(){
-		return $this->settings;
-	}
-
 	private function startLoadTimer(){
 		$currentTime = microtime();
 		$currentTime = explode(" ", $currentTime);
@@ -229,25 +230,19 @@ class uCMS{
 		return number_format( ($stopTime - $this->startTime), 3 );
 	}
 
-	public function getLanguage(){
-		return $this->language;
-	}
-
-	public function getCurrentTheme(){
-		return $this->theme;
-	}
-
-	public function getExtentions(){
-		return $this->extentions;
-	}
-
 	public function reloadTheme($newTheme){
 		try{
-			$this->theme = new Theme($newTheme);
+			Theme::setCurrent($newTheme);
 		}catch(InvalidArgumentException $e){
-			p("[@s]: ".$e->getMessage(), $themeName);
+			p("[@s]: ".$e->getMessage(), $newTheme);
 		}catch(RuntimeException $e){
-			p("[@s]: ".$e->getMessage(), $themeName);
+			p("[@s]: ".$e->getMessage(), $newTheme);
+		}
+	}
+
+	public function getDatabase($name){
+		if( isset($this->databases[$name]) ){
+			return $this->databases[$name];
 		}
 	}
 }
