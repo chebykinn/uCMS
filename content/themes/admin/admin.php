@@ -3,7 +3,7 @@
 $defaultActions = array('settings', 'extentions', 'phpinfo');
 $url = new URLManager();
 $currentAction = $url->getCurrentAdminAction();
-$adminActions = array_merge($defaultActions, uCMS::getInstance()->getExtentions()->getUsedAdminActions());
+$adminActions = array_merge($defaultActions, Extentions::getUsedAdminActions());
 if( !empty($currentAction) && !in_array($currentAction, $adminActions) ){
 	error_404();
 }
