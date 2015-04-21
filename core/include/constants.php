@@ -136,4 +136,8 @@ if( !defined("MINUTE_IN_SECONDS") ){ // Time constants
 if( !defined("SESSION_IDLE_LIFETIME") ){
 	define("SESSION_IDLE_LIFETIME", 2 * HOUR_IN_SECONDS);
 }
+
+if( !defined("DEFAULT_DATABASE_NAME") ){
+	define("DEFAULT_DATABASE_NAME", "default");
+}
 ?>
