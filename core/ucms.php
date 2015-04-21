@@ -32,14 +32,13 @@ class uCMS{
 		/**
 		* @todo check php version
 		*/
-		global $databases;
-		if( empty($databases) || !is_array($databases) ){
+		if( empty($GLOBALS['databases']) || !is_array($GLOBALS['databases']) ){
 			/**
 			* @todo install
 			*/
 			log_add(tr("install, no config"), UC_LOG_CRITICAL);
 		}
-		foreach ($databases as $dbName => $dbData) {
+		foreach ($GLOBALS['databases'] as $dbName => $dbData) {
 			try{
 				$fields = array('server', 'user', 'password', 'name', 'port', 'prefix');
 				foreach ($fields as $field) {
@@ -73,6 +72,7 @@ class uCMS{
 				}
 			}
 		}
+		unset($GLOBALS['databases']);
 		Session::getCurrent()->load();
 		Settings::load();
 		$lang = Settings::get('language');
@@ -247,4 +247,3 @@ class uCMS{
 	}
 }
 ?>
-
