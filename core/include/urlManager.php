@@ -82,7 +82,7 @@ class URLManager{
 	}
 
 	public static function makeLink($action, $key){
-		$isCleanUrl = (bool)get_setting('clean_url');
+		$isCleanUrl = (bool)Settings::get('clean_url');
 		return (UCMS_DIR.($isCleanUrl ? "$action/$key" : "?action=$action&amp;key=$key"));
 	} 
 }
