@@ -9,10 +9,10 @@ class AdminPanel{
 	private static function loadSidebar(){
 		self::$sidebar[] = array('name' => tr('Home'), 'action' => '', 'parent' => 0);
 		$prevAction = '';
-		$loadedExtentions = uCMS::getInstance()->getExtentions()->getLoadedExtentions();
+		$loadedExtentions = Extentions::getLoadedExtentions();
 		if( !empty($loadedExtentions) ){
 			foreach ($loadedExtentions as $name) {
-				$extentionItems = uCMS::getInstance()->getExtentions()->get($name)->getAdminSidebarItems();
+				$extentionItems = Extentions::get($name)->getAdminSidebarItems();
 				if( !empty($extentionItems) && is_array($extentionItems) ){
 					foreach ($extentionItems as $name => $action) {
 						if( !isset(self::$sidebar[$name]) ){
