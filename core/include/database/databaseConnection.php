@@ -1,21 +1,36 @@
 <?php
 class DatabaseConnection{
+	private static $instance;
 	private $dbServer, $dbUser, $dbPassword, $dbName;
+	private $tables;
 	private $queriesCount;
 	private $connection;
 	private $prefix;
+	private $ucmsName;
 
-	public function __construct($server, $login, $password, $dbName, $prefix){
+	public function getDefault(){
+		if( !is_null(self::$instance) ){
+			return self::$instance;
+		}
+	}
+
+	public function __construct($server, $login, $password, $dbName, $dbPort, $prefix, $ucmsName){
 		$this->dbServer = $server;
 		$this->dbUser = $login;
 		$this->dbPassword = $password;
 		$this->dbName = $dbName;
+		$this->dbPort = (int) $dbPort;
 		$this->prefix = $prefix;
+		$this->ucmsName = $ucmsName;
 		$this->connect();
+		if($ucmsName == DEFAULT_DATABASE_NAME){
+			$this->setDefaultTables();
+			self::$instance = $this;
+		}
 	}
 
-	public function connect(){	
-		$this->connection = @mysqli_connect($this->dbServer, $this->dbUser, $this->dbPassword, $this->dbName);
+	public function connect(){
+		$this->connection = mysqli_connect($this->dbServer, $this->dbUser, $this->dbPassword, $this->dbName, $this->dbPort);
 		if(!$this->connection){
 			$errno = mysqli_connect_errno();
 			throw new Exception("Can't connect to database", $errno);
@@ -52,6 +67,22 @@ class DatabaseConnection{
 
 	public function getPrefix(){
 		return $this->prefix;
+	}
+
+	public function getTable($name){
+		foreach ($this->tables as $table) {
+			if($table === $name){
+				return $this->getPrefix().$table;
+			}
+		}
+	}
+
+	public function setDefaultTables(){
+		$this->tables = array('settings');
+	}
+
+	public function getuCMSName(){
+		return $this->ucmsName;
 	}
 
 }

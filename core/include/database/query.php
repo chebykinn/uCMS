@@ -7,7 +7,7 @@ class Query{
 	public function __construct(){
 		$args = func_get_args();
 		$this->sql = "";
-		$this->database = uCMS::getInstance()->getDatabase();
+		$this->database = DatabaseConnection::getDefault();
 		if( empty($this->database) ){
 			log_add("No connection to the database", UC_LOG_ERROR);
 			return;
