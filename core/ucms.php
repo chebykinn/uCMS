@@ -56,7 +56,7 @@ class uCMS{
 												   $dbData["port"], 
 												   $dbData["prefix"],
 												   $dbName);	
-				// echo "asdasdas".$database;
+				
 				/**
 				* @todo check mysql version
 				*/
@@ -74,31 +74,34 @@ class uCMS{
 		}
 		unset($GLOBALS['databases']);
 		Session::getCurrent()->load();
+		URLManager::init();
 		Settings::load();
 		$lang = Settings::get('language');
 
 		// TODO: language
-		Language::getInstance()->load($lang);
+		Language::getCurrent()->load($lang);
 
-		$enabledExtentions = Settings::get('extentions');
-		$enabledExtentions = explode(',', $enabledExtentions);
+		$enabledExtensions = Settings::get('extensions');
+		$enabledExtensions = explode(',', $enabledExtensions);
 
-		Extentions::create($enabledExtentions);
-		Extentions::load();
+		Extensions::create($enabledExtensions);
+		Extensions::load();
 		
 	}
 
 	public function runSite(){
-		$url = new URLManager();
-		//parse url, get page and get extention responsible for current page
+		//parse url, get page and get extension responsible for current page
 		$templateData = false;
-		if( $url->getCurrentAction() != ADMIN_ACTION ){
+
+		$siteTitle = Settings::get("site_title");
+		if( empty($siteTitle) ) $siteTitle = tr("Untitled");
+		if( URLManager::getCurrentAction() != ADMIN_ACTION ){
 			$themeName = Settings::get('theme');
 			if( empty($themeName) ) $themeName = DEFAULT_THEME;
-			$templateData = Extentions::loadOnAction( $url->getCurrentAction() );
+			$templateData = Extensions::loadOnAction( URLManager::getCurrentAction() );
 		}else{
 			$themeName = ADMIN_THEME;
-			$templateData = Extentions::loadOnAdminAction( $url->getCurrentAdminAction() );
+			$templateData = Extensions::loadOnAdminAction( URLManager::getCurrentAdminAction() );
 		} // load admin panel
 
 		try{
@@ -111,15 +114,15 @@ class uCMS{
 		
 		if( empty($templateData) || !is_array($templateData) ){
 			$title    = tr("404 Not Found");
-			$template = ERROR_TEMPLATE_NAME;
+			$templateAction = ERROR_TEMPLATE_NAME;
 		}else{
-			$title    = empty($templateData['title'])    ? tr("Untitled")      : $templateData['title'];
-			$template = empty($templateData['template']) ? ERROR_TEMPLATE_NAME : $templateData['template'];
+			$title    	    = empty($templateData['title'])    ? $siteTitle          : $templateData['title'];
+			$templateAction = empty($templateData['template']) ? ERROR_TEMPLATE_NAME : $templateData['template'];
 
 		}
-
 		Theme::getCurrent()->setTitle($title);
-		Theme::getCurrent()->loadTemplate($template);
+		Theme::getCurrent()->setAction($templateAction);
+		Theme::getCurrent()->load();
 		$this->shutdown();
 	}
 
@@ -151,58 +154,58 @@ class uCMS{
    		}
    		$die = false;
    		echo "<br>";
+		echo '<pre style="text-align: left; background: #fff; color: #000; padding: 5px; border: 1px #aa1111 solid; margin: 20px; z-index: 9999;">';
+   		echo '<h2>';
 		switch ($errno) {
 			case E_RECOVERABLE_ERROR:
-				echo "<h3>PHP Catchable Fatal Error</h3>";
+				echo "PHP Catchable Fatal Error";
 			break;
 			
 			case E_NOTICE:
-				echo "<h3>PHP Notice</h3>";
+				echo "PHP Notice";
 			break;
 
 			case E_WARNING:
-				echo "<h3>PHP Warning</h3>";
+				echo "PHP Warning";
 			break;
 
 			case E_ERROR:
-				echo "<h3>PHP Fatal Error</h3>";
+				echo "PHP Fatal Error";
 				$die = true;
 			break;
 
 			case E_PARSE:
-				echo "<h3>PHP Parse Error</h3>";
+				echo "PHP Parse Error";
 				$die = true;
 			break;
 
 			case E_COMPILE_ERROR:
-				echo "<h3>PHP Compile Fatal Error</h3>";
+				echo "PHP Compile Fatal Error";
 				$die = true;
 			break;
 
 			case E_DEPRECATED:
-				echo "<h3>PHP Deprecated Message</h3>";
+				echo "PHP Deprecated Message";
 			break;
 
 			case E_STRICT:
-				echo "<h3>PHP Strict Standars</h3>";
+				echo "PHP Strict Standars";
 			break;
 
 			default:
-				echo "<h3>PHP Error $errno</h3>";
+				echo "PHP Error $errno";
 			break;
 		}
+   		echo '</h2>';
 		if(!UCMS_DEBUG){
-			echo "<pre>";
 			echo "$errstr in <b>$errfile</b> on line <b>$errline</b>";
-			echo "</pre>";
 		}else{
-			echo "<pre>";
 			echo "$errstr in <b>$errfile</b> on line <b>$errline</b><br>";
 			echo '<p style="font-size: 8pt; padding: 10px;">';
 			echo debug_print_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
 			echo '</p>';
-			echo "</pre>";
 		}
+		echo "</pre>";
 		echo "<br>";
 		if($die) die;
 	}
