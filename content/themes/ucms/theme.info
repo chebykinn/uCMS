@@ -1,6 +1,9 @@
 {
 	"version": "1.0",
 	"coreVersion": "2.x",
+	"dependencies":[
+		"users"
+	],
 	"info": {
 		"displayname": "µCMS Default",
 		"description": "The default theme",
@@ -9,6 +12,8 @@
 		"header": "head.php",
 		"sidebar": "sidebar.php",
 		"footer": "footer.php",
+		"home": "home.php",
+		"error": "error.php",
 		"style": "style.css"
 	}
 }
