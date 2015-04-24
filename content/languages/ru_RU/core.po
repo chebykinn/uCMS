@@ -22,7 +22,7 @@ msgstr "Записи"
 msgid "Home"
 msgstr "Главная"
 
-msgid "Extentions"
+msgid "Extensions"
 msgstr "Расширения"
 
 msgid "Settings"
