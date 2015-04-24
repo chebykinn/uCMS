@@ -5,6 +5,7 @@
 		"header": "head.php",
 		"sidebar": "sidebar.php",
 		"footer": "footer.php",
-		"style": "style.css"
+		"style": "style.css",
+		"mobile": "mobile.css"
 	}
 }

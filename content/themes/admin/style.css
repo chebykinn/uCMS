@@ -4,11 +4,20 @@
 }
 
 body{
-	font-family: Arial, Helvetica, Georgia, Sans-serif;
+	font-family: Arial, Georgia, Sans-serif;
 	background: #F8F8F8;
 	color: #000;
 	font-size: 12px;
 	text-align: center;
+}
+
+a, a:visited{
+	color: #336699;
+	text-decoration: none;
+}
+
+a:hover{
+	color: #0099ff;
 }
 
 #wrapper{
@@ -66,6 +75,8 @@ body{
 #content{
 	float: left;
 	padding: 10px;
+	box-sizing: border-box;
+	width: 100%;
 }
 
 #footer{
@@ -79,4 +90,46 @@ body{
 	font-style: italic;
 	float: right;
 	text-align: right;
+}
+
+.manage{
+	width: 100%;
+	border: 1px #ccc solid;
+	border-radius: 2px;
+	border-spacing: 0;
+	font-size: 13px;
+}
+
+.manage tr{
+	background: #ccc;
+}
+
+
+.manage td, .manage th{
+	background: #f0f0f0;
+	border-bottom: 1px #ccc solid;
+	padding: 10px;
+}
+
+.manage th{
+	background: #fff;
+	border-bottom: 2px #ccc solid;
+	font-size: 15px;
+	font-weight: normal;
+}
+
+.show-sidebar{
+	display: none;
+}
+
+.delete-button, .delete-button:visited{
+	color: #CE1A1A;
+}
+
+.delete-button:hover{
+	color: #FF2323;
+}
+
+.manage-actions{
+	color: #ccc;
 }
