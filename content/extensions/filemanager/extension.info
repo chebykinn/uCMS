@@ -1,0 +1,31 @@
+{
+	"version": "1.0",
+	"coreVersion": "2.x",
+	"dependencies": [
+		"users"
+	],
+
+	"loadAfter": [
+		"users"
+	],
+
+	"admin": {
+		"Files": "files"
+	},
+
+	"adminPages": {
+		"files": "admin/files.php"
+	},
+
+	"includes": [
+		"include/file.php"
+	],
+
+	"info": {
+		"displayname": "File Manager",
+		"description": "Files system extension",
+		"author": "µCMS",
+		"site": "http://ucms.ivan4b.ru",
+		"updateURL": "http://ucms.ivan4b.ru/pub/extensions/fileman"
+	}
+}
