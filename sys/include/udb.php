@@ -207,6 +207,8 @@ class uDB{
 	*/
 	function parse_value($value){
 		if($value == "") return false;
+		$value = implode("", explode( "\\", $value));
+		$value = stripslashes($value);
 		$value = @mysqli_real_escape_string($this->con, $value);
 		$value = addcslashes($value, '%');
 		return $value;
