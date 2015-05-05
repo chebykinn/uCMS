@@ -40,7 +40,7 @@ a:hover{
 }
 </style>
 <div class="main"><br><h2><?php $ucms->cout("module.comments.template.duplicate-comment.message"); ?></h2>
-	<br><br><a href="<?php echo $ucms->get_back_url(); ?>/"><?php $ucms->cout("module.comments.templates.back.button"); ?></a>
+	<br><br><a href="<?php echo $ucms->get_back_url(); ?>"><?php $ucms->cout("module.comments.templates.back.button"); ?></a>
 </div>
 </body>
 </html>
