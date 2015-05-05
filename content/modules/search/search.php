@@ -53,7 +53,7 @@ $page = 1;
 if(!$user->has_access("posts", 1)) $query = '';
 
 if(isset($query) and $query != '' and $table_name){
-	$safe_query = $udb->parse_value(htmlspecialchars($query));
+	$safe_query = $udb->parse_value(htmlspecialchars(stripcslashes($query)));
 	if ($safe_query != ''){
 		$query = trim($safe_query);
 		if(!$sef){
