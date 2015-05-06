@@ -110,7 +110,7 @@
 		$comment = parse_comment($p['comment']);
 		$rating = isset($p['rating']) ? $udb->parse_value($p['rating']) : 0;
 		$event->do_actions("comment.update.check");
-		if(!$comment){
+		if(empty($comment)){
 			echo '<div class="error">'.$ucms->cout("module.comments.alert.error.empty_comment", true).'<br>
 			<a href="manage.php?module=comments&amp;action=update&amp;id='.$id.'">'.$ucms->cout("module.comments.alert.go_back.link", true).'</a></div>';
 		}else if($user->has_access("comments", 3)){
@@ -460,7 +460,12 @@
 
 	function parse_comment($text){
 		global $udb, $user;
-		$text = $udb->parse_value($text);
+		/**
+		* @todo add limit setting
+		*/
+		$limit = 640; // 640 symbols ought to be enough for anybody
+		$text = mb_substr($text, 0, $limit);
+		$text = trim($udb->parse_value($text));
 		if($user->has_access("comments", 3)){
 			$replacement = NICE_LINKS ?  UCMS_URL."redirect/http://" : UCMS_URL."?action=redirect&amp;url=http://";
 			if(!preg_match("#($replacement)#", $text))
