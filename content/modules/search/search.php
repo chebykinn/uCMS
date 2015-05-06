@@ -2,6 +2,8 @@
 $query = "";
 $sef = false;
 if(isset($_GET['query'])) $query = $_GET['query'];
+$limit = 100;
+$query = mb_substr($query, 0, $limit);
 $module = DEFAULT_SEARCH_MODULE;
 if(empty($module) and !in_url('admin'))
 	header("Location: ".$ucms->get_back_url());
@@ -53,7 +55,7 @@ $page = 1;
 if(!$user->has_access("posts", 1)) $query = '';
 
 if(isset($query) and $query != '' and $table_name){
-	$safe_query = $udb->parse_value(htmlspecialchars(stripcslashes($query)));
+	$safe_query = $udb->parse_value(htmlspecialchars($query));
 	if ($safe_query != ''){
 		$query = trim($safe_query);
 		if(!$sef){
@@ -64,7 +66,7 @@ if(isset($query) and $query != '' and $table_name){
 
 		if($keywords){
 			foreach ($keywords as $word){
-				$where = preg_replace('/@word@/', mb_strtolower($word, "UTF-8"), $where);
+				$where = preg_replace('/@word@/i', mb_strtolower($word), $where);
 				$count = $udb->num_rows("SELECT $selected_columns FROM `".UC_PREFIX."$table_name` $join WHERE ($where) AND $check_where");
 				if($count > 0) break;
 			}
@@ -85,7 +87,7 @@ if(isset($query) and $query != '' and $table_name){
 				$start_pos = ($page - 1) * $perpage; 
 			}
 			foreach ($keywords as $word){ 
-				$where = preg_replace('/@word@/', mb_strtolower($word, "UTF-8"), $where);
+				$where = preg_replace('/@word@/i', mb_strtolower($word), $where);
 				$results = $udb->get_rows("SELECT $selected_columns FROM `".UC_PREFIX."$table_name` $join WHERE ($where) AND $check_where LIMIT $start_pos, $perpage");
 				if($results and count($results) > 0) break;
 			}
@@ -94,11 +96,11 @@ if(isset($query) and $query != '' and $table_name){
 					$results[$i]['relevance'] = 0;
 					$wordWeight = 0;
 					foreach ($keywords as $word) {
-						$reg = "/(".mb_strtolower($word, "UTF-8").")/";
+						$reg = "/($word)/i";
 						foreach ($columns_to_search as $column) {
-							$wordWeight += preg_match_all($reg, mb_strtolower($results[$i][$column], 'UTF-8'), $out);
-							$wordWeight += preg_match_all($reg, mb_strtolower($results[$i][$column], 'UTF-8'), $out);
-							$wordWeight += preg_match_all($reg, mb_strtolower($results[$i][$column], 'UTF-8'), $out);
+							$wordWeight += preg_match_all($reg, $results[$i][$column], $out);
+							$wordWeight += preg_match_all($reg, $results[$i][$column], $out);
+							$wordWeight += preg_match_all($reg, $results[$i][$column], $out);
 						}
 						
 						$results[$i]['relevance'] += $wordWeight;
