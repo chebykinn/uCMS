@@ -21,13 +21,13 @@ $join = get_search_table($module, 'join');
 
 $check_where = !empty($overwrite_where) ? $udb->parse_value($overwrite_where) : get_search_table($module, 'where');
 
-$columns_to_search_sql = get_search_table($module, 'search_in_sql');
+$columns_to_search_sql = get_search_table($module, 'search_in_sql') or $columns_to_search_sql = array();
 
-$columns_to_search = get_search_table($module, 'search_in');
+$columns_to_search = get_search_table($module, 'search_in') or $columns_to_search = array();
 
-$sort_columns = get_search_table($module, 'sort_by');
+$sort_columns = get_search_table($module, 'sort_by') or $sort_columns = array();
 
-$columns_to_light = get_search_table($module, 'highlight');
+$columns_to_light = get_search_table($module, 'highlight') or $columns_to_light = array();
 
 $module_file = get_search_table($module, 'file');
 
@@ -181,6 +181,8 @@ function get_search_table($module, $column = ''){
 						if($count > 0){
 							$value = explode(",", $udb->parse_value($value));
 							return $value;
+						}else{
+							return array();
 						}
 					break;
 
@@ -189,6 +191,8 @@ function get_search_table($module, $column = ''){
 						if($count > 0){
 							$value = explode(",", $udb->parse_value($value));
 							return $value;
+						}else{
+							return array();
 						}
 					break;
 
@@ -197,6 +201,8 @@ function get_search_table($module, $column = ''){
 						if($count > 0){
 							$value = explode(",", $udb->parse_value($value));
 							return $value;
+						}else{
+							return array();
 						}
 					break;
 
@@ -205,6 +211,8 @@ function get_search_table($module, $column = ''){
 						if($count > 0){
 							$value = explode(",", $udb->parse_value($value));
 							return $value;
+						}else{
+							return array();
 						}
 					break;
 
@@ -223,6 +231,7 @@ function get_search_table($module, $column = ''){
 		}
 		return false;
 	}
+	return false;
 }
 
 function get_searching_module(){
