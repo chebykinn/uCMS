@@ -1,10 +1,9 @@
-<?php 
+<?php
 include $theme->get_path()."head.php";
 include $theme->get_path()."nav.php";
 ?>
 <div id="content">
 <?php
-
 if (!$user->has_access("users", 1)){
 	if(!$user->logged()){
 		echo '<div class="error">';
@@ -137,14 +136,16 @@ if (!$user->has_access("users", 1)){
 								echo '</div>';
 							}
 						}
-					}elseif($user_messages_page){
+					}
+					elseif($user_messages_page){
 						
 						echo '<div id="user-pm">';
 						$ucms->cout("theme.ucms.pm.inbox.label");
 						if($pm->have_inbox_messages()){
 							echo '<table class="messages">';
 							for($message = 0; $message < $pm->inbox_count(); $message++){
-								$author = !empty($pm->get_inbox_message("author_nickname")) ? $pm->get_inbox_message("author_nickname") : $pm->get_inbox_message("author_login");
+								$author_nickname = $pm->get_inbox_message("author_nickname");
+								$author = !empty($author_nickname) ? $pm->get_inbox_message("author_nickname") : $pm->get_inbox_message("author_login");
 								$author_link = NICE_LINKS ? UCMS_DIR.'/user/'.$pm->get_inbox_message("author_login") : UCMS_DIR.'/?action=profile&amp;id='.$pm->get_inbox_message("author");
 								echo '<tr>';
 								echo '<th>'.$ucms->cout("theme.ucms.pm.table.header.date", true).'</th>';
@@ -168,7 +169,8 @@ if (!$user->has_access("users", 1)){
 						if($pm->have_outbox_messages()){
 							echo '<table class="messages">';
 							for($message = 0; $message < $pm->outbox_count(); $message++){
-								$receiver =	!empty($pm->get_outbox_message("receiver_nickname")) ? $pm->get_outbox_message("receiver_nickname") : $pm->get_outbox_message("receiver_login");
+								$receiver_nickname = $pm->get_outbox_message("receiver_nickname");
+								$receiver =	!empty($receiver_nickname) ? $pm->get_outbox_message("receiver_nickname") : $pm->get_outbox_message("receiver_login");
 								$receiver_link = NICE_LINKS ? UCMS_DIR.'/user/'.$pm->get_outbox_message("receiver_login") : UCMS_DIR.'/?action=profile&amp;id='.$pm->get_outbox_message("receiver");
 								echo '<tr>';
 								echo '<th>'.$ucms->cout("theme.ucms.pm.table.header.date", true).'</th>';
