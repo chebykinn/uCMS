@@ -1,0 +1,31 @@
+{
+	"version": "1.0",
+	"coreVersion": "2.x",
+	"dependencies": [
+		"posts"
+	],
+
+	"loadAfter": [
+		"posts"
+	],
+
+	"admin": {
+		"Comments": "comments"
+	},
+
+	"adminPages": {
+		"comments": "admin/comments.php"
+	},
+
+	"includes": [
+		"include/comments.php"
+	],
+
+	"info": {
+		"displayname": "Comments",
+		"description": "Comments system extension",
+		"author": "µCMS",
+		"site": "http://ucms.ivan4b.ru",
+		"updateURL": "http://ucms.ivan4b.ru/pub/extensions/comments"
+	}
+}
