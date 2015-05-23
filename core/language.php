@@ -12,17 +12,18 @@ class Language{
 
 	public function __construct(){
 		
-		//$this->load($langFile);
+		// $this->load($langFile);
 	}
 
 	public function load($langName){
 		$set = setlocale(LC_ALL, $langName.".utf8");
 		putenv('LC_ALL=en_US.utf8');
-		if($set === false){
+		if( $set === false ){
 			putenv('LC_ALL=en_US.utf8');
 			setlocale(LC_ALL, "en_US.utf8");	
 		} // Setting locale for date and other stuff
 		$langFile = LANGUAGES_PATH.$langName.'/core.po';
+		//$this->loadStrings($langFile);
 	}
 
 	public function loadStrings($langFile){
