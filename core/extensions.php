@@ -3,11 +3,13 @@ class Extensions{
 	private static $list;
 	private static $usedActions;
 	private static $usedAdminActions;
+	private static $defaultExtentions;
 
-	public static function create($extensions){
+	public static function Create($extensions){
 		self::$list = array();
 		self::$usedActions = array();
 		self::$usedAdminActions = array();
+		self::$defaultExtentions = array('filemanager', 'users', 'posts');
 		if( !is_array($extensions) ){
 			$extensions = array($extensions);
 		}
@@ -18,10 +20,8 @@ class Extensions{
 				if( class_exists($extension) ){
 					try{
 						self::$list[$extension] = new $extension($extension);
-					}catch(InvalidArgumentException $e){
-						p("[@s]: ".$e->getMessage(), $extension);
-					}catch(RuntimeException $e){
-						p("[@s]: ".$e->getMessage(), $extension);
+					}catch(Exception $e){
+						log_add(tr("Can't load extension: @s, error: @s", $extension, $e->getMessage()), UC_LOG_ERROR);
 					}
 					
 					
@@ -30,12 +30,12 @@ class Extensions{
 		}
 	}
 
-	public static function load(){
+	public static function Load(){
 		if( is_array(self::$list) ){
 			$extensionActions = $extensionAdminActions = array();
 			foreach (self::$list as $name => $extension) {
 				if( is_object($extension) ){
-					$extension->load();
+					$extension->onLoad();
 					
 					$extensionActions = is_array($extension->getActions()) ? $extension->getActions() : array();
 					$extensionAdminActions = is_array($extension->getAdminActions()) ? $extension->getAdminActions() : array();
@@ -48,14 +48,14 @@ class Extensions{
 		}
 	}
 
-	public static function loadOnAction($action){
+	public static function LoadOnAction($action){
 		if( is_array(self::$list) ){
 			$count = 0;
 			$templateData = "";
 			foreach (self::$list as $name => $extension) {
 				if( !in_array($action, self::$usedActions) ) $action = OTHER_ACTION;
 				if( is_object($extension) && in_array($action, $extension->getActions())){
-					$templateData = $extension->doAction($action);
+					$templateData = $extension->onAction($action);
 					$count++;
 				}
 			}
@@ -65,17 +65,17 @@ class Extensions{
 		return "";
 	}
 
-	public static function loadOnAdminAction($action){
+	public static function LoadOnAdminAction($action){
 		if( is_array(self::$list) ){
 			$title = "";
 			foreach (self::$list as $name => $extension) {
 				if( is_object($extension) ){
-					$settingsAction = URLManager::getKeyValue($action);
+					$settingsAction = URLManager::GetKeyValue($action);
 					if($action == ADMIN_SETTINGS_ACTION && !empty($settingsAction) ){
 						$action = $action.'/'.$settingsAction;
 					}
 					if( in_array($action, $extension->getAdminActions()) ){
-						$title = $extension->doAdminAction($action);
+						$title = $extension->onAdminAction($action);
 					}
 				}
 			}
@@ -84,30 +84,42 @@ class Extensions{
 		return array( "template" => ADMIN_ACTION, "title" => tr("μCMS Control Panel$title") );
 	}
 
-	public static function getUsedAdminActions(){
+	public static function GetUsedAdminActions(){
 		return self::$usedAdminActions;
 	}
 
-	public static function getUsedActions(){
+	public static function GetUsedActions(){
 		return self::$usedActions;
 	}
 
-	public static function get($name){
+	public static function Get($name){
 		if( !empty(self::$list[$name]) && is_object(self::$list[$name]) ){
 			return self::$list[$name];
+		}
+		if( self::isExists($name) ){
+			try{
+				$extension = new Extension($name);
+				return $extension;
+			}catch(Exception $e){
+				return "";
+			}
 		}
 		return '';
 	}
 
-	public static function isLoaded($name){
+	public static function IsLoaded($name){
 		return (!empty(self::$list[$name]) && is_object(self::$list[$name]));
 	}
 
-	public static function isExists($name){
-
+	public static function IsExists($name){
+		return in_array($name, self::GetAll());
 	}
 
-	public static function getLoadedExtensions(){
+	public static function IsExtention($name){
+		return ( file_exists(EXTENSIONS_PATH.$name.'/extension.php') && file_exists(EXTENSIONS_PATH.$name.'/'.EXTENSION_INFO) );
+	}
+
+	public static function GetLoaded(){
 		$names = array();
 		foreach (self::$list as $name => $extension) {
 			if( is_object($extension) ){
@@ -117,7 +129,24 @@ class Extensions{
 		return $names;
 	}
 
-	public static function getExtensionByAdminAction($action){
+	public static function GetAll(){
+		$names = array();
+		$dirs = scandir(EXTENSIONS_PATH);// array_filter(scandir(EXTENSIONS_PATH), 'is_dir');
+		if ( $dh = @opendir(EXTENSIONS_PATH) ) {
+			while ( ($extension = readdir($dh)) !== false ) {
+				if( self::IsExtention($extension) ){
+					/**
+					* @todo check .. ?
+					*/
+					$names[] = $extension;
+				}
+			}
+			closedir($dh);
+		}
+		return $names;
+	}
+
+	public static function GetExtensionByAdminAction($action){
 		foreach (self::$list as $name => $extension) {
 			if( is_object($extension) ){
 				if( in_array($action, $extension->getAdminActions()) ){
@@ -127,7 +156,7 @@ class Extensions{
 		}
 	}
 
-	public static function getExtensionByAction($action){
+	public static function GetExtensionByAction($action){
 		foreach (self::$list as $name => $extension) {
 			if( is_object($extension) ){
 				if( in_array($action, $extension->getActions()) ){
@@ -136,6 +165,76 @@ class Extensions{
 			}
 		}
 		return NULL;
+	}
+
+	public static function Delete($name){
+		if( self::IsDefault($name) || !self::IsExtention($name) ){
+			return ERROR_STATUS;
+		}
+		self::Disable($name);
+		//remove dir
+		return SUCCESS_STATUS;
+	}
+
+	public static function Enable($name){
+		if( self::IsLoaded($name) ){
+			return ERROR_STATUS;
+		}
+		$exists = false;
+
+		if( file_exists(EXTENSIONS_PATH.$name.'/extension.php') ){
+			include EXTENSIONS_PATH.$name.'/extension.php';
+
+			if( class_exists($name) ){
+				try{
+					self::$list[$name] = new $name($name);
+					$exists = true;
+				}catch(Exception $e){
+					log_add(tr("Can't load extension: @s, error: @s", $extension, $e->getMessage()), UC_LOG_ERROR);
+				}
+			}
+		}
+		if($exists){
+			$extensions = array();
+			foreach (self::$list as $name => $extension) {
+				$extensions[] = $name;
+			}
+			$extensions = implode(",", $extensions);
+			Settings::Set('extensions', $extensions);
+			return SUCCESS_STATUS;
+		}
+		return ERROR_STATUS;
+		/**
+		* @todo event or something
+		*/
+
+
+	}
+
+	public static function Disable($name){
+		if( !self::IsLoaded($name) || self::IsDefault($name) ){
+			return ERROR_STATUS;
+		}
+		unset(self::$list[$name]);
+		/**
+		* @todo event or something
+		*/
+		$extensions = array();
+		foreach (self::$list as $name => $extension) {
+			$extensions[] = $name;
+		}
+		$extensions = implode(",", $extensions);
+		Settings::Set('extensions', $extensions);
+		return SUCCESS_STATUS;
+	}
+
+	public static function add($name){
+		var_dump($name);
+		return SUCCESS_STATUS;
+	}
+
+	public static function isDefault($name){
+		return in_array($name, self::$defaultExtentions);
 	}
 }
 ?>
