@@ -1,17 +1,17 @@
 <?php
 class Users extends Extension{
 
-	public function install(){
+	public function onInstall(){
 
 	}
 
-	public function uninstall(){
+	public function onUninstall(){
 
 	}
 
-	public function load(){
-		parent::load();
-		UserManagement::loadUser();
+	public function onLoad(){
+		parent::onLoad();
+		User::current()->load();
 		$id = User::current()->getID();
 		$name = User::current()->getName();
 		$email = User::current()->getEmail();
@@ -23,11 +23,11 @@ class Users extends Extension{
 		varDump(User::current()->can('access site'));*/
 	}
 
-	public function doAction($action){
+	public function onAction($action){
 		return array("template" => 'profile', "title" => tr("Profile of @s", User::current()->getName()));
 	}
 
-	public function doAdminAction($action){
+	public function onAdminAction($action){
 		$title = "";
 		switch ($action) {
 			case 'users':
