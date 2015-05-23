@@ -1,19 +1,19 @@
 <?php
 class FileManager extends Extension{
 	
-	public function install(){
+	public function onInstall(){
 
 	}
 
-	public function uninstall(){
+	public function onUninstall(){
 
 	}
 
-	public function load(){
+	public function onLoad(){
 		
 	}
 
-	public function doAdminAction($action){
+	public function onAdminAction($action){
 		return tr('File Manager');
 	}
 }
