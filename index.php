@@ -12,8 +12,8 @@ if( !defined("ABSPATH") ){
 	exit;
 }
 
-uCMS::getInstance()->init();
+uCMS::GetInstance()->init();
 
-uCMS::getInstance()->runSite();
+uCMS::GetInstance()->runSite();
 exit;
 ?>

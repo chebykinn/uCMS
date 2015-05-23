@@ -6,7 +6,7 @@ class uCMS{
 	private $startTime = 0;
 	private $stopTime = 0;
 
-	public static function getInstance(){
+	public static function GetInstance(){
 		if ( is_null( self::$instance ) ){
 			self::$instance = new self();
 		}
@@ -15,12 +15,12 @@ class uCMS{
 
 	public function init(){
 		$this->startLoadTimer();
-		Session::start();
+		Session::Start();
 		register_shutdown_function( "uCMS::errorHandler" );
+		register_shutdown_function(array($this, 'shutdown'));
 		set_error_handler('uCMS::errorHandler');
 		ini_set('display_errors', 0);
 		@mb_internal_encoding("UTF-8");
-
 		if(UCMS_DEBUG){ // Debug mode preparation
 			error_reporting(E_ALL);
 			ini_set('log_errors', 1);
@@ -32,6 +32,11 @@ class uCMS{
 		/**
 		* @todo check php version
 		*/
+
+		if( version_compare(phpversion(), UCMS_MIN_PHP_VERSION, '<') ){
+			log_add(tr("Obsolete PHP"), UC_LOG_CRITICAL);
+		}
+
 		if( empty($GLOBALS['databases']) || !is_array($GLOBALS['databases']) ){
 			/**
 			* @todo install
@@ -49,13 +54,15 @@ class uCMS{
 						log_add(tr("install, wrong config"), UC_LOG_CRITICAL);
 					}
 				}
-				$database = new DatabaseConnection($dbData["server"], 
-												   $dbData["user"], 
-												   $dbData["password"], 
-												   $dbData["name"], 
-												   $dbData["port"], 
-												   $dbData["prefix"],
-												   $dbName);	
+				$database = new DatabaseConnection(
+					$dbData["server"], 
+					$dbData["user"], 
+					$dbData["password"], 
+					$dbData["name"], 
+					$dbData["port"], 
+					$dbData["prefix"],
+					$dbName
+				);
 				
 				/**
 				* @todo check mysql version
@@ -68,24 +75,25 @@ class uCMS{
 					*/
 					log_add(tr("install, wrong config"), UC_LOG_CRITICAL);
 				}else{
-					uCMS::exceptionHandler($e);
+					uCMS::ExceptionHandler($e);
 				}
 			}
 		}
-		unset($GLOBALS['databases']);
+		unset($GLOBALS['databases']); // We don't want to have global variables, so we delete this
+		Cache::Init();
 		Session::getCurrent()->load();
-		URLManager::init();
-		Settings::load();
-		$lang = Settings::get('language');
+		URLManager::Init();
+		Settings::Load();
+		$lang = Settings::Get('language');
 
 		// TODO: language
-		Language::getCurrent()->load($lang);
+		Language::GetCurrent()->load($lang);
 
-		$enabledExtensions = Settings::get('extensions');
+		$enabledExtensions = Settings::Get('extensions');
 		$enabledExtensions = explode(',', $enabledExtensions);
 
-		Extensions::create($enabledExtensions);
-		Extensions::load();
+		Extensions::Create($enabledExtensions);
+		Extensions::Load();
 		
 	}
 
@@ -93,15 +101,15 @@ class uCMS{
 		//parse url, get page and get extension responsible for current page
 		$templateData = false;
 
-		$siteTitle = Settings::get("site_title");
+		$siteTitle = Settings::Get("site_title");
 		if( empty($siteTitle) ) $siteTitle = tr("Untitled");
-		if( URLManager::getCurrentAction() != ADMIN_ACTION ){
-			$themeName = Settings::get('theme');
+		if( URLManager::GetCurrentAction() != ADMIN_ACTION ){
+			$themeName = Settings::Get('theme');
 			if( empty($themeName) ) $themeName = DEFAULT_THEME;
-			$templateData = Extensions::loadOnAction( URLManager::getCurrentAction() );
+			$templateData = Extensions::LoadOnAction( URLManager::GetCurrentAction() );
 		}else{
 			$themeName = ADMIN_THEME;
-			$templateData = Extensions::loadOnAdminAction( URLManager::getCurrentAdminAction() );
+			$templateData = Extensions::LoadOnAdminAction( URLManager::GetCurrentAdminAction() );
 		} // load admin panel
 
 		try{
@@ -123,12 +131,12 @@ class uCMS{
 		Theme::getCurrent()->setTitle($title);
 		Theme::getCurrent()->setAction($templateAction);
 		Theme::getCurrent()->load();
-		$this->shutdown();
 	}
 
 	public function shutdown(){
 		$this->stopLoadTimer();
-		Session::getCurrent()->save();
+		Session::GetCurrent()->save();
+		DatabaseConnection::GetDefault()->shutdown(); //multiple
 	}
 
 	/**
@@ -154,7 +162,7 @@ class uCMS{
    		}
    		$die = false;
    		echo "<br>";
-		echo '<pre style="text-align: left; background: #fff; color: #000; padding: 5px; border: 1px #aa1111 solid; margin: 20px; z-index: 9999;">';
+		begin_debug_block();
    		echo '<h2>';
 		switch ($errno) {
 			case E_RECOVERABLE_ERROR:
@@ -205,7 +213,7 @@ class uCMS{
 			echo debug_print_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
 			echo '</p>';
 		}
-		echo "</pre>";
+		end_debug_block();
 		echo "<br>";
 		if($die) die;
 	}

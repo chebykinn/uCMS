@@ -1,7 +1,7 @@
 <?php
 class ManageTable{
 	private $action;
-	private $data;
+	private $rows;
 	private $perpage;
 	private $order;
 	private $sort;
@@ -14,71 +14,95 @@ class ManageTable{
 		$this->data = array();
 		$this->columns = array();
 		$this->info = array();
+		$this->rows = array();
 		$this->setSnippets();
 	}
 
 	public function setSnippets(){
 		//$editLink = $url->makeLink('admin', 'extensions/');
+		$this->setInfo('emptyMessage', tr('No elements'), true);
 		$this->snippets['edit'] = '<a href="/admin/%action%/edit/%idKey%">'.tr('Edit').'</a>';
 		$this->snippets['activate'] = '<a href="/admin/%action%/activate/%idKey%">'.tr('Activate').'</a>';
+		$this->snippets['deactivate'] = '<a href="/admin/%action%/deactivate/%idKey%">'.tr('Deactivate').'</a>';
+		$this->snippets['enable'] = '<a href="/admin/%action%/enable/%idKey%">'.tr('Enable').'</a>';
+		$this->snippets['disable'] = '<a href="/admin/%action%/disable/%idKey%">'.tr('Disable').'</a>';
 		$this->snippets['delete'] = '<a class="delete-button" href="/admin/%action%/delete/%idKey%">'.tr('Delete').'</a>';
 		$this->snippets['manage'] = '<div class="manage-actions">'.$this->snippets['edit'].' | '.$this->snippets['delete'].'</div>';
 		$this->snippets['select'] = '<input type="checkbox" name="select[]" value="%idKey%">';
-		$this->snippets['selectAll'] = '<input type="checkbox" name="select_all">';
+		$this->snippets['selectAll'] = '<input type="checkbox" name="select-all">';
 	}
 
 	public function setInfo($field, $value, $raw = false){
 		$this->info[$field] = $raw ? $value : "#$value#";
 	}
 
-
-	public function addRow($columnsAndValues){
-		$this->data[] = $columnsAndValues;
+	public function getInfo($field){
+		if( isset($this->info[$field]) ) return $this->info[$field]; 
 	}
 
-	public function addColumn($name, $sort, $permission, $content, $size = 0){
+	public function addRow($columnsAndValues, $rowStyleClass = ''){
+		$id = count($this->rows)-1;
+		$this->rows[$id]['data'] = $columnsAndValues;
+		$this->rows[$id]['style'] = $rowStyleClass;
+	}
+
+	public function addColumn($name, $sort, $permission, $content, $size = 0, $alwaysShow = false){
 		// # - means data column, @ means snippet for content, % means info
 		if( !empty($name) ){
 			foreach ($this->snippets as $key => $value) {
 				$name = str_replace("@$key@", $value, $name);
 			}
-			$this->columns[] = array("name" => $name, 'sort' => $sort, 'permission' => $permission, 'content' => $content, 'size' => $size);
+			$this->columns[] = array("name" => $name, 'sort' => $sort, 'permission' => $permission, 'content' => $content, 'size' => $size, 'show' => $alwaysShow);
 		}
+	}
+
+	public function addSelectColumn($permission){
+		$this->addColumn("@selectAll@", false, $permission, '@select@', '10px', true);
 	}
 
 	public function printTable($paginal = true, $class = 'manage'){
 		$user = User::current();
 		echo '<table class="'.$class.'">';
-		echo '<tr>';
+		echo '<tr >';
 			foreach ($this->columns as $column) {
 				if( !$user->can($column['permission']) ){
 					continue;
 				}
 				$size = $column['size'] > 0 ? 'style="width: '.$column['size'].'"' : "";
-				echo '<th '.$size.'>'.$column['name'].'</th>';
+				$hiddenColumn = $column['show'] ? 'class="always-show"' : '';
+				echo '<th '.$size.' '.$hiddenColumn.'>'.$column['name'].'</th>';
 			}
 		echo '</tr>';
-		foreach ($this->data as $row) {
-			echo '<tr>';
-			foreach ($this->columns as $column) {
-				if( !$user->can($column['permission']) ){
-					continue;
+		if( !empty($this->rows) ){
+			foreach ($this->rows as $row) {
+				echo '<tr '.( !empty($row['style']) ? 'class="'.$row['style'].'"' : "" ).'>';
+				foreach ($this->columns as $column) {
+					if( !$user->can($column['permission']) ){
+						continue;
+					}
+					$hiddenColumn = $column['show'] ? 'class="always-show"' : '';
+					echo '<td '.$hiddenColumn.'>';
+					$content = $column['content'];
+					$depth = 3;
+					for($i = 0; $i < $depth; $i++){
+						foreach ($this->snippets as $key => $value) {
+							$content = str_replace("@$key@", $value, $content);
+						}
+						foreach ($this->info as $field => $value) {
+							$content = str_replace("%$field%", $value, $content);
+						}
+						foreach ($row['data'] as $key => $value) {
+							$content = str_replace("#$key#", $value, $content);
+						}
+					}
+					echo $content;
+					echo '</td>';
 				}
-				echo '<td>';
-				$content = $column['content'];
-				foreach ($this->snippets as $key => $value) {
-					$content = str_replace("@$key@", $value, $content);
-				}
-				foreach ($this->info as $field => $value) {
-					$content = str_replace("%$field%", $value, $content);
-				}
-				foreach ($row as $key => $value) {
-					$content = str_replace("#$key#", $value, $content);
-				}
-				echo $content;
-				echo '</td>';
+				echo '</tr>';
 			}
-			echo '</tr>';
+		}else{
+			$size = count($this->columns);
+			echo '<tr><td colspan="'.$size.'">'.$this->getInfo('emptyMessage').'</td></tr>';
 		}
 		echo '</table>';
 	}
