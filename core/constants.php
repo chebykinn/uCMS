@@ -3,11 +3,19 @@
 * @todo Group these constants
 */
 if( !defined("CORE_VERSION") ){
-	define("CORE_VERSION", '2.0 Alpha 1');
+	define("CORE_VERSION", '2.0 Alpha 2');
 }
 
 if( !defined("COMPATIBILITY_VERSION") ){
 	define("COMPATIBILITY_VERSION", '2.x');
+}
+
+if(!defined("UCMS_MIN_PHP_VERSION")){							
+	define("UCMS_MIN_PHP_VERSION", 5.3);						// minimum required PHP version
+}
+
+if(!defined("UCMS_MIN_MYSQL_VERSION")){							
+	define("UCMS_MIN_MYSQL_VERSION", 5.0);						// minimum required MySQL version
 }
 
 if( !defined("EXTENSION_INFO") ){
@@ -16,6 +24,10 @@ if( !defined("EXTENSION_INFO") ){
 
 if( !defined("THEME_INFO") ){
 	define("THEME_INFO", 'theme.info');
+}
+
+if( !defined("WIDGET_INFO") ){
+	define("WIDGET_INFO", 'widget.info');
 }
 
 if( !defined("DEFAULT_THEME") ){
@@ -72,6 +84,14 @@ if( !defined("THEMES_PATH") ){
 
 if( !defined("THEMES_URL_PATH") ){
 	define("THEMES_URL_PATH", CONTENT_URL_PATH.'themes/');
+}
+
+if( !defined("WIDGETS_PATH") ){
+	define("WIDGETS_PATH", CONTENT_PATH.'widgets/');
+}
+
+if( !defined("WIDGETS_URL_PATH") ){
+	define("WIDGETS_URL_PATH", CONTENT_URL_PATH.'widgets/');
 }
 
 if( !defined("CORE_PATH") ){
@@ -158,6 +178,18 @@ if( !defined("GENERAL_TEMPLATE_NAME") ){
 
 if( !defined("DEBUG_DISPLAY_QUERY") ){
 	define("DEBUG_DISPLAY_QUERY", false);
+}
+
+if( !defined("SUCCESS_STATUS") ){
+	define("SUCCESS_STATUS", 0);
+}
+
+if( !defined("ERROR_STATUS") ){
+	define("ERROR_STATUS", 1);
+}
+
+if( !defined("WARNING_STATUS") ){
+	define("WARNING_STATUS", 2);
 }
 
 ?>
