@@ -6,7 +6,7 @@
 body{
 	font-family: Arial, Georgia, Sans-serif;
 	background: #F8F8F8;
-	color: #000;
+	color: #222;
 	font-size: 12px;
 	text-align: center;
 }
@@ -60,6 +60,12 @@ a:hover{
 	margin-bottom: 5px;
 }
 
+#sidebar .separator{
+	margin: 5px auto;
+	width: 50%;
+	border: 1px #142E59 solid;
+}
+
 #sidebar ul li a:hover{
 	background: #00325E;
 }
@@ -98,6 +104,11 @@ a:hover{
 	border-radius: 2px;
 	border-spacing: 0;
 	font-size: 13px;
+	line-height: 20px;
+}
+
+.manage p{
+	margin: 5px;
 }
 
 .manage tr{
@@ -118,6 +129,10 @@ a:hover{
 	font-weight: normal;
 }
 
+.manage .enabled td{
+	background: #EAF2F7;
+}
+
 .show-sidebar{
 	display: none;
 }
@@ -132,4 +147,39 @@ a:hover{
 
 .manage-actions{
 	color: #ccc;
+}
+
+.error, .warning, .success{
+	width: 100%;
+	box-sizing: border-box;
+	font-size: 15px;
+	padding: 10px;
+	margin: 10px auto;
+	background: #fdfdfd;
+	box-shadow: 0 1px 5px 0 rgba(0, 0, 0, 0.1);
+}
+
+.error{
+	border-left: 10px #D93030 solid;
+	border-right: 10px #D93030 solid;
+}
+
+.warning{
+	border-left: 10px #C4AF23 solid;
+	border-right: 10px #C4AF23 solid;
+}
+
+.success{
+	border-left: 10px #168A24 solid;
+	border-right: 10px #168A24 solid;
+}
+
+.summary{
+	width: 25%;
+}
+
+.info{
+	display: block;
+	float: left;
+	width: 50%;
 }

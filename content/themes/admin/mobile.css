@@ -6,21 +6,39 @@
 	display: none;
 }
 
+#sidebar ul ul{
+	margin: 0 0 0 5px;
+}
+
+#sidebar ul li a, #sidebar ul li a:visited{
+	padding: 10px;
+}
+
+#sidebar ul ul li a, #sidebar ul ul li a:visited{
+	padding: 10px;
+}
+
 #wrapper{
 	border: none;
 }
 
-
 .show-sidebar{
 	position: relative;
 	display: block;
-	background: url("/content/themes/admin/images/menu.png") #1a5eac;
+	background: url("/content/themes/admin/images/menu.png") #1a5eac no-repeat;
 	background-size: 100% 100%;
 	width: 48px;
 	height: 48px;
-	border: 1px #336699 solid;
 }
 
-#sidebar:target{
-	display: inline;
+.selected{
+	background-color: #12223D;
+}
+
+.manage th:not([class="always-show"]), .manage td:not([class="always-show"]){
+	display: none;
+}
+
+.summary{
+	width: 100%;
 }
