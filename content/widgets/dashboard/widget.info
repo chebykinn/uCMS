@@ -1,0 +1,18 @@
+{
+	"version": "1.0",
+	"coreVersion": "2.x",
+	"dependencies": [
+		"posts"
+	],
+	"includes": [
+		"load.php"
+	],
+	"info": {
+		"displayname": "Dashboard",
+		"description": "Control Panel's dashboard",
+		"author": "µCMS",
+		"site": "http://ucms.ivan4b.ru",
+		"updateURL": "http://ucms.ivan4b.ru/pub/widgets/dashboard",
+		"permissions": "access control panel"
+	}
+}
