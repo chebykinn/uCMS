@@ -5,16 +5,18 @@ class Session{
 	private $uid;
 	private $ip;
 	private $updateTime;
-	private $loaded;
+	private $isLoaded;
+	private $_authorized = false;
+	private $_saved = false;
 
-	public static function getCurrent(){
+	public static function GetCurrent(){
 		if ( is_null( self::$instance ) ){
 			self::$instance = new self();
 		}
 		return self::$instance;
 	}
 
-	public static function start(){
+	public static function Start(){
 		self::$instance = new self();
 	}
 
@@ -24,36 +26,73 @@ class Session{
 		}
 		ini_set('session.cookie_lifetime', 0); // set session life until the browser closes
 		ini_set("session.gc_maxlifetime", SESSION_IDLE_LIFETIME);
-		$this->sid = !empty($_SESSION['hash']) ? $_SESSION['hash'] : session_id();
+		if( !empty($_SESSION["usid".session_id()]) ){
+			$this->sid = $_SESSION["usid".session_id()];
+			$this->_authorized = true;
+		}
+		if( !empty($_COOKIE["usid_saved"]) ){
+			$this->sid = $_COOKIE["usid_saved"];
+			$this->_authorized = true;
+			$this->_saved = true;
+		}
+		if( !$this->_authorized ){
+			$this->sid = session_id();
+		}
 		$this->ip = $this->getIPAddress();
 		$this->updateTime = time();
-		$this->loaded = false;
+		if( $this->_saved ) $this->updateTime = 0;
+		$this->isLoaded = false;
+	}
+
+	public function isAuthorized(){
+		return $this->_authorized;
+	}
+
+	public function Authorize($hash){
+		$this->sid = $_SESSION["usid".session_id()] = $hash;
+		$this->_authorized = true;
+	}
+
+	public function Deauthorize(){
+		if( $this->_authorized ){
+			$this->delete("usid".session_id());
+			$this->deleteCookie("usid_saved");
+		}
 	}
 
 	public function load(){
-		$query = new Query('{sessions}');
-		$data = $query->select(array('sessiondata', 'uid', 'sid'))->where()->condition('sid', '=', $this->sid)->execute();
-		if( !empty($data) ){
-			session_decode($data[0]['sessiondata']);
-			$this->uid = $data[0]['uid'];
-			$this->sid = $data[0]['sid'];
-			$this->loaded = true;
+		if( $this->_authorized ){
+			$query = new Query('{sessions}');
+			$data = $query->select(array('sessiondata', 'uid', 'sid'))->where()->condition('sid', '=', $this->sid)->execute();
+			if( !empty($data) ){
+				session_decode($data[0]['sessiondata']);
+				$this->uid = intval($data[0]['uid']);
+				$this->sid = $data[0]['sid'];
+				$this->isLoaded = true;
+			}else{
+				$this->Deauthorize();
+			}
 		}
 
 	}
 
 	public function save(){
-		$data = session_encode();
 		$query = new Query('{sessions}');
-		if($this->loaded){
-			$query->update(array('sessiondata' => $data, 'ip' => $this->ip, 'updated' => $this->updateTime))
-			->where()->condition('sid', '=', $this->sid)->execute();
-		}else{
-			$query->insert(array('sid' => $this->sid, 'sessiondata' => $data, 'ip' => $this->ip, 'updated' => $this->updateTime))->execute();
+		if( $this->_authorized ){
+			$data = @session_encode();
+			$data = str_replace("usid".session_id()."|s:32:\"$this->sid\";", "", $data);
+			if($this->isLoaded){
+				$query->update(array('sessiondata' => $data, 'ip' => $this->ip, 'updated' => $this->updateTime))
+				->where()->condition('sid', '=', $this->sid)->execute();
+			}
+			if($this->uid > 0){
+				$userVisit = new Query("{users}");
+				$userVisit->update(array("visited" => $this->updateTime))->where()->condition('uid', '=', $this->uid)->execute();
+			}
 		}
-
 		//Delete old sessions
-		$query->delete()->where()->condition('UNIX_TIMESTAMP() - `updated`', '>', SESSION_IDLE_LIFETIME, true)->execute();
+		$query->delete()->where()->condition('UNIX_TIMESTAMP() - `updated`', '>', SESSION_IDLE_LIFETIME, true)
+		                 ->_and()->condition('updated', '!=', '0')->execute();
 	}
 
 	public function getIPAddress(){
@@ -77,6 +116,14 @@ class Session{
 
 	public function getUID(){
 		return intval($this->uid);
+	}
+
+	public function getHost(){
+		return $this->ip;
+	}
+
+	public function getUpdateTime(){
+		return $this->updateTime;
 	}
 
 	public function get($name){
@@ -103,7 +150,8 @@ class Session{
 		return "";
 	}
 
-	public function setCookie($name, $value, $time){
+	public function setCookie($name, $value, $time = 0){
+		if(!$time) $time = time() + 60 * 60 * 24 * 30;
 		return setcookie($name, $value, $time, '/');
 	}
 
