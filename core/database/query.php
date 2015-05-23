@@ -2,109 +2,135 @@
 class Query{
 	private $database;
 	private $sql;
+	private $params = array();
 	private $table;
+	private $type;
+	private $doCache = false;
 
-	public function __construct(){
-		$args = func_get_args();
-		$this->sql = "";
+	public function __construct($sql, $params = array()){
 		$this->database = DatabaseConnection::getDefault();
 		if( empty($this->database) ){
 			log_add("No connection to the database", UC_LOG_ERROR);
 			return;
 		}
-		if( count($args) == 1 ){ // $table
-			$table = $args[0];
-			$outTable = array();
-			if( preg_match("/{(.*?)}/", $table, $outTable) ){
-				$this->table = $this->database->getPrefix().$this->prepare($outTable[1]);
-			}else{
-				$this->table = $this->prepare($table);
-			}
+		$outType = array();
+		$sql = $this->getLocalTableNames($sql);
+		if( !preg_match("/select|insert|update|delete/i", $sql, $outType) ){
+			$this->table = $sql;
 		}else{
-			$sql = "";
-			$check = !empty($args[0]) ? (bool) $args[0] : false;
-			if( $check && !empty($args[1]) ) $sql = $args[1];
-			$tables = array();
-			if( preg_match_all("/{(.*?)}/i", $sql, $tables) ){
-				foreach ($tables[1] as &$value){
-    				$value = $this->database->getPrefix().$this->prepare($value);
-				}
-				$pattern = array_fill(0, count($tables[1]), "/{(.*?)}/i");
-				$sql = preg_replace($pattern, $tables[1], $sql, 1);
-			}
-			if( isset($args[2]) && is_array($args[2]) ){
-				$words = array_keys($args[2]);
-				$replacements = array_values($args[2]);
-				foreach ($replacements as &$value) {
-					$value = $this->prepare($value);
-				}
-				$sql = str_replace($words, $replacements, $sql);
-			}
-			$this->sql = $sql;
+			$this->sql = $sql;	
+			$this->type = strtolower($outType[0]);
+			$this->params = $params;
 		}
 	}
 
+	public function doCache(){
+		$this->doCache = true;
+	}
+
+	public function getLocalTableNames($str){
+		$tables = array();
+		if( preg_match_all("/{(.*?)}/i", $str, $tables) ){
+			foreach ($tables[1] as &$value){
+    			$value = $this->database->getPrefix().$value;
+			}
+			$pattern = array_fill(0, count($tables[1]), "/{(.*?)}/i");
+			$str = preg_replace($pattern, $tables[1], $str, 1);
+		}
+		return $str;
+	}
+
+	public function countRows(){
+		$this->type = "count";
+		$this->sql = "SELECT COUNT(*) as count FROM $this->table";
+		return $this;
+	}
+
 	public function insert($columnsAndValues){
+		$this->type = 'insert';
 		$noQuotes = array('NULL', 'NOW()');
 		if( is_array($columnsAndValues) ){
-			$columns = $this->prepare( array_keys($columnsAndValues) );
-			$values = $this->prepare( array_values($columnsAndValues) );
+			//$columns = array_keys($columnsAndValues);
+			//$values = array_values($columnsAndValues);
+			$params = array();
+			$columns = array();
+			foreach ($columnsAndValues as $column => $value) {
+				$params[":$column"] = $value;
+				$columns[] = $column;
+			}
+			$sqlColumns = implode(", ", $columns);
+			$sqlValues  = implode(", ", array_keys($params));
 			/**
 			* @todo checks
 			*/
-			$sqlColumns = "`".implode("`, `", $columns)."`";
-			foreach ($values as &$value) {
-				if( !in_array($value, $noQuotes) ){
-					$value = "'$value'";
-				}
-			}
-			$sqlValues = implode(", ", $values);
-			$this->sql = "INSERT INTO `$this->table` ($sqlColumns) VALUES ($sqlValues)";
+
+		//	foreach ($values as &$value) {
+				//if( !in_array($value, $noQuotes) ){
+				//	$value = "'$value'";
+				//}
+		//	}
+
+			$this->sql = "INSERT INTO $this->table ($sqlColumns) VALUES ($sqlValues)";
+			$this->params = $params;
 		}
 		return $this;
 	}
 
 	public function update($columnsAndValues){
+		$this->type = 'update';
 		$noQuotes = array('NULL', 'NOW()');
 		if( is_array($columnsAndValues) ){
-			
+			$params = array();
+			$columns = array();
+			$values = array();
+
 			$sqlUpdate = "";
 			foreach ($columnsAndValues as $column => $value) {
-				$column = '`'.$this->prepare( $column ).'`';
-				$value = $this->prepare( $value );
+				$params[":$column"] = $value;
+				$columns[] = $column;
+				$values[]  = $value;
+				if($sqlUpdate != '') $sqlUpdate .= ', ';
+				$sqlUpdate .= "$column = :$column";
+			}
+
+			/*$sqlUpdate = "";
+			foreach ($columnsAndValues as $column => $value) {
+				$column = '`'.$column.'`';
 				if( !in_array($value, $noQuotes) ){
 					$value = "'$value'";
 				}
 				if($sqlUpdate != '') $sqlUpdate .= ', ';
 				$sqlUpdate .= "$column = $value";
-			}
-			$this->sql = "UPDATE `$this->table` SET $sqlUpdate";
+			}*/
+			$this->sql = "UPDATE $this->table SET $sqlUpdate";
+			$this->params = $params;
 		}
 		return $this;
 	}
 
-	public function select($columns, $noQuotes = false){
-		$columns = $this->prepare($columns);
+	public function select($columns){
+		$this->type = 'select';
 		if(is_array($columns)){
-			$sqlColumns = "`".implode("`, `", $columns)."`";
-		}else{
-			if(!$noQuotes){
-				$sqlColumns = "`$columns`";
-			}else{
-				$sqlColumns = "$columns";
+			foreach ($columns as &$column) {
+				$column = $this->getLocalTableNames($column);
 			}
+			$sqlColumns = implode(", ", $columns);
+		}else{
+			$columns = $this->getLocalTableNames($columns);
+			$sqlColumns = "$columns";
 		}
-		$this->sql = "SELECT $sqlColumns FROM `$this->table`";
+		$this->sql = "SELECT $sqlColumns FROM $this->table";
 		return $this;
 	}	
 
 	public function delete(){
-		$this->sql = "DELETE FROM `$this->table`";
+		$this->type = 'delete';
+		$this->sql = "DELETE FROM $this->table";
 		return $this;
 	}
 	
 	public function where(){
-		if( mb_strpos($this->sql, 'WHERE') === false ){
+		if( strpos($this->sql, 'WHERE') === false ){
 			$this->sql .= ' WHERE';
 		}
 		return $this;
@@ -115,18 +141,13 @@ class Query{
 		return $this;
 	}
 
-	public function condition($column, $operator, $value, $noQuotes = false){
-		$column = $this->prepare($column);
-		$operator = $this->prepare($operator);
-		$value = $this->prepare($value);
+	public function condition($column, $operator, $value){
 		/**
 		* @todo filter operators
 		*/
-		if(!$noQuotes){
-			$condSql = '`'.$column.'` '.$operator.' \''.$value.'\'';
-		}else{
-			$condSql = $column.' '.$operator.' '.$value;
-		}
+		$safeName = $this->findNextName($column);
+		$this->params[$safeName] = $value;
+		$condSql = $column.' '.$operator.' '.$safeName;
 		$this->sql .= " $condSql";
 		return $this;
 	}
@@ -141,29 +162,40 @@ class Query{
 		return $this;
 	}
 
-	public function leftJoin($table){
+	public function left(){
+		$this->sql .= ' LEFT';
 		return $this;
 	}
 
-	public function rightJoin($table){
+	public function right(){
+		$this->sql .= ' RIGHT';
 		return $this;
 	}
 
-	public function innerJoin($table){
+	public function inner(){
+		$this->sql .= ' INNER';
+		return $this;
+	}
+
+	public function outer(){
+		$this->sql .= ' OUTER';
+		return $this;
+	}
+
+	public function join($table){
+		$table = $this->getLocalTableNames($table);
+		$this->sql .= " JOIN `$table`";
 		return $this;
 	}
 
 	public function using($column){
-		$column = $this->prepare($column);
 		$this->sql .= " USING(`$column`)";
 		return $this;
 	}
 
 	public function orderBy($columns, $orders){
-		$columns = $this->prepare($columns);
-		$orders = $this->prepare($orders);
 		$orderSql = " ORDER BY ";
-		if(is_array($columns) && is_array($orders)){
+		if( is_array($columns) && is_array($orders) ){
 			for ($i = 0; $i < count($columns); $i++) { 
 				$orderSql .= '`'.$columns[$i].'` '.$orders[$i];
 				if($i+1 < count($columns)) $orderSql .= ', ';
@@ -175,12 +207,23 @@ class Query{
 		return $this;
 	}
 
-	public function groupBy($columns){
+	public function groupBy($columns, $noQuotes = false){
+		$this->sql .= " GROUP BY ";
+		if( is_array($columns) ){
+			$sqlColumns = '`'.implode("`, `", $columns).'`';
+		}else{
+			if($noQuotes){
+				$sqlColumns = $columns;
+			}else{
+				$sqlColumns = "`$columns`";
+			}
+		}
+		$this->sql .= $sqlColumns;
 		return $this;
 	}
 
 	public function limit($start, $amount = 0){
-		if( mb_strpos($this->sql, 'LIMIT') === false ){
+		if( strpos($this->sql, 'LIMIT') === false ){
 			if($amount != 0){
 				$this->sql .= ' LIMIT '.intval($start).', '.intval($amount); //check
 			}else{
@@ -194,19 +237,38 @@ class Query{
 		return $this->sql;
 	}
 
-	public function execute(){
+	public function execute($type = ""){
 		if( empty($this->database) ) return;
-		if(true){ //select
-			$query = $this->database->doQuery($this->sql);
-			$data = array();
-			$i = 0;
-			while($row = $this->database->fetchArray($query)){
-				$data[$i] = $row;
-				$i++;
-			}
-			return $data;
+		if( empty($type) ) $type = $this->type;
+		$returnValue = NULL;
+		switch ($type) {
+			case 'select':
+				$data = array();
+				$query = $this->database->doQuery($this->sql, $this->params);
+
+				$i = 0;
+				while($row = $this->database->fetch($query)){
+					$data[$i] = $row;
+					$i++;
+				}
+				$returnValue = $data;
+			break;
+
+			case 'count':
+				$query = $this->database->doQuery($this->sql, $this->params);
+				$row = $this->database->fetch($query);
+				if( !empty($row['count']) ) return intval($row['count']);
+			break;
+			
+			default:
+				$returnValue = $this->database->doQuery($this->sql, $this->params);
+			break;
 		}
-		return $this->database->doQuery($this->sql);
+		$this->type = "";
+		$this->sql = "";
+		$this->params = array();
+		if( is_null($returnValue) ) $returnValue = $this->database->doQuery($this->sql, $this->params);
+		return $returnValue;
 	}
 
 	public function prepare($value){
@@ -224,6 +286,16 @@ class Query{
 	public function getTable(){
 		if( empty($this->database) ) return;
 		return $this->table;
+	}
+
+	public function findNextName($column, $index = 0){
+		$column = preg_replace("/[^a-z0-9.]/i", "", $column);
+		$name = $index == 0 ? ":$column" : ":$column$index";
+		if( isset($this->params[$name]) ){
+			$index++;
+			$this->findNextName(":$column$index", $index);
+		}
+		return $name;
 	}
 }
 ?>

@@ -8,7 +8,7 @@ class DatabaseConnection{
 	private $prefix;
 	private $ucmsName;
 
-	public function getDefault(){
+	public static function getDefault(){
 		if( !is_null(self::$instance) ){
 			return self::$instance;
 		}
@@ -30,34 +30,68 @@ class DatabaseConnection{
 	}
 
 	public function connect(){
-		$this->connection = mysqli_connect($this->dbServer, $this->dbUser, $this->dbPassword, $this->dbName, $this->dbPort);
-		if(!$this->connection){
-			$errno = mysqli_connect_errno();
-			throw new Exception("Can't connect to database", $errno);
-		}
-
-	}
-
-	public function disconnect(){
+		$this->connection = new PDO("mysql:host=$this->dbServer;port=$this->dbPort;dbname=$this->dbName;charset=utf8", $this->dbUser, $this->dbPassword);
 		
+		$this->connection->exec("set names utf8");
+		$this->connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+		//if ($this->connection->connect_errno) {
+		//	throw new Exception("Can't connect to database", $this->connection->connect_errno);
+		//}
+		//if (!$this->connection->set_charset("utf8")) {
+		//	throw new Exception("Can't set database charset");
+		//}
+
 	}
 
-	public function doQuery($sql){
+	public function shutdown(){
+		$this->connection = null; 
+	}
+
+	public function doQuery($sql, $params = array()){
 		if($sql == "") return false;
-		$query = @mysqli_query($this->connection, $sql);
-		$this->queriesCount++;
+		$result = $this->connection->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
 		if(DEBUG_DISPLAY_QUERY) {
-			echo "<pre style=\"text-align: left; color: #000; background: #fff; border: 1px #555 solid; margin: 20px; padding: 5px; z-index: 9999;\">$sql</pre>";
+			begin_debug_block();
+			echo $sql;
+			end_debug_block();
 		}
-		return $query;
+		try{
+			$result->execute($params);
+			$this->queriesCount++;
+		}catch(PDOException $e){
+			begin_debug_block();
+			echo "<h2>".tr("Query failed")."</h2><br>";
+			echo "$sql<br><br>";
+			echo $e->getMessage();
+			if(UCMS_DEBUG){
+				echo "<br><h3>Trace:</h3>".$e->getTraceAsString();
+			}
+			end_debug_block();
+			
+		}
+		// $result->close();
+		return $result;
 	}
 
 	public function escapeString($value){
-		return @mysqli_escape_string($this->connection, $value);
+		return $this->connection->quote($value);
 	}
 
-	public function fetchArray($query){
-		return @mysqli_fetch_array($query);
+	public function fetch($query, $type = 'assoc'){
+		switch ($type) {
+			case 'assoc':
+				$outType = PDO::FETCH_ASSOC;
+			break;
+			
+			default:
+				$outType = PDO::FETCH_ASSOC;
+			break;
+		}
+
+		if( is_object($query) && $query instanceof PDOStatement ){
+			return $query->fetch($outType); //param
+		}
+		return false;
 	}
 
 	public function getQueriesCount(){
