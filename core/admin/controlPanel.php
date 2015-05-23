@@ -1,0 +1,141 @@
+<?php
+class ControlPanel{
+	private static $sidebar;
+	private static $action;
+
+	public static function Init(){
+		self::loadSidebar();
+		self::$action = URLManager::GetCurrentAdminAction();
+	}
+
+	private static function LoadSidebar(){
+		self::$sidebar[] = array('name' => tr('Home'), 'action' => 'home', 'parent' => 0, 'after' => '');
+		$prevAction = 'home';
+		$position = 'home';
+		$waitingItems = array();
+		$loadedExtensions = Extensions::GetLoaded();
+		if( !empty($loadedExtensions) ){
+			foreach ($loadedExtensions as $name) {
+				$extensionItems = Extensions::Get($name)->getAdminSidebarItems();
+				$positions = Extensions::Get($name)->getAdminSidebarPositions();
+				if( !empty($extensionItems) && is_array($extensionItems) ){
+					foreach ($extensionItems as $name => $action) {
+						if ( $action == "" && strpos($action, "separator") === false ) continue;
+						$position = !empty($positions[$action]) ? $positions[$action] : $prevAction;
+						if( mb_substr($name, 0, 1) === '#' ){
+							$parent = 'settings';
+							$name = mb_substr($name, 1, mb_strlen($name));
+							$position = "settings";
+						}elseif( mb_substr($name, 0, 1) === '@' ){
+							$name = mb_substr($name, 1, mb_strlen($name));
+							$parent = $prevAction;
+						}else{
+							$parent = 0;
+						}
+						$item = array('name' => tr($name), 
+							'action' => $action, 'parent' => $parent, 'after' => $position);
+						if( $prevAction == $position && !isset($waitingItems[$position]) ){
+							self::$sidebar[] = $item;
+						}else{
+							$waitingItems[$action] = $item;
+						}
+						if( strpos($action, "settings/") === false && strpos($action, "separator") === false){
+							$prevAction = $action;
+						}
+					}
+				}
+			}
+		}
+		$offset = array();
+		$count = 0;
+		while( !empty($waitingItems) && $count < 32 ){
+			foreach ($waitingItems as $key => $item) {
+				foreach (self::$sidebar as $searchKey => $searchItem) {
+					if( $item['after'] == $searchItem['action'] ){
+						if( !isset($offset[$searchKey]) ){
+							$offset[$searchKey] = 1;
+						}else{
+							$offset[$searchKey]++;
+						}
+						array_splice(self::$sidebar, $searchKey+$offset[$searchKey], 0, array($item));
+						unset($waitingItems[$key]);
+					}
+				}
+				if( $item['after'] == "settings" ){
+					array_push(self::$sidebar, $item);
+					unset($waitingItems[$key]);
+				}
+			}
+			$count++;
+		}
+		self::$sidebar[] = array('name' => "separator",      'action' => 'separator',  'parent' => 0,            'after' => 'home');
+		self::$sidebar[] = array('name' => tr('Tools'),      'action' => 'tools',      'parent' => 0,            'after' => 'home');
+		self::$sidebar[] = array('name' => tr('Journal'),    'action' => 'journal',    'parent' => 'tools',      'after' => 'tools');
+		self::$sidebar[] = array('name' => tr('PHP Info'),   'action' => 'phpinfo',    'parent' => 'tools',      'after' => 'journal');
+		self::$sidebar[] = array('name' => "separator",      'action' => 'separator',  'parent' => 0,            'after' => 'phpinfo');
+		self::$sidebar[] = array('name' => tr('Extensions'), 'action' => 'extensions', 'parent' => 0,            'after' => 'phpinfo');
+		self::$sidebar[] = array('name' => tr('Themes'),     'action' => 'themes',     'parent' => 'extensions', 'after' => 'extensions');
+		self::$sidebar[] = array('name' => tr('Widgets'),    'action' => 'widgets',    'parent' => 'extensions', 'after' => 'themes');
+		self::$sidebar[] = array('name' => "separator",      'action' => 'separator',  'parent' => 0,            'after' => 'themes');
+		self::$sidebar[] = array('name' => tr('Settings'),   'action' => 'settings',   'parent' => 0,            'after' => 'widgets');
+	}
+
+	public static function AddMenuItem($name, $action, $parent = "", $after = "home"){
+		if( empty($name) || empty($action) ) return false;
+		if( empty($after) ) $after = 'home';
+		$item = array('name' => tr($name), 'action' => $action, 'parent' => $parent, 'after' => $after);
+		foreach (self::$sidebar as $searchKey => $searchItem) {
+			if( $after == $searchItem['action'] ){
+				array_splice(self::$sidebar, $searchKey+1, 0, array($item));
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public static function GetSidebar(){
+		return self::$sidebar;
+	}
+
+	public static function GetAction(){
+		return self::$action;
+	}
+
+	public static function PrintSidebar($root = 0, $checkSelection = false){
+		$selected = false;
+		if( is_array(self::$sidebar) ){
+			foreach (self::$sidebar as $key){
+				if( $key['parent'] === $root ){
+					if( strpos($key['action'], "separator") === false ){
+						$childrenMenu = self::PrintSidebar($key['action']);
+						if($key['action'] == 'home') $key['action'] = "";
+						$link = URLManager::MakeLink(ADMIN_ACTION, $key['action']);
+						$selected = self::PrintSidebar($key['action'], true);
+						if( !$selected ){
+							$selected = (mb_strpos( htmlspecialchars_decode(URLManager::GetRaw()), htmlspecialchars_decode($link) ) !== false);
+							if( empty($key['action']) ) { // Select home page button
+								$selected = (htmlspecialchars_decode(URLManager::GetRaw()) == htmlspecialchars_decode($link)
+											|| htmlspecialchars_decode(URLManager::GetRaw()).'/' == htmlspecialchars_decode($link));
+							}
+						}
+						if( $selected and $checkSelection ){
+							return true;
+						}
+						$tree[] = '<li><a '.($selected ? 'class="selected"' : '').' href="'.$link.'">'.$key['name'].'</a>'.$childrenMenu.'</li>';
+					}else{
+						$tree[] = '<li><div class="separator"></div></li>';
+					}
+				}
+			}
+			if( $checkSelection ) return $selected;
+			if( isset($tree) ){
+				return '<ul>'.implode('', $tree).'</ul>';
+			}else{
+				return '';
+			}
+		}else{
+			return false;
+		}
+	}
+}
+?>
