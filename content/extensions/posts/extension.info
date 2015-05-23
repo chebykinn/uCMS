@@ -13,8 +13,12 @@
 		"other"
 	],
 	"admin": {
-		"Posts": "posts",
+		"separator": ["", "home"],
+		"Posts": ["posts", "home"],
 		"@Categories": "categories",
+		"separator2": "",
+		"Pages": "pages",
+		"separator3": "",
 		"#Posts": "settings/posts"
 	},
 	"includes": [

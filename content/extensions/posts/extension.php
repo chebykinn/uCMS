@@ -1,18 +1,18 @@
 <?php
 class Posts extends Extension{
 	
-	public function install(){
+	public function onInstall(){
 
 	}
 
-	public function uninstall(){
+	public function onUninstall(){
 
 	}
 
-	public function load(){
+	public function onLoad(){
 	}
 	
-	public function doAction($action){
+	public function onAction($action){
 		if($action == INDEX_ACTION){
 			return array("template" => INDEX_ACTION);
 		}else{
@@ -20,7 +20,7 @@ class Posts extends Extension{
 		}
 	}
 
-	public function doAdminAction($action){
+	public function onAdminAction($action){
 
 	}
 }
