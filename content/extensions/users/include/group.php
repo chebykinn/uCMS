@@ -66,5 +66,25 @@ class Group{
 	public function getPermissions(){
 		return $this->permissions;
 	}
+
+	public static function grantPermission($name, $group){
+		if( !is_object($group) ) return false;
+		if( !$group->hasPermission($name) ){
+			$check = new Query('{group_permissions}');
+			$data = $check->select('owner')->where()->condition('name', '=', $name)->limit(1)->execute(); //add query method to check
+			if(count($data) > 0){
+				$add = new Query('{group_permissions}');
+				$add->insert(array('gid' => $group->getID(), 'name' => $name, 'owner' => $data[0]['owner']))->execute();
+			}
+		}
+	}
+
+	public static function denyPermission($name, $group){
+		if( !is_object($group) ) return false;
+		if( $group->hasPermission($name) ){
+			$query = new Query('{group_permissions}');
+			$query->delete()->where()->condition('gid', '=', $group->getID())->execute();
+		}
+	}
 }
 ?>
