@@ -2,21 +2,29 @@
 class Settings{
 	private static $list;
 
-	public static function add($name, $value){
+	public static function Add($name, $value){
 		/**
 		* @todo owner
 		*/
-		$owner = self::getCurrentOwner();
+		$owner = self::GetCurrentOwner();
 		$query = new Query('{settings}');
 		$query->insert(array('name' => $name, 'value' => $value, 'owner' => $owner))->execute();
 	}
 
-	public static function load(){
+	public static function Load(){
 		$query = new Query('{settings}');
-		self::$list = $query->select(array('name', 'value'))->execute();
+		self::$list = $query->select(array('name', 'value', 'owner'))->execute();
 	} 
 
-	public static function get($name){
+	public static function IsExists($name){
+		if( empty(self::$list) ) return "";
+		foreach (self::$list as $setting) {
+			if($setting['name'] === $name) return true;
+		}
+		return false;
+	}
+
+	public static function Get($name){
 		if( empty(self::$list) ) return "";
 		foreach (self::$list as $setting) {
 			if($setting['name'] === $name) return $setting['value'];
@@ -24,7 +32,7 @@ class Settings{
 		return "";
 	}
 
-	public static function getOwner($name){
+	public static function GetOwner($name){
 		if( empty(self::$list) ) return "";
 		foreach (self::$list as $setting) {
 			if($setting['name'] === $name) return $setting['owner'];
@@ -32,7 +40,7 @@ class Settings{
 		return "";
 	}
 
-	public static function getCurrentOwner(){
+	public static function GetCurrentOwner(){
 		// varDump(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS));
 		$name = "core";
 		$trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
@@ -43,7 +51,7 @@ class Settings{
 
 					if( mb_strpos($value, EXTENSIONS_PATH) !== false ){
 						$name = str_replace(EXTENSIONS_PATH, '', dirname($value));
-						if( Extensions::isLoaded($name) ){
+						if( Extensions::IsLoaded($name) ){
 							$found = true;
 						}
 					}
@@ -60,14 +68,19 @@ class Settings{
 		return $name;
 	}
 
-	public static function set($name, $value){
-		//echo self::getCurrentOwner();
-		/**
-		* @todo owner
-		*/
+	public static function Set($name, $value){
+		$owner = self::GetCurrentOwner();
+		$checkName = self::IsExists($name);
+		if( $checkName && self::GetOwner($name) == $owner ){
+			$set = new Query('{settings}');
+			$set->update(array('value' => $value))
+			    ->where()->condition('name', '=', $name)->execute();
+			return true; // query result
+		}
+		return false;
 	}
 
-	public static function remove($name, $value){
+	public static function Remove($name, $value){
 		/**
 		* @todo owner
 		*/
