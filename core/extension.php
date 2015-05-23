@@ -8,6 +8,7 @@ class Extension{
 	protected $includes;
 	protected $actions;
 	protected $admin;
+	protected $sidebarPosition;
 	protected $adminPages = NULL;
 	protected $info;
 
@@ -18,15 +19,15 @@ class Extension{
 		
 	}
 
-	public function install(){
+	public function onInstall(){
 		log_add(tr("@s installed", $this->name), UC_LOG_INFO);
 	}
 
-	public function uninstall(){
+	public function onUninstall(){
 		log_add(tr("@s uninstalled", $this->name), UC_LOG_INFO);
 	}
 
-	public function load(){
+	public function onLoad(){
 		if( is_array($this->includes) ){
 			foreach ($this->includes as $include) {
 				$this->includeFile($include);
@@ -35,11 +36,11 @@ class Extension{
 		// log_add(tr("@s loaded", $this->name), UC_LOG_INFO);
 	}
 	
-	public function doAction($action){
+	public function onAction($action){
 
 	}
 
-	public function doAdminAction($action){
+	public function onAdminAction($action){
 
 	}
 
@@ -78,13 +79,32 @@ class Extension{
 		$this->loadAfter    = !empty($decodedInfo['loadAfter'])    ? $decodedInfo['loadAfter']    : "";
 		$this->includes     = !empty($decodedInfo['includes'])     ? $decodedInfo['includes']     : "";
 		$this->actions      = !empty($decodedInfo['actions'])      ? $decodedInfo['actions']      : "";
-		$this->admin        = !empty($decodedInfo['admin'])        ? $decodedInfo['admin']        : "";
+		$this->admin        = !empty($decodedInfo['admin'])        ? $decodedInfo['admin']        : array();
 		$this->adminPages   = !empty($decodedInfo['adminPages'])   ? $decodedInfo['adminPages']   : "";
 		$this->info         = !empty($decodedInfo['info'])         ? $decodedInfo['info']         : "";
+		foreach ($this->admin as $key => &$item) {
+			if( is_array($item) && count($item) == 2 ){ // if sidebar position is set
+				if( empty($item[0]) ){
+					$item[0] = $key;
+					if( strpos($item[0], "separator" ) !== false ){
+						$item[0] .= rand(0, 1000);
+					}
+				}
+				$this->sidebarPosition[$item[0]] = $item[1];
+				$item = $item[0]; 
+			}else{
+				if( empty($item) ){
+					$item = $key;
+					if( strpos($item, "separator" ) !== false ){
+						$item .= rand(0, 1000);
+					}
+				}
+			}
+		}
 	}
 
 	private function checkCoreVersion(){
-		if((float)CORE_VERSION < (float)$this->coreVersion){
+		if( version_compare(CORE_VERSION, $this->coreVersion, '<') ){
 			log_add(tr("Outdated core version @s", $this->name), UC_LOG_ERROR);
 			throw new RuntimeException("Outdated core version");
 		}
@@ -121,6 +141,13 @@ class Extension{
 	public function getAdminSidebarItems(){
 		if( is_array($this->admin) ){
 			return $this->admin;
+		}
+		return array();
+	}
+
+	public function getAdminSidebarPositions(){
+		if( is_array($this->sidebarPosition) ){
+			return $this->sidebarPosition;
 		}
 		return array();
 	}
