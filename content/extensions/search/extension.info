@@ -1,0 +1,31 @@
+{
+	"version": "1.0",
+	"coreVersion": "2.x",
+	"dependencies": [
+		"users"
+	],
+
+	"loadAfter": [
+		"users"
+	],
+
+	"admin": {
+		"#Search": "settings/search"
+	},
+
+	"adminPages": {
+		"settings/search": "admin/settings.php"
+	},
+
+	"includes": [
+		"include/search.php"
+	],
+
+	"info": {
+		"displayname": "Search",
+		"description": "Search system extension",
+		"author": "µCMS",
+		"site": "http://ucms.ivan4b.ru",
+		"updateURL": "http://ucms.ivan4b.ru/pub/extensions/search"
+	}
+}
