@@ -22,17 +22,24 @@ function get_theme_path($name){
 }
 
 function get_current_url(){
-	$url = new URLManager();
-	return $url->getRaw();
+	return URLManager::getRaw();
 }
 
 function get_current_action(){
-	$url = new URLManager();
-	return $url->getCurrentAction();
+	return URLManager::getCurrentAction();
 }
 
 function get_current_page(){
-	$url = new URLManager();
-	return $url->getCurrentPage();
+	return URLManager::getCurrentPage();
+}
+
+function generate_hash($length = 32){
+	$chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHI JKLMNOPRQSTUVWXYZ0123456789";
+	$code = "";
+	$clen = strlen($chars) - 1;  
+	while (strlen($code) < $length) {
+		$code .= $chars[mt_rand(0,$clen)];  
+	}
+	return $code;
 }
 ?>
