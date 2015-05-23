@@ -33,3 +33,12 @@ msgstr "Перейти к сайту"
 
 msgid "IVaN4B's μCMS © 2011-@s Queries: @s. Load time: @s seconds. <span class=\"ucms-version\">Version: @s</span>"
 msgstr "IVaN4B's μCMS © 2011-@s Запросов: @s. Время загрузки: @s секунд. <span class=\"ucms-version\">Версия: @s</span>"
+
+msgid ""
+"#description#"
+"<br><br>Version: #version# | Author: #author# | Site: <a href=\"@s\">#site#</a>"
+"<br>Depends on: #dependencies#"
+msgstr ""
+"#description#"
+"<br><br>Версия: #version# | Автор: #author# | Сайт: <a href=\"@s\">#site#</a>"
+"<br>Зависит от: #dependencies#"
