@@ -86,8 +86,9 @@ class Session{
 				->where()->condition('sid', '=', $this->sid)->execute();
 			}
 			if($this->uid > 0){
+
 				$userVisit = new Query("{users}");
-				$userVisit->update(array("visited" => $this->updateTime))->where()->condition('uid', '=', $this->uid)->execute();
+				$userVisit->update(array("visited" => time()))->where()->condition('uid', '=', $this->uid)->execute();
 			}
 		}
 		//Delete old sessions

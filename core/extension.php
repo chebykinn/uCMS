@@ -36,6 +36,10 @@ class Extension{
 		// log_add(tr("@s loaded", $this->name), UC_LOG_INFO);
 	}
 	
+	public function onShutdown(){
+		
+	}
+
 	public function onAction($action){
 
 	}

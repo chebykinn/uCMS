@@ -67,7 +67,7 @@ class Group{
 		return $this->permissions;
 	}
 
-	public static function grantPermission($name, $group){
+	public static function GrantPermission($name, $group){
 		if( !is_object($group) ) return false;
 		if( !$group->hasPermission($name) ){
 			$check = new Query('{group_permissions}');
@@ -79,7 +79,7 @@ class Group{
 		}
 	}
 
-	public static function denyPermission($name, $group){
+	public static function DenyPermission($name, $group){
 		if( !is_object($group) ) return false;
 		if( $group->hasPermission($name) ){
 			$query = new Query('{group_permissions}');

@@ -16,7 +16,7 @@ class User{
 	protected $info;
 	protected static $currentUser;
 	
-	public static function current($id = 0){
+	public static function Current($id = 0){
 		if ( is_null( self::$currentUser ) ){
 			self::$currentUser = new self($id);
 		}
@@ -144,7 +144,7 @@ class User{
 		return false;
 	}
 
-	public static function add($user){
+	public static function Add($user){
 		//add user
 		if( is_object($user) ){
 			$name = $user->getName();
@@ -168,11 +168,11 @@ class User{
 		}
 	}
 
-	public static function updateUser($user){
+	public static function UpdateUser($user){
 
 	}
 
-	public static function deleteUser($userID){
+	public static function DeleteUser($userID){
 
 	}
 
@@ -202,11 +202,11 @@ class User{
 		Session::getCurrent()->destroy();
 	}
 
-	public static function activateUser($userID){
+	public static function ActivateUser($userID){
 		//?
 	}
 
-	public static function addGroup($group){
+	public static function AddGroup($group){
 		$groupName = $group->getName();
 		if( is_object($group) && !empty($groupName) ){
 			$query = new Query('{groups}');
@@ -219,15 +219,15 @@ class User{
 		}
 	}
 
-	public static function updateGroup($group){
+	public static function UpdateGroup($group){
 
 	}
 
-	public static function deleteGroup($groupID){
+	public static function DeleteGroup($groupID){
 
 	}
 
-	public static function encryptPassword($password){
+	public static function EncryptPassword($password){
 		$salt = substr(sha1($password), 0, 22);
 		$password = crypt($password, '$2a$10$'.$salt);
 		return $password;
@@ -245,7 +245,7 @@ class User{
 	}
 
 
-	public static function isExists($uid){
+	public static function IsExists($uid){
 		$check = new Query('{users}');
 		$user = $check->select('uid')->where()->condition('uid', '=', $uid)->execute();
 		return !empty($user);

@@ -1,20 +1,23 @@
 <?php
 class Permission{
 	private $list;
+	private $gid;
+	private $name;
+	private $owner;
 
 	public function __construct(){
 
 	}
 
-	public function add($name, $owner){
+	public static function Add($name, $owner){
 
 	}
 
-	public function rename($oldName, $newName){
+	public static function Rename($oldName, $newName){
 
 	}
 
-	public function remove($name){
+	public static function Remove($name){
 
 	}
 }

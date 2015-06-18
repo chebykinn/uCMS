@@ -228,13 +228,21 @@ class Extensions{
 		return SUCCESS_STATUS;
 	}
 
-	public static function add($name){
+	public static function Add($name){
 		var_dump($name);
 		return SUCCESS_STATUS;
 	}
 
-	public static function isDefault($name){
+	public static function IsDefault($name){
 		return in_array($name, self::$defaultExtentions);
+	}
+
+	public static function Shutdown(){
+		foreach (self::$list as $name => $extension) {
+			if( is_object($extension) ){
+				$extension->onShutdown();
+			}
+		}
 	}
 }
 ?>

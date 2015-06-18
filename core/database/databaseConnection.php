@@ -83,6 +83,10 @@ class DatabaseConnection{
 				$outType = PDO::FETCH_ASSOC;
 			break;
 			
+			case 'object':
+			$outType = PDO::FETCH_OBJ;
+			break;
+
 			default:
 				$outType = PDO::FETCH_ASSOC;
 			break;

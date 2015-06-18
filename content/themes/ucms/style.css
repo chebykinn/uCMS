@@ -24,11 +24,13 @@ body{
 #sidebar{
 	width: 200px;
 	float: left;
+	width: 25%;
 }
 
 #content{
 	float: left;
 	padding: 10px;
+	width: 70%;
 }
 
 #footer{

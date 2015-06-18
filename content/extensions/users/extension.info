@@ -9,8 +9,11 @@
 	],
 	"actions": [
 		"user",
-		"profile",
-		"users"
+		"users",
+		"login",
+		"logout",
+		"registration",
+		"reset"
 	],
 	"admin": {
 		"Users": ["users", "pages"],

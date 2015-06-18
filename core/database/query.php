@@ -5,6 +5,7 @@ class Query{
 	private $params = array();
 	private $table;
 	private $type;
+	private $fetchType = 'assoc';
 	private $doCache = false;
 
 	public function __construct($sql, $params = array()){
@@ -237,6 +238,11 @@ class Query{
 		return $this->sql;
 	}
 
+	public function toObject(){
+		$this->fetchType = "object";
+		return $this;
+	}
+
 	public function execute($type = ""){
 		if( empty($this->database) ) return;
 		if( empty($type) ) $type = $this->type;
@@ -247,7 +253,7 @@ class Query{
 				$query = $this->database->doQuery($this->sql, $this->params);
 
 				$i = 0;
-				while($row = $this->database->fetch($query)){
+				while($row = $this->database->fetch($query, $this->fetchType)){
 					$data[$i] = $row;
 					$i++;
 				}
@@ -256,7 +262,7 @@ class Query{
 
 			case 'count':
 				$query = $this->database->doQuery($this->sql, $this->params);
-				$row = $this->database->fetch($query);
+				$row = $this->database->fetch($query, $this->fetchType);
 				if( !empty($row['count']) ) return intval($row['count']);
 			break;
 			

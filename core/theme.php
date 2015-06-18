@@ -4,15 +4,15 @@ class Theme extends Extension{
 	private $title;
 	private $action;
 
-	public static function setCurrent($themeName){
+	public static function SetCurrent($themeName){
 		self::$instance = new self($themeName);
 	}
 
-	public static function isLoaded(){
+	public static function IsLoaded(){
 		return !is_null( self::$instance );
 	}
 
-	public static function getCurrent(){
+	public static function GetCurrent(){
 		if ( is_null( self::$instance ) ){
 			log_add(tr("Theme is not loaded"), UC_LOG_CRITICAL);
 			return false;

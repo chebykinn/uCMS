@@ -81,7 +81,7 @@ class uCMS{
 		}
 		unset($GLOBALS['databases']); // We don't want to have global variables, so we delete this
 		Cache::Init();
-		Session::getCurrent()->load();
+		Session::GetCurrent()->load();
 		URLManager::Init();
 		Settings::Load();
 		$lang = Settings::Get('language');
@@ -113,7 +113,7 @@ class uCMS{
 		} // load admin panel
 
 		try{
-			Theme::setCurrent($themeName);
+			Theme::SetCurrent($themeName);
 		}catch(InvalidArgumentException $e){
 			p("[@s]: ".$e->getMessage(), $themeName);
 		}catch(RuntimeException $e){
@@ -128,12 +128,13 @@ class uCMS{
 			$templateAction = empty($templateData['template']) ? ERROR_TEMPLATE_NAME : $templateData['template'];
 
 		}
-		Theme::getCurrent()->setTitle($title);
-		Theme::getCurrent()->setAction($templateAction);
-		Theme::getCurrent()->load();
+		Theme::GetCurrent()->setTitle($title);
+		Theme::GetCurrent()->setAction($templateAction);
+		Theme::GetCurrent()->load();
 	}
 
 	public function shutdown(){
+		Extensions::Shutdown();
 		$this->stopLoadTimer();
 		Session::GetCurrent()->save();
 		DatabaseConnection::GetDefault()->shutdown(); //multiple
@@ -148,7 +149,7 @@ class uCMS{
 	* @return nothing
 	*
 	*/
-	public static function errorHandler($errno = "", $errstr = "", $errfile = "", $errline = ""){
+	public static function ErrorHandler($errno = "", $errstr = "", $errfile = "", $errline = ""){
 		if(empty($errno) && empty($errstr) && empty($errfile) && empty($errline)){
 			$error = error_get_last();
 			$errno = $error["type"];
@@ -218,8 +219,8 @@ class uCMS{
 		if($die) die;
 	}
 
-	public static function exceptionHandler($e){
-   		uCMS::errorHandler($e->getCode(), $e->getMessage(), $e->getFile(), $e->getLine());
+	public static function ExceptionHandler($e){
+   		uCMS::ErrorHandler($e->getCode(), $e->getMessage(), $e->getFile(), $e->getLine());
 	}
 
 	private function startLoadTimer(){
@@ -243,7 +244,7 @@ class uCMS{
 
 	public function reloadTheme($newTheme){
 		try{
-			Theme::setCurrent($newTheme);
+			Theme::SetCurrent($newTheme);
 		}catch(InvalidArgumentException $e){
 			p("[@s]: ".$e->getMessage(), $newTheme);
 		}catch(RuntimeException $e){
