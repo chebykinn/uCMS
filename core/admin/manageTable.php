@@ -21,6 +21,7 @@ class ManageTable{
 	public function setSnippets(){
 		//$editLink = $url->makeLink('admin', 'extensions/');
 		$this->setInfo('emptyMessage', tr('No elements'), true);
+		$this->setInfo('notAllowed', tr("You don't have permissions to view this content"), true);
 		$this->snippets['edit'] = '<a href="/admin/%action%/edit/%idKey%">'.tr('Edit').'</a>';
 		$this->snippets['activate'] = '<a href="/admin/%action%/activate/%idKey%">'.tr('Activate').'</a>';
 		$this->snippets['deactivate'] = '<a href="/admin/%action%/deactivate/%idKey%">'.tr('Deactivate').'</a>';
@@ -62,26 +63,29 @@ class ManageTable{
 
 	public function printTable($paginal = true, $class = 'manage'){
 		$user = User::current();
+		$amountOfAllowed = 0;
 		echo '<table class="'.$class.'">';
-		echo '<tr >';
+		echo '<tr>';
 			foreach ($this->columns as $column) {
 				if( !$user->can($column['permission']) ){
 					continue;
 				}
-				$size = $column['size'] > 0 ? 'style="width: '.$column['size'].'"' : "";
-				$hiddenColumn = $column['show'] ? 'class="always-show"' : '';
-				echo '<th '.$size.' '.$hiddenColumn.'>'.$column['name'].'</th>';
+				$size = $column['size'] > 0 ? ' style="width: '.$column['size'].'"' : "";
+				$hiddenColumn = $column['show'] ? ' class="always-show"' : '';
+				echo '<th'.$size.$hiddenColumn.'>'.$column['name'].'</th>';
+				$amountOfAllowed++;
 			}
 		echo '</tr>';
-		if( !empty($this->rows) ){
+
+		if( !empty($this->rows) && $amountOfAllowed > 0 ){
 			foreach ($this->rows as $row) {
-				echo '<tr '.( !empty($row['style']) ? 'class="'.$row['style'].'"' : "" ).'>';
+				echo '<tr'.( !empty($row['style']) ? ' class="'.$row['style'].'"' : "" ).'>';
 				foreach ($this->columns as $column) {
 					if( !$user->can($column['permission']) ){
 						continue;
 					}
-					$hiddenColumn = $column['show'] ? 'class="always-show"' : '';
-					echo '<td '.$hiddenColumn.'>';
+					$hiddenColumn = $column['show'] ? ' class="always-show"' : '';
+					echo '<td'.$hiddenColumn.'>';
 					$content = $column['content'];
 					$depth = 3;
 					for($i = 0; $i < $depth; $i++){
@@ -102,7 +106,8 @@ class ManageTable{
 			}
 		}else{
 			$size = count($this->columns);
-			echo '<tr><td colspan="'.$size.'">'.$this->getInfo('emptyMessage').'</td></tr>';
+			$message = $amountOfAllowed > 0 ? $this->getInfo('emptyMessage') : $this->getInfo('notAllowed');
+			echo '<tr><td colspan="'.$size.'">'.$message.'</td></tr>';
 		}
 		echo '</table>';
 	}
