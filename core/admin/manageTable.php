@@ -20,6 +20,9 @@ class ManageTable{
 
 	public function setSnippets(){
 		//$editLink = $url->makeLink('admin', 'extensions/');
+		/** 
+		* @todo change admin action to constant
+		*/
 		$this->setInfo('emptyMessage', tr('No elements'), true);
 		$this->setInfo('notAllowed', tr("You don't have permissions to view this content"), true);
 		$this->snippets['edit'] = '<a href="/admin/%action%/edit/%idKey%">'.tr('Edit').'</a>';
