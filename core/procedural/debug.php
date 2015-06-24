@@ -49,7 +49,7 @@ function log_add($message, $level = UC_LOG_INFO){
 		}
 		$host = Session::getCurrent()->getHost();
 		$outMessage = strftime("%Y-%m-%d %H:%M:%S", time())." [Host: $host] $type $message\n";
-		$logFile = fopen(LOG_FILE, 'a');
+		$logFile = @fopen(LOG_FILE, 'a');
 		if($logFile){
 			fwrite($logFile, $outMessage);
 			fclose($logFile);
