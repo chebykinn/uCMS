@@ -69,7 +69,7 @@ class uCMS{
 				*/
 				$this->databases[$dbName] = $database;
 			}catch(Exception $e){
-				if( $e->getCode() == 1045 ){
+				if( $e->getCode() == 1045 || $e->getCode() == 1049 ){
 					/**
 					* @todo install
 					*/
