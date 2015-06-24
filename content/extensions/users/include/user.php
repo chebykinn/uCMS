@@ -198,8 +198,10 @@ class User{
 	}
 
 	public static function Deauthorize($userID){
-		Session::getCurrent()->deleteCookie('usid_saved');
-		Session::getCurrent()->destroy();
+		if( $userID == User::current()->getID() ){
+			Session::getCurrent()->deleteCookie('usid_saved');
+			Session::getCurrent()->destroy();
+		}
 	}
 
 	public static function ActivateUser($userID){
