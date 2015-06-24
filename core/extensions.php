@@ -1,6 +1,6 @@
 <?php
 class Extensions{
-	private static $list;
+	private static $list = array();
 	private static $usedActions;
 	private static $usedAdminActions;
 	private static $defaultExtentions;
