@@ -67,6 +67,30 @@ class Group{
 		return $this->permissions;
 	}
 
+	public static function Add($group){
+		/**
+		* @todo add checks for object
+		*/
+		$groupName = $group->getName();
+		if( is_object($group) && !empty($groupName) ){
+			$query = new Query('{groups}');
+			$query->insert( array("gid" => "NULL",
+								  "name" => $group->getName(),
+								  "position" => $group->getPosition()) )->execute();
+			/** 
+			* @todo add permissions
+			*/
+		}
+	}
+
+	public static function Update($group){
+
+	}
+
+	public static function Delete($groupID){
+
+	}
+
 	public static function GrantPermission($name, $group){
 		if( !is_object($group) ) return false;
 		if( !$group->hasPermission($name) ){
