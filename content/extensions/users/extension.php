@@ -12,12 +12,7 @@ class Users extends Extension{
 	public function onLoad(){
 		parent::onLoad();
 		User::current()->load();
-		/*echo "You: $id $name $email ". User::current()->getGroup()->getName();
-		echo " ".User::current()->isLoggedIn();
-
-		echo '<br>';
-
-		varDump(User::current()->can('access site'));*/
+		
 	}
 
 	public function onAction($action){
