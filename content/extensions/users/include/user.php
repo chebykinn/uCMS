@@ -168,7 +168,7 @@ class User{
 		}
 	}
 
-	public static function Updates($user){
+	public static function UpdateUser($user){
 
 	}
 
