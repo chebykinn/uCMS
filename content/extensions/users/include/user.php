@@ -50,7 +50,7 @@ class User{
 		foreach ($data as $field => $value) {
 			if(  in_array($field, $fields) ){
 				if( $field == 'password' && $fromArray ){ // if user object was created from array we should encrypt given password 
-					$value = UserManagement::encryptPassword($value);
+					$value = User::encryptPassword($value);
 				}
 				
 				$this->$field = $value;
@@ -168,7 +168,7 @@ class User{
 		}
 	}
 
-	public static function UpdateUser($user){
+	public static function Updates($user){
 
 	}
 
@@ -197,7 +197,7 @@ class User{
 		}
 	}
 
-	public static function Deauthorize($userID){
+	public static function Deauthorize($userID = 0){
 		if( $userID == User::current()->getID() ){
 			Session::getCurrent()->deleteCookie('usid_saved');
 			Session::getCurrent()->destroy();
@@ -206,27 +206,6 @@ class User{
 
 	public static function ActivateUser($userID){
 		//?
-	}
-
-	public static function AddGroup($group){
-		$groupName = $group->getName();
-		if( is_object($group) && !empty($groupName) ){
-			$query = new Query('{groups}');
-			$query->insert( array("gid" => "NULL",
-								  "name" => $group->getName(),
-								  "position" => $group->getPosition()) )->execute();
-			/** 
-			* @todo add permissions
-			*/
-		}
-	}
-
-	public static function UpdateGroup($group){
-
-	}
-
-	public static function DeleteGroup($groupID){
-
 	}
 
 	public static function EncryptPassword($password){
