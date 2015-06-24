@@ -168,11 +168,11 @@ class User{
 		}
 	}
 
-	public static function UpdateUser($user){
+	public static function Update($user){
 
 	}
 
-	public static function DeleteUser($userID){
+	public static function Delete($userID){
 
 	}
 
