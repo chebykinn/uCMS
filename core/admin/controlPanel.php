@@ -51,6 +51,11 @@ class ControlPanel{
 		while( !empty($waitingItems) && $count < 32 ){
 			foreach ($waitingItems as $key => $item) {
 				foreach (self::$sidebar as $searchKey => $searchItem) {
+					if(!in_array($item['after'], self::$sidebar)){
+						$item['after'] = 'home';
+						// If current item depends on item from another extension,
+						// which was disabled or deleted, this will prevent it from disappearing
+					}
 					if( $item['after'] == $searchItem['action'] ){
 						if( !isset($offset[$searchKey]) ){
 							$offset[$searchKey] = 1;
