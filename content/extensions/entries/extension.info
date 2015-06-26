@@ -14,22 +14,22 @@
 	],
 	"admin": {
 		"separator": ["", "home"],
-		"Posts": ["posts", "home"],
+		"Entries": ["entries", "home"],
 		"@Categories": "categories",
 		"separator2": "",
 		"Pages": "pages",
 		"separator3": "",
-		"#Posts": "settings/posts"
+		"#Entries": "settings/entries"
 	},
 	"includes": [
 		"include/user.php"
 	],
 
 	"info": {
-		"displayname": "Posts",
-		"description": "Posts system extension",
+		"displayname": "Entries",
+		"description": "Entries system extension",
 		"author": "µCMS",
 		"site": "http://ucms.ivan4b.ru",
-		"updateURL": "http://ucms.ivan4b.ru/pub/extensions/posts"
+		"updateURL": "http://ucms.ivan4b.ru/pub/extensions/entries"
 	}
 }

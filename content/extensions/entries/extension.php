@@ -1,5 +1,5 @@
 <?php
-class Posts extends Extension{
+class Entries extends Extension{
 	
 	public function onInstall(){
 
