@@ -9,7 +9,7 @@ class Extensions{
 		self::$list = array();
 		self::$usedActions = array();
 		self::$usedAdminActions = array();
-		self::$defaultExtentions = array('filemanager', 'users', 'posts');
+		self::$defaultExtentions = array('filemanager', 'users', 'entries');
 		if( !is_array($extensions) ){
 			$extensions = array($extensions);
 		}
