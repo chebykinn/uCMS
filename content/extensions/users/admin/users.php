@@ -2,8 +2,7 @@
 $usersPage = new ManagePage();
 $usersTable = new ManageTable();
 $query = new Query("{users}");
-
-$usersPage->showNotifications();
+Notification::ShowPending();
 $usersPage->doActions();
 $users = $query->select('DISTINCT `{users}`.*, `{groups}`.`name`, `{sessions}`.`ip` AS `sip`', true)
          ->left()->join('{groups}')->  using('gid')
