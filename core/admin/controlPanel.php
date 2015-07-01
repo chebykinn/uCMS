@@ -5,7 +5,7 @@ class ControlPanel{
 
 	public static function Init(){
 		self::loadSidebar();
-		self::$action = URLManager::GetCurrentAdminAction();
+		self::$action = Page::GetCurrent()->getKeyValue(ADMIN_ACTION);
 	}
 
 	private static function LoadSidebar(){
@@ -110,6 +110,14 @@ class ControlPanel{
 		return self::$action;
 	}
 
+	public static function IsSettingsPage(){
+		return self::$action === ADMIN_SETTINGS_ACTION;
+	}
+
+	public static function GetSettingsAction(){
+		return Page::GetCurrent()->getKeyValue(self::$action);
+	}
+
 	public static function PrintSidebar($root = 0, $checkSelection = false){
 		$selected = false;
 		if( is_array(self::$sidebar) ){
@@ -118,13 +126,13 @@ class ControlPanel{
 					if( strpos($key['action'], "separator") === false ){
 						$childrenMenu = self::PrintSidebar($key['action']);
 						if($key['action'] == 'home') $key['action'] = "";
-						$link = URLManager::MakeLink(ADMIN_ACTION, $key['action']);
+						$link = Page::FromAction(ADMIN_ACTION, $key['action'])->getURL();
 						$selected = self::PrintSidebar($key['action'], true);
 						if( !$selected ){
-							$selected = (mb_strpos( htmlspecialchars_decode(URLManager::GetRaw()), htmlspecialchars_decode($link) ) !== false);
+							$selected = (mb_strpos( htmlspecialchars_decode((string)Page::GetCurrent()), htmlspecialchars_decode($link) ) !== false);
 							if( empty($key['action']) ) { // Select home page button
-								$selected = (htmlspecialchars_decode(URLManager::GetRaw()) == htmlspecialchars_decode($link)
-											|| htmlspecialchars_decode(URLManager::GetRaw()).'/' == htmlspecialchars_decode($link));
+								$selected = (htmlspecialchars_decode((string)Page::GetCurrent()) == htmlspecialchars_decode($link)
+											|| htmlspecialchars_decode((string)Page::GetCurrent()).'/' == htmlspecialchars_decode($link));
 							}
 						}
 						if( $selected and $checkSelection ){
