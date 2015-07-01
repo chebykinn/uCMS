@@ -14,11 +14,11 @@ if($page and count($page) > 0){
 		<table class="forms" style="width:100%">
 			<tr>
 				<td width="80px"><label for="title"><?php $ucms->cout("module.pages.editor.title.label") ?></label></td>
-				<td><input type="text" name="title" id="title" value="<?=$page['title']?>"></td> 
+				<td><input type="text" name="title" id="title" value="<?=htmlspecialchars($page['title'])?>"></td> 
 			</tr>
 			<tr>
 				<td width="80px"><label for="alias"><?php $ucms->cout("module.pages.editor.alias.label") ?></label></td>
-				<td><input type="text" name="alias" id="alias" value="<?=$page['alias']?>"></td> 
+				<td><input type="text" name="alias" id="alias" value="<?=htmlspecialchars($page['alias'])?>"></td> 
 			</tr>
 			<tr>
 				<td></td>

@@ -12,11 +12,11 @@ $category = $args[1];
 		<table class="forms" style="width:100%">
 			<tr>
 				<td width="80px"><label for="title"><?php $ucms->cout("module.posts.form.title.label"); ?></label></td>
-				<td><input type="text" name="title" id="title" value="<?=$post['title']?>"></td> 
+				<td><input type="text" name="title" id="title" value="<?=htmlspecialchars($post['title'])?>"></td> 
 			</tr>
 			<tr>
 				<td width="80px"><label for="alias"><?php $ucms->cout("module.posts.form.alias.label"); ?></label></td>
-				<td><input type="text" name="alias" id="alias" value="<?=$post['alias']?>"></td> 
+				<td><input type="text" name="alias" id="alias" value="<?=htmlspecialchars($post['alias'])?>"></td> 
 			</tr>
 			<tr>
 				<td></td>
@@ -27,7 +27,7 @@ $category = $args[1];
 				<td><?php $editor->main(); ?></td>
 			<tr>		
 				<td><label for="keywords"><?php $ucms->cout("module.posts.form.keywords.label"); ?></label></td>
-				<td><input type="text" name="keywords" id="keywords" value="<?=$post['keywords']?>"></td>
+				<td><input type="text" name="keywords" id="keywords" value="<?=htmlspecialchars($post['keywords'])?>"></td>
 			</tr>
 			<tr>
 				<td><?php $ucms->cout("module.posts.form.category.label"); ?></td>
