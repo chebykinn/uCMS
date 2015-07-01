@@ -80,9 +80,9 @@ class uCMS{
 			}
 		}
 		unset($GLOBALS['databases']); // We don't want to have global variables, so we delete this
+
 		Cache::Init();
 		Session::GetCurrent()->load();
-		URLManager::Init();
 		Settings::Load();
 		$lang = Settings::Get('language');
 
@@ -101,16 +101,16 @@ class uCMS{
 		//parse url, get page and get extension responsible for current page
 		$templateData = false;
 
-		$siteTitle = Settings::Get("site_title");
 		if( empty($siteTitle) ) $siteTitle = tr("Untitled");
-		if( URLManager::GetCurrentAction() != ADMIN_ACTION ){
+		if( Page::GetCurrent()->getAction() != ADMIN_ACTION ){
 			$themeName = Settings::Get('theme');
 			if( empty($themeName) ) $themeName = DEFAULT_THEME;
-			$templateData = Extensions::LoadOnAction( URLManager::GetCurrentAction() );
 		}else{
+		 	// load control panel
+			ControlPanel::Init();
 			$themeName = ADMIN_THEME;
-			$templateData = Extensions::LoadOnAdminAction( URLManager::GetCurrentAdminAction() );
-		} // load admin panel
+		}
+		$templateData = Extensions::LoadOnAction( Page::GetCurrent()->getAction() );
 
 		try{
 			Theme::SetCurrent($themeName);
@@ -119,17 +119,9 @@ class uCMS{
 		}catch(RuntimeException $e){
 			p("[@s]: ".$e->getMessage(), $themeName);
 		}
-		
-		if( empty($templateData) || !is_array($templateData) ){
-			$title    = tr("404 Not Found");
-			$templateAction = ERROR_TEMPLATE_NAME;
-		}else{
-			$title    	    = empty($templateData['title'])    ? $siteTitle          : $templateData['title'];
-			$templateAction = empty($templateData['template']) ? ERROR_TEMPLATE_NAME : $templateData['template'];
 
-		}
-		Theme::GetCurrent()->setTitle($title);
-		Theme::GetCurrent()->setAction($templateAction);
+		Theme::GetCurrent()->setTitle($templateData['title']);
+		Theme::GetCurrent()->setAction($templateData['template']);
 		Theme::GetCurrent()->load();
 	}
 

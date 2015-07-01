@@ -51,37 +51,49 @@ class Extensions{
 	public static function LoadOnAction($action){
 		if( is_array(self::$list) ){
 			$count = 0;
-			$templateData = "";
+			$templateData = array();
+			$adminTitle = "";
 			foreach (self::$list as $name => $extension) {
-				if( !in_array($action, self::$usedActions) ) $action = OTHER_ACTION;
-				if( is_object($extension) && in_array($action, $extension->getActions())){
-					$templateData = $extension->onAction($action);
-					$count++;
+				if( !in_array($action, self::$usedActions) && $action != ADMIN_ACTION ) $action = OTHER_ACTION;
+				if( is_object($extension)){
+					if( $action == ADMIN_ACTION ){
+						$adminAction = ControlPanel::GetAction();
+						if(ControlPanel::IsSettingsPage() && !empty(ControlPanel::GetSettingsAction()) ){
+							$adminAction = $adminAction.'/'.ControlPanel::GetSettingsAction();
+						}
+						if( in_array($adminAction, $extension->getAdminActions()) ){
+							$adminTitle = $extension->onAdminAction($adminAction);
+							$count++;
+						}
+					}else{
+						if( in_array($action, $extension->getActions()) ){
+							$templateData = $extension->onAction($action);
+							$count++;
+						}
+					}
 				}
 			}
-			if($count == 0) return "";
+			
+			if( !empty($adminTitle) || $action == ADMIN_ACTION ){
+				$adminTitle = ' :: '.$adminTitle;
+				return array( "template" => ADMIN_ACTION, "title" => tr("μCMS Control Panel$adminTitle") );
+			}
+
+			if($count == 0){
+				return array("template" => ERROR_TEMPLATE_NAME, "title" => tr("404 Not Found"));
+			}
+
+			if( empty($templateData['template']) ){
+				$templateData['template'] = ERROR_TEMPLATE_NAME;
+			}
+
+			if( empty($templateData['title']) ){
+				$templateData['title'] = Settings::Get("site_title");
+			}
+
 			return $templateData;
 		}
-		return "";
-	}
-
-	public static function LoadOnAdminAction($action){
-		if( is_array(self::$list) ){
-			$title = "";
-			foreach (self::$list as $name => $extension) {
-				if( is_object($extension) ){
-					$settingsAction = URLManager::GetKeyValue($action);
-					if($action == ADMIN_SETTINGS_ACTION && !empty($settingsAction) ){
-						$action = $action.'/'.$settingsAction;
-					}
-					if( in_array($action, $extension->getAdminActions()) ){
-						$title = $extension->onAdminAction($action);
-					}
-				}
-			}
-			if( !empty($title) ) $title = ' :: '.$title;
-		}
-		return array( "template" => ADMIN_ACTION, "title" => tr("μCMS Control Panel$title") );
+		return array("template" => ERROR_TEMPLATE_NAME, "title" => tr("404 Not Found"));
 	}
 
 	public static function GetUsedAdminActions(){
@@ -169,16 +181,24 @@ class Extensions{
 
 	public static function Delete($name){
 		if( self::IsDefault($name) || !self::IsExtention($name) ){
-			return ERROR_STATUS;
+			$message = new Notification(tr("Unable to delete extension \"@s\"", $name), Notification::ERROR);
+			$message->add();
+			return false;
 		}
 		self::Disable($name);
 		//remove dir
-		return SUCCESS_STATUS;
+
+		Notification::ClearPending();
+		$message = new Notification(tr("Extension \"@s\" was successfully deleted", $name), Notification::SUCCESS);
+		$message->add();
+		return true;
 	}
 
 	public static function Enable($name){
 		if( self::IsLoaded($name) ){
-			return ERROR_STATUS;
+			$message = new Notification(tr("Extension \"@s\" is already enabled", $name), Notification::ERROR);
+			$message->add();
+			return false;
 		}
 		$exists = false;
 
@@ -201,9 +221,13 @@ class Extensions{
 			}
 			$extensions = implode(",", $extensions);
 			Settings::Set('extensions', $extensions);
-			return SUCCESS_STATUS;
+			$message = new Notification(tr("Extension \"@s\" was successfully enabled", $name), Notification::SUCCESS);
+			$message->add();
+			return true;
 		}
-		return ERROR_STATUS;
+		$message = new Notification(tr("Extension \"@s\" doesn't exists", $name), Notification::ERROR);
+		$message->add();
+		return false;
 		/**
 		* @todo event or something
 		*/
@@ -212,8 +236,15 @@ class Extensions{
 	}
 
 	public static function Disable($name){
-		if( !self::IsLoaded($name) || self::IsDefault($name) ){
-			return ERROR_STATUS;
+		if( !self::IsLoaded($name) ){
+			$message = new Notification(tr("Extension \"@s\" is already disabled", $name), Notification::ERROR);
+			$message->add();
+			return false;
+		}
+		if( self::IsDefault($name) ){
+			$message = new Notification(tr("Extension \"@s\" can't be disabled", $name), Notification::ERROR);
+			$message->add();
+			return false;
 		}
 		unset(self::$list[$name]);
 		/**
@@ -225,12 +256,16 @@ class Extensions{
 		}
 		$extensions = implode(",", $extensions);
 		Settings::Set('extensions', $extensions);
-		return SUCCESS_STATUS;
+		$message = new Notification(tr("Extension \"@s\" was successfully disabled", $name), Notification::SUCCESS);
+		$message->add();
+		return true;
 	}
 
 	public static function Add($name){
 		var_dump($name);
-		return SUCCESS_STATUS;
+		$message = new Notification(tr("Extension \"@s\" was successfully added", $name), Notification::SUCCESS);
+		$message->add();
+		return true;
 	}
 
 	public static function IsDefault($name){
