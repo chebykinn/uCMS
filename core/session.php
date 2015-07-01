@@ -127,6 +127,10 @@ class Session{
 		return $this->updateTime;
 	}
 
+	public function have($name){
+		return isset($_SESSION[$name]);
+	}
+
 	public function get($name){
 		if( isset($_SESSION[$name]) ){
 			return $_SESSION[$name];
@@ -137,6 +141,19 @@ class Session{
 	public function set($name, $value){
 		$_SESSION[$name] = $value;
 	}
+
+	public function push($arrayName, $value){
+		$_SESSION[$arrayName][] = $value;
+	}
+
+	public function pop($arrayName){
+		if( isset($_SESSION[$arrayName]) && is_array($_SESSION[$arrayName]) ){
+			$value = array_pop($arrayName);
+			return $value;
+		}
+		return "";
+	}
+
 
 	public function delete($name){
 		if( isset($_SESSION[$name]) ){
