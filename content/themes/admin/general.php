@@ -1,10 +1,7 @@
 <?php
 // Admin theme control center
-require_once ADMIN_PATH.'controlPanel.php';
-require_once ADMIN_PATH.'manageTable.php';
-require_once ADMIN_PATH.'managePage.php';
 
-ControlPanel::Init();
+
 $defaultTitles = array(
 	''           => tr('Home'),
 	'home'       => tr('Home'),
@@ -34,7 +31,7 @@ if( User::Current()->can('access control panel') ){
 		break;
 	
 		case 'settings':
-			$extensionAction = URLManager::GetKeyValue('settings');
+			$extensionAction = Page::GetCurrent()->getKeyValue('settings');
 			if( !empty($extensionAction) ){
 				$settingsAction = 'settings/'.$extensionAction;
 				$extension = Extensions::GetExtensionByAdminAction($settingsAction);
@@ -45,7 +42,8 @@ if( User::Current()->can('access control panel') ){
 					include $pageFile;
 				}else{
 					log_add(tr("Unable to load admin page for action: @s", $settingsAction), UC_LOG_ERROR);
-					URLManager::Redirect(URLManager::MakeLink('admin', 'settings', true));
+					$settingsPage = Page::FromAction(ADMIN_ACTION, 'settings');
+					$settingsPage->go();
 				}
 			}else{
 				$this->loadTemplate('settings');
@@ -64,7 +62,8 @@ if( User::Current()->can('access control panel') ){
 					include $pageFile;
 				}else{
 					log_add(tr("Unable to load admin page for action: @s", $currentAction), UC_LOG_ERROR);
-					URLManager::Redirect(URLManager::MakeLink('admin'));
+					$homePage = Page::FromAction(ADMIN_ACTION);
+					$homePage->go();
 				}
 			}
 		break;
