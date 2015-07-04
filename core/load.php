@@ -3,7 +3,7 @@ require_once ABSPATH.'core/constants.php';
 /**
 * @todo move files to more logical locations
 */
-require_once CORE_PATH.'procedural/debug.php';
+require_once CORE_PATH.'debug.php';
 require_once CORE_PATH.'procedural/general.php';
 require_once CORE_PATH.'language.php';
 require_once CORE_PATH.'database/databaseConnection.php';
