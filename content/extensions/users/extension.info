@@ -17,13 +17,13 @@
 	],
 	"admin": {
 		"Users": ["users", "pages"],
-		"@Groups": "groups",
+		"@Groups": "users/groups",
 		"#Users": "settings/users",
 		"separator": ""
 	},
 	"adminPages": {
 		"users": "admin/users.php",
-		"groups": "admin/groups.php",
+		"users/groups": "admin/groups.php",
 		"settings/users": "admin/settings.php"
 	},
 	"includes": [
