@@ -4,7 +4,7 @@ class ManagePage{
 	private $actions = array();
 
 	public function __construct(){
-		$this->adminAction = ControlPanel::GetAction();
+		$this->adminAction = ControlPanel::GetBaseAction();
 	}
 
 
