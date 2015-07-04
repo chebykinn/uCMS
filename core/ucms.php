@@ -14,34 +14,26 @@ class uCMS{
 	}
 
 	public function init(){
+		Debug::Init();
+		
 		$this->startLoadTimer();
 		Session::Start();
-		register_shutdown_function( "uCMS::errorHandler" );
-		register_shutdown_function(array($this, 'shutdown'));
-		set_error_handler('uCMS::errorHandler');
-		ini_set('display_errors', 0);
 		@mb_internal_encoding("UTF-8");
-		if(UCMS_DEBUG){ // Debug mode preparation
-			error_reporting(E_ALL);
-			ini_set('log_errors', 1);
-			ini_set('error_log', CONTENT_PATH.'debug.log');
-		}else{
-			error_reporting(E_ALL ^ (E_DEPRECATED | E_NOTICE | E_STRICT));
-		}
-
+		register_shutdown_function(array($this, 'shutdown'));
+		
 		/**
 		* @todo check php version
 		*/
 
 		if( version_compare(phpversion(), UCMS_MIN_PHP_VERSION, '<') ){
-			log_add(tr("Obsolete PHP"), UC_LOG_CRITICAL);
+			Debug::Log(tr("Obsolete PHP"), UC_LOG_CRITICAL);
 		}
 
 		if( empty($GLOBALS['databases']) || !is_array($GLOBALS['databases']) ){
 			/**
 			* @todo install
 			*/
-			log_add(tr("install, no config"), UC_LOG_CRITICAL);
+			Debug::Log(tr("install, no config"), UC_LOG_CRITICAL);
 		}
 		foreach ($GLOBALS['databases'] as $dbName => $dbData) {
 			try{
@@ -51,7 +43,7 @@ class uCMS{
 						/**
 						* @todo install
 						*/
-						log_add(tr("install, wrong config"), UC_LOG_CRITICAL);
+						Debug::Log(tr("install, wrong config"), UC_LOG_CRITICAL);
 					}
 				}
 				$database = new DatabaseConnection(
@@ -73,7 +65,7 @@ class uCMS{
 					/**
 					* @todo install
 					*/
-					log_add(tr("install, wrong config"), UC_LOG_CRITICAL);
+					Debug::Log(tr("install, wrong config"), UC_LOG_CRITICAL);
 				}else{
 					uCMS::ExceptionHandler($e);
 				}
@@ -132,87 +124,8 @@ class uCMS{
 		DatabaseConnection::GetDefault()->shutdown(); //multiple
 	}
 
-	/**
-	* Handler for PHP errors
-	*
-	* @package uCMS
-	* @since 1.3
-	* @version 1.3
-	* @return nothing
-	*
-	*/
-	public static function ErrorHandler($errno = "", $errstr = "", $errfile = "", $errline = ""){
-		if(empty($errno) && empty($errstr) && empty($errfile) && empty($errline)){
-			$error = error_get_last();
-			$errno = $error["type"];
-			$errstr = $error["message"];
-			$errfile = $error["file"];
-			$errline = $error["line"];
-		}
-
-		if (!(error_reporting() & $errno) || error_reporting() === 0) {
-   		    return;
-   		}
-   		$die = false;
-   		echo "<br>";
-		begin_debug_block();
-   		echo '<h2>';
-		switch ($errno) {
-			case E_RECOVERABLE_ERROR:
-				echo "PHP Catchable Fatal Error";
-			break;
-			
-			case E_NOTICE:
-				echo "PHP Notice";
-			break;
-
-			case E_WARNING:
-				echo "PHP Warning";
-			break;
-
-			case E_ERROR:
-				echo "PHP Fatal Error";
-				$die = true;
-			break;
-
-			case E_PARSE:
-				echo "PHP Parse Error";
-				$die = true;
-			break;
-
-			case E_COMPILE_ERROR:
-				echo "PHP Compile Fatal Error";
-				$die = true;
-			break;
-
-			case E_DEPRECATED:
-				echo "PHP Deprecated Message";
-			break;
-
-			case E_STRICT:
-				echo "PHP Strict Standars";
-			break;
-
-			default:
-				echo "PHP Error $errno";
-			break;
-		}
-   		echo '</h2>';
-		if(!UCMS_DEBUG){
-			echo "$errstr in <b>$errfile</b> on line <b>$errline</b>";
-		}else{
-			echo "$errstr in <b>$errfile</b> on line <b>$errline</b><br>";
-			echo '<p style="font-size: 8pt; padding: 10px;">';
-			echo debug_print_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
-			echo '</p>';
-		}
-		end_debug_block();
-		echo "<br>";
-		if($die) die;
-	}
-
-	public static function ExceptionHandler($e){
-   		uCMS::ErrorHandler($e->getCode(), $e->getMessage(), $e->getFile(), $e->getLine());
+	public static function ExceptionHandler($e){ // ?
+   		Debug::ErrorHandler($e->getCode(), $e->getMessage(), $e->getFile(), $e->getLine());
 	}
 
 	private function startLoadTimer(){
