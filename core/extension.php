@@ -20,11 +20,11 @@ class Extension{
 	}
 
 	public function onInstall(){
-		log_add(tr("@s installed", $this->name), UC_LOG_INFO);
+		Debug::Log(tr("@s installed", $this->name), UC_LOG_INFO);
 	}
 
 	public function onUninstall(){
-		log_add(tr("@s uninstalled", $this->name), UC_LOG_INFO);
+		Debug::Log(tr("@s uninstalled", $this->name), UC_LOG_INFO);
 	}
 
 	public function onLoad(){
@@ -33,7 +33,7 @@ class Extension{
 				$this->includeFile($include);
 			}
 		}
-		// log_add(tr("@s loaded", $this->name), UC_LOG_INFO);
+		// Debug::Log(tr("@s loaded", $this->name), UC_LOG_INFO);
 	}
 	
 	public function onShutdown(){
@@ -56,7 +56,7 @@ class Extension{
 		if( file_exists($this->getFilePath($file)) ){
 			include $this->getFilePath($file);
 		}else{
-			log_add(tr("Failed to open file @s", $this->getFilePath($file)), UC_LOG_ERROR);
+			Debug::Log(tr("Failed to open file @s", $this->getFilePath($file)), UC_LOG_ERROR);
 		}
 	}
 
@@ -73,7 +73,7 @@ class Extension{
 		$decodedInfo = json_decode($encodedInfo, true);
 		$checkRequiredFields = empty($decodedInfo['version']) || empty($decodedInfo['coreVersion']);
 		if( $decodedInfo === NULL || $checkRequiredFields ){
-			log_add(tr("Can't get extension information @s", $this->name), UC_LOG_ERROR);
+			Debug::Log(tr("Can't get extension information @s", $this->name), UC_LOG_ERROR);
 			throw new InvalidArgumentException("Can't get extension information");
 		}
 		$this->version = $decodedInfo['version'];
@@ -109,7 +109,7 @@ class Extension{
 
 	private function checkCoreVersion(){
 		if( version_compare(CORE_VERSION, $this->coreVersion, '<') ){
-			log_add(tr("Outdated core version @s", $this->name), UC_LOG_ERROR);
+			Debug::Log(tr("Outdated core version @s", $this->name), UC_LOG_ERROR);
 			throw new RuntimeException("Outdated core version");
 		}
 	}
