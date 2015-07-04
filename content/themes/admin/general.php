@@ -14,10 +14,16 @@ $defaultTitles = array(
 	'journal'    => tr("System Journal")
 );
 $defaultActions = array_keys($defaultTitles);
-$currentAction = ControlPanel::GetAction();
 $adminActions = array_merge($defaultActions, Extensions::GetUsedAdminActions());
-if( !empty($currentAction) && !in_array($currentAction, $adminActions) ){
+
+$currentAction = ControlPanel::GetAction();
+$baseAction = ControlPanel::GetBaseAction();
+
+if( !in_array($baseAction, $adminActions) ){
 	error_404();
+}
+if( !in_array($currentAction, $adminActions) ){
+	$currentAction = $baseAction;
 }
 if( User::Current()->can('access control panel') ){
 	$adminTitle = $this->getTitle().' :: ';
@@ -41,7 +47,7 @@ if( User::Current()->can('access control panel') ){
 				if( !empty($extension) && !empty($pageFile) ){
 					include $pageFile;
 				}else{
-					log_add(tr("Unable to load admin page for action: @s", $settingsAction), UC_LOG_ERROR);
+					Debug::Log(tr("Unable to load admin page for action: @s", $settingsAction), UC_LOG_ERROR);
 					$settingsPage = Page::FromAction(ADMIN_ACTION, 'settings');
 					$settingsPage->go();
 				}
@@ -61,7 +67,7 @@ if( User::Current()->can('access control panel') ){
 				if( !empty($extension) && !empty($pageFile) ){
 					include $pageFile;
 				}else{
-					log_add(tr("Unable to load admin page for action: @s", $currentAction), UC_LOG_ERROR);
+					Debug::Log(tr("Unable to load admin page for action: @s", $currentAction), UC_LOG_ERROR);
 					$homePage = Page::FromAction(ADMIN_ACTION);
 					$homePage->go();
 				}
