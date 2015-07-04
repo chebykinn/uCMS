@@ -26,7 +26,7 @@ class Users extends Extension{
 				$title = tr("Users");
 			break;
 
-			case 'groups':
+			case 'users/groups':
 				$title = tr("Groups");
 			break;
 
