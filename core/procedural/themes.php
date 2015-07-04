@@ -33,7 +33,7 @@ function get_title(){
 }
 
 function error_404(){
-	log_add(tr("Page not found at action: @s", get_current_action()), UC_LOG_WARNING);
+	Debug::Log(tr("Page not found at action: @s", get_current_action()), UC_LOG_WARNING);
 	$theme = Settings::get('theme');
 	if( empty($theme) ) $theme = DEFAULT_THEME;
 	if( !Theme::isLoaded() || $theme != Theme::getCurrent()->getName() ) {
