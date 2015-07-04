@@ -1,11 +1,13 @@
 <?php
 class ControlPanel{
 	private static $sidebar;
-	private static $action;
+	private static $action = OTHER_ACTION;
 
 	public static function Init(){
 		self::loadSidebar();
-		self::$action = Page::GetCurrent()->getKeyValue(ADMIN_ACTION);
+		if( self::IsActive() ){
+			self::$action = Page::GetCurrent()->getActionData();
+		}
 	}
 
 	private static function LoadSidebar(){
@@ -48,7 +50,8 @@ class ControlPanel{
 		}
 		$offset = array();
 		$count = 0;
-		while( !empty($waitingItems) && $count < 32 ){
+		$limit = 32;
+		while( !empty($waitingItems) && $count < $limit ){
 			foreach ($waitingItems as $key => $item) {
 				foreach (self::$sidebar as $searchKey => $searchItem) {
 					if( $item['after'] == $searchItem['action'] ){
@@ -106,8 +109,20 @@ class ControlPanel{
 		return self::$sidebar;
 	}
 
+	public static function IsActive(){
+		return Page::GetCurrent()->getAction() == ADMIN_ACTION;
+	}
+
 	public static function GetAction(){
 		return self::$action;
+	}
+
+	public static function GetBaseAction(){
+		if( strpos(self::$action, "/") === false ){
+			return self::$action;
+		}else{
+			return Page::GetCurrent()->getKeyValue(ADMIN_ACTION);
+		}
 	}
 
 	public static function IsSettingsPage(){
