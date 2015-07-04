@@ -44,7 +44,10 @@ class Page{
 	}
 
 	public function getActionData(){
-		return $this->data;
+		$data = $this->data;
+		unset($data[0]);
+		$data = implode('/', $data);
+		return $data;
 	}
 
 	public function go(){
