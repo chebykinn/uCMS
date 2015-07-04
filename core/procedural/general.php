@@ -13,27 +13,27 @@ function tr($string){
 	return call_user_func_array(array(Language::GetCurrent(), 'get'), $args);
 }
 
-function get_setting($name){
+function get_setting($name){ // ?
 	return Settings::get($name);
 }
 
-function get_theme_path($name){
+function get_theme_path($name){  // ?
 	return THEMES_PATH.$name.'/';
 }
 
-function get_current_url(){
+function get_current_url(){  // ?
 	return (string)Page::GetCurrent();
 }
 
-function get_current_action(){
+function get_current_action(){  // ?
 	return Page::GetCurrent()->getAction();
 }
 
-function get_current_page(){
+function get_current_page(){  // ?
 	return Page::GetCurrent()->getPageNumber();
 }
 
-function generate_hash($length = 32){
+function generate_hash($length = 32){  // ?
 	$chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHI JKLMNOPRQSTUVWXYZ0123456789";
 	$code = "";
 	$clen = strlen($chars) - 1;  
