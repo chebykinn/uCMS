@@ -15,17 +15,13 @@ class Extensions{
 		}
 
 		foreach ($extensions as $extension) {
-			if( file_exists(EXTENSIONS_PATH.$extension.'/extension.php') ){
-				include EXTENSIONS_PATH.$extension.'/extension.php';
-				if( class_exists($extension) ){
-					try{
-						self::$list[$extension] = new $extension($extension);
-					}catch(Exception $e){
-						log_add(tr("Can't load extension: @s, error: @s", $extension, $e->getMessage()), UC_LOG_ERROR);
-					}
-					
-					
+			if( self::IsExtention($extension) ){
+				try{
+					self::$list[$extension] = new $extension($extension);
+				}catch(Exception $e){
+					Debug::Log(tr("Can't load extension: @s, error: @s", $extension, $e->getMessage()), UC_LOG_ERROR);
 				}
+					
 			}
 		}
 	}
@@ -54,13 +50,13 @@ class Extensions{
 			$templateData = array();
 			$adminTitle = "";
 			foreach (self::$list as $name => $extension) {
-				if( !in_array($action, self::$usedActions) && $action != ADMIN_ACTION ) $action = OTHER_ACTION;
-				if( is_object($extension)){
-					if( $action == ADMIN_ACTION ){
+				if( !in_array($action, self::$usedActions) && !ControlPanel::IsActive() ){
+					$action = OTHER_ACTION;
+				}
+				if( is_object($extension) ){
+					if( ControlPanel::IsActive() ){
 						$adminAction = ControlPanel::GetAction();
-						if(ControlPanel::IsSettingsPage() && !empty(ControlPanel::GetSettingsAction()) ){
-							$adminAction = $adminAction.'/'.ControlPanel::GetSettingsAction();
-						}
+
 						if( in_array($adminAction, $extension->getAdminActions()) ){
 							$adminTitle = $extension->onAdminAction($adminAction);
 							$count++;
@@ -74,7 +70,7 @@ class Extensions{
 				}
 			}
 			
-			if( !empty($adminTitle) || $action == ADMIN_ACTION ){
+			if( !empty($adminTitle) || ControlPanel::IsActive() ){
 				$adminTitle = ' :: '.$adminTitle;
 				return array( "template" => ADMIN_ACTION, "title" => tr("μCMS Control Panel$adminTitle") );
 			}
@@ -128,7 +124,14 @@ class Extensions{
 	}
 
 	public static function IsExtention($name){
-		return ( file_exists(EXTENSIONS_PATH.$name.'/extension.php') && file_exists(EXTENSIONS_PATH.$name.'/'.EXTENSION_INFO) );
+		$dataExists = ( file_exists(EXTENSIONS_PATH.$name.'/extension.php') && file_exists(EXTENSIONS_PATH.$name.'/'.EXTENSION_INFO) );
+
+		if ( $dataExists ){
+			include_once(EXTENSIONS_PATH.$name.'/extension.php');
+			return ( class_exists($name) && is_subclass_of($name, "Extension") );
+
+		}
+		return false;
 	}
 
 	public static function GetLoaded(){
@@ -210,7 +213,7 @@ class Extensions{
 					self::$list[$name] = new $name($name);
 					$exists = true;
 				}catch(Exception $e){
-					log_add(tr("Can't load extension: @s, error: @s", $extension, $e->getMessage()), UC_LOG_ERROR);
+					Debug::Log(tr("Can't load extension: @s, error: @s", $extension, $e->getMessage()), UC_LOG_ERROR);
 				}
 			}
 		}
