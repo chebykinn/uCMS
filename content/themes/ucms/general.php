@@ -3,7 +3,7 @@ get_header();
 ?>
 <div id="content">
 	<?php
-	varDump($this->getAction());
+	Debug::PrintVar($this->getAction());
 	$this->loadBlock($this->getAction());
 	?>
 </div>
