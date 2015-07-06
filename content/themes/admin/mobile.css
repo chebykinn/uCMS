@@ -1,3 +1,5 @@
+@media only screen and (max-device-width: 960px) {
+
 #sidebar{
 	clear: both;
 	z-index: 9999;
@@ -41,4 +43,6 @@
 
 .summary{
 	width: 100%;
+}
+
 }
