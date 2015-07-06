@@ -16,7 +16,7 @@ class Entries extends Extension{
 		if($action == INDEX_ACTION){
 			return array("template" => INDEX_ACTION);
 		}else{
-			error_404();
+			Theme::LoadErrorPage(404);
 		}
 	}
 
