@@ -184,7 +184,7 @@ class User{
 				Session::getCurrent()->Deauthorize(); // user got wrong cache saved
 			}
 		}
-		$hash = generate_hash();
+		$hash = Tools::GenerateHash();
 		$updateSession = new Query("{sessions}");
 		$updated = $saveCookies ? 0 : time();
 		$updateSession->insert( array('sid' => $hash, 'uid' => $userID, 'ip' => Session::getCurrent()->getIPAddress(), 'updated' => $updated) )->execute();
