@@ -16,7 +16,7 @@ class Users extends Extension{
 	}
 
 	public function onAction($action){
-		return array("template" => $action, "title" => tr("Profile of @s", User::current()->getName()));
+		Theme::GetCurrent()->setTitle(tr("Profile of @s", User::current()->getName()));
 	}
 
 	public function onAdminAction($action){
@@ -34,7 +34,7 @@ class Users extends Extension{
 				$title = tr("Users");
 			break;
 		}
-		return $title;
+		ControlPanel::SetTitle($title);
 	}
 }
 ?>
