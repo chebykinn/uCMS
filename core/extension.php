@@ -68,7 +68,7 @@ class Extension{
 		return $this->getFilePath(EXTENSION_INFO);
 	}
 
-	private function loadInfo(){
+	protected function loadInfo(){
 		$encodedInfo = @file_get_contents($this->getExtensionInfoPath());
 		$decodedInfo = json_decode($encodedInfo, true);
 		$checkRequiredFields = empty($decodedInfo['version']) || empty($decodedInfo['coreVersion']);
