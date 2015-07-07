@@ -65,6 +65,7 @@ class DatabaseConnection{
 		if( isset(self::$databases[$name]) ){
 			return self::$databases[$name];
 		}
+		return self::$default;
 	}
 
 	public function __construct($server, $login, $password, $dbName, $dbPort, $prefix, $ucmsName){
