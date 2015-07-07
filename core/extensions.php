@@ -27,69 +27,44 @@ class Extensions{
 	}
 
 	public static function Load(){
-		if( is_array(self::$list) ){
-			$extensionActions = $extensionAdminActions = array();
-			foreach (self::$list as $name => $extension) {
-				if( is_object($extension) ){
-					$extension->onLoad();
-					
-					$extensionActions = is_array($extension->getActions()) ? $extension->getActions() : array();
-					$extensionAdminActions = is_array($extension->getAdminActions()) ? $extension->getAdminActions() : array();
-					self::$usedActions = array_merge(self::$usedActions, $extensionActions);
-					self::$usedAdminActions = array_merge(self::$usedAdminActions, $extensionAdminActions);
-				}
+		$extensionActions = $extensionAdminActions = array();
+		foreach (self::$list as $name => $extension) {
+			if( is_object($extension) ){
+				$extension->onLoad();
+				
+				$extensionActions = is_array($extension->getActions()) ? $extension->getActions() : array();
+				$extensionAdminActions = is_array($extension->getAdminActions()) ? $extension->getAdminActions() : array();
+				self::$usedActions = array_merge(self::$usedActions, $extensionActions);
+				self::$usedAdminActions = array_merge(self::$usedAdminActions, $extensionAdminActions);
 			}
-			self::$usedActions = array_unique(self::$usedActions);
-			self::$usedAdminActions = array_unique(self::$usedAdminActions);
 		}
+		self::$usedActions = array_unique(self::$usedActions);
+		self::$usedAdminActions = array_unique(self::$usedAdminActions);
 	}
 
 	public static function LoadOnAction($action){
-		if( is_array(self::$list) ){
-			$count = 0;
-			$templateData = array();
-			$adminTitle = "";
-			foreach (self::$list as $name => $extension) {
-				if( !in_array($action, self::$usedActions) && !ControlPanel::IsActive() ){
-					$action = OTHER_ACTION;
-				}
-				if( is_object($extension) ){
-					if( ControlPanel::IsActive() ){
-						$adminAction = ControlPanel::GetAction();
-
-						if( in_array($adminAction, $extension->getAdminActions()) ){
-							$adminTitle = $extension->onAdminAction($adminAction);
-							$count++;
-						}
-					}else{
-						if( in_array($action, $extension->getActions()) ){
-							$templateData = $extension->onAction($action);
-							$count++;
-						}
+		$isUsed = false;
+		$cPanelResult = array('isUsed' => false);
+		foreach (self::$list as $name => $extension) {
+			if( ControlPanel::IsActive() ){
+				if( !$cPanelResult['isUsed'] ){
+					$cPanelResult = ControlPanel::CheckAction($extension->getAdminActions());
+					$isUsed = $cPanelResult['isUsed'];
+					if( $isUsed && !$cPanelResult['default'] ){
+						$extension->onAdminAction($cPanelResult['action']);
 					}
 				}
+			}else{
+				if( !in_array($action, self::$usedActions) ){
+					$action = OTHER_ACTION;
+				}
+				if( in_array($action, $extension->getActions()) ){
+					$extension->onAction($action);
+					$isUsed = true;
+				}
 			}
-			
-			if( !empty($adminTitle) || ControlPanel::IsActive() ){
-				$adminTitle = ' :: '.$adminTitle;
-				return array( "template" => ADMIN_ACTION, "title" => tr("μCMS Control Panel$adminTitle") );
-			}
-
-			if($count == 0){
-				return array("template" => ERROR_TEMPLATE_NAME, "title" => tr("404 Not Found"));
-			}
-
-			if( empty($templateData['template']) ){
-				$templateData['template'] = ERROR_TEMPLATE_NAME;
-			}
-
-			if( empty($templateData['title']) ){
-				$templateData['title'] = Settings::Get("site_title");
-			}
-
-			return $templateData;
 		}
-		return array("template" => ERROR_TEMPLATE_NAME, "title" => tr("404 Not Found"));
+		return $isUsed;
 	}
 
 	public static function GetUsedAdminActions(){
@@ -124,14 +99,18 @@ class Extensions{
 	}
 
 	public static function IsExtention($name){
-		$dataExists = ( file_exists(EXTENSIONS_PATH.$name.'/extension.php') && file_exists(EXTENSIONS_PATH.$name.'/'.EXTENSION_INFO) );
-
-		if ( $dataExists ){
-			include_once(EXTENSIONS_PATH.$name.'/extension.php');
-			return ( class_exists($name) && is_subclass_of($name, "Extension") );
-
+		if( !is_object($name) ){
+			$dataExists = ( file_exists(EXTENSIONS_PATH.$name.'/extension.php') && file_exists(	EXTENSIONS_PATH.$name.'/'.EXTENSION_INFO) );
+	
+			if ( $dataExists ){
+				include_once(EXTENSIONS_PATH.$name.'/extension.php');
+				return ( class_exists($name) && is_subclass_of($name, "Extension") );
+	
+			}
+			return false;
+		}else{
+			return is_subclass_of($name, "Extension");
 		}
-		return false;
 	}
 
 	public static function GetLoaded(){
