@@ -176,6 +176,18 @@ if( !defined("GENERAL_TEMPLATE_NAME") ){
 	define("GENERAL_TEMPLATE_NAME", "general");
 }
 
+if( !defined("GENERAL_TEMPLATE") ){
+	define("GENERAL_TEMPLATE", "general.php");
+}
+
+if( !defined("HTML_TEMPLATE") ){
+	define("HTML_TEMPLATE", TEMPLATES_PATH."html.php");
+}
+
+if( !defined("PAGE_TEMPLATE") ){
+	define("PAGE_TEMPLATE", TEMPLATES_PATH."page.php");
+}
+
 if( !defined("DEBUG_DISPLAY_QUERY") ){
 	define("DEBUG_DISPLAY_QUERY", false);
 }
