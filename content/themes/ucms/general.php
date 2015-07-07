@@ -1,13 +1,35 @@
-<?php
-get_header();
-?>
-<div id="content">
+<div id="header">
 	<?php
-	Debug::PrintVar($this->getAction());
-	$this->loadBlock($this->getAction());
+		$this->printRegionBlocks('header');
 	?>
 </div>
-<?php
-get_sidebar();
-get_footer();
-?>
+<div id="wrapper">
+<div id="content">
+	<?php
+	Debug::PrintVar(Page::GetCurrent()->getAction());
+	if( $this->getErrorCode() === 404 ){
+		echo "EГГОГ 404";
+	}else{
+		//$this->loadBlock(Page::GetCurrent()->getAction());		
+	}
+	$this->printRegionBlocks('content');
+	?>
+</div>
+<div id="sidebar">
+	<?php
+
+	$this->printRegionBlocks('right-sidebar');
+	$user = User::Current();
+	echo '<br>'.$user->getID().'<br>';
+	echo '<br>'.$user->getName().'<br>';
+	echo '<br>'.$user->getEmail().'<br>';
+	?>
+</div>
+</div>
+<div id="footer">
+	<?php
+	$this->printRegionBlocks('footer');
+	echo '<br>'.DatabaseConnection::GetDefault()->getQueriesCount();
+	echo '<br>'.uCMS::getInstance()->getLoadTime();
+	?>
+</div>

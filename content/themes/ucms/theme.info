@@ -13,7 +13,13 @@
 		"sidebar": "sidebar.php",
 		"footer": "footer.php",
 		"home": "home.php",
-		"error": "error.php",
+		"error404": "error.php",
 		"style": "style.css"
-	}
+	},
+	"regions": [
+		"header",
+		"content",
+		"right-sidebar",
+		"footer"
+	]
 }
