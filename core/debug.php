@@ -158,27 +158,4 @@ class Debug{
 		if($die) die;
 	}
 }
-function begin_debug_block(){
-	Debug::BeginBlock();
-	debug_print_backtrace();
-	Debug::EndBlock();
-}
-
-function end_debug_block(){
-	Debug::BeginBlock();
-	debug_print_backtrace();
-	Debug::EndBlock();
-}
-
-function varDump($var){
-	Debug::BeginBlock();
-	debug_print_backtrace();
-	Debug::EndBlock();
-}
-
-function log_add($message, $level = UC_LOG_INFO){
-	Debug::BeginBlock();
-	debug_print_backtrace();
-	Debug::EndBlock();
-}
 ?>
