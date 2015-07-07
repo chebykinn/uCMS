@@ -8,10 +8,10 @@ class Query{
 	private $fetchType = 'assoc';
 	private $doCache = false;
 
-	public function __construct($sql, $params = array()){
-		$this->database = DatabaseConnection::getDefault();
+	public function __construct($sql, $params = array(), $database = NULL){
+		$this->database = DatabaseConnection::GetDatabase($database);
 		if( empty($this->database) ){
-			log_add("No connection to the database", UC_LOG_ERROR);
+			Debug::Log(tr("No connection to the database"), UC_LOG_ERROR);
 			return;
 		}
 		$outType = array();
