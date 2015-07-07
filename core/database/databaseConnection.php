@@ -1,6 +1,7 @@
 <?php
 class DatabaseConnection{
-	private static $instance;
+	private static $default;
+	private static $databases;
 	private $dbServer, $dbUser, $dbPassword, $dbName;
 	private $tables;
 	private $queriesCount;
@@ -8,9 +9,61 @@ class DatabaseConnection{
 	private $prefix;
 	private $ucmsName;
 
-	public static function getDefault(){
-		if( !is_null(self::$instance) ){
-			return self::$instance;
+	public static function Init(){
+		if( empty($GLOBALS['databases']) || !is_array($GLOBALS['databases']) ){
+			/**
+			* @todo install
+			*/
+			Debug::Log(tr("install, no config"), UC_LOG_CRITICAL);
+		}
+		foreach ($GLOBALS['databases'] as $dbName => $dbData) {
+			try{
+				$fields = array('server', 'user', 'password', 'name', 'port', 'prefix');
+				foreach ($fields as $field) {
+					if( !isset($dbData[$field]) ){
+						/**
+						* @todo install
+						*/
+						Debug::Log(tr("install, wrong config"), UC_LOG_CRITICAL);
+					}
+				}
+				$database = new DatabaseConnection(
+					$dbData["server"], 
+					$dbData["user"], 
+					$dbData["password"], 
+					$dbData["name"], 
+					$dbData["port"], 
+					$dbData["prefix"],
+					$dbName
+				);
+				
+				/**
+				* @todo check mysql version
+				*/
+				self::$databases[$dbName] = $database;
+			}catch(Exception $e){
+				if( $e->getCode() == 1045 || $e->getCode() == 1049 ){
+					/**
+					* @todo install
+					*/
+					Debug::Log(tr("install, wrong config"), UC_LOG_CRITICAL);
+				}else{
+					uCMS::ExceptionHandler($e);
+				}
+			}
+		}
+		unset($GLOBALS['databases']); // We don't want to have global variables, so we delete this
+	}
+
+	public static function GetDefault(){
+		if( !is_null(self::$default) ){
+			return self::$default;
+		}
+	}
+
+	public static function GetDatabase($name){
+		if( isset(self::$databases[$name]) ){
+			return self::$databases[$name];
 		}
 	}
 
@@ -25,7 +78,7 @@ class DatabaseConnection{
 		$this->connect();
 		if($ucmsName == DEFAULT_DATABASE_NAME){
 			$this->setDefaultTables();
-			self::$instance = $this;
+			self::$default = $this;
 		}
 	}
 
