@@ -107,7 +107,7 @@ class Session{
 			$ip = explode(",", $ip);
 			$ip = $ip[0];
 		}
-		if (empty($ip)) $ip = $_SERVER['REMOTE_ADDR'];
+		if (empty($ip)) $ip = @$_SERVER['REMOTE_ADDR'];
 		return $ip;
 	}
 
