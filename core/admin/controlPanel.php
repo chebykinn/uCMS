@@ -2,12 +2,71 @@
 class ControlPanel{
 	private static $sidebar;
 	private static $action = OTHER_ACTION;
+	const TITLE = "μCMS Control Panel";
+	private static $defaultItems = array();
 
 	public static function Init(){
-		self::loadSidebar();
+		self::LoadSidebar();
+		self::SetDefaultItems();
 		if( self::IsActive() ){
 			self::$action = Page::GetCurrent()->getActionData();
+			if( empty(self::$action) ) self::$action = 'home'; 
 		}
+	}
+
+	private static function SetDefaultItems(){
+		self::$defaultItems = array(
+		 'home'       => tr('Home'),
+		 'settings'   => tr("Settings"), 
+		 'extensions' => tr("Extensions"), 
+		 'themes'     => tr("Themes"), 
+		 'widgets'    => tr("Widgets"), 
+		 'tools'      => tr("Tools"),
+		 'phpinfo'    => tr("PHP Information"),
+		 'journal'    => tr("System Journal")
+		);
+	}
+
+	public static function GetDefaultActions(){
+		return array_keys(self::$defaultItems);
+	}
+
+	public static function CheckAction($extensionActions){
+		$result = array("isUsed" => false, "default" => false, "action" => "");
+
+		if( User::Current()->can('access control panel') ){
+			$defaultActions = self::GetDefaultActions();
+			$currentAction = self::GetAction();
+			$baseAction = self::GetBaseAction();
+			if( (empty($extensionActions) || !is_array($extensionActions)) ) {
+				$extensionActions = array();
+			}
+
+			if( !in_array($currentAction, $defaultActions) 
+				&& !in_array($currentAction, $extensionActions) ){
+				$currentAction = $baseAction;
+			}
+
+			$result['action'] = $currentAction;
+			if( in_array($currentAction, $defaultActions) ){
+				self::SetTitle(self::$defaultItems[$currentAction]);
+				$result['isUsed'] = true;
+				$result['default'] = true;
+			}else if( in_array($currentAction, $extensionActions) ){
+				$result['isUsed'] = true;
+			}
+
+			self::$action = $result['action'];
+		}else{
+			$result['isUsed'] = true;
+			$result['default'] = true;
+			if( !User::Current()->isLoggedIn() ){
+				Theme::GetCurrent()->setThemeTemplate('login');
+			}else{
+				Theme::GetCurrent()->setThemeTemplate('access_denied');
+			}
+		}
+		return $result;
 	}
 
 	private static function LoadSidebar(){
@@ -80,7 +139,9 @@ class ControlPanel{
 				array_push(self::$sidebar, $item);
 			}
 		}
-		self::$sidebar[] = array('name' => "separator",      'action' => 'separator',  'parent' => 0,            'after' => 'home');
+
+		self::$sidebar[] = array('name' => "separator",
+			'action' => 'separator', 'parent' => 0, 'after' => 'home');
 		self::$sidebar[] = array('name' => tr('Tools'),      'action' => 'tools',      'parent' => 0,            'after' => 'home');
 		self::$sidebar[] = array('name' => tr('Journal'),    'action' => 'journal',    'parent' => 'tools',      'after' => 'tools');
 		self::$sidebar[] = array('name' => tr('PHP Info'),   'action' => 'phpinfo',    'parent' => 'tools',      'after' => 'journal');
@@ -105,6 +166,13 @@ class ControlPanel{
 		return false;
 	}
 
+	public static function SetTitle($title){
+		$delimeter = " :: ";
+		$settingsTitle = self::IsSettingsPage() ? tr('Settings').$delimeter : "";
+		$newTitle = self::TITLE.$delimeter.$settingsTitle.$title;
+		Theme::GetCurrent()->setTitle($newTitle);
+	}
+
 	public static function GetSidebar(){
 		return self::$sidebar;
 	}
@@ -126,11 +194,11 @@ class ControlPanel{
 	}
 
 	public static function IsSettingsPage(){
-		return self::$action === ADMIN_SETTINGS_ACTION;
+		return self::GetBaseAction() === ADMIN_SETTINGS_ACTION;
 	}
 
 	public static function GetSettingsAction(){
-		return Page::GetCurrent()->getKeyValue(self::$action);
+		return Page::GetCurrent()->getKeyValue('settings');
 	}
 
 	public static function PrintSidebar($root = 0, $checkSelection = false){
