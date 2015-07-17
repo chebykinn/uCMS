@@ -9,5 +9,11 @@
 		"script": ["scripts/mobile.js", "scripts/table.js", "scripts/jquery-2.1.3.min.js"],
 		"login": "templates/login.php",
 		"access_denied": "templates/access_denied.php"
-	}
+	},
+
+	"regions":[
+		"header",
+		"dashboard",
+		"footer"
+	]
 }

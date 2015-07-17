@@ -11,9 +11,9 @@ if( !defined("ABSPATH") ){
 	echo "install";
 	exit;
 }
+use uCMS\Core\Loader;
+Loader::GetInstance()->init();
 
-uCMS::GetInstance()->init();
-
-uCMS::GetInstance()->runSite();
+Loader::GetInstance()->runSite();
 exit;
 ?>

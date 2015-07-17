@@ -1,0 +1,32 @@
+{
+	"version": "1.0",
+	"coreVersion": "2.x",
+	"dependencies": [
+		"filemanager",
+		"users"
+	],
+	"loadAfter": [
+		"users"
+	],
+	"actions": [
+		"home",
+		"other"
+	],
+	"admin": {
+		"separator": ["", "home"],
+		"Entries": ["entries", "home"],
+		"@Categories": "categories",
+		"separator2": "",
+		"Pages": "pages",
+		"separator3": "",
+		"#Entries": "settings/entries"
+	},
+
+	"info": {
+		"displayname": "Entries",
+		"description": "Entries system extension",
+		"author": "µCMS",
+		"site": "http://ucms.ivan4b.ru",
+		"updateURL": "http://ucms.ivan4b.ru/pub/extensions/entries"
+	}
+}

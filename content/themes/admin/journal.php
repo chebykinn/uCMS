@@ -1,6 +1,7 @@
 <?php
-echo '<h2>'.tr('System Journal').'</h2><br>';
-$journalLines = @file(LOG_FILE);
+
+use uCMS\Core\Debug;
+$journalLines = @file(Debug::GetLogFile());
 if(!empty($journalLines)){
 	$journalLines = array_reverse($journalLines);
 }else{
