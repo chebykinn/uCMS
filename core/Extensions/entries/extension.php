@@ -2,13 +2,21 @@
 namespace uCMS\Core\Extensions\Entries;
 use uCMS\Core\Page;
 use uCMS\Core\Extensions\Theme;
-class Entries extends \uCMS\Core\Extensions\Extension{
+class Entries extends \uCMS\Core\Extensions\Extension implements \uCMS\Core\Extensions\IExtension {
+
+	public function onLoad(){
+		
+	}
 	
 	public function onInstall(){
 
 	}
 
 	public function onUninstall(){
+
+	}
+
+	public function onShutdown(){
 
 	}
 	

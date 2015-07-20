@@ -1,6 +1,6 @@
 <?php
 namespace uCMS\Core\Extensions\FileManager;
-class FileManager extends \uCMS\Core\Extensions\Extension{
+class FileManager extends \uCMS\Core\Extensions\Extension implements \uCMS\Core\Extensions\IExtension {
 	
 	public function onInstall(){
 
@@ -10,7 +10,15 @@ class FileManager extends \uCMS\Core\Extensions\Extension{
 
 	}
 
+	public function onShutdown(){
+
+	}
+
 	public function onLoad(){
+		
+	}
+
+	public function onAction($action){
 		
 	}
 

@@ -2,10 +2,9 @@
 namespace uCMS\Core\Extensions\Users;
 use uCMS\Core\Extensions\Theme;
 use uCMS\Core\Admin\ControlPanel;
-class Users extends \uCMS\Core\Extensions\Extension{
+class Users extends \uCMS\Core\Extensions\Extension implements \uCMS\Core\Extensions\IExtension {
 
-	public function __construct($name){
-		parent::__construct($name);
+	public function onLoad(){
 		User::Current()->load();
 	}
 
@@ -14,6 +13,10 @@ class Users extends \uCMS\Core\Extensions\Extension{
 	}
 
 	public function onUninstall(){
+
+	}
+
+	public function onShutdown(){
 
 	}
 
