@@ -9,7 +9,7 @@ use uCMS\Core\Notification;
 use uCMS\Core\Admin\ControlPanel;
 use uCMS\Core\Database\DatabaseConnection;
 use uCMS\Core\Extensions\Users\User;
-class Theme extends Extension{
+class Theme extends AbstractExtension{
 	const DEFAULT_THEME = "ucms";
 	const GENERAL_TEMPLATE = 'general.php';
 	const ERROR_TEMPLATE = 'error.php';
@@ -80,19 +80,8 @@ class Theme extends Extension{
 	}
 
 	public function loadInfo(){
-		$encodedInfo = @file_get_contents($this->getExtensionInfoPath());
-		$decodedInfo = json_decode($encodedInfo, true);
-		$checkRequiredFields = empty($decodedInfo['version']) || empty($decodedInfo['coreVersion']);
-		if( $decodedInfo === NULL || $checkRequiredFields ){
-			Debug::Log(tr("Can't get theme information @s", $this->name), Debug::LOG_ERROR);
-			throw new \InvalidArgumentException("Can't get theme information");
-		}
-		$this->version = $decodedInfo['version'];
-		$this->coreVersion = $decodedInfo['coreVersion'];
-
-		$this->dependencies = !empty($decodedInfo['dependencies']) ? $decodedInfo['dependencies'] : "";
-		$this->info         = !empty($decodedInfo['info'])         ? $decodedInfo['info']         : "";
-		$this->regions      = !empty($decodedInfo['regions']) ? $decodedInfo['regions'] : array();
+		parent::loadInfo();
+		$this->regions      = !empty($this->decodedInfo['regions']) ? $this->decodedInfo['regions'] : array();
 		if( !is_array($this->regions) ) $this->regions = array($this->regions);
 	}
 
@@ -199,7 +188,7 @@ class Theme extends Extension{
 	/**
 	* Get current title.
 	*
-	* Get current title that should be displayed in template <title> tag.
+	* Get current title that should be displayed in template 'title' tag.
 	*
 	* @api
 	* @since 2.0
