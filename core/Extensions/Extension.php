@@ -130,7 +130,8 @@ class Extension extends AbstractExtension{
 		foreach ($extensions as $extension) {
 			if( self::IsExtention($extension) ){
 				try{  
-					$extensionClass = __NAMESPACE__."\\$extension\\$extension";
+					$namespace = self::IsDefault($extension) ? __NAMESPACE__ : "uCMS\\Extensions";
+					$extensionClass = "$namespace\\$extension\\$extension";
 					if( class_exists($extensionClass) ){
 						self::$list[$extension] = new $extensionClass($extension);
 						$e = self::$list[$extension];
