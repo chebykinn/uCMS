@@ -25,22 +25,7 @@ abstract class AbstractExtension{
 		$this->checkCoreVersion();
 	}
 
-	protected function loadInfo(){
-
-		$encodedInfo = @file_get_contents($this->getExtensionInfoPath());
-
-		$this->decodedInfo = json_decode($encodedInfo, true);
-		$checkRequiredFields = empty($this->decodedInfo['version']) || empty($this->decodedInfo['coreVersion']);
-		if( $this->decodedInfo === NULL || $checkRequiredFields ){
-			Debug::Log(tr("Can't get extension information @s", $this->name), Debug::LOG_ERROR);
-			throw new \InvalidArgumentException("Can't get extension information");
-		}
-		$this->version = $this->decodedInfo['version'];
-		$this->coreVersion = $this->decodedInfo['coreVersion'];
-
-		$this->dependencies = !empty($this->decodedInfo['dependencies']) ? $this->decodedInfo['dependencies'] : "";
-		$this->info         = !empty($this->decodedInfo['info'])         ? $this->decodedInfo['info']         : "";
-	}
+	abstract protected function loadInfo();
 
 	protected function includeFile($file){
 		if( file_exists($this->getFilePath($file)) ){

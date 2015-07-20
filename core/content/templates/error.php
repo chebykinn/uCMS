@@ -6,6 +6,6 @@
 </head>
 <body>
 <h1><?php p("Not Found") ?></h1>
-<p><?php p("The requested URL @s was not found on this server.", get_current_url()) ?></p>
+<p><?php p("The requested URL was not found on this server."); ?></p>
 </body>
 </html>

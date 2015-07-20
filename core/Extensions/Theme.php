@@ -14,10 +14,11 @@ class Theme extends AbstractExtension{
 	const GENERAL_TEMPLATE = 'general.php';
 	const ERROR_TEMPLATE = 'error.php';
 	const ERROR_TEMPLATE_NAME = 'error';
-	const HTML_TEMPLATE = "content/templates/html.php";
-	const PAGE_TEMPLATE = "content/templates/page.php";
+	const HTML_TEMPLATE = "core/content/templates/html.php";
+	const PAGE_TEMPLATE = "core/content/templates/page.php";
 	const INFO = 'theme.info';
 	const PATH = 'content/themes/';
+	const CORE_PATH = 'core/content/themes/';
 	private static $instance;
 	private $title;
 	private $themeTemplate = self::GENERAL_TEMPLATE;
@@ -43,6 +44,20 @@ class Theme extends AbstractExtension{
 	public static function IsLoaded(){
 		return !is_null( self::$instance );
 	}
+
+	/**
+	* Check if theme $name is default.
+	*
+	* This method allows you to check if given theme is default.
+	*
+	* @since 2.0
+	* @param $name The name of given theme.
+	* @return bool True if theme is default, false if not.
+	*/
+	public static function IsDefault($name){
+		$defaultThemes = array('ucms', 'admin');
+		return in_array($name, $defaultThemes);
+	} 
 
 	public static function GetCurrent(){
 		if ( is_null( self::$instance ) ){
@@ -80,8 +95,20 @@ class Theme extends AbstractExtension{
 	}
 
 	public function loadInfo(){
-		parent::loadInfo();
-		$this->regions      = !empty($this->decodedInfo['regions']) ? $this->decodedInfo['regions'] : array();
+		$encodedInfo = @file_get_contents($this->getExtensionInfoPath());
+
+		$decodedInfo = json_decode($encodedInfo, true);
+		$checkRequiredFields = empty($decodedInfo['version']) || empty($decodedInfo['coreVersion']);
+		if( $decodedInfo === NULL || $checkRequiredFields ){
+			Debug::Log(tr("Can't get extension information @s", $this->name), Debug::LOG_ERROR);
+			throw new \InvalidArgumentException("Can't get extension information");
+		}
+		$this->version = $decodedInfo['version'];
+		$this->coreVersion = $decodedInfo['coreVersion'];
+
+		$this->dependencies = !empty($decodedInfo['dependencies']) ? $decodedInfo['dependencies'] : "";
+		$this->info         = !empty($decodedInfo['info'])         ? $decodedInfo['info']         : "";
+		$this->regions      = !empty($decodedInfo['regions']) ? $decodedInfo['regions'] : array();
 		if( !is_array($this->regions) ) $this->regions = array($this->regions);
 	}
 
@@ -94,17 +121,21 @@ class Theme extends AbstractExtension{
 		$this->errorCode = (int) $code;
 	}
 
+	private function getRelativePath(){
+		return self::IsDefault($this->name) ? self::CORE_PATH : self::PATH;
+	}
+
 	protected function getPath(){
-		return ABSPATH.self::PATH."$this->name/";
+		return $this->getRelativePath()."$this->name/";
 	}
 
 	protected function getURLPath(){
-		return UCMS_DIR.self::PATH."$this->name/";
+		return UCMS_DIR.$this->getRelativePath()."$this->name/";
 	}
 
 	protected function getFilePath($file){
 		if( !empty($file) ){
-			return ABSPATH.self::PATH."$this->name/$file";
+			return ABSPATH.$this->getRelativePath()."$this->name/$file";
 		}
 		return "";
 	}
@@ -114,7 +145,7 @@ class Theme extends AbstractExtension{
 	}
 
 	public function getURLFilePath($file){
-		return UCMS_DIR.self::PATH."$this->name/$file";
+		return UCMS_DIR.$this->getRelativePath()."$this->name/$file";
 	}
 
 	public function load(){

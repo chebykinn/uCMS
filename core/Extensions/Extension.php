@@ -9,12 +9,7 @@ use uCMS\Core\uCMS;
 class Extension extends AbstractExtension{
 	const INFO = 'extension.info';
 	const PATH = 'content/extensions/';
-	const CORE_PATH = 'core/Extensions/';
-	protected $name;
-	protected $version;
-	protected $coreVersion;
-	protected $dependencies = NULL;
-	protected $info;
+	const CORE_PATH = 'core/content/extensions/';
 	private $loadAfter = NULL;
 	private $includes;
 	private $actions;
@@ -39,12 +34,24 @@ class Extension extends AbstractExtension{
 	}
 
 	protected function loadInfo(){
-		parent::loadInfo();
-		$this->loadAfter    = !empty($this->decodedInfo['loadAfter'])    ? $this->decodedInfo['loadAfter']    : "";
-		$this->includes     = !empty($this->decodedInfo['includes'])     ? $this->decodedInfo['includes']     : "";
-		$this->actions      = !empty($this->decodedInfo['actions'])      ? $this->decodedInfo['actions']      : "";
-		$this->admin        = !empty($this->decodedInfo['admin'])        ? $this->decodedInfo['admin']        : array();
-		$this->adminPages   = !empty($this->decodedInfo['adminPages'])   ? $this->decodedInfo['adminPages']   : "";
+		$encodedInfo = @file_get_contents($this->getExtensionInfoPath());
+
+		$decodedInfo = json_decode($encodedInfo, true);
+		$checkRequiredFields = empty($decodedInfo['version']) || empty($decodedInfo['coreVersion']);
+		if( $decodedInfo === NULL || $checkRequiredFields ){
+			Debug::Log(tr("Can't get extension information @s", $this->name), Debug::LOG_ERROR);
+			throw new \InvalidArgumentException("Can't get extension information");
+		}
+		$this->version = $decodedInfo['version'];
+		$this->coreVersion = $decodedInfo['coreVersion'];
+
+		$this->dependencies = !empty($decodedInfo['dependencies']) ? $decodedInfo['dependencies'] : "";
+		$this->info         = !empty($decodedInfo['info'])         ? $decodedInfo['info']         : "";
+		$this->loadAfter    = !empty($decodedInfo['loadAfter'])    ? $decodedInfo['loadAfter']    : "";
+		$this->includes     = !empty($decodedInfo['includes'])     ? $decodedInfo['includes']     : "";
+		$this->actions      = !empty($decodedInfo['actions'])      ? $decodedInfo['actions']      : "";
+		$this->admin        = !empty($decodedInfo['admin'])        ? $decodedInfo['admin']        : array();
+		$this->adminPages   = !empty($decodedInfo['adminPages'])   ? $decodedInfo['adminPages']   : "";
 		foreach ($this->admin as $key => &$item) {
 			if( is_array($item) && count($item) == 2 ){ // if sidebar position is set
 				if( empty($item[0]) ){
