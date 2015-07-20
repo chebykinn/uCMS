@@ -6,7 +6,7 @@ use uCMS\Core\Page;
 use uCMS\Core\Notification;
 use uCMS\Core\Admin\ControlPanel;
 use uCMS\Core\uCMS;
-class Extension{
+class Extension extends AbstractExtension{
 	const INFO = 'extension.info';
 	const PATH = 'content/extensions/';
 	const CORE_PATH = 'core/Extensions/';
@@ -26,9 +26,10 @@ class Extension{
 	private static $usedAdminActions;
 	private static $defaultExtentions;
 
-	public function __construct($name){
+	final public function __construct($name){
 		$this->name = $name;
 		$this->loadInfo();
+
 		$this->checkCoreVersion();
 		if( is_array($this->includes) ){
 			foreach ($this->includes as $include) {
@@ -37,65 +38,13 @@ class Extension{
 		}
 	}
 
-	protected function onInstall(){
-		Debug::Log(tr("@s installed", $this->name), Debug::LOG_INFO);
-	}
-
-	protected function onUninstall(){
-		Debug::Log(tr("@s uninstalled", $this->name), Debug::LOG_INFO);
-	}
-	
-	protected function onShutdown(){
-		
-	}
-
-	protected function onAction($action){
-
-	}
-
-	protected function onAdminAction($action){
-
-	}
-
-	private function getDependenciesList(){
-		return $this->dependencies;
-	}
-
-	protected function includeFile($file){
-		if( file_exists($this->getFilePath($file)) ){
-			include $this->getFilePath($file);
-		}else{
-			Debug::Log(tr("Failed to open file @s", $this->getFilePath($file)), Debug::LOG_ERROR);
-		}
-	}
-
-	protected function getFilePath($file){
-		$path = self::IsDefault($this->name) ? ABSPATH.self::CORE_PATH : ABSPATH.self::PATH;
-		return $path."$this->name/$file";
-	}
-
-	protected function getExtensionInfoPath(){
-		return $this->getFilePath(self::INFO);
-	}
-
 	protected function loadInfo(){
-		$encodedInfo = @file_get_contents($this->getExtensionInfoPath());
-		$decodedInfo = json_decode($encodedInfo, true);
-		$checkRequiredFields = empty($decodedInfo['version']) || empty($decodedInfo['coreVersion']);
-		if( $decodedInfo === NULL || $checkRequiredFields ){
-			Debug::Log(tr("Can't get extension information @s", $this->name), Debug::LOG_ERROR);
-			throw new \InvalidArgumentException("Can't get extension information");
-		}
-		$this->version = $decodedInfo['version'];
-		$this->coreVersion = $decodedInfo['coreVersion'];
-
-		$this->dependencies = !empty($decodedInfo['dependencies']) ? $decodedInfo['dependencies'] : "";
-		$this->loadAfter    = !empty($decodedInfo['loadAfter'])    ? $decodedInfo['loadAfter']    : "";
-		$this->includes     = !empty($decodedInfo['includes'])     ? $decodedInfo['includes']     : "";
-		$this->actions      = !empty($decodedInfo['actions'])      ? $decodedInfo['actions']      : "";
-		$this->admin        = !empty($decodedInfo['admin'])        ? $decodedInfo['admin']        : array();
-		$this->adminPages   = !empty($decodedInfo['adminPages'])   ? $decodedInfo['adminPages']   : "";
-		$this->info         = !empty($decodedInfo['info'])         ? $decodedInfo['info']         : "";
+		parent::loadInfo();
+		$this->loadAfter    = !empty($this->decodedInfo['loadAfter'])    ? $this->decodedInfo['loadAfter']    : "";
+		$this->includes     = !empty($this->decodedInfo['includes'])     ? $this->decodedInfo['includes']     : "";
+		$this->actions      = !empty($this->decodedInfo['actions'])      ? $this->decodedInfo['actions']      : "";
+		$this->admin        = !empty($this->decodedInfo['admin'])        ? $this->decodedInfo['admin']        : array();
+		$this->adminPages   = !empty($this->decodedInfo['adminPages'])   ? $this->decodedInfo['adminPages']   : "";
 		foreach ($this->admin as $key => &$item) {
 			if( is_array($item) && count($item) == 2 ){ // if sidebar position is set
 				if( empty($item[0]) ){
@@ -117,25 +66,9 @@ class Extension{
 		}
 	}
 
-	final private function checkCoreVersion(){
-		if( version_compare(uCMS::CORE_VERSION, $this->coreVersion, '<') ){
-			Debug::Log(tr("Outdated core version @s", $this->name), Debug::LOG_ERROR);
-			throw new \RuntimeException("Outdated core version");
-		}
-	}
-
-	final public function getInfo($field){
-		if( !empty($this->info[$field]) )
-			return $this->info[$field];
-		return "";
-	}
-
-	final public function getName(){
-		return $this->name;
-	}
-
-	final public function getVersion(){
-		return $this->version;
+	protected function getFilePath($file){
+		$path = self::IsDefault($this->name) ? ABSPATH.self::CORE_PATH : ABSPATH.self::PATH;
+		return $path."$this->name/$file";
 	}
 
 	final public function getActions(){
@@ -194,6 +127,7 @@ class Extension{
 					if( class_exists($extensionClass) ){
 						self::$list[$extension] = new $extensionClass($extension);
 						$e = self::$list[$extension];
+						$e->onLoad();
 						$extensionActions = is_array($e->getActions()) ? $e->getActions() : array();
 						$extensionAdminActions = is_array($e->getAdminActions()) ? $e->getAdminActions() : array();
 						self::$usedActions = array_merge(self::$usedActions, $extensionActions);
@@ -272,11 +206,12 @@ class Extension{
 			if( in_array($name, self::$defaultExtentions) ){
 				return require_once(ABSPATH.self::CORE_PATH."$name/extension.php");
 			}
-				$dataExists = ( file_exists(ABSPATH.self::PATH.$name.'/extension.php') && file_exists(ABSPATH.self::PATH.$name.'/'.self::INFO) );
+			$dataExists = ( file_exists(ABSPATH.self::PATH.$name.'/extension.php') && file_exists(ABSPATH.self::PATH.$name.'/'.self::INFO) );
 	
 			if ( $dataExists ){
 				include_once(ABSPATH.self::PATH.$name.'/extension.php');
-				return ( class_exists($name) && is_subclass_of($name, "Extension") );
+				return ( class_exists($name) && is_subclass_of($name, "Extension") 
+					&& in_array("IExtension", class_implements($name)) );
 	
 			}
 			return false;
