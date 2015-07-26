@@ -1,23 +1,4 @@
 <?php
-namespace uCMS\Core;
-/*require_once ABSPATH.'core/ucms.php';
-
-require_once ABSPATH.'core/debug.php';
-require_once ABSPATH.'core/language/language.php';
-require_once ABSPATH.'core/database/databaseConnection.php';
-require_once ABSPATH.'core/database/query.php';
-require_once ABSPATH.'core/cache.php';
-require_once ABSPATH.'core/session.php';
-require_once ABSPATH.'core/notification.php';
-require_once ABSPATH.'core/tools.php';
-require_once ABSPATH.'core/extensions/extension.php';
-require_once ABSPATH.'core/extensions/theme.php';
-require_once ABSPATH.'core/page.php';
-require_once ABSPATH.'core/settings.php';
-require_once ABSPATH.'core/admin/controlPanel.php';
-require_once ABSPATH.'core/admin/manageTable.php';
-require_once ABSPATH.'core/admin/managePage.php';
-require_once ABSPATH.'core/loader.php';*/
 require_once ABSPATH.'core/functions.php';
 spl_autoload_register(function ($class) {
 
@@ -38,6 +19,7 @@ spl_autoload_register(function ($class) {
     $relative_class = substr($class, $len);
     $level = substr_count($relative_class, "\\");
     if( $level > 1 ){
+        // prevent autoload from content directory
     	return;
     }
     // replace the namespace prefix with the base directory, replace namespace
