@@ -16,23 +16,10 @@ class ControlPanel{
 
 	public static function Init(){
 		self::LoadSidebar();
-		self::SetDefaultItems();
 		if( self::IsActive() ){
 			self::$action = Page::GetCurrent()->getActionData();
 			if( empty(self::$action) ) self::$action = 'home'; 
 		}
-	}
-
-	private static function SetDefaultItems(){
-		self::$defaultItems = array(
-		 'home'       => tr('Dashboard'),
-		 'settings'   => tr("Settings"), 
-		 'extensions' => tr("Extensions"), 
-		 'themes'     => tr("Themes"),
-		 'tools'      => tr("Tools"),
-		 'phpinfo'    => tr("PHP Information"),
-		 'journal'    => tr("System Journal")
-		);
 	}
 
 	public static function GetDefaultActions(){
@@ -43,28 +30,21 @@ class ControlPanel{
 		$result = array("isUsed" => false, "default" => false, "action" => "");
 
 		if( User::Current()->can('access control panel') ){
-			$defaultActions = self::GetDefaultActions();
 			$currentAction = self::GetAction();
 			$baseAction = self::GetBaseAction();
 			if( (empty($extensionActions) || !is_array($extensionActions)) ) {
 				$extensionActions = array();
 			}
-
-			if( !in_array($currentAction, $defaultActions) 
-				&& !in_array($currentAction, $extensionActions) ){
+			
+			if( !in_array($currentAction, $extensionActions) && empty(self::GetSettingsAction()) ){
 				$currentAction = $baseAction;
 			}
-
-			$result['action'] = $currentAction;
-			if( in_array($currentAction, $defaultActions) ){
-				self::SetTitle(self::$defaultItems[$currentAction]);
+			if( in_array($currentAction, $extensionActions) ){
+				$result['action'] = $currentAction;
 				$result['isUsed'] = true;
-				$result['default'] = true;
-			}else if( in_array($currentAction, $extensionActions) ){
-				$result['isUsed'] = true;
+				self::$action = $result['action'];
 			}
 
-			self::$action = $result['action'];
 		}else{
 			$result['isUsed'] = true;
 			$result['default'] = true;
@@ -78,11 +58,11 @@ class ControlPanel{
 	}
 
 	private static function LoadSidebar(){
-		self::$sidebar[] = array('name' => tr('Home'), 'action' => 'home', 'parent' => 0, 'after' => '');
 		$prevAction = 'home';
 		$position = 'home';
 		$waitingItems = array();
 		$loadedExtensions = Extension::GetLoaded();
+		$lastParent = "";
 		if( !empty($loadedExtensions) ){
 			foreach ($loadedExtensions as $name) {
 				$extensionItems = Extension::Get($name)->getAdminSidebarItems();
@@ -97,9 +77,10 @@ class ControlPanel{
 							$position = "settings";
 						}elseif( mb_substr($name, 0, 1) === '@' ){
 							$name = mb_substr($name, 1, mb_strlen($name));
-							$parent = $prevAction;
+							$parent = $lastParent;
 						}else{
 							$parent = 0;
+							$lastParent = $action;
 						}
 						$item = array('name' => tr($name), 
 							'action' => $action, 'parent' => $parent, 'after' => $position);
@@ -147,17 +128,6 @@ class ControlPanel{
 				array_push(self::$sidebar, $item);
 			}
 		}
-
-		self::$sidebar[] = array('name' => "separator",
-			'action' => 'separator', 'parent' => 0, 'after' => 'home');
-		self::$sidebar[] = array('name' => tr('Tools'),      'action' => 'tools',      'parent' => 0,            'after' => 'home');
-		self::$sidebar[] = array('name' => tr('Journal'),    'action' => 'journal',    'parent' => 'tools',      'after' => 'tools');
-		self::$sidebar[] = array('name' => tr('PHP Info'),   'action' => 'phpinfo',    'parent' => 'tools',      'after' => 'journal');
-		self::$sidebar[] = array('name' => "separator",      'action' => 'separator',  'parent' => 0,            'after' => 'phpinfo');
-		self::$sidebar[] = array('name' => tr('Extensions'), 'action' => 'extensions', 'parent' => 0,            'after' => 'phpinfo');
-		self::$sidebar[] = array('name' => tr('Themes'),     'action' => 'themes',     'parent' => 'extensions', 'after' => 'extensions');
-		self::$sidebar[] = array('name' => "separator",      'action' => 'separator',  'parent' => 0,            'after' => 'themes');
-		self::$sidebar[] = array('name' => tr('Settings'),   'action' => 'settings',   'parent' => 0,            'after' => 'widgets');
 	}
 
 	public static function AddMenuItem($name, $action, $parent = "", $after = "home"){
@@ -249,20 +219,16 @@ class ControlPanel{
 
 	public static function LoadTemplate(){
 		$currentAction = self::GetAction();
-		if( in_array($currentAction, self::GetDefaultActions()) ){
-			Theme::GetCurrent()->loadTemplate($currentAction);
+		$extension = Extension::getExtensionByAdminAction($currentAction);
+		if( is_object($extension) ){
+			$pageFile = $extension->getAdminPageFile($currentAction);
+		}
+		if( !empty($extension) && !empty($pageFile) ){
+			include_once($pageFile);
 		}else{
-			$extension = Extension::getExtensionByAdminAction($currentAction);
-			if( is_object($extension) ){
-				$pageFile = $extension->getAdminPageFile($currentAction);
-			}
-			if( !empty($extension) && !empty($pageFile) ){
-				include_once($pageFile);
-			}else{
-				Debug::Log(tr("Unable to load admin page for action: @s", $currentAction), Debug::LOG_ERROR);
-				$homePage = Page::FromAction(self::ACTION);
-				$homePage->go();
-			}
+			Debug::Log(tr("Unable to load admin page for action: @s", $currentAction), Debug::LOG_ERROR);
+			$homePage = Page::FromAction(self::ACTION);
+			$homePage->go();
 		}
 	}
 }
