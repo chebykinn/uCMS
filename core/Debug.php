@@ -42,6 +42,7 @@ class Debug{
 
 	public static function PrintVar($var){
 		self::BeginBlock();
+		// debug_print_backtrace();
 		var_dump($var);
 		self::EndBlock();
 	}
@@ -50,7 +51,7 @@ class Debug{
 		if(self::$logLevel > $level){
 			switch ($level) {
 				case self::LOG_DEBUG:
-					$type = '[INFO]';
+					$type = '[DEBUG]';
 				break;
 
 				case self::LOG_INFO:
@@ -74,7 +75,8 @@ class Debug{
 				break;
 			}
 			$host = Session::GetCurrent()->getHost();
-			$outMessage = strftime("%Y-%m-%d %H:%M:%S", time())." [Host: $host] $type $message\n";
+			$owner = Tools::GetCurrentOwner();
+			$outMessage = strftime("%Y-%m-%d %H:%M:%S", time())." [Host: $host] $type $owner $message\n";
 			$logFile = @fopen(self::$logFile, 'a');
 			if($logFile){
 				fwrite($logFile, $outMessage);
