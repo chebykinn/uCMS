@@ -10,7 +10,7 @@ class Settings{
 		/**
 		* @todo owner
 		*/
-		$owner = self::GetCurrentOwner();
+		$owner = Tools::GetCurrentOwner();
 		$query = new Query('{settings}');
 		$query->insert(array('name' => $name, 'value' => $value, 'owner' => $owner))->execute();
 	}
@@ -44,36 +44,8 @@ class Settings{
 		return "";
 	}
 
-	public static function GetCurrentOwner(){
-		// varDump(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS));
-		$name = "core";
-		$trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
-		foreach ($trace as $level) {
-			foreach ($level as $key => $value) {
-				$found = false;
-				if($key == 'file' && is_file($value) ){
-
-					if( mb_strpos($value, EXTENSIONS_PATH) !== false ){
-						$name = str_replace(EXTENSIONS_PATH, '', dirname($value));
-						if( Extension::IsLoaded($name) ){
-							$found = true;
-						}
-					}
-
-					if( mb_strpos($value, THEMES_PATH) !== false ){
-						/**
-						* @todo themes, widgets ?
-						*/
-					}
-				}
-				if($found) break;
-			}
-		}
-		return $name;
-	}
-
-	public static function Set($name, $value){
-		$owner = self::GetCurrentOwner();
+	public static function Update($name, $value){
+		$owner = Tools::GetCurrentOwner();
 		$checkName = self::IsExists($name);
 		if( $checkName && self::GetOwner($name) == $owner ){
 			$set = new Query('{settings}');
