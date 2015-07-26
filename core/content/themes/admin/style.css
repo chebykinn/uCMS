@@ -179,7 +179,12 @@ a:hover{
 }
 
 .info{
-	display: block;
 	float: left;
 	width: 50%;
+}
+
+.info .amount{
+	/*display: block;	*/
+	float: right;
+	margin-right: 50%;
 }
