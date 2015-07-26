@@ -1,9 +1,11 @@
 <?php
 namespace uCMS\Core\Extensions\Users;
 use uCMS\Core\Session;
+use uCMS\Core\Settings;
 use uCMS\Core\Database\Query;
-
+use uCMS\Core\Tools;
 class User{
+	const AVATARS_PATH = 'content/uploads/avatars';
 	protected $uid;
 	protected $name;
 	protected $password;
@@ -116,7 +118,9 @@ class User{
 	}
 
 	public function getAvatar(){
-		if( !empty($this->avatar) ){
+		$enabled = (bool) Settings::Get('user_avatars');
+		if( $enabled && !empty($this->avatar) ){
+			// Should get File object's path and build the img tag
 			return $this->avatar;
 		}
 		return "";
@@ -134,6 +138,16 @@ class User{
 			return $this->info;
 		}
 		return "";
+	}
+
+	public function getDisplayName(){
+		// print name or nickname if set
+		$allows = (bool)Settings::Get('allow_nicknames');
+		$nickname = $this->getInfo('nickname');
+		if( $allows && !empty($nickname) ){
+			return $nickname;
+		}
+		return $this->getName();
 	}
 
 	public function isLoggedIn(){
@@ -169,6 +183,8 @@ class User{
 								  "avatar" => $user->getAvatar(),
 								  "language" => $user->getLanguage(),
 								  "ip" => Session::getCurrent()->getIPAddress()) )->execute();
+			$amount = $query->countRows()->execute();
+			Settings::Update("users_amount", $amount);
 		}
 	}
 
