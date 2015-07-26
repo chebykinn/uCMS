@@ -2,6 +2,7 @@
 namespace uCMS\Core\Extensions\Users;
 use uCMS\Core\Extensions\Theme;
 use uCMS\Core\Admin\ControlPanel;
+use uCMS\Core\Block;
 class Users extends \uCMS\Core\Extensions\Extension implements \uCMS\Core\Extensions\IExtension {
 
 	public function onLoad(){
@@ -9,7 +10,7 @@ class Users extends \uCMS\Core\Extensions\Extension implements \uCMS\Core\Extens
 	}
 
 	public function onInstall(){
-
+		Block::Add("user-card");
 	}
 
 	public function onUninstall(){
