@@ -1,4 +1,8 @@
 <?php
+use uCMS\Core\Admin\ManagePage;
+use uCMS\Core\Admin\ManageTable;
+use uCMS\Core\Database\Query;
+use uCMS\Core\Admin\ControlPanel;
 $groupsPage = new ManagePage();
 $groupsTable = new ManageTable();
 

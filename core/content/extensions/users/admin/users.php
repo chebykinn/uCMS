@@ -1,8 +1,11 @@
 <?php
+use uCMS\Core\Admin\ManagePage;
+use uCMS\Core\Admin\ManageTable;
+use uCMS\Core\Database\Query;
+use uCMS\Core\Admin\ControlPanel;
 $usersPage = new ManagePage();
 $usersTable = new ManageTable();
 $query = new Query("{users}");
-Notification::ShowPending();
 $usersPage->doActions();
 $users = $query->select('DISTINCT `{users}`.*, `{groups}`.`name`, `{sessions}`.`ip` AS `sip`', true)
          ->left()->join('{groups}')->  using('gid')
