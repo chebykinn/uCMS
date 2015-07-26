@@ -12,12 +12,12 @@ use uCMS\Core\uCMS;
 abstract class AbstractExtension{
 	const INFO = 'extension.info';
 	const PATH = 'content/extensions/';
+	const CORE_PATH = 'core/content/extensions/';
 	protected $name;
 	protected $version;
 	protected $coreVersion;
 	protected $dependencies = NULL;
 	protected $info;
-	protected $decodedInfo;
 
 	public function __construct($name){
 		$this->name = $name;
@@ -26,6 +26,8 @@ abstract class AbstractExtension{
 	}
 
 	abstract protected function loadInfo();
+	abstract protected function getRelativePath();
+	
 
 	protected function includeFile($file){
 		if( file_exists($this->getFilePath($file)) ){
@@ -34,10 +36,9 @@ abstract class AbstractExtension{
 			Debug::Log(tr("Failed to open file @s", $this->getFilePath($file)), Debug::LOG_ERROR);
 		}
 	}
-
-	protected function getFilePath($file){
-		$path = self::IsDefault($this->name) ? ABSPATH.self::CORE_PATH : ABSPATH.self::PATH;
-		return $path."$this->name/$file";
+	
+	public function getFilePath($file){
+		return ABSPATH.$this->getRelativePath()."$this->name/$file";
 	}
 
 	protected function getExtensionInfoPath(){
@@ -58,7 +59,7 @@ abstract class AbstractExtension{
 	}
 
 
-	final protected function getDependenciesList(){
+	final public function getDependenciesList(){
 		return $this->dependencies;
 	}
 

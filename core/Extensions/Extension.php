@@ -19,7 +19,7 @@ class Extension extends AbstractExtension{
 	private static $list = array();
 	private static $usedActions;
 	private static $usedAdminActions;
-	private static $defaultExtentions;
+	private static $defaultList;
 
 	final public function __construct($name){
 		$this->name = $name;
@@ -34,6 +34,7 @@ class Extension extends AbstractExtension{
 	}
 
 	protected function loadInfo(){
+
 		$encodedInfo = @file_get_contents($this->getExtensionInfoPath());
 
 		$decodedInfo = json_decode($encodedInfo, true);
@@ -73,11 +74,6 @@ class Extension extends AbstractExtension{
 		}
 	}
 
-	protected function getFilePath($file){
-		$path = self::IsDefault($this->name) ? ABSPATH.self::CORE_PATH : ABSPATH.self::PATH;
-		return $path."$this->name/$file";
-	}
-
 	final public function getActions(){
 		if( is_array($this->actions) ){
 			return $this->actions;
@@ -92,28 +88,28 @@ class Extension extends AbstractExtension{
 		return array();
 	}
 
-	public function getAdminSidebarItems(){
+	final public function getAdminSidebarItems(){
 		if( is_array($this->admin) ){
 			return $this->admin;
 		}
 		return array();
 	}
 
-	public function getAdminSidebarPositions(){
+	final public function getAdminSidebarPositions(){
 		if( is_array($this->sidebarPosition) ){
 			return $this->sidebarPosition;
 		}
 		return array();
 	}
 
-	public function getAdminPageFile($action){
+	final public function getAdminPageFile($action){
 		if( !empty($this->adminPages[$action]) && file_exists($this->getFilePath($this->adminPages[$action])) ){
 			return $this->getFilePath($this->adminPages[$action]);
 		}
 		return "";
 	}
 
-	public function getIncludes(){
+	final public function getIncludes(){
 		if( is_array($this->includes) ){
 			return $this->includes;
 		}
@@ -121,10 +117,11 @@ class Extension extends AbstractExtension{
 	}
 	
 	final public static function Init(){
+		
 		self::$list = array();
 		self::$usedActions = array();
 		self::$usedAdminActions = array();
-		self::$defaultExtentions = array('filemanager', 'users', 'entries');
+		self::$defaultList = array('admin', 'filemanager', 'users', 'entries');
 		$extensions = unserialize(Settings::Get('extensions'));
 		$extensionActions = $extensionAdminActions = array();
 		foreach ($extensions as $extension) {
@@ -178,6 +175,23 @@ class Extension extends AbstractExtension{
 		return $isUsed;
 	}
 
+	final protected function getRelativePath(){
+		return self::IsDefault($this->name) ? self::CORE_PATH : self::PATH;
+	}
+
+	/**
+	* Check if extension $name is default.
+	*
+	* This method allows you to check if given extension is default.
+	*
+	* @since 2.0
+	* @param $name The name of given extension.
+	* @return bool True if extension is default, false if not.
+	*/
+	final public static function IsDefault($name){
+		return in_array($name, self::$defaultList);
+	}
+
 	final public static function GetUsedAdminActions(){
 		return self::$usedAdminActions;
 	}
@@ -211,7 +225,7 @@ class Extension extends AbstractExtension{
 
 	final public static function IsExtention($name){
 		if( !is_object($name) ){
-			if( in_array($name, self::$defaultExtentions) ){
+			if( in_array($name, self::$defaultList) ){
 				return require_once(ABSPATH.self::CORE_PATH."$name/extension.php");
 			}
 			$dataExists = ( file_exists(ABSPATH.self::PATH.$name.'/extension.php') && file_exists(ABSPATH.self::PATH.$name.'/'.self::INFO) );
@@ -240,6 +254,20 @@ class Extension extends AbstractExtension{
 
 	final public static function GetAll(){
 		$names = array();
+		if( UCMS_DEBUG ){
+			$dirs = scandir(self::CORE_PATH);// array_filter(scandir(self::PATH), 'is_dir');
+			if ( $dh = @opendir(self::CORE_PATH) ) {
+				while ( ($extension = readdir($dh)) !== false ) {
+					if( self::IsExtention($extension) ){
+						/**
+						* @todo check .. ?
+						*/
+						$names[] = $extension;
+					}
+				}
+				closedir($dh);
+			}
+		}
 		$dirs = scandir(self::PATH);// array_filter(scandir(self::PATH), 'is_dir');
 		if ( $dh = @opendir(self::PATH) ) {
 			while ( ($extension = readdir($dh)) !== false ) {
@@ -317,7 +345,7 @@ class Extension extends AbstractExtension{
 				$extensions[] = $name;
 			}
 			$extensions = implode(",", $extensions);
-			Settings::Set('extensions', $extensions);
+			Settings::Update('extensions', $extensions);
 			$message = new Notification(tr("Extension \"@s\" was successfully enabled", $name), Notification::SUCCESS);
 			$message->add();
 			return true;
@@ -352,7 +380,7 @@ class Extension extends AbstractExtension{
 			$extensions[] = $name;
 		}
 		$extensions = implode(",", $extensions);
-		Settings::Set('extensions', $extensions);
+		Settings::Update('extensions', $extensions);
 		$message = new Notification(tr("Extension \"@s\" was successfully disabled", $name), Notification::SUCCESS);
 		$message->add();
 		return true;
@@ -363,10 +391,6 @@ class Extension extends AbstractExtension{
 		$message = new Notification(tr("Extension \"@s\" was successfully added", $name), Notification::SUCCESS);
 		$message->add();
 		return true;
-	}
-
-	final public static function IsDefault($name){
-		return in_array($name, self::$defaultExtentions);
 	}
 
 	final public static function Shutdown(){
