@@ -1,5 +1,6 @@
 <?php
 namespace uCMS\Core;
+use uCMS\Core\Admin\ControlPanel;
 class Page{
 	const INDEX_ACTION = 'home';
 	const OTHER_ACTION = 'other';
@@ -66,6 +67,20 @@ class Page{
 	*/
 	public static function Home($data = ""){
 		return Page::FromAction(self::INDEX_ACTION, $data);
+	}
+
+	/**
+	* Create control panel page object.
+	*
+	* This method is an alias of Page::FromAction() called with admin action, this
+	* will create link to the control panel page with certain $action.
+	*
+	* @since 2.0
+	* @param string $action A control panel action
+	* @return Page A control panel page object
+	*/
+	public static function ControlPanel($action = ""){
+		return Page::FromAction(ControlPanel::ACTION, $action);
 	}
 
 	public function getAction(){
