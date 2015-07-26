@@ -74,6 +74,7 @@ class Loader{
 		Language::Init();
 
 		Extension::Init();
+		Block::Init();
 	}
 
 	/**
@@ -112,7 +113,7 @@ class Loader{
 		// Debug::PrintVar($isUsed);
 		// exit;
 		if( !$isUsed ){
-			Theme::LoadErrorPage(404);
+			Theme::LoadErrorPage(uCMS::ERR_NOT_FOUND);
 		}else{
 			if( !Theme::GetCurrent()->IsTitleSet() ){
 				Theme::GetCurrent()->setTitle($siteTitle);
