@@ -3,12 +3,8 @@ namespace uCMS\Core\Extensions;
 use uCMS\Core\Debug;
 use uCMS\Core\Settings;
 use uCMS\Core\Page;
-use uCMS\Core\Loader;
-use uCMS\Core\uCMS;
+use uCMS\Core\Block;
 use uCMS\Core\Notification;
-use uCMS\Core\Admin\ControlPanel;
-use uCMS\Core\Database\DatabaseConnection;
-use uCMS\Core\Extensions\Users\User;
 class Theme extends AbstractExtension{
 	const DEFAULT_THEME = "ucms";
 	const GENERAL_TEMPLATE = 'general.php';
@@ -16,6 +12,7 @@ class Theme extends AbstractExtension{
 	const ERROR_TEMPLATE_NAME = 'error';
 	const HTML_TEMPLATE = "core/content/templates/html.php";
 	const PAGE_TEMPLATE = "core/content/templates/page.php";
+	const VARIABLES_LOAD = "core/content/templates/variables.php";
 	const INFO = 'theme.info';
 	const PATH = 'content/themes/';
 	const CORE_PATH = 'core/content/themes/';
@@ -24,6 +21,8 @@ class Theme extends AbstractExtension{
 	private $themeTemplate = self::GENERAL_TEMPLATE;
 	private $regions = array();
 	private $errorCode = 0;
+	private static $defaultList = array();
+
 
 	/**
 	* @var string $pageTitle An optional title for page, that should be set by some extension
@@ -32,36 +31,49 @@ class Theme extends AbstractExtension{
 	*/
 	private $pageTitle, $pageContent;
 
-	/**
-	* @var mixed[] $data An array representing useful variables for theme
-	*/
-	private $data;
-
 	public static function SetCurrent($themeName){
+		self::$defaultList = array('ucms', 'admin');
 		self::$instance = new self($themeName);
+	}
+
+	public static function isExists($name){
+		return in_array($name, self::GetAll());
+	}
+
+	final public static function GetAll(){
+		$names = array();
+		if( UCMS_DEBUG ){
+			$dirs = scandir(self::CORE_PATH);// array_filter(scandir(self::PATH), 'is_dir');
+			if ( $dh = @opendir(self::CORE_PATH) ) {
+				while ( ($theme = readdir($dh)) !== false ) {
+					/**
+					* @todo check .. ?
+					*/
+					$names[] = $theme;
+				}
+				closedir($dh);
+			}
+		}
+		$dirs = scandir(self::PATH);// array_filter(scandir(self::PATH), 'is_dir');
+		if ( $dh = @opendir(self::PATH) ) {
+			while ( ($theme = readdir($dh)) !== false ) {
+				/**
+				* @todo check .. ?
+				*/
+				$names[] = $theme;
+			}
+			closedir($dh);
+		}
+		return $names;
 	}
 
 	public static function IsLoaded(){
 		return !is_null( self::$instance );
 	}
 
-	/**
-	* Check if theme $name is default.
-	*
-	* This method allows you to check if given theme is default.
-	*
-	* @since 2.0
-	* @param $name The name of given theme.
-	* @return bool True if theme is default, false if not.
-	*/
-	public static function IsDefault($name){
-		$defaultThemes = array('ucms', 'admin');
-		return in_array($name, $defaultThemes);
-	} 
-
 	public static function GetCurrent(){
 		if ( is_null( self::$instance ) ){
-			log_add(tr("Theme is not loaded"), Debug::LOG_CRITICAL);
+			Debug::Log(tr("Theme is not loaded"), Debug::LOG_CRITICAL);
 			return false;
 		}
 		return self::$instance;
@@ -121,7 +133,11 @@ class Theme extends AbstractExtension{
 		$this->errorCode = (int) $code;
 	}
 
-	private function getRelativePath(){
+	public static function IsDefault($name){
+		return in_array($name, self::$defaultList);
+	}
+
+	protected function getRelativePath(){
 		return self::IsDefault($this->name) ? self::CORE_PATH : self::PATH;
 	}
 
@@ -133,13 +149,6 @@ class Theme extends AbstractExtension{
 		return UCMS_DIR.$this->getRelativePath()."$this->name/";
 	}
 
-	protected function getFilePath($file){
-		if( !empty($file) ){
-			return ABSPATH.$this->getRelativePath()."$this->name/$file";
-		}
-		return "";
-	}
-
 	protected function getExtensionInfoPath(){
 		return $this->getFilePath(self::INFO);
 	}
@@ -149,12 +158,17 @@ class Theme extends AbstractExtension{
 	}
 
 	public function load(){
-		$this->loadData();
+		include_once(self::VARIABLES_LOAD);
+		$themeLoad = $this->getFilePath("load.php");
+		if( file_exists($themeLoad) && is_file($themeLoad) ){
+			include_once($themeLoad);
+		}
 		include_once(self::PAGE_TEMPLATE);
 	}
 
 	public function setThemeTemplate($name){
-		if( file_exists($this->getFilePath($this->getInfo($name))) ){
+		$template = $this->getFilePath($this->getInfo($name));
+		if( file_exists($template) && is_file($template) ){
 			$this->themeTemplate = $this->getInfo($name);
 		}
 	}
@@ -244,46 +258,10 @@ class Theme extends AbstractExtension{
 	public function region($name){
 		if( !in_array($name, $this->regions) ) return "";
 		// Debug::PrintVar($name);
-	}
-
-	/**
-	* Sets an array of variables to display.
-	*
-	* This method prepares an array of variables that should be used by theme to display site
-	* information or to control data flow.
-	*
-	* @since 2.0
-	* @param none
-	* @return void
-	*/
-	private function loadData(){
-		$this->data['action'] = Page::GetCurrent()->getAction();
-		$this->data['admin-action'] = ControlPanel::GetAction();
-		$this->data['site-name'] = Settings::Get("site_title");
-		$this->data['site-description'] = Settings::Get("site_description");
-		$this->data['queries-count'] = DatabaseConnection::GetDefault()->getQueriesCount(); //?
-		$this->data['load-time'] = Loader::GetInstance()->getLoadTime(); //?
-		$this->data['core-version'] = uCMS::CORE_VERSION; //?
-		$this->data['current-user'] = User::Current(); //?
-		$this->data['home-page'] = Page::Home()->getURL();
-	}
-
-	/**
-	* Get the array of prepared variables.
-	*
-	* This method is used to get a variable from special array, which is used to provide site
-	* information to current theme.
-	*
-	* @api
-	* @since 2.0
-	* @param string $name The name of variable.
-	* @return mixed The variable contents or empty string.
-	*/
-	public function getVar($name){
-		if( isset($this->data[$name]) ){
-			return $this->data[$name];
+		$blocks = Block::GetList($name);
+		foreach ($blocks as $block) {
+			$block->render();
 		}
-		return "";
 	}
 
 	/**

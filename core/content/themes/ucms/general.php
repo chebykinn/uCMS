@@ -1,15 +1,15 @@
 <div class="wrapper">
 	<header class="header">
 		<?php
-		if( $this->getVar('site-name') ):
+		if( $siteName ):
 		?>
-		<h1><a href="<?php echo $this->getVar('home-page'); ?>"><?php 
-		echo $this->getVar('site-name'); ?></a></h1>
+		<h1><a href="<?php echo $homePage; ?>"><?php 
+		echo $siteName; ?></a></h1>
 		<?php 
 		endif; 
-		if( $this->getVar('site-description') ):
+		if( $siteDescription ):
 		?>
-		<h2><?php echo $this->getVar('site-description'); ?></h2>
+		<h2><?php echo $siteDescription; ?></h2>
 		<?php
 		endif;
 		$this->region('header');
@@ -40,10 +40,6 @@
 
 		<aside class="right-sidebar">
 			<?php
-			$user = $this->getVar('current-user');
-			echo '<br>'.$user->getID().'<br>';
-			echo '<br>'.$user->getName().'<br>';
-			echo '<br>'.$user->getEmail().'<br>';
 			$this->region('right-sidebar');
 			?>
 		</aside><!-- .right-sidebar -->
@@ -53,8 +49,8 @@
 	<footer class="footer">
 		<?php
 		$this->region('footer');
-		echo '<br>'.$this->getVar('queries-count');
-		echo '<br>'.$this->getVar('load-time');
+		echo '<br>'.$queriesCount;
+		echo '<br>'.$loadTime;
 		?>
 	</footer><!-- .footer -->
 

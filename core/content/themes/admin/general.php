@@ -16,10 +16,10 @@ use uCMS\Core\Admin\ControlPanel;
 <?php
 	$this->region("header");
 	if( $this->pageTitle() ){
-		echo "<h2>".$this->pageTitle()."</h2>";
+		echo "<h2>".$this->pageTitle()."</h2><br>";
 	}
 	$this->showNotifications();
-	if($this->getVar('admin-action') === 'home'){
+	if($adminAction === 'home'){
 		$this->region("dashboard");
 	}
 	ControlPanel::LoadTemplate();
@@ -29,7 +29,7 @@ use uCMS\Core\Admin\ControlPanel;
 	<?php 
 	$this->region("footer");
 	p("IVaN4B's μCMS © 2011-@s Queries: @s. Load time: @s seconds. <span class=\"ucms-version\">Version: @s</span>", 
-	date('Y'), $this->getVar('queries-count'),
-			$this->getVar('load-time'), $this->getVar('core-version')); ?>
+	date('Y'), $queriesCount,
+			$loadTime, $coreVersion); ?>
 </div>
 </div>
