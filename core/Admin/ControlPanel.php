@@ -32,11 +32,12 @@ class ControlPanel{
 		if( User::Current()->can('access control panel') ){
 			$currentAction = self::GetAction();
 			$baseAction = self::GetBaseAction();
+			$settingsAction = self::GetSettingsAction(); 
 			if( (empty($extensionActions) || !is_array($extensionActions)) ) {
 				$extensionActions = array();
 			}
 			
-			if( !in_array($currentAction, $extensionActions) && empty(self::GetSettingsAction()) ){
+			if( !in_array($currentAction, $extensionActions) && empty($settingsAction) ){
 				$currentAction = $baseAction;
 			}
 			if( in_array($currentAction, $extensionActions) ){
@@ -145,7 +146,8 @@ class ControlPanel{
 
 	public static function SetTitle($title){
 		$delimeter = " :: ";
-		$settingsTitle = (self::IsSettingsPage() && !empty(self::GetSettingsAction()) )
+		$settingsAction = self::GetSettingsAction();
+		$settingsTitle = (self::IsSettingsPage() && !empty($settingsAction) )
 		? tr('Settings').$delimeter : "";
 		$newTitle = $settingsTitle.$title;
 		Theme::GetCurrent()->setTitle(self::TITLE.$delimeter.$newTitle);
