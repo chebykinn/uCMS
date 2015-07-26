@@ -1,5 +1,6 @@
 <?php
 namespace uCMS\Core\Admin;
+use uCMS\Core\Extensions\Users\User;
 class ManageTable{
 	private $action;
 	private $rows;
@@ -100,6 +101,9 @@ class ManageTable{
 							$content = str_replace("%$field%", $value, $content);
 						}
 						foreach ($row['data'] as $key => $value) {
+							if( is_array($value) ){
+								$value = implode(", ", $value);
+							}
 							$content = str_replace("#$key#", $value, $content);
 						}
 					}
