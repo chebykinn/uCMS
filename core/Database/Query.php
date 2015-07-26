@@ -13,7 +13,7 @@ class Query{
 	public function __construct($sql, $params = array(), $database = NULL){
 		$this->database = DatabaseConnection::GetDatabase($database);
 		if( empty($this->database) ){
-			Debug::Log(tr("No connection to the database"), UC_LOG_ERROR);
+			Debug::Log(tr("No connection to the database"), Debug::LOG_ERROR);
 			return;
 		}
 		$outType = array();
@@ -49,7 +49,7 @@ class Query{
 		return $this;
 	}
 
-	public function insert($columnsAndValues){
+	public function insert($columnsAndValues, $ignore = false){
 		$this->type = 'insert';
 		$noQuotes = array('NULL', 'NOW()');
 		if( is_array($columnsAndValues) ){
@@ -72,8 +72,8 @@ class Query{
 				//	$value = "'$value'";
 				//}
 		//	}
-
-			$this->sql = "INSERT INTO $this->table ($sqlColumns) VALUES ($sqlValues)";
+			$sqlIgnore = $ignore ? "IGNORE" : "";
+			$this->sql = "INSERT $sqlIgnore INTO $this->table ($sqlColumns) VALUES ($sqlValues)";
 			$this->params = $params;
 		}
 		return $this;
@@ -296,12 +296,11 @@ class Query{
 		return $this->table;
 	}
 
-	public function findNextName($column, $index = 0){
+	private function findNextName($column){
 		$column = preg_replace("/[^a-z0-9.]/i", "", $column);
-		$name = $index == 0 ? ":$column" : ":$column$index";
+		$name = ":$column";
 		if( isset($this->params[$name]) ){
-			$index++;
-			$this->findNextName(":$column$index", $index);
+			$name .= rand(0, 1000);
 		}
 		return $name;
 	}
