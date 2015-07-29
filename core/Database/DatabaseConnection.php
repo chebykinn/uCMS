@@ -72,6 +72,12 @@ class DatabaseConnection{
 		return self::$default;
 	}
 
+	public static function Shutdown(){
+		foreach (self::$databases as $connection) {
+			$connection->close();
+		}
+	}
+
 	public function __construct($server, $login, $password, $dbName, $dbPort, $prefix, $ucmsName){
 		$this->dbServer = $server;
 		$this->dbUser = $login;
@@ -101,7 +107,7 @@ class DatabaseConnection{
 
 	}
 
-	public function shutdown(){
+	public function close(){
 		$this->connection = null; 
 	}
 

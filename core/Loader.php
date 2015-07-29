@@ -137,7 +137,7 @@ class Loader{
 		Extension::Shutdown();
 		$this->stopLoadTimer();
 		Session::GetCurrent()->save();
-		DatabaseConnection::GetDefault()->shutdown(); //multiple
+		DatabaseConnection::Shutdown();
 	}
 
 	/**
