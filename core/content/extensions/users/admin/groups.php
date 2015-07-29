@@ -11,8 +11,6 @@ $permissions = $query->select("`{groups}`.*, `{group_permissions}`.`name` AS `pe
 		  ->orderBy('gid', 'asc')->limit(100)->execute();
 $countsQuery = new Query('{users}');
 $counts = $countsQuery->select("`gid`, COUNT(`uid`) AS `count`", true)->groupBy("gid")->orderBy('gid', 'asc')->limit(100)->execute();
-$groupsTable->setInfo('action', ControlPanel::getAction(), true);
-$groupsTable->setInfo('idKey', 'gid');
 $groups = array();
 $lastGroup = "";
 $i = -1;
@@ -34,21 +32,21 @@ foreach ($permissions as $permission) {
 	$groups[$i]['permission'][] = $permission['permission'];
 	$lastGroup = $permission['gid'];
 }
+$groupsTable->addSelectColumn('manage users');
+$groupsTable->addColumn(tr('Name'), true, 'manage users', 0, true);
+$groupsTable->addColumn(tr('Permissions'), true, 'manage users', 0, true);
+$groupsTable->addColumn(tr('Users count'), true, 'manage users');
 foreach ($groups as $group) {
+	$groupsTable->setInfo('idKey', $group['gid']);
 	$groupsTable->addRow(
 		array(
-			'gid' => $group['gid'],
-			'name' => $group['name'],
-			'position' => $group['position'],
-			'permission' => implode("<br>", $group['permission']),
-			'count' => $group['count']
+			"{$group['name']}<br><div class=\"manage-actions\">".$groupsTable->manageButtons(array('Edit' => 'edit',
+				'Delete' => 'delete'))."</div>",
+			implode("<br>", $group['permission']),
+			$group['count']
 		)
 	);
 
 }
-$groupsTable->addSelectColumn('manage users');
-$groupsTable->addColumn(tr('Name'), true, 'manage users', "#name#<br>@manage@", 0, true);
-$groupsTable->addColumn(tr('Permissions'), true, 'manage users', "#permission#", 0, true);
-$groupsTable->addColumn(tr('Users count'), true, 'manage users', "#count#");
 $groupsTable->printTable();
 ?>

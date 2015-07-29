@@ -17,48 +17,45 @@ $extensionsPage->doActions();
 $extensionsTable = new ManageTable();
 $extensions = Extension::GetAll();
 
-$extensionsTable->setInfo('action', ControlPanel::GetAction(), true);
-$extensionsTable->setInfo('idKey', 'name');
-
+$siteLink = Page::Home();
+$extensionsTable->addSelectColumn('manage extensions');
+$extensionsTable->addColumn(tr('Extension'), true, 'manage extensions', '20%', true);
+$extensionsTable->addColumn(tr('Description'), true, 'manage extensions', 0, true );
 foreach ($extensions as $extension) {
-	$dependencies = array();
+	$dependencies = "";
 	$extensionObject = Extension::Get($extension);
 	if( empty($extensionObject) ){
 		continue;
 	}
-	if( is_array(Extension::Get($extension)->getDependenciesList()) ){
-		foreach (Extension::Get($extension)->getDependenciesList() as $dependency) {
+	if( is_array($extensionObject->getDependenciesList()) ){
+		foreach ($extensionObject->getDependenciesList() as $dependency) {
 			if( Extension::IsLoaded($dependency) ){ //?
 				$dependencies[] = Extension::Get($dependency)->getInfo('displayname');
 			}
 		}
 		$dependencies = implode(", ", $dependencies);
 	}
-	$style = Extension::IsLoaded($extension) ? "enabled" : "";
+	$status = Extension::IsLoaded($extension);
+	$style = $status ? "enabled" : "";
+	$displayname = $extensionObject->getInfo('displayname');
+	$description = $extensionObject->getInfo('description');
+	$extensionsTable->setInfo('idKey', $extension);
+	$extensionsTable->setInfo('status', $status);
+	$version = $extensionObject->getVersion();
+	$author = $extensionObject->getInfo('author');
+	$site = $extensionObject->getInfo('site');
+	$dependenciesMessage = !empty($dependencies) ? "<br>Depends on: @s" : "";
 	$extensionsTable->addRow( 
 		array(
-		'manage'           => Extension::IsLoaded($extension) ? "@disable@" : "@enable@",
-		'manageButtons'    => !Extension::IsDefault($extension) ? "#manage# | @delete@" : "",
-		'dependenciesList' => !empty($dependencies) ? "<br>Depends on: #dependencies#" : "",
-		'name'             => $extension, 
-		'displayname'      => Extension::Get($extension)->getInfo('displayname'), 
-		'description'      => Extension::Get($extension)->getInfo('description'), 
-		'version'          => Extension::Get($extension)->getVersion(),
-		'author'           => Extension::Get($extension)->getInfo('author'),
-		'site'             => Extension::Get($extension)->getInfo('site'),
-		'dependencies'     => $dependencies
+			"$displayname<br><div class=\"manage-actions\">".
+			$extensionsTable->manageButtons()."</div>",
+			tr($description).tr('<br><br>Version: @s | Author: @s | Site: <a href="@s">@s</a>',
+			$version, $author, $site, $site, $dependencies).tr($dependenciesMessage, $dependencies),
+
 		),
 		$style
 	);
 }
 
-$siteLink = Page::FromAction('redirect', '#site#');
-$extensionsTable->addSelectColumn('manage users');
-$extensionsTable->addColumn(tr('Extension'),   true,  'manage extensions', '#displayname#<br><div class="manage-actions">#manageButtons#</div>', '20%', true);
-$extensionsTable->addColumn(tr('Description'), true,  'manage extensions',
-							tr('#description#
-								<br><br>Version: #version# | Author: #author# | Site: <a href="@s">#site#</a>
-								#dependenciesList#
-								', $siteLink), 0, true );
 $extensionsTable->printTable();
 ?>
