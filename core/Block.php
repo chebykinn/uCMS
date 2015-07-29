@@ -4,8 +4,8 @@ use uCMS\Core\Database\Query;
 use uCMS\Core\Extensions\Extension;
 use uCMS\Core\Extensions\Theme;
 class Block{
-	const SHOW_LISTED = 0;
-	const SHOW_EXCEPT = 1;
+	const SHOW_EXCEPT = 0;
+	const SHOW_LISTED = 1;
 	const SHOW_MANUAL = 2;
 	private $bid;
 	private $name;
@@ -104,7 +104,7 @@ class Block{
 		//load template from theme or extension and print it
 	}
 
-	public static function Add($name, $region = "", $theme = "", $position = -1, $visibility = self::SHOW_LISTED, $actions = "", $cache = 0){
+	public static function Add($name, $region = "", $theme = "", $position = -1, $visibility = self::SHOW_EXCEPT, $actions = "", $cache = 0){
 
 		if( !Theme::IsExists($theme) ) $theme = "";
 		if( empty($theme) ) $theme = Settings::Get('theme');
@@ -128,7 +128,7 @@ class Block{
 		return $add;
 	}
 
-	public static function Update($name, $theme = "", $region = "", $position = -1, $visibility = self::SHOW_LISTED, $actions = "", $cache = 0){
+	public static function Update($name, $theme = "", $region = "", $position = -1, $visibility = self::SHOW_EXCEPT, $actions = "", $cache = 0){
 
 	}
 
