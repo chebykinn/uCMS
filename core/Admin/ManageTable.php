@@ -1,6 +1,7 @@
 <?php
 namespace uCMS\Core\Admin;
 use uCMS\Core\Extensions\Users\User;
+use uCMS\Core\Page;
 class ManageTable{
 	private $action;
 	private $rows;
@@ -8,7 +9,7 @@ class ManageTable{
 	private $order;
 	private $sort;
 	private $columns;
-	private $snippets;
+	private $canSelect = false;
 	private $info;
 
 	public function __construct(){
@@ -17,58 +18,75 @@ class ManageTable{
 		$this->columns = array();
 		$this->info = array();
 		$this->rows = array();
-		$this->setSnippets();
+		$this->info['emptyMessage'] = tr('No elements to display');
+		$this->info['notAllowed'] = tr("You don't have permissions to view this content");
 	}
 
-	public function setSnippets(){
-		//$editLink = $url->makeLink('admin', 'extensions/');
-		/** 
-		* @todo change admin action to constant
-		*/
-		$this->setInfo('emptyMessage', tr('No elements'), true);
-		$this->setInfo('notAllowed', tr("You don't have permissions to view this content"), true);
-		$this->snippets['edit'] = '<a href="/admin/%action%/edit/%idKey%">'.tr('Edit').'</a>';
-		$this->snippets['activate'] = '<a href="/admin/%action%/activate/%idKey%">'.tr('Activate').'</a>';
-		$this->snippets['deactivate'] = '<a href="/admin/%action%/deactivate/%idKey%">'.tr('Deactivate').'</a>';
-		$this->snippets['enable'] = '<a href="/admin/%action%/enable/%idKey%">'.tr('Enable').'</a>';
-		$this->snippets['disable'] = '<a href="/admin/%action%/disable/%idKey%">'.tr('Disable').'</a>';
-		$this->snippets['delete'] = '<a class="delete-button" href="/admin/%action%/delete/%idKey%">'.tr('Delete').'</a>';
-		$this->snippets['manage'] = '<div class="manage-actions">'.$this->snippets['edit'].' | '.$this->snippets['delete'].'</div>';
-		$this->snippets['select'] = '<input type="checkbox" name="select[]" value="%idKey%">';
-		$this->snippets['selectAll'] = '<input type="checkbox" name="select-all">';
+	public function manageButtons($list = array('Enable|Disable' => 'switch-status',
+		'Edit' => 'edit', 'Delete' => 'delete'), $delimeter = " | "){
+		$buttons = array('switch-status', 'edit', 'delete');
+		$content = "";
+		$action = "";
+		if ( is_array($list) ){
+			$i = 0;
+			$size = count($list);
+			foreach ($list as $name => $button) {
+				$i++;
+				if( !in_array($button, $buttons) ){
+					continue;
+				}
+				$action = $button;
+				if( $button == 'switch-status' ){
+					$status = (bool) $this->getInfo('status');
+					$action = $status ? 'disable' : 'enable';
+					$names = explode('|', $name);
+					if( isset($names[0]) && isset($names[1]) ){
+						$name = $names[(int)$status];
+					}
+				}
+				$id = $this->getInfo('idKey');
+				$link = Page::ControlPanel(ControlPanel::GetAction()."/$action/$id");
+				$del = ($i === $size) ? "" : $delimeter;
+				$content .= "<a class=\"$action-button\" href=\"$link\">".tr($name)."</a>$del\n";
+			}
+		}
+		return $content;
 	}
 
-	public function setInfo($field, $value, $raw = false){
-		$this->info[$field] = $raw ? $value : "#$value#";
+	public function setInfo($field, $value){
+		$this->info[$field] = $value;
 	}
 
 	public function getInfo($field){
 		if( isset($this->info[$field]) ) return $this->info[$field]; 
 	}
 
-	public function addRow($columnsAndValues, $rowStyleClass = ''){
+	public function addRow($data, $rowStyleClass = ''){
 		$id = count($this->rows)-1;
-		$this->rows[$id]['data'] = $columnsAndValues;
+		if( $this->canSelect ){
+			array_unshift($data, 
+				'<input type="checkbox" name="select[]" value="'.$this->getInfo('idKey').'">');
+		}
+		$this->rows[$id]['data'] = $data;
 		$this->rows[$id]['style'] = $rowStyleClass;
 	}
 
-	public function addColumn($name, $sort, $permission, $content, $size = 0, $alwaysShow = false){
+	public function addColumn($name, $sort, $permission, $size = 0, $alwaysShow = false){
 		// # - means data column, @ means snippet for content, % means info
 		if( !empty($name) ){
-			foreach ($this->snippets as $key => $value) {
-				$name = str_replace("@$key@", $value, $name);
-			}
-			$this->columns[] = array("name" => $name, 'sort' => $sort, 'permission' => $permission, 'content' => $content, 'size' => $size, 'show' => $alwaysShow);
+			$this->columns[] = array("name" => $name, 'sort' => $sort, 'permission' => $permission, 'size' => $size, 'show' => $alwaysShow);
 		}
 	}
 
 	public function addSelectColumn($permission){
-		$this->addColumn("@selectAll@", false, $permission, '@select@', '10px', true);
+		$this->addColumn('<input type="checkbox" name="select-all">', false, $permission, '10px', true);
+		$this->canSelect = true;
 	}
 
 	public function printTable($paginal = true, $class = 'manage'){
 		$user = User::Current();
 		$amountOfAllowed = 0;
+		$size = count($this->columns);
 		echo '<table class="'.$class.'">';
 		echo '<tr>';
 			foreach ($this->columns as $column) {
@@ -85,35 +103,22 @@ class ManageTable{
 		if( !empty($this->rows) && $amountOfAllowed > 0 ){
 			foreach ($this->rows as $row) {
 				echo '<tr'.( !empty($row['style']) ? ' class="'.$row['style'].'"' : "" ).'>';
+				$i = 0;
 				foreach ($this->columns as $column) {
 					if( !$user->can($column['permission']) ){
 						continue;
 					}
 					$hiddenColumn = $column['show'] ? ' class="always-show"' : '';
 					echo '<td'.$hiddenColumn.'>';
-					$content = $column['content'];
-					$depth = 3;
-					for($i = 0; $i < $depth; $i++){
-						foreach ($this->snippets as $key => $value) {
-							$content = str_replace("@$key@", $value, $content);
-						}
-						foreach ($this->info as $field => $value) {
-							$content = str_replace("%$field%", $value, $content);
-						}
-						foreach ($row['data'] as $key => $value) {
-							if( is_array($value) ){
-								$value = implode(", ", $value);
-							}
-							$content = str_replace("#$key#", $value, $content);
-						}
+					if( isset($row['data'][$i]) ){
+						echo $row['data'][$i];
 					}
-					echo $content;
 					echo '</td>';
+					$i++;
 				}
 				echo '</tr>';
 			}
 		}else{
-			$size = count($this->columns);
 			$message = $amountOfAllowed > 0 ? $this->getInfo('emptyMessage') : $this->getInfo('notAllowed');
 			echo '<tr><td colspan="'.$size.'">'.$message.'</td></tr>';
 		}
