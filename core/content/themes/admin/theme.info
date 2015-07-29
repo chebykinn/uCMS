@@ -6,7 +6,7 @@
 		"sidebar": "sidebar.php",
 		"footer": "footer.php",
 		"style": ["style.css", "mobile.css"],
-		"script": ["scripts/mobile.js", "scripts/table.js", "scripts/jquery-2.1.3.min.js"],
+		"script": ["scripts/jquery-2.1.3.min.js", "scripts/mobile.js", "scripts/table.js"],
 		"login": "templates/login.php",
 		"access_denied": "templates/access_denied.php"
 	},
