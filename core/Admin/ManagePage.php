@@ -1,6 +1,7 @@
 <?php
 namespace uCMS\Core\Admin;
 use uCMS\Core\Page;
+use uCMS\Core\Extensions\Users\User;
 class ManagePage{
 	private $adminAction;
 	private $actions = array();
