@@ -55,22 +55,22 @@ class Block{
 	}
 	
 	public function _construct($name = ""){
-		// $owner = Tools::GetCurrentOwner(); 
-		// if( isset(self::$list[$name]) && self::$list[$name]->owner === $owner ){
-
-		// 	$this = self::$list[$name];
-		// }else if( !empty($name) ){
-		// 	// select from database
-		// 	$query = new Query("{blocks}");
-		// 	$blockData = $query->select("*")->where()->condition("name", "=", $name)
-		// 	 ->_and()->condition("owner", "=", $owner)->execute();
-		// 	if( !empty($blockData) ){
-		// 		$block = self::FromArray($blockData);
-		// 	}
-		// 	if( empty($this) ){
-		// 		throw new Exception(tr("Block @s not found", $name));	
-		// 	}
-		// }
+		if( !empty($name) ){
+			$query = new Query("{blocks}");
+			$data = $query->select("*")->where()->condition('name', '=', $name)->execute();
+			if( !empty($data) ){
+				$block = $data[0];
+				$this->bid = $block['bid'];
+				$this->name = $block['name'];
+				$this->owner = $block['owner'];
+				$this->status = $block['status'];
+				$this->theme = $block['theme'];
+				$this->region = $block['region'];
+				$this->cache = $block['cache'];
+				$this->visibility = $block['visibility'];
+				$this->actions = $block['actions'];
+			}
+		}
 	}
 
 	public function getName(){
@@ -125,11 +125,12 @@ class Block{
 				"position"   => $position				
 			), true
 		)->execute();
+		Settings::Increment("blocks_amount");
 		return $add;
 	}
 
-	public static function Update($name, $theme = "", $region = "", $position = -1, $visibility = self::SHOW_EXCEPT, $actions = "", $cache = 0){
-
+	public static function Update($name, $theme = "", $region = "", $position = -1, $visibility = -1, $actions = "", $cache = -1){
+		
 	}
 
 	public static function Delete($name){
