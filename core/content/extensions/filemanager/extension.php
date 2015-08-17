@@ -2,7 +2,7 @@
 namespace uCMS\Core\Extensions\FileManager;
 class FileManager extends \uCMS\Core\Extensions\Extension implements \uCMS\Core\Extensions\IExtension {
 	
-	public function onInstall(){
+	public function onInstall($stage){
 
 	}
 
