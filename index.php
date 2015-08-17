@@ -1,17 +1,9 @@
 <?php
-if( file_exists('config.php') ){
-	require 'config.php';
-}else if( file_exists('../config.php') ){
-	define("ABSPATH", getcwd()."/");
-	require '../config.php';
-}
-
-if( !defined("ABSPATH") ){
-	//install
-	echo "install";
-	exit;
-}
+require_once 'core/autoload.php';
 use uCMS\Core\Loader;
+
+Loader::GetConfiguration();
+
 Loader::GetInstance()->init();
 
 Loader::GetInstance()->runSite();
