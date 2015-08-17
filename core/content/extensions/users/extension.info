@@ -16,7 +16,7 @@
 		"reset"
 	],
 	"admin": {
-		"Users": ["users", "pages"],
+		"Users": ["users", "categories"],
 		"@Groups": "users/groups",
 		"#Users": "settings/users",
 		"separator": ""
@@ -37,6 +37,7 @@
 		"description": "Users system extension",
 		"author": "µCMS",
 		"site": "http://ucms.ivan4b.ru",
-		"updateURL": "http://ucms.ivan4b.ru/pub/extensions/users"
+		"updateURL": "http://ucms.ivan4b.ru/pub/extensions/users",
+		"tables": ["users", "user_info", "groups", "group_permissions"]
 	}
 }
