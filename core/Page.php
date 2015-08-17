@@ -4,6 +4,7 @@ use uCMS\Core\Admin\ControlPanel;
 class Page{
 	const INDEX_ACTION = 'home';
 	const OTHER_ACTION = 'other';
+	const INSTALL_ACTION = 'install';
 	private $url;
 	private $status;
 	private $action = self::INDEX_ACTION;
@@ -67,6 +68,20 @@ class Page{
 	*/
 	public static function Home($data = ""){
 		return Page::FromAction(self::INDEX_ACTION, $data);
+	}
+
+	/**
+	* Create install page object.
+	*
+	* This method is an alias of Page::FromAction() called with INDEX_ACTION, this
+	* will create link to the install page.
+	*
+	* @since 2.0
+	* @param string $data Data for the install action
+	* @return Page A install page object
+	*/
+	public static function Install($data = ""){
+		return Page::FromAction(self::INSTALL_ACTION, $data);
 	}
 
 	/**
