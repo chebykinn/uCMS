@@ -1,6 +1,6 @@
 <?php
 namespace uCMS\Core\Database;
-use uCMS\Core;
+use uCMS\Core\Debug;
 class Query{
 	private $database;
 	private $sql;
