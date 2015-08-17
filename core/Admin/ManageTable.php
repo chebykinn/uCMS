@@ -2,6 +2,7 @@
 namespace uCMS\Core\Admin;
 use uCMS\Core\Extensions\Users\User;
 use uCMS\Core\Page;
+use uCMS\Core\Form;
 class ManageTable{
 	private $action;
 	private $rows;
@@ -11,6 +12,7 @@ class ManageTable{
 	private $columns;
 	private $canSelect = false;
 	private $info;
+	private $form;
 
 	public function __construct(){
 		// $this->owner = $owner;
@@ -20,6 +22,7 @@ class ManageTable{
 		$this->rows = array();
 		$this->info['emptyMessage'] = tr('No elements to display');
 		$this->info['notAllowed'] = tr("You don't have permissions to view this content");
+		$this->form = new Form("tableForm");
 	}
 
 	public function manageButtons($list = array('Enable|Disable' => 'switch-status',
@@ -86,7 +89,6 @@ class ManageTable{
 	public function printTable($paginal = true, $class = 'manage'){
 		$user = User::Current();
 		$amountOfAllowed = 0;
-		$size = count($this->columns);
 		echo '<table class="'.$class.'">';
 		echo '<tr>';
 			foreach ($this->columns as $column) {
@@ -119,6 +121,7 @@ class ManageTable{
 				echo '</tr>';
 			}
 		}else{
+			$size = count($this->columns);
 			$message = $amountOfAllowed > 0 ? $this->getInfo('emptyMessage') : $this->getInfo('notAllowed');
 			echo '<tr><td colspan="'.$size.'">'.$message.'</td></tr>';
 		}
