@@ -5,11 +5,14 @@ use uCMS\Core\Settings;
 use uCMS\Core\Page;
 use uCMS\Core\Notification;
 use uCMS\Core\Admin\ControlPanel;
+use uCMS\Core\Database\Query;
+use uCMS\Core\Database\DatabaseConnection;
 use uCMS\Core\uCMS;
 class Extension extends AbstractExtension{
 	const INFO = 'extension.info';
 	const PATH = 'content/extensions/';
 	const CORE_PATH = 'core/content/extensions/';
+
 	private $loadAfter = NULL;
 	private $includes;
 	private $actions;
@@ -115,6 +118,18 @@ class Extension extends AbstractExtension{
 		}
 		return array();
 	}
+
+	final public function getTables(){
+		if( is_array($this->getInfo('tables')) ){
+			return $this->getInfo('tables');
+		}
+		return array();
+	}
+
+	final public function getDatabase(){
+		$database = $this->getInfo('database');
+		return $database;
+	}
 	
 	final public static function Init(){
 		
@@ -122,7 +137,8 @@ class Extension extends AbstractExtension{
 		self::$usedActions = array();
 		self::$usedAdminActions = array();
 		self::$defaultList = array('admin', 'filemanager', 'users', 'entries');
-		$extensions = unserialize(Settings::Get('extensions'));
+		$externalList = is_array(unserialize(Settings::Get('extensions'))) ? unserialize(Settings::Get('extensions')) : array();
+		$extensions = array_merge(self::$defaultList, $externalList);
 		$extensionActions = $extensionAdminActions = array();
 		foreach ($extensions as $extension) {
 			if( self::IsExtention($extension) ){
@@ -173,6 +189,30 @@ class Extension extends AbstractExtension{
 			}
 		}
 		return $isUsed;
+	}
+
+	final public static function CheckInstall(){
+		foreach (self::$list as $name => $extension) {
+			$tables = $extension->getTables();
+			foreach ($tables as $table) {
+				// TODO: SQL Preparation
+				$database = $extension->getDatabase();
+				$table = DatabaseConnection::GetDatabase($database)->getPrefix().stripslashes($table);
+				$checkQuery = new Query("SELECT 1 FROM $table LIMIT 1");
+				$result = $checkQuery->execute();
+				if( $result === false ){
+					// If some of the tables are missing we signal the installer of the need to start installation.
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	final public static function Install($stage){
+		foreach (self::$list as $name => $extension) {
+			$extension->onInstall($stage);
+		}
 	}
 
 	final protected function getRelativePath(){
@@ -395,9 +435,7 @@ class Extension extends AbstractExtension{
 
 	final public static function Shutdown(){
 		foreach (self::$list as $name => $extension) {
-			if( is_object($extension) ){
-				$extension->onShutdown();
-			}
+			$extension->onShutdown();
 		}
 	}
 }
