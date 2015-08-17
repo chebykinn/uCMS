@@ -58,6 +58,40 @@ body {
 	padding: 20px;
 }
 
+.entry{
+	margin-top: 10px;
+	font-size: 14px;
+	line-height: 150%;
+}
+
+.entry .content{
+	margin-left: 5px;
+	padding: 5px;
+}
+
+.error, .warning, .success{
+	border-radius: 2px;
+	width: 80%;
+	color: #000;
+	padding: 10px;
+	margin: 0 auto;
+	
+}
+
+.error{
+	border: 1px #D93030 solid;
+	background: #E6A3A3;
+}
+
+.warning{
+	border: 1px #C4AF23 solid;
+	background: #EDDF80;
+}
+
+.success{
+	border: 1px #168A24 solid;
+	background: #74D96F;
+}
 
 /* Right Sidebar
 -----------------------------------------------------------------------------*/
