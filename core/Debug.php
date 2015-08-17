@@ -76,19 +76,62 @@ class Debug{
 			}
 			$host = Session::GetCurrent()->getHost();
 			$owner = Tools::GetCurrentOwner();
-			$outMessage = strftime("%Y-%m-%d %H:%M:%S", time())." [Host: $host] $type $owner $message\n";
+			$outMessage = strftime("%Y-%m-%d %H:%M:%S", time())." [Host: $host] $type [$owner] $message\n";
 			$logFile = @fopen(self::$logFile, 'a');
 			if($logFile){
 				fwrite($logFile, $outMessage);
 				fclose($logFile);
 			}
-			if($level === self::LOG_CRITICAL){
+			if( $level === self::LOG_CRITICAL && UCMS_DEBUG ){
 				echo "<pre>";
 				p($outMessage);
 				echo "</pre>";
 				die;
 			}
 		}
+	}
+
+	/**
+	* Get prepared array of log messages.
+	*
+	* This method returns an array of structured log messages, parsed from log file.
+	*
+	* @since 2.0
+	* @param none
+	* @return array An array of log messages.
+	*/
+	public static function GetLogMessages(){
+		// TODO: offset and limit
+		$journalLines = @file(self::GetLogFile());
+		if(!empty($journalLines)){
+			$journalLines = array_reverse($journalLines);
+		}else{
+			$journalLines = array();
+		}
+		$dateOffset = 0;
+		$hostOffset = 3;
+		$typeOffset = 4;
+		$ownerOffset = 5;
+		$messageOffset = 6;
+		$headerLimit = 7;
+		$messages = array();
+		$count = count($journalLines);
+		$i = 0;
+		foreach ($journalLines as $line) {
+			$id = $count-$i;
+			$data = explode(" ", $line, $headerLimit);
+			$message = array(
+				"id" => $id,
+				"type" => preg_replace("/\[|\]/", "", $data[$typeOffset]),
+				"text" => htmlspecialchars($data[$messageOffset]),
+				"host" => substr($data[$hostOffset], 0, -1),
+				"owner" => htmlspecialchars(preg_replace("/\[|\]/", "", $data[$ownerOffset])),
+				"date" => $data[$dateOffset].' '.$data[$dateOffset+1]
+			);
+			$messages[] = $message;
+			$i++;
+		}
+		return $messages;
 	}
 
 	public static function GetLogFile(){
@@ -112,8 +155,8 @@ class Debug{
 	*
 	* @package uCMS
 	* @since 1.3
-	* @version 1.3
-	* @return nothing
+	* @version 2.0
+	* @return void
 	*
 	*/
 	public static function ErrorHandler($errno = "", $errstr = "", $errfile = "", $errline = ""){
