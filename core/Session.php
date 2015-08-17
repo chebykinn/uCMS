@@ -30,6 +30,7 @@ class Session{
 		}
 		self::$idleLifetime = 2 * 3600;
 		ini_set('session.cookie_lifetime', 0); // set session life until the browser closes
+		ini_set('session.cookie_httponly', 1); // set session life until the browser closes
 		ini_set("session.gc_maxlifetime", self::$idleLifetime);
 		if( !empty($_SESSION["usid".session_id()]) ){
 			$this->sid = $_SESSION["usid".session_id()];
@@ -97,8 +98,9 @@ class Session{
 			}
 		}
 		//Delete old sessions
-		$query->delete()->where()->condition('UNIX_TIMESTAMP() - `updated`', '>', self::$idleLifetime, true)
-		                 ->_and()->condition('updated', '!=', '0')->execute();
+		$old = new Query("DELETE FROM {sessions} WHERE UNIX_TIMESTAMP() - updated > :idletime 
+			AND updated <> 0", array(':idletime' => self::$idleLifetime));
+		$old->execute();
 	}
 
 	public function getIPAddress(){
