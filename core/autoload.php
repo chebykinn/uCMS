@@ -1,12 +1,12 @@
 <?php
-require_once ABSPATH.'core/functions.php';
+require_once getcwd().'/core/functions.php';
 spl_autoload_register(function ($class) {
 
     // project-specific namespace prefix
     $prefix = 'uCMS\\Core\\';
 
     // base directory for the namespace prefix
-    $base_dir = ABSPATH.'core/';
+    $base_dir = getcwd().'/core/';
 
     // does the class use the namespace prefix?
     $len = strlen($prefix);
@@ -33,7 +33,7 @@ spl_autoload_register(function ($class) {
 
     // if the file exists, require it
     if (file_exists($file)) {
-        require $file;
+        require_once $file;
     }
 });
 ?>
