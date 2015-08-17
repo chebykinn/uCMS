@@ -1,20 +1,31 @@
 <?php
 namespace uCMS\Core\Language;
 use uCMS\Core\Settings;
+use uCMS\Core\Session;
 class Language{
 	const PATH = 'content/languages';
 	private static $instance;
 	private $langStrings;
 
-	public static function getCurrent(){
+	public static function GetCurrent(){
 		if ( is_null( self::$instance ) ){
 			self::$instance = new self();
 		}
 		return self::$instance;
 	}
 
+	public static function IsLoaded(){
+		return is_null( self::$instance );
+	}
+
+	public static function IsSaved(){
+		$sessionLang = Session::GetCurrent()->get('language');
+		return !empty($sessionLang);
+	}
+
 	public static function Init(){
-		$language = Settings::Get('language');
+		$sessionLang = Session::GetCurrent()->get('language');
+		$language = !empty($sessionLang) ? $sessionLang : Settings::Get('language');
 		Language::GetCurrent()->load($language);
 	}
 
