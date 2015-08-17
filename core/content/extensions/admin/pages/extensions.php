@@ -6,11 +6,11 @@ use uCMS\Core\Admin\ControlPanel;
 use uCMS\Core\Extensions\Extension;
 use uCMS\Core\Page;
 $extensionsPage = new ManagePage();
-
-$extensionsPage->addAction('add',     'manage extensions',  'Extension::add');
-$extensionsPage->addAction('delete',  'manage extensions',  'Extension::delete');
-$extensionsPage->addAction('enable',  'manage extensions',  'Extension::enable');
-$extensionsPage->addAction('disable', 'manage extensions',  'Extension::disable');
+$namespace = "\\uCMS\\Core\\Extensions\\";
+$extensionsPage->addAction('add',     'manage extensions',  "{$namespace}Extension::Add");
+$extensionsPage->addAction('delete',  'manage extensions',  "{$namespace}Extension::Delete");
+$extensionsPage->addAction('enable',  'manage extensions',  "{$namespace}Extension::Enable");
+$extensionsPage->addAction('disable', 'manage extensions',  "{$namespace}Extension::Disable");
 
 $extensionsPage->doActions();
 
@@ -36,6 +36,7 @@ foreach ($extensions as $extension) {
 		$dependencies = implode(", ", $dependencies);
 	}
 	$status = Extension::IsLoaded($extension);
+	$default = Extension::IsDefault($extension);
 	$style = $status ? "enabled" : "";
 	$displayname = $extensionObject->getInfo('displayname');
 	$description = $extensionObject->getInfo('description');
@@ -48,7 +49,7 @@ foreach ($extensions as $extension) {
 	$extensionsTable->addRow( 
 		array(
 			"$displayname<br><div class=\"manage-actions\">".
-			$extensionsTable->manageButtons()."</div>",
+			($default ? "" : $extensionsTable->manageButtons())."</div>",
 			tr($description).tr('<br><br>Version: @s | Author: @s | Site: <a href="@s">@s</a>',
 			$version, $author, $site, $site, $dependencies).tr($dependenciesMessage, $dependencies),
 
