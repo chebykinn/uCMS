@@ -15,6 +15,7 @@ class User{
 	protected $theme;
 	protected $avatar;
 	protected $language;
+	protected $timezone;
 	protected $created;
 	protected $lastlogin;
 	protected $visited;
@@ -129,6 +130,13 @@ class User{
 	public function getLanguage(){
 		if( !empty($this->language) ){
 			return $this->language;
+		}
+		return "";
+	}
+
+	public function getTimezone(){
+		if( !empty($this->timezone) ){
+			return $this->timezone;
 		}
 		return "";
 	}
