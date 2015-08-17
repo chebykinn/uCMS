@@ -32,7 +32,7 @@ class Theme extends AbstractExtension{
 	private $pageTitle, $pageContent;
 
 	public static function SetCurrent($themeName){
-		self::$defaultList = array('ucms', 'admin');
+		self::$defaultList = array('install', 'ucms', 'admin');
 		self::$instance = new self($themeName);
 	}
 
@@ -42,6 +42,7 @@ class Theme extends AbstractExtension{
 
 	final public static function GetAll(){
 		$names = array();
+		$exclude = array('.', '..');
 		if( UCMS_DEBUG ){
 			$dirs = scandir(self::CORE_PATH);// array_filter(scandir(self::PATH), 'is_dir');
 			if ( $dh = @opendir(self::CORE_PATH) ) {
@@ -49,18 +50,22 @@ class Theme extends AbstractExtension{
 					/**
 					* @todo check .. ?
 					*/
-					$names[] = $theme;
+					if( !in_array($theme, $exclude) ){
+						$names[] = $theme;
+					}
 				}
 				closedir($dh);
 			}
 		}
 		$dirs = scandir(self::PATH);// array_filter(scandir(self::PATH), 'is_dir');
 		if ( $dh = @opendir(self::PATH) ) {
-			while ( ($theme = readdir($dh)) !== false ) {
+			while ( ($theme = readdir($dh)) !== false && !in_array($theme, $exclude) ) {
 				/**
 				* @todo check .. ?
 				*/
-				$names[] = $theme;
+				if( !in_array($theme, $exclude) ){
+					$names[] = $theme;
+				}
 			}
 			closedir($dh);
 		}
@@ -89,6 +94,24 @@ class Theme extends AbstractExtension{
 		}
 	}
 
+	public static function LoadTemplate($name){
+		$path = 'content/templates/';
+		$corePath = 'core/'.$path;
+		$coreFile = ABSPATH.$corePath.$name.'.php';
+		$file = ABSPATH.$path.$name.'.php';
+		if ( file_exists($coreFile) && is_file($coreFile) ){
+			include_once $coreFile;
+			return true;
+		}
+
+		if ( file_exists($file) && is_file($file) ){
+			include_once $file;
+			return true;
+		}
+		Debug::Log(tr("Unable to load template @s", $name), Debug::LOG_ERROR);
+		return false;	
+	}
+
 	public static function LoadErrorPage($errorCode){
 		Debug::Log(tr("Error @s at: @s", $errorCode,
 						Page::GetCurrent()->getURL()), Debug::LOG_WARNING);
@@ -98,6 +121,7 @@ class Theme extends AbstractExtension{
 			self::ReloadTheme($theme);
 		}
 		// TODO: Add HTTP Header
+		// TODO: Fix XSS
 		self::GetCurrent()->setErrorCode($errorCode);
 		self::GetCurrent()->setTitle(tr("404 Not Found"));
 		self::GetCurrent()->setPageTitle(tr("404 Not Found"));
@@ -157,8 +181,17 @@ class Theme extends AbstractExtension{
 		return UCMS_DIR.$this->getRelativePath()."$this->name/$file";
 	}
 
-	public function load(){
-		include_once(self::VARIABLES_LOAD);
+	public function load($variables = true){
+		if( $variables ){
+			include_once(self::VARIABLES_LOAD);
+			// Load blocks
+			$blocks = Block::GetList('', $this->getName());
+			foreach ($blocks as $regions) {
+				foreach ($regions as $block) {
+					$block->render();
+				}
+			}
+		}
 		$themeLoad = $this->getFilePath("load.php");
 		if( file_exists($themeLoad) && is_file($themeLoad) ){
 			include_once($themeLoad);
@@ -173,9 +206,6 @@ class Theme extends AbstractExtension{
 		}
 	}
 
-	public function loadTemplate($name){
-		$this->includeFile($name.'.php');
-	}
 
 	public function loadStyles(){
 		// TODO: Add default uCMS styles
@@ -260,7 +290,7 @@ class Theme extends AbstractExtension{
 		// Debug::PrintVar($name);
 		$blocks = Block::GetList($name);
 		foreach ($blocks as $block) {
-			$block->render();
+			$block->printRendered();
 		}
 	}
 
