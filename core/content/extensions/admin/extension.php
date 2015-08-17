@@ -6,9 +6,13 @@ class Admin extends \uCMS\Core\Extensions\Extension implements \uCMS\Core\Extens
 	public function onLoad(){
 	}
 
-	public function onInstall(){
+	public function onInstall($stage){
 		Block::Add("stats", "dashboard", "admin");
-		
+		if( $stage === 'check' ){
+
+		}else{
+			
+		}
 	}
 
 	public function onUninstall(){
