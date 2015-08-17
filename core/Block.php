@@ -14,6 +14,7 @@ class Block{
 	private $theme;
 	private $region;
 	private $cache;
+	private $renderedHTML;
 	private $visibility; // 0 - show except listed actions, 1 - show at listed actions, 2 - own code to determine pages
 	private $actions;
 	private static $list;
@@ -85,6 +86,7 @@ class Block{
 		//load data
 		//$data from cache or
 		$ownerExtension = Extension::Get($this->owner);
+
 		$loadFile = $ownerExtension->getFilePath("$this->name.load.php");
 		if( true && file_exists($loadFile) ) { // TODO: add cache check
 			include_once $loadFile;
@@ -93,15 +95,23 @@ class Block{
 		}
 		$template = "templates/$this->name.php";
 		$theme = new Theme($this->theme);
+		ob_start();
 		if( file_exists($theme->getFilePath($template)) ){
 			include_once $theme->getFilePath($template);
-			return true;
 		}else if( file_exists($ownerExtension->getFilePath($template)) ){
 			include_once $ownerExtension->getFilePath($template);
-			return true;
 		}
-		return false;
-		//load template from theme or extension and print it
+		$this->renderedHTML = ob_get_clean();
+		// TODO: cache this render
+		return !empty($this->renderedHTML);
+		//load template from theme or extension and render it
+	}
+
+	public function printRendered(){
+		// Print rendered block content
+		if( !empty($this->renderedHTML) ){
+			print $this->renderedHTML;
+		}
 	}
 
 	public static function Add($name, $region = "", $theme = "", $position = -1, $visibility = self::SHOW_EXCEPT, $actions = "", $cache = 0){
@@ -109,6 +119,7 @@ class Block{
 		if( !Theme::IsExists($theme) ) $theme = "";
 		if( empty($theme) ) $theme = Settings::Get('theme');
 		// TODO: region check
+		// TODO: Check if block exists
 		$status = ($theme != "" && $region != "") ? 1 : 0;
 		$owner = Tools::GetCurrentOwner();
 		$query = new Query("{blocks}");
@@ -157,25 +168,20 @@ class Block{
 		}
 	}
 
-	public static function GetList($region){
-		$theme = Tools::GetCurrentOwner();
-		if( isset(self::$list[$theme][$region]) ){
-			return self::$list[$theme][$region];
+	public static function GetList($region = "", $theme = ""){
+		if ( !Theme::IsExists($theme) ){
+			$theme = Tools::GetCurrentOwner();
+		}
+		if( isset(self::$list[$theme]) ){
+			if( !empty($region) ){
+				if( isset(self::$list[$theme][$region]) ){
+					return self::$list[$theme][$region];
+				}
+				return array();
+			}
+			return self::$list[$theme];
 		}
 		return array();
-	}
-
-	public function getVar($name){
-		if( isset($this->data[$name]) ){
-			return $this->data[$name];
-		}
-	}
-
-	public function addVar($name, $value){
-		$owner = Tools::GetCurrentOwner();
-		if( $owner === $this->owner ){
-			$this->data[$name] = $value;
-		}
 	}
 }
 ?>
