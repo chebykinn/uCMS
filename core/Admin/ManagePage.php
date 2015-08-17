@@ -2,6 +2,7 @@
 namespace uCMS\Core\Admin;
 use uCMS\Core\Page;
 use uCMS\Core\Extensions\Users\User;
+use uCMS\Core\Extensions\Extension;
 class ManagePage{
 	private $adminAction;
 	private $actions = array();
@@ -17,10 +18,10 @@ class ManagePage{
 
 	public function doActions(){
 		$name = Page::GetCurrent()->getKeyValue($this->adminAction);
-		$exitPage = Page::FromAction(ControlPanel::ACTION, $this->adminAction);
+		$exitPage = Page::ControlPanel($this->adminAction);
 		if( !empty($this->actions[$name]) ){
 			$key = htmlspecialchars(Page::GetCurrent()->getKeyValue($name));
-			$user = User::current();
+			$user = User::Current();
 			if( empty($key) || !$user->can($this->actions[$name]['permission']) || !is_callable($this->actions[$name]['callback']) ){
 				$exitPage->go();
 				return false;
