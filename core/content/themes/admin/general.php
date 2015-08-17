@@ -16,7 +16,7 @@ use uCMS\Core\Admin\ControlPanel;
 <?php
 	$this->region("header");
 	if( $this->pageTitle() ){
-		echo "<h2>".$this->pageTitle()."</h2><br>";
+		echo "<h2>".$this->pageTitle()."</h2>";
 	}
 	$this->showNotifications();
 	if($adminAction === 'home'){
