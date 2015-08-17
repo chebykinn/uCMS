@@ -10,7 +10,7 @@ class Notification{
 	const ERROR = 'error';
 	private static $typeList = array(self::SUCCESS, self::WARNING, self::ERROR);
 
-	public function __construct($message, $type = SUCCESS, $page = ''){
+	public function __construct($message, $type = self::SUCCESS, $page = ''){
 		if( !in_array($type, self::$typeList) ){
 			$type = self::SUCCESS;
 		}
