@@ -30,7 +30,12 @@ foreach ($users as $user) {
 	$lastlogin = empty($user['lastlogin']) ? tr("None") : $user['lastlogin'];
 	$visited = empty($user['visited']) ? tr("None") : $user['visited'];
 	$usersTable->addRow( array(
-		$user['name'].'<br><div class="manage-actions">'.$usersTable->manageButtons().'</div>',
+		$user['name'].'<br><div class="manage-actions">'.
+		$usersTable->manageButtons(array(
+			"Activate|Deactivate" => 'switch-status',
+			"Edit" => 'edit',
+			"Delete" => 'delete'
+			)).'</div>',
 		$user['group'],
 		$user['email'],
 		tr("Last login: @s<br>Registered: @s", $lastloginIP, $user['ip']),
