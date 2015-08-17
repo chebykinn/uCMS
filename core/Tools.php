@@ -28,9 +28,12 @@ class Tools{
 					}
 					if( is_array($path) && isset($path[1]) ){
 						$name = $path[1];
+						// TODO: fix install theme stealing ownership
 						if( Extension::IsLoaded($name) || Theme::IsExists($name) ){
 							$found = true;
 						}
+					}else{
+						// $name = 'core';
 					}
 				}
 				// TODO: Add themes detection
