@@ -12,14 +12,22 @@
 		"home",
 		"other"
 	],
+	"includes":[
+		"include/Entry.php",
+		"include/EntryType.php"
+	],
 	"admin": {
 		"separator": ["", "home"],
 		"Entries": ["entries", "home"],
 		"@Categories": "categories",
 		"separator2": "",
-		"Pages": "pages",
-		"separator3": "",
 		"#Entries": "settings/entries"
+	},
+
+	"adminPages": {
+		"entries": "admin/entries.php",
+		"categories": "admin/categories.php",
+		"settings/entries": "admin/settings.php"
 	},
 
 	"info": {
@@ -27,6 +35,7 @@
 		"description": "Entries system extension",
 		"author": "µCMS",
 		"site": "http://ucms.ivan4b.ru",
-		"updateURL": "http://ucms.ivan4b.ru/pub/extensions/entries"
+		"updateURL": "http://ucms.ivan4b.ru/pub/extensions/entries",
+		"tables": ["entries", "entry_types", "entry_access", "terms", "term_hierarchy", "term_taxonomy"]
 	}
 }
