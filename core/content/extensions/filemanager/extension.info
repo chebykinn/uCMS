@@ -26,6 +26,7 @@
 		"description": "Files system extension",
 		"author": "µCMS",
 		"site": "http://ucms.ivan4b.ru",
-		"updateURL": "http://ucms.ivan4b.ru/pub/extensions/fileman"
+		"updateURL": "http://ucms.ivan4b.ru/pub/extensions/filemanager",
+		"tables": ["uploaded_files"]
 	}
 }
