@@ -40,7 +40,8 @@ foreach ($groups as $group) {
 	$groupsTable->setInfo('idKey', $group['gid']);
 	$groupsTable->addRow(
 		array(
-			"{$group['name']}<br><div class=\"manage-actions\">".$groupsTable->manageButtons(array('Edit' => 'edit',
+			"{$group['name']}<br><div class=\"manage-actions\">".$groupsTable->manageButtons(array(
+				'Edit' => 'edit',
 				'Delete' => 'delete'))."</div>",
 			implode("<br>", $group['permission']),
 			$group['count']
