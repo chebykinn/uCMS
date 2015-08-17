@@ -1,0 +1,128 @@
+* {
+	margin: 0;
+	padding: 0;
+}
+
+body {
+	font-family: Arial, sans-serif, Georgia;
+	font-size: 15px;
+	text-align: center;
+	background: #f1f1f1;
+}
+
+a{
+	text-decoration: none;
+	color: #336699;
+}
+
+a:hover{
+	text-decoration: underline;
+	color: #00b4ff;
+}
+
+
+.wrapper{
+	background: #fff;
+	color: #333;
+	max-width: 960px;
+	height: 100%;
+	margin: 10% auto;
+	box-shadow: 0 1px 3px rgba(0,0,0,.14);
+	/*text-align: left;*/
+}
+
+.inner{
+	padding: 20px;
+}
+
+.inner p{
+	/*text-align: left;*/
+}
+
+.inner h2{
+	display: block;
+	margin-bottom: 20px;
+}
+
+.button, input[type=submit]{
+	background: #3C89E0;
+	border: 1px solid #1a5eac;
+	padding: 5px 10px 5px 10px;
+	border-radius: 4px;
+	color: #fff;
+	font-size: 16px;
+}
+
+.button:hover, input[type=submit]:hover{
+	text-decoration: none;
+	background: #4196F2;
+	cursor: pointer;
+	color: #fff;
+}
+
+.ucms-form{
+	width: 85%;
+	margin: 0 auto;
+}
+
+.ucms-form .form-item{
+	clear: both;
+	margin: 10px 5px;
+	overflow: hidden;
+	word-wrap: none;
+}
+
+.ucms-form label{
+	display: block;
+	float: left;
+	width: 20%;
+	font-size: 16px;
+	text-align: left;
+}
+
+.ucms-form input:not([type=submit]){
+	display: block;
+	float: left;
+	padding: 5px;
+	margin-right: 10px;
+	font-size: 14px;
+}
+
+.ucms-form select{
+	width: 50%;
+	font-size: 14px;
+	padding: 5px;
+	overflow-y: auto;
+}
+
+.ucms-form .field-description{
+	font-size: 13px;
+	float: left;
+	line-height: 30px;
+	word-wrap: break-word;
+	text-align: left;
+}
+
+.error, .warning, .success{
+	border-radius: 2px;
+	width: 80%;
+	color: #000;
+	padding: 10px;
+	margin: 0 auto;
+	
+}
+
+.error{
+	border: 1px #D93030 solid;
+	background: #E6A3A3;
+}
+
+.warning{
+	border: 1px #C4AF23 solid;
+	background: #EDDF80;
+}
+
+.success{
+	border: 1px #168A24 solid;
+	background: #74D96F;
+}

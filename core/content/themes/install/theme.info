@@ -1,0 +1,11 @@
+{
+	"version": "1.0",
+	"coreVersion": "2.x",
+	"info": {
+		"displayname": "Install theme",
+		"description": "Install theme",
+		"author": "µCMS",
+		"site": "http://ucms.ivan4b.ru",
+		"style": ["style.css", "mobile.css"]
+	}
+}
