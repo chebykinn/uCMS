@@ -1,34 +1,34 @@
 <?php
 namespace uCMS\Core\Database;
 use uCMS\Core\Debug;
+use uCMS\Core\Loader;
+use uCMS\Core\Page;
 class DatabaseConnection{
 	const DISPLAY_QUERY = false;
 	const DEFAULT_NAME = 'default';
+	const ERR_TABLE_NOT_EXIST = "42S02";
 	private static $default;
-	private static $databases;
+	private static $databases = array();
 	private $dbServer, $dbUser, $dbPassword, $dbName;
 	private $tables;
 	private $queriesCount;
 	private $connection;
+	private $connected = false;
 	private $prefix;
 	private $ucmsName;
 
 	public static function Init(){
 		if( empty($GLOBALS['databases']) || !is_array($GLOBALS['databases']) ){
-			/**
-			* @todo install
-			*/
-			Debug::Log(tr("install, no config"), Debug::LOG_CRITICAL);
+			Loader::GetInstance()->install();
+			Debug::Log(tr("No configuration file was found"), Debug::LOG_CRITICAL);
 		}
 		foreach ($GLOBALS['databases'] as $dbName => $dbData) {
 			try{
 				$fields = array('server', 'user', 'password', 'name', 'port', 'prefix');
 				foreach ($fields as $field) {
 					if( !isset($dbData[$field]) ){
-						/**
-						* @todo install
-						*/
-						Debug::Log(tr("install, wrong config"), Debug::LOG_CRITICAL);
+						Debug::Log(tr("Wrong configuration file was provided"), Debug::LOG_CRITICAL);
+						Loader::GetInstance()->install();
 					}
 				}
 				$database = new DatabaseConnection(
@@ -47,16 +47,18 @@ class DatabaseConnection{
 				self::$databases[$dbName] = $database;
 			}catch(\Exception $e){
 				if( $e->getCode() == 1045 || $e->getCode() == 1049 ){
-					/**
-					* @todo install
-					*/
-					Debug::Log(tr("install, wrong config"), Debug::LOG_CRITICAL);
+					Debug::Log(tr("Wrong configuration file was provided"), Debug::LOG_CRITICAL);
+					Loader::GetInstance()->install();
 				}else{
 					Debug::Log(tr("Database @s connection error @s: @s", $dbName, $e->getCode(), $e->getMessage()), Debug::LOG_CRITICAL);
 				}
 			}
 		}
 		unset($GLOBALS['databases']); // We don't want to have global variables, so we delete this
+	}
+
+	public function isConnected(){
+		return $this->connected;
 	}
 
 	public static function GetDefault(){
@@ -87,6 +89,7 @@ class DatabaseConnection{
 		$this->prefix = $prefix;
 		$this->ucmsName = $ucmsName;
 		$this->connect();
+		$this->connected = true;
 		if($ucmsName == self::DEFAULT_NAME){
 			$this->setDefaultTables();
 			self::$default = $this;
@@ -123,14 +126,23 @@ class DatabaseConnection{
 			$result->execute($params);
 			$this->queriesCount++;
 		}catch(\PDOException $e){
-			Debug::BeginBlock();
-			echo "<h2>".tr("Query failed")."</h2><br>";
-			echo "$sql<br><br>";
-			echo $e->getMessage();
-			if(UCMS_DEBUG){
-				echo "<br><h3>Trace:</h3>".$e->getTraceAsString();
+			if( $e->getCode() === self::ERR_TABLE_NOT_EXIST ){
+				// TODO: debug mode
+				// TODO: check only if this is installed table
+				$check = Page::Install('check');
+				if( Page::GetCurrent()->getAction() !== Page::INSTALL_ACTION ){
+					$check->go();
+				}
+			}else{
+				Debug::BeginBlock();
+				echo "<h2>".tr("Query failed")."</h2><br>";
+				echo "$sql<br><br>";
+				echo $e->getMessage();
+				if(UCMS_DEBUG){
+					echo "<br><h3>Trace:</h3>".$e->getTraceAsString();
+				}
+				Debug::EndBlock();
 			}
-			Debug::EndBlock();
 			
 		}
 		// $result->close();
@@ -182,8 +194,28 @@ class DatabaseConnection{
 		}
 	}
 
+	public function checkDefaultTables(){
+		if( $this->ucmsName === self::DEFAULT_NAME ){
+			$data = array();
+			$exists = false;
+			foreach ($this->tables as $table) {
+				try{
+					$fullTable = $this->prefix.$table;
+					$this->connection->query("SELECT 1 FROM $fullTable LIMIT 1");
+					$exists = true;
+				}catch(\PDOException $e){
+					if( $e->getCode() === self::ERR_TABLE_NOT_EXIST ){
+						$exists = false;
+					}
+				}
+				$data[$table] = $exists;
+			}
+			return $data;
+		}
+	}
+
 	public function setDefaultTables(){
-		$this->tables = array('settings');
+		$this->tables = array('settings', 'blocks', 'cache', 'ips', 'sessions', 'menus');
 	}
 
 	public function getuCMSName(){
