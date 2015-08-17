@@ -6,13 +6,10 @@ use uCMS\Core\Extensions\Extension;
 class Settings{
 	private static $list;
 
-	public static function Add($name, $value){
-		/**
-		* @todo owner
-		*/
-		$owner = Tools::GetCurrentOwner();
+	public static function Add($name, $value, $public = false){
+		$owner = !$public ? Tools::GetCurrentOwner() : "";
 		$query = new Query('{settings}');
-		$query->insert(array('name' => $name, 'value' => $value, 'owner' => $owner))->execute();
+		$query->insert(array('name' => $name, 'value' => $value, 'owner' => $owner), true)->execute();
 	}
 
 	public static function Load(){
@@ -44,10 +41,18 @@ class Settings{
 		return "";
 	}
 
-	public static function Update($name, $value){
+	public static function IsOwner($name){
 		$owner = Tools::GetCurrentOwner();
 		$checkName = self::IsExists($name);
-		if( $checkName && self::GetOwner($name) == $owner ){
+		if( $checkName ){
+			$settingOwner = self::GetOwner($name);
+			return (empty($settingOwner) || $settingOwner === $owner);
+		}
+		return false;
+	}
+
+	public static function Update($name, $value){
+		if( self::IsOwner($name) ){
 			$set = new Query('{settings}');
 			$set->update(array('value' => $value))
 			    ->where()->condition('name', '=', $name)->execute();
@@ -56,10 +61,40 @@ class Settings{
 		return false;
 	}
 
-	public static function Remove($name, $value){
-		/**
-		* @todo owner
-		*/
+	public static function Increment($name){
+		if( self::IsOwner($name) ){
+			$set = new Query('UPDATE {settings} SET value = value + 1 WHERE name = :name', array(':name' => $name));
+			$set->execute();
+			return true;
+		}
+		return false;
+	}
+
+	public static function Decrement($name){
+		if( self::IsOwner($name) ){
+			$set = new Query('UPDATE {settings} SET value = value - 1 WHERE name = :name', array(':name' => $name));
+			$set->execute();
+			return true;
+		}
+		return false;
+	}
+
+	public static function Rename($name, $newName){
+		if( self::IsOwner($name) ){
+			$rename = new Query("{settings}");
+			$rename->update(array('name' => $newName))->where()->condition('name', '=', $name)->execute();
+			return true;
+		}
+		return false;
+	}
+
+	public static function Remove($name){
+		if( self::IsOwner($name) ){
+			$delete = new Query("{settings}");
+			$delete->delete()->where()->condition('name', '=', $name)->execute();
+			return true;
+		}
+		return false;
 	}
 }
 ?>
