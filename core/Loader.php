@@ -12,6 +12,7 @@ use uCMS\Core\Language\Language;
 use uCMS\Core\Extensions\Extension;
 use uCMS\Core\Extensions\Theme;
 use uCMS\Core\Admin\ControlPanel;
+use uCMS\Core\uCMS;
 /**
 * This class handles loading process.
 * 
@@ -45,6 +46,34 @@ class Loader{
 	}
 
 	/**
+	* Method to load Database configuration
+	*
+	* This method finds and includes uCMS config file and prepares system for further loading. 
+	*
+	* @since 2.0
+	* @param none
+	* @return bool True if config file is found and loaded, false if not
+	*/
+	public static function GetConfiguration(){
+		if( file_exists(uCMS::CONFIG_FILE) ){
+			require_once uCMS::CONFIG_FILE;
+			return true;
+		}else if( file_exists('../'.uCMS::CONFIG_FILE) ){
+			define("ABSPATH", getcwd()."/");
+			require_once '../'.uCMS::CONFIG_FILE;
+			return true;
+		}
+		
+		if( !defined("ABSPATH") ){
+			define("ABSPATH", getcwd()."/");
+			define('UCMS_DEBUG', false);
+			
+			require_once 'core/autoload.php';
+		}
+		return false;
+	}
+
+	/**
 	* Main initialization method.
 	*
 	* This method initializes all uCMS classes, sets up a connection to database, settings, cache
@@ -60,20 +89,34 @@ class Loader{
 		Debug::Init();
 		Session::Start();
 
-		@mb_internal_encoding("UTF-8");
-		register_shutdown_function(array($this, 'shutdown'));
-		// TODO: Installation process
-		if( version_compare(phpversion(), uCMS::MIN_PHP_VERSION, '<') ){
-			Debug::Log(tr("Obsolete PHP"), Debug::LOG_CRITICAL);
+		// If we have saved language preference in session we are able to load language at this stage
+		if( Language::IsSaved() ){
+			Language::Init();
 		}
+
+		Form::Init();
+
+		@mb_internal_encoding("UTF-8");
+		date_default_timezone_set("UTC");
+		register_shutdown_function(array($this, 'shutdown'));
+		if( version_compare(phpversion(), uCMS::MIN_PHP_VERSION, '<') ){
+			Theme::LoadTemplate('php-version');
+			Debug::Log("Server's PHP is obsolete", Debug::LOG_CRITICAL);
+			exit;
+		}
+
 		DatabaseConnection::Init();
+		Settings::Load();
+		
+		// Load site language from database preference
+		if( !Language::IsLoaded() ){
+			Language::Init();
+		}
+
 		Cache::Init();
 		Session::GetCurrent()->load();
-		Settings::Load();
-		// TODO: Language
-		Language::Init();
-
 		Extension::Init();
+
 		Block::Init();
 	}
 
@@ -89,9 +132,13 @@ class Loader{
 	public function runSite(){
 		//parse url, get page and get extension responsible for current page
 		$templateData = false;
+		$currentAction =  Page::GetCurrent()->getAction();
+		if ($currentAction === Page::INSTALL_ACTION ){
+			$this->install();
+		}
 		$siteTitle = Settings::Get('site_title');
 		if( empty($siteTitle) ) $siteTitle = tr("Untitled");
-		if( Page::GetCurrent()->getAction() != ControlPanel::ACTION ){
+		if( $currentAction != ControlPanel::ACTION ){
 			$themeName = Settings::Get('theme');
 			if( empty($themeName) ) $themeName = Theme::DEFAULT_THEME;
 		}else{
@@ -103,13 +150,13 @@ class Loader{
 
 		try{
 			Theme::SetCurrent($themeName);
-		}catch(InvalidArgumentException $e){
+		}catch(\InvalidArgumentException $e){
 			p("[@s]: ".$e->getMessage(), $themeName);
-		}catch(RuntimeException $e){
+		}catch(\RuntimeException $e){
 			p("[@s]: ".$e->getMessage(), $themeName);
 		}
 
-		$isUsed = Extension::LoadOnAction( Page::GetCurrent()->getAction() );
+		$isUsed = Extension::LoadOnAction( $currentAction );
 		// Debug::PrintVar($isUsed);
 		// exit;
 		if( !$isUsed ){
@@ -124,6 +171,20 @@ class Loader{
 	}
 
 	/**
+	* Method to start installation.
+	*
+	* This method is used to start installation if something is wrong with tables or configuration data.
+	*
+	* @since 2.0
+	* @param none
+	* @return void
+	*/
+	public function install(){
+		$installer = new Installer();
+		$installer->run();
+	}
+
+	/**
 	* Shutdown method.
 	*
 	* This method is used for uCMS classes to do their shutting down stuff.
@@ -134,6 +195,11 @@ class Loader{
 	* @return void
 	*/
 	public function shutdown(){
+		// If stage mark was left after installation we have to remove it
+		if( Session::GetCurrent()->have('install-stage')
+			&& Page::GetCurrent()->getAction() != Page::INSTALL_ACTION ){
+			Session::GetCurrent()->delete('install-stage');
+		}
 		Extension::Shutdown();
 		$this->stopLoadTimer();
 		Session::GetCurrent()->save();
