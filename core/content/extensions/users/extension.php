@@ -3,14 +3,16 @@ namespace uCMS\Core\Extensions\Users;
 use uCMS\Core\Extensions\Theme;
 use uCMS\Core\Admin\ControlPanel;
 use uCMS\Core\Block;
+use uCMS\Core\Settings;
 class Users extends \uCMS\Core\Extensions\Extension implements \uCMS\Core\Extensions\IExtension {
 
 	public function onLoad(){
 		User::Current()->load();
 	}
 
-	public function onInstall(){
+	public function onInstall($stage){
 		Block::Add("user-card");
+		Settings::Add("groups_amount", 1);
 	}
 
 	public function onUninstall(){
@@ -26,18 +28,10 @@ class Users extends \uCMS\Core\Extensions\Extension implements \uCMS\Core\Extens
 	}
 
 	public function onAdminAction($action){
-		$title = "";
+		$title = tr("Users");
 		switch ($action) {
-			case 'users':
-				$title = tr("Users");
-			break;
-
 			case 'users/groups':
 				$title = tr("Groups");
-			break;
-
-			case 'settings/users':
-				$title = tr("Users");
 			break;
 		}
 		ControlPanel::SetTitle($title);
