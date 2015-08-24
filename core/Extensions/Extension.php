@@ -136,7 +136,7 @@ class Extension extends AbstractExtension{
 		self::$list = array();
 		self::$usedActions = array();
 		self::$usedAdminActions = array();
-		self::$defaultList = array('admin', 'filemanager', 'users', 'entries');
+		self::$defaultList = array('admin', 'filemanager', 'users', 'menus', 'entries');
 		$externalList = is_array(unserialize(Settings::Get('extensions'))) ? unserialize(Settings::Get('extensions')) : array();
 		$extensions = array_merge(self::$defaultList, $externalList);
 		$extensionActions = $extensionAdminActions = array();
@@ -271,9 +271,11 @@ class Extension extends AbstractExtension{
 			$dataExists = ( file_exists(ABSPATH.self::PATH.$name.'/extension.php') && file_exists(ABSPATH.self::PATH.$name.'/'.self::INFO) );
 	
 			if ( $dataExists ){
+				$extensionClass = "\\uCMS\\Core\\Extensions\\Extension";
+				$extensionInterface = "\\uCMS\\Core\\Extensions\\IExtension";
 				include_once(ABSPATH.self::PATH.$name.'/extension.php');
-				return ( class_exists($name) && is_subclass_of($name, "Extension") 
-					&& in_array("IExtension", class_implements($name)) );
+				return ( class_exists($name) && is_subclass_of($name, $extensionClass) 
+					&& in_array($extensionInterface, class_implements($name)) );
 	
 			}
 			return false;
