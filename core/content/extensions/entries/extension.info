@@ -13,8 +13,9 @@
 		"other"
 	],
 	"includes":[
-		"include/Entry.php",
-		"include/EntryType.php"
+		"include/Term.php",
+		"include/EntryType.php",
+		"include/Entry.php"
 	],
 	"admin": {
 		"separator": ["", "home"],
