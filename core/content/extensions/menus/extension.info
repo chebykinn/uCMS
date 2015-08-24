@@ -10,11 +10,11 @@
 	],
 
 	"admin": {
-		"Menus": "menus"
+		"Menu": "menu"
 	},
 
 	"adminPages": {
-		"menus": "admin/menus.php"
+		"menu": "admin/menu.php"
 	},
 
 	"includes": [
