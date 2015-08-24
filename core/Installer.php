@@ -53,7 +53,7 @@ class Installer{
 		self::$instance = $this;
 	}
 
-	public function checkStage(){
+	private function checkStage(){
 		// First we check configuration file
 		$connected = is_object(DatabaseConnection::GetDefault()) ? DatabaseConnection::GetDefault()->isConnected() : false;
 		if (!$connected) {
@@ -133,7 +133,7 @@ class Installer{
 		exit;
 	}
 
-	public function prepareStage(){
+	private function prepareStage(){
 		$this->stageCallback = "{$this->currentStage}Stage";
 		$isPosted = (isset($_POST['stage']) && $_POST['stage'] === $this->currentStage);
 		$nextStage = "";
@@ -265,7 +265,7 @@ class Installer{
 		$this->stageCallback();
 	}
 
-	public function installForm($name, $button = ''){
+	private function installForm($name, $button = ''){
 		if ( empty($button) ){
 			$button = tr('Next');
 		}
@@ -274,7 +274,7 @@ class Installer{
 		return $form;
 	}
 
-	public function languageStage(){
+	private function languageStage(){
 		$form = $this->installForm('language-form', 'Continue');
 		$languages = array(
 			"en_US" => "English",
@@ -284,7 +284,7 @@ class Installer{
 		$form->render();
 	}
 
-	public function welcomeStage(){
+	private function welcomeStage(){
 		print '<p>';
 		p('Welcome to μCMS! Before you can enjoy your site, we need some information on database, where all data will be stored.<br>After a few steps of configuration you\'ll be ready to use your site.');
 		print '</p>';
@@ -293,7 +293,7 @@ class Installer{
 		$form->render();
 	}
 
-	public function configStage(){
+	private function configStage(){
 		$form = $this->installForm('config-form');
 		$form->addField('server', 'text', tr('Database Server:'), tr('Most likely it\'s "localhost".'), 'localhost', tr('server'));
 		$form->addField('user', 'text', tr('User:'), tr('Login of database user, provided by website hosting.'), 'root', tr('user'));
@@ -306,7 +306,7 @@ class Installer{
 		print '</p>';
 	}
 
-	public function connectionErrorStage(){
+	private function connectionErrorStage(){
 		print '<p>';
 		p("An error occurred while connecting to database, this means either you have provided incorrect username and password, or we can't reach your database server.<br>Please make sure that you're entered correct data and try again. If this error still occurs, contact server administrator.");
 		print '</p>';
@@ -315,7 +315,7 @@ class Installer{
 		$form->render();
 	}
 
-	public function tablesStage(){
+	private function tablesStage(){
 		print '<p>';
 		p('There is lack of our tables in your database, need to create some!');
 		print '</p>';
@@ -323,7 +323,7 @@ class Installer{
 		$form->render();
 	}
 
-	public function siteInformationStage(){
+	private function siteInformationStage(){
 		print '<p>';
 		p('Just a few more steps to go!');
 
@@ -335,21 +335,21 @@ class Installer{
 		print '</p>';
 	}
 
-	public function extensionsStage(){
+	private function extensionsStage(){
 		Extension::Install('print');
 	}
 
-	public function checkSettings(){
+	private function checkSettings(){
 		// TODO: Implement
 		return self::SITEINFO_STAGE;
 	}
 
-	public function updateStage(){
+	private function updateStage(){
 		// TODO: Implement
 
 	}
 
-	public function doneStage(){
+	private function doneStage(){
 		// TODO: Implement
 
 	}
@@ -366,6 +366,10 @@ class Installer{
 		if( method_exists($this, $this->stageCallback) ){
 			return call_user_func_array(array($this, $this->stageCallback), $args);
 		}
+    }
+
+    private function addSettings(){
+
     }
 }
 ?>
