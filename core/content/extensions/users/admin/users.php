@@ -20,9 +20,9 @@ $usersTable->addColumn(tr('User'), true, 'manage users', '20%', true);
 $usersTable->addColumn(tr('Group'), true, 'manage users', 0, true);
 $usersTable->addColumn(tr('Email'), true, 'manage users');
 $usersTable->addColumn(tr('IP'), true, 'manage users');
-$usersTable->addColumn(tr('Last login'), true, 'manage users', "#lastlogin#");
-$usersTable->addColumn(tr('Last visit'), true, 'manage users', "#visited#");
-$usersTable->addColumn(tr('Registered'), true, 'manage users', "#created#");
+$usersTable->addColumn(tr('Last login'), true, 'manage users');
+$usersTable->addColumn(tr('Last visit'), true, 'manage users');
+$usersTable->addColumn(tr('Registered'), true, 'manage users');
 foreach ($users as $user) {
 	$usersTable->setInfo('idKey', $user['uid']);
 	$usersTable->setInfo('status', $user['status']);
