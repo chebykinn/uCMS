@@ -3,8 +3,9 @@ namespace uCMS\Core\Extensions\Users;
 use uCMS\Core\Session;
 use uCMS\Core\Settings;
 use uCMS\Core\Database\Query;
+use uCMS\Core\Object;
 use uCMS\Core\Tools;
-class User{
+class User extends Object{
 	const AVATARS_PATH = 'content/uploads/avatars';
 	protected $uid;
 	protected $name;
@@ -30,7 +31,7 @@ class User{
 		return self::$currentUser;
 	}
 
-	public function __construct($id){
+	public function __construct($id = 0){
 		$data = array();
 		$fromArray = false;
 		if( !empty($id) ){
@@ -56,17 +57,27 @@ class User{
 		$fields = array_keys( get_object_vars($this) );
 		foreach ($data as $field => $value) {
 			if(  in_array($field, $fields) ){
-				if( $field == 'password' && $fromArray ){ // if user object was created from array we should encrypt given password 
-					$value = User::encryptPassword($value);
+				if( $field == 'password' && $fromArray ){ 
+					// If user object was created from array we should encrypt given password 
+					$value = User::EncryptPassword($value);
 				}
 				
 				$this->$field = $value;
 			}else{
-				if($field == 'gid'){ // if we got group id from base we should create group object
+				if($field == 'gid'){
+					// If we got group id from base we should create group object
 					$this->group = new Group($value);
 				}
 			}
 		}
+	}
+
+	public static function FromArray($data, $prefixes = array(), $namespaces = array(), $returnClass = "\\uCMS\Core\Extensions\Users\\User"){
+		$prefixes = array("group" => 'Group');
+		$namespaces = array("Group" => __NAMESPACE__);
+		$user = parent::FromArray($data, $prefixes, $namespaces, $returnClass);
+		// $user->password = User::EncryptPassword($user->password);
+		return $user;
 	}
 
 	public function getID(){
@@ -101,7 +112,8 @@ class User{
 		if( !empty($this->group) ){
 			return $this->group;
 		}
-		return new Group(0); // should be guest group?
+		// Return Guest group
+		return new Group();
 	}
 
 	public function getStatus(){

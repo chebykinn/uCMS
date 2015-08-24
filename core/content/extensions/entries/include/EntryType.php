@@ -1,6 +1,8 @@
 <?php
-namespace uCMS\Core\Extensions\Entries\Entry;
-class EntryType{
+namespace uCMS\Core\Extensions\Entries;
+
+use uCMS\Core\Object;
+class EntryType extends Object{
 	/**
 	 * ID of type.
 	 *
@@ -39,5 +41,20 @@ class EntryType{
 	var $uid;
 	var $gid;
 	var $permission;
+	var $terms;
+
+	public static function FromArray($data, $prefixes = array(), $namespaces = array(), $returnClass = "\\uCMS\\Core\\Extensions\\Entries\\EntryType"){
+		// TODO: Terms
+		$type = parent::FromArray($data, $prefixes, $namespaces, $returnClass);
+		return $type;
+	}
+
+	public function getID(){
+		return $this->type;
+	}
+
+	public function getName(){
+		return $this->name;
+	}
 }
 ?>

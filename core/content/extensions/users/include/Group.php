@@ -1,16 +1,25 @@
 <?php
 namespace uCMS\Core\Extensions\Users;
 use uCMS\Core\Database\Query;
+use uCMS\Core\Object;
 
-class Group{
+class Group extends Object{
 	private $permissions;
 	private $gid;
 	private $name;
 	private $position;
+	const ADMINISTRATOR = 1;
+	const MODERATOR     = 2;
+	const TRUSTED       = 3;
+	const USER          = 4;
+	const BANNED        = 5;
+	const GUEST         = 6;
 
 	public function __construct(){
 		$args = func_get_args();
 		$data = array();
+		// TODO: move to FromArray
+		// TODO: Set default group to guest.
 		if( count($args) == 1){
 			if( is_array($args[0]) ){
 				$data = $args[0];
@@ -39,6 +48,14 @@ class Group{
 				}
 			}
 		}
+	}
+
+	public static function FromArray($data, $prefixes = array(), $namespaces = array(), $returnClass = "\\uCMS\Core\Extensions\Users\\Group"){
+		//TODO: Permissions
+		// $prefixes = array("group" => 'Group');
+		// $namespaces = array("Group" => __NAMESPACE__);
+		$group = parent::FromArray($data, $prefixes, $namespaces, $returnClass);
+		return $group;
 	}
 
 	public function getID(){
