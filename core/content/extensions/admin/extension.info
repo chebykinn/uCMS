@@ -14,6 +14,8 @@
 		"Extensions": "extensions",
 		"@Themes": "themes",
 		"separator2": "",
+		"Update": "update",
+		"separator3": "",
 		"Settings": "settings"
 	},
 	"adminPages": {
@@ -23,7 +25,8 @@
 		"phpinfo": "pages/phpinfo.php",
 		"extensions": "pages/extensions.php",
 		"themes": "pages/themes.php",
-		"settings": "pages/settings.php"
+		"settings": "pages/settings.php",
+		"update": "pages/update.php"
 	},
 	"includes": [
 		
