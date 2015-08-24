@@ -3,12 +3,13 @@ namespace uCMS\Core\Extensions\Entries;
 use uCMS\Core\Extensions\Users\User;
 use uCMS\Core\Extensions\Users\Group;
 use uCMS\Core\Settings;
-class Entry{
+use uCMS\Core\Object;
+class Entry extends Object{
 	const DRAFT = 0;
 	const PUBLISHED = 1;
 	const PINNED = 2;
 	var $eid;
-	var $user;
+	var $author;
 	var $type;
 	var $status;
 	var $comments;
@@ -27,20 +28,33 @@ class Entry{
 
 	}
 
-	public static function FromArray($data){
-		if( is_array($data) ){
-			$entry = new self();
-			$fields = array_keys(get_object_vars($entry));
-			foreach ($data as $key => $value) {
-				if( in_array($key, $fields) ){
-					$entry->$key = $value;
-				}
-				if( $key == 'uid' ){
-					$entry->user = new User($key);
-				}
-			}
-			return $entry;
-		}
+	public static function FromArray($data, $prefixes = array(), $namespaces = array(), $returnClass = "\\uCMS\\Core\\Extensions\\Entries\\Entry"){
+		$prefixes = array(
+			'author' => 'User',
+			'terms'  => 'Term',
+			'type'   => 'EntryType'
+		);
+		$namespaces = array(
+			'User' => "\\uCMS\\Core\\Extensions\\Users",
+			'Term' => __NAMESPACE__,
+			'EntryType' => __NAMESPACE__
+		);
+
+		$entry = parent::FromArray($data, $prefixes, $namespaces, $returnClass);
+		return $entry;
+		// if( is_array($data) ){
+		// 	$entry = new self();
+		// 	$fields = array_keys(get_object_vars($entry));
+		// 	foreach ($data as $key => $value) {
+		// 		if( in_array($key, $fields) ){
+		// 			$entry->$key = $value;
+		// 		}
+		// 		if( $key == 'uid' ){
+		// 			$entry->author = new User($key);
+		// 		}
+		// 	}
+		// 	return $entry;
+		// }
 	}
 
 	public function getID(){
@@ -54,8 +68,7 @@ class Entry{
 
 
 	public function getAuthor(){
-		// TODO: user object
-		return $user;
+		return $this->author;
 	}
 
 
@@ -66,6 +79,10 @@ class Entry{
 
 	public function getTerms($type){
 
+	}
+
+	public function getType(){
+		return $this->type;
 	}
 
 	public function getContent($short = false){
@@ -133,8 +150,8 @@ class Entry{
 		return true;
 	}
 
-	public static function GetList($type, $start, $limit){
-
+	public static function GetList($mode = self::MODE_BASE, $type = "", $sort = array(), $start = 0, $limit = self::LIMIT, $condition = "", $columns = array()){
+		
 	}
 }
 ?>
