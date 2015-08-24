@@ -28,19 +28,27 @@ class Tools{
 					}
 					if( is_array($path) && isset($path[1]) ){
 						$name = $path[1];
-						// TODO: fix install theme stealing ownership
-						if( Extension::IsLoaded($name) || Theme::IsExists($name) ){
+						if( Extension::IsLoaded($name) ){ 
+							$found = true;
+							break;
+						}
+						if( Theme::IsExists($name) ){
 							$found = true;
 						}
-					}else{
-						// $name = 'core';
 					}
 				}
-				// TODO: Add themes detection
-				if($found) break;
 			}
 		}
+		// \uCMS\Core\Debug::PrintVar($name);
 		return $name;
+	}
+
+	public static function PrepareSQL($value){
+
+	}
+
+	public static function PrepareXSS($value){
+
 	}
 
 }
