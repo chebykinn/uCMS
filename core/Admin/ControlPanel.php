@@ -5,6 +5,9 @@ use uCMS\Core\Extensions\Extension;
 use uCMS\Core\Extensions\Users\User;
 use uCMS\Core\Page;
 use uCMS\Core\Debug;
+use uCMS\Core\Settings;
+use uCMS\Core\Tools;
+use uCMS\Core\Notification;
 class ControlPanel{
 	private static $sidebar;
 	private static $action = Page::OTHER_ACTION;
@@ -150,7 +153,7 @@ class ControlPanel{
 		$settingsTitle = (self::IsSettingsPage() && !empty($settingsAction) )
 		? tr('Settings').$delimeter : "";
 		$newTitle = $settingsTitle.$title;
-		Theme::GetCurrent()->setTitle(self::TITLE.$delimeter.$newTitle);
+		Theme::GetCurrent()->setTitle($newTitle.$delimeter.self::TITLE);
 		Theme::GetCurrent()->setPageTitle($newTitle);
 	}
 
@@ -179,7 +182,7 @@ class ControlPanel{
 	}
 
 	public static function GetSettingsAction(){
-		return Page::GetCurrent()->getKeyValue('settings');
+		return Page::GetCurrent()->getKeyValue(self::SETTINGS_ACTION);
 	}
 
 	public static function PrintSidebar($root = 0, $checkSelection = false){
@@ -221,7 +224,7 @@ class ControlPanel{
 
 	public static function LoadTemplate(){
 		$currentAction = self::GetAction();
-		$extension = Extension::getExtensionByAdminAction($currentAction);
+		$extension = Extension::GetExtensionByAdminAction($currentAction);
 		if( is_object($extension) ){
 			$pageFile = $extension->getAdminPageFile($currentAction);
 		}
@@ -232,6 +235,33 @@ class ControlPanel{
 			$homePage = Page::FromAction(self::ACTION);
 			$homePage->go();
 		}
+	}
+
+	public static function UpdateSettings(){
+		// TODO: Consider use some method for multiple changes in one query
+		if( User::Current()->can("update core settings") ){
+			$failures = array();
+			unset($_POST['settings']);
+			foreach ($_POST as $name => $value) {
+				if( self::GetSettingsAction() === "" ){
+					// If core settings are being updated, we need to override admin extension with core
+					Tools::OverrideOwner();
+				}
+				$result = Settings::Update($name, $value);
+				if( !$result ){
+					$failures[] = $name;
+				}
+			}
+			if( !empty($failures) ){
+				$list = implode("<br>", $failures);
+				$fail = new Notification(tr("Error: Some settings weren't updated: @s", $list), Notification::ERROR);
+				$fail->add();
+			}else{
+				$success = new Notification(tr("Settings have been successfully updated."), Notification::SUCCESS);
+				$success->add();
+			}
+		}
+		Page::Refresh();
 	}
 }
 ?>
