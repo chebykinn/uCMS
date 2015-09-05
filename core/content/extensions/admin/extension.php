@@ -30,7 +30,12 @@ class Admin extends \uCMS\Core\Extensions\Extension implements \uCMS\Core\Extens
 	public function onAdminAction($action){
 		switch ($action) {
 			case 'home':       $title = tr('Dashboard');       break;
-			case 'settings':   $title = tr("Settings");        break; 
+			case 'settings':
+				if ( isset($_POST['settings']) ){
+					ControlPanel::UpdateSettings();
+				}
+				$title = tr("Settings");
+			break; 
 			case 'extensions': $title = tr("Extensions");      break; 
 			case 'themes':     $title = tr("Themes");          break;
 			case 'tools':      $title = tr("Tools");           break;
