@@ -193,3 +193,47 @@ h1, h2{
 	float: right;
 	margin-right: 20%;
 }
+
+.ucms-form{
+	font-size: 15px;
+	/*width: 100%;*/
+	line-height: 150%;
+}
+
+.form-item{
+	clear: both;
+	margin: 10px;
+	padding: 20px 0;
+}
+
+.form-item label{
+	font-weight: bold;
+	float: left;
+	width: 20%;
+}
+
+.form-item input:not([type=submit]), .form-item select{
+	float: left;
+	padding: 5px;
+}
+
+.form-item input[type=submit]{
+	background: #3C89E0;
+	border: 1px solid #1a5eac;
+	padding: 5px 10px 5px 10px;
+	border-radius: 4px;
+	color: #fff;
+	font-size: 16px;
+}
+
+.form-item input[type=submit]:hover{
+	text-decoration: none;
+	background: #4196F2;
+	cursor: pointer;
+	color: #fff;
+}
+
+.form-item .field-description{
+	float: left;
+	margin-left: 10px;
+}
