@@ -3,7 +3,7 @@ namespace uCMS\Core\Language;
 use uCMS\Core\Settings;
 use uCMS\Core\Session;
 class Language{
-	const PATH = 'content/languages';
+	const PATH = 'content/languages/';
 	private static $instance;
 	private $langStrings;
 
@@ -25,7 +25,8 @@ class Language{
 
 	public static function Init(){
 		$sessionLang = Session::GetCurrent()->get('language');
-		$language = !empty($sessionLang) ? $sessionLang : Settings::Get('language');
+		$storedValue = Settings::Get('language');
+		$language = (!empty($sessionLang) && $sessionLang === $storedValue) ? $sessionLang : Settings::Get('language');
 		Language::GetCurrent()->load($language);
 	}
 
@@ -42,7 +43,7 @@ class Language{
 		// 	setlocale(LC_ALL, "en_US.utf8");	
 		// } // Setting locale for date and other stuff
 		$langFile = ABSPATH.self::PATH.$langName.'/core.po';
-		//$this->loadStrings($langFile);
+		$this->loadStrings($langFile);
 	}
 
 	public function loadStrings($langFile){
@@ -60,6 +61,15 @@ class Language{
 				}
 			}
 		}
+	}
+
+	public static function GetList(){
+		// TODO: Load full list from server
+		$languages = array(
+			"English" => "en_US",
+			"Русский" => "ru_RU" 
+		);
+		return $languages;
 	}
 
 	public function get($string, $args = array()){

@@ -276,10 +276,7 @@ class Installer{
 
 	private function languageStage(){
 		$form = $this->installForm('language-form', 'Continue');
-		$languages = array(
-			"en_US" => "English",
-			"ru_RU" => "Russian"
-		); // TODO: Generate list of languages
+		$languages = Language::GetList();
 		$form->addSelectField($languages, "languages", "", "", "en_US", 16);
 		$form->render();
 	}
