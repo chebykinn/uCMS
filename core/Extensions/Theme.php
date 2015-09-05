@@ -44,7 +44,7 @@ class Theme extends AbstractExtension{
 		$names = array();
 		$exclude = array('.', '..');
 		if( UCMS_DEBUG ){
-			$dirs = scandir(self::CORE_PATH);// array_filter(scandir(self::PATH), 'is_dir');
+			$dirs = @scandir(self::CORE_PATH);// array_filter(scandir(self::PATH), 'is_dir');
 			if ( $dh = @opendir(self::CORE_PATH) ) {
 				while ( ($theme = readdir($dh)) !== false ) {
 					/**
@@ -57,7 +57,7 @@ class Theme extends AbstractExtension{
 				closedir($dh);
 			}
 		}
-		$dirs = scandir(self::PATH);// array_filter(scandir(self::PATH), 'is_dir');
+		$dirs = @scandir(self::PATH);// array_filter(scandir(self::PATH), 'is_dir');
 		if ( $dh = @opendir(self::PATH) ) {
 			while ( ($theme = readdir($dh)) !== false && !in_array($theme, $exclude) ) {
 				/**
