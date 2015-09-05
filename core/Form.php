@@ -36,7 +36,8 @@ class Form{
 			'url',
 			'month',
 			'week',
-			'textarea'
+			'textarea',
+			'select'
 		);
 	}
 
@@ -53,7 +54,21 @@ class Form{
 	}
 
 	public function addHiddenField($name, $value){
-		$this->addField($name, 'hidden', "", "", $value, "", false);
+		if( isset($this->fields[$name]) ){
+			$field = array(
+				'name' => htmlspecialchars(strip_tags($name)),
+				'type' => 'hidden',
+				'title' => "",
+				'defaultValue' => htmlspecialchars(strip_tags($value)),
+				'description' => "",
+				'require' => false,
+				'placeholder' => "",
+				'printed' => false
+			);
+			array_unshift($this->fields, $field);
+		}else{
+			$this->addField($name, 'hidden', "", "", $value, "", false);
+		}
 	}
 
 	public function addField($name, $type, $title = "", $description = "", $defaultValue = "", $placeholder = "", $require = true){
@@ -70,20 +85,29 @@ class Form{
 			);
 	}
 
+	public function addFlag($name, $title = "", $description = "", $set = false){
+		$this->addField($name, 'checkbox', $title, $description, 1, "" , false);
+		$this->fields[$name]['checked'] = $set;
+		$this->addHiddenField($name, 0);
+	}
+
 	public function addSelectField($list, $name, $title = "", $description = "", $defaultValue = "", $size = 1, $require = true){
 		if( is_array($list) ){
-			$this->fields[$name] = array(
-			'name' => htmlspecialchars(strip_tags($name)),
-			'type' => 'select',
-			'title' => strip_tags($title),
-			'defaultValue' => htmlspecialchars(strip_tags($defaultValue)),
-			'description' => strip_tags($description, '<a><p><br>'),
-			'require' => (bool)$require,
-			'placeholder' => "",
-			'list' => $list,
-			'size' => (int) $size,
-			'printed' => false
-			);
+			$this->addField($name, 'select', $title, $description, $defaultValue, "", $require);
+			$this->fields[$name]['list'] = $list;
+			$this->fields[$name]['size'] = (int) $size;
+			// $this->fields[$name] = array(
+			// 'name' => htmlspecialchars(strip_tags($name)),
+			// 'type' => 'select',
+			// 'title' => strip_tags($title),
+			// 'defaultValue' => htmlspecialchars(strip_tags($defaultValue)),
+			// 'description' => strip_tags($description, '<a><p><br>'),
+			// 'require' => (bool)$require,
+			// 'placeholder' => "",
+			// 'list' => $list,
+			// 'size' => (int) $size,
+			// 'printed' => false
+			// );
 		}
 		return false;
 	}
@@ -113,7 +137,11 @@ class Form{
 		$c = 0;
 		foreach ($fields as &$field) {
 			if( !$field['printed'] ){
-				$require = $field['require'] ? ' required' : ''; // fix checkbox
+				$checked = "";
+				if( $field['type'] === 'checkbox'){
+					$checked = $field['checked'] ? ' checked' : '';
+				}
+				$require = $field['require'] ? ' required' : '';
 				$placeholder = !empty($field['placeholder']) ? ' placeholder="'.$field['placeholder'].'"' : '';
 				if( $field['type'] != 'hidden' ){
 					print "<div class=\"form-item form-item-{$field['name']}\">";
@@ -130,7 +158,7 @@ class Form{
 					case 'select':
 						$size = $field['size'] > 1 ? " size=\"{$field['size']}\"" : "";
 						print "<select name=\"{$field['name']}\"$size$require>";
-						foreach ($field['list'] as $value => $title) {
+						foreach ($field['list'] as $title => $value) {
 							$selected = $value === $field['defaultValue'] ? " selected" : "";
 							print "<option value=\"$value\"$selected>$title</option>\n";
 						}
@@ -138,7 +166,7 @@ class Form{
 					break;
 					
 					default:
-						print "<input type=\"{$field['type']}\" name=\"{$field['name']}\" value=\"{$field['defaultValue']}\"$placeholder$require>\n";
+						print "<input type=\"{$field['type']}\" name=\"{$field['name']}\" value=\"{$field['defaultValue']}\"$placeholder$require$checked>\n";
 					break;
 				}
 				if( !empty($field['description']) ){
