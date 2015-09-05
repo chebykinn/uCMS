@@ -65,7 +65,8 @@ if(!NICE_LINKS){
 				if($match != $sources[$i]){
 					if(preg_match("/@/", $sources[$i])){
 						$match = $udb->parse_value($match);
-						$post_page = $udb->get_row("SELECT `id`,`title` FROM `".UC_PREFIX."posts` WHERE `alias` = '$match' or `id` = '$match' or `title` = '$match' AND `publish` > 0 LIMIT 1");
+						$id_check = is_int($match) ? "or `id` = '$match'" : "";
+						$post_page = $udb->get_row("SELECT `id`,`title` FROM `".UC_PREFIX."posts` WHERE `alias` = '$match'$id_check or `title` = '$match' AND `publish` > 0 LIMIT 1");
 						if($post_page){ 
 							if(isset($sources[$i+1])){
 								if(preg_match("/@/", $sources[$i+1])){
