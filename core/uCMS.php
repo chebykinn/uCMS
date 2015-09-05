@@ -16,6 +16,11 @@ class uCMS{
 		// TODO: more complex default value
 		return empty($storedValue) ? '/' : $storedValue;
 	}
+
+	public static function GetDomain(){
+		$storedValue = Settings::Get("site_domain");
+		return empty($storedValue) ? $_SERVER['REQUEST_URI'] : $storedValue;
+	}
 }
 
 if( !defined("UCMS_DIR") ){
