@@ -9,7 +9,7 @@ use uCMS\Core\Admin\ControlPanel;
 
 $action = Page::GetCurrent()->getAction();
 $adminAction = ControlPanel::GetAction();
-$siteName = Settings::Get("site_title");
+$siteName = Settings::Get("site_name");
 $siteDescription = Settings::Get("site_description");
 $queriesCount = DatabaseConnection::GetDefault()->getQueriesCount(); //?
 $loadTime = Loader::GetInstance()->getLoadTime(); //?
