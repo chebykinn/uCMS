@@ -42,19 +42,6 @@ class Entry extends Object{
 
 		$entry = parent::FromArray($data, $prefixes, $namespaces, $returnClass);
 		return $entry;
-		// if( is_array($data) ){
-		// 	$entry = new self();
-		// 	$fields = array_keys(get_object_vars($entry));
-		// 	foreach ($data as $key => $value) {
-		// 		if( in_array($key, $fields) ){
-		// 			$entry->$key = $value;
-		// 		}
-		// 		if( $key == 'uid' ){
-		// 			$entry->author = new User($key);
-		// 		}
-		// 	}
-		// 	return $entry;
-		// }
 	}
 
 	public function getID(){
