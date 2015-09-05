@@ -141,11 +141,11 @@ class Page{
 		return self::$currentPage;
 	}
 
-	public static function Refresh($delay = 0){
+	public static function Refresh($delay = 0, $noRedirect = false){
 		/**
 		* @todo add params for keeping GET and keys or somewhat
 		*/
-		$url = $_SERVER['PHP_SELF'];
+		$url = $_SERVER['REQUEST_URI'];
 		if(headers_sent()){
 			echo '<script type="text/javascript">';
 			echo 'window.location.href="'.$url.'";';
@@ -155,8 +155,13 @@ class Page{
 			echo '</noscript>';
 		}
 		else{
-			header("Refresh: $delay; url=$url");
-			exit;
+			if( $noRedirect ){
+				header("Refresh: $delay; url=$url");
+				exit;
+			}else{
+				// Added this to prevent browsers ask about resending form data
+				Page::Redirect($url);
+			}
 		}
 	}
 
