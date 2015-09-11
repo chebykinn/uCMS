@@ -136,7 +136,7 @@ class Extension extends AbstractExtension{
 		self::$list = array();
 		self::$usedActions = array();
 		self::$usedAdminActions = array();
-		self::$defaultList = array('admin', 'filemanager', 'users', 'menus', 'entries');
+		self::$defaultList = array('admin', 'filemanager', 'users', 'menus', 'entries', 'comments');
 		$externalList = is_array(unserialize(Settings::Get('extensions'))) ? unserialize(Settings::Get('extensions')) : array();
 		$extensions = array_merge(self::$defaultList, $externalList);
 		$extensionActions = $extensionAdminActions = array();
