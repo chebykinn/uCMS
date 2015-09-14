@@ -56,12 +56,13 @@ class Extension extends AbstractExtension{
 		$this->actions      = !empty($decodedInfo['actions'])      ? $decodedInfo['actions']      : "";
 		$this->admin        = !empty($decodedInfo['admin'])        ? $decodedInfo['admin']        : array();
 		$this->adminPages   = !empty($decodedInfo['adminPages'])   ? $decodedInfo['adminPages']   : "";
+		$separatorIndex = 1;
 		foreach ($this->admin as $key => &$item) {
 			if( is_array($item) && count($item) == 2 ){ // if sidebar position is set
 				if( empty($item[0]) ){
 					$item[0] = $key;
 					if( strpos($item[0], "separator" ) !== false ){
-						$item[0] .= rand(0, 1000);
+						$item[0] .= $separatorIndex++;
 					}
 				}
 				$this->sidebarPosition[$item[0]] = $item[1];
@@ -70,7 +71,7 @@ class Extension extends AbstractExtension{
 				if( empty($item) ){
 					$item = $key;
 					if( strpos($item, "separator" ) !== false ){
-						$item .= rand(0, 1000);
+						$item .= ++$separatorIndex;
 					}
 				}
 			}
