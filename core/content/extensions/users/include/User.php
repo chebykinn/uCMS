@@ -5,8 +5,13 @@ use uCMS\Core\Settings;
 use uCMS\Core\Database\Query;
 use uCMS\Core\Object;
 use uCMS\Core\Tools;
+use uCMS\Core\Form;
+use uCMS\Core\Page;
+use uCMS\Core\Notification;
 class User extends Object{
 	const AVATARS_PATH = 'content/uploads/avatars';
+	const LOGIN_ACTION = 'login';
+	const LOGOUT_ACTION = 'logout';
 	protected $uid;
 	protected $name;
 	protected $password;
@@ -232,15 +237,16 @@ class User extends Object{
 		$lastlogin->update(array('lastlogin' => time()))->where()->condition("uid", '=', $userID)->execute();
 		Session::getCurrent()->Authorize($hash);
 		//save cookies if needed
-		if($saveCookies){
+		if( $saveCookies ){
 			Session::getCurrent()->setCookie('usid_saved', $hash); //save cookie for year
 		}
+		return true;
 	}
 
 	public static function Deauthorize($userID = 0){
-		if( $userID == User::current()->getID() ){
-			Session::getCurrent()->deleteCookie('usid_saved');
-			Session::getCurrent()->destroy();
+		if( $userID == User::Current()->getID() || $userID === 0 ){
+			Session::GetCurrent()->deleteCookie('usid_saved');
+			Session::GetCurrent()->destroy();
 		}
 	}
 
@@ -270,6 +276,39 @@ class User extends Object{
 		$check = new Query('{users}');
 		$user = $check->select('uid')->where()->condition('uid', '=', $uid)->execute();
 		return !empty($user);
+	}
+
+	public static function Authenticate($login, $password, $saveCookies = false){
+		// /[^a-zA-Z0-9-_@]/
+		$result = false;
+		$password = self::EncryptPassword($password);
+		$saveCookies = (bool) $saveCookies;
+		$query = new Query("{users}");
+		$check = $query->select("uid")->where()->condition("name", "=", $login)->_or()->condition("email", "=", $login)->limit(1)->execute();
+		if( !empty($check) ){
+			$id = $check[0]['uid'];
+			$result = self::Authorize($id, $saveCookies);
+		}else{
+			// TODO: login attempts
+		}
+
+		if( !$result ){
+			$error = new Notification(tr("Wrong username or password"), Notification::ERROR);
+			$error->add();
+		}
+		return $result;
+	}
+
+	public static function IsAuthenticationRequested(){
+		return ( isset($_POST['login-form']) && isset($_POST['login']) && isset($_POST['password']) && isset($_POST['save_cookies']) );
+	}
+
+	public static function GetLoginForm(){
+		$form = new Form("login-form", Page::FromAction(self::LOGIN_ACTION), tr("Log In"));
+		$form->addField("login", "text", tr("Username:"), "", "", tr("username or email"));
+		$form->addField("password", "password", tr("Password:"), "", "", tr("password"));
+		$form->addFlag("save_cookies", tr("Remember Me"));
+		return $form;
 	}
 }
 ?>
