@@ -10,7 +10,8 @@
 	],
 
 	"admin": {
-		"Comments": "comments"
+		"Comments": "comments",
+		"separator": ""
 	},
 
 	"adminPages": {
