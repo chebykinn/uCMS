@@ -2,7 +2,8 @@
 namespace uCMS\Core;
 
 use uCMS\Core\Database\Query;
-class Session{
+use uCMS\Core\ORM\Model;
+class Session extends Model{
 	private static $instance;
 	private $sid;
 	private $uid;
@@ -24,26 +25,31 @@ class Session{
 		self::$instance = new self();
 	}
 
-	public function __construct(){
-		if (!isset($_SESSION)){
+	public function init(){
+		$this->tableName('sessions');
+		$this->primaryKey('sid');
+		$this->belongsTo('\\uCMS\\Core\\Extensions\\Users\\User', array('bind' => 'user'));
+
+		foreach ($_COOKIE as $key => $value) {
+			if( strpos($key, 'USID') !== false ){
+				$this->sid = $value;
+				session_id($value);
+				$this->_authorized = true;
+				$this->_saved = true;
+				if( strpos($key, 'tmpUSID') !== false ){
+					$this->deleteCookie($key);
+					$this->_saved = false;
+				}
+			}
+		}
+		if ( !isset($_SESSION) ){
 			session_start();
 		}
 		self::$idleLifetime = 2 * 3600;
 		ini_set('session.cookie_lifetime', 0); // set session life until the browser closes
 		ini_set('session.cookie_httponly', 1); // set session life until the browser closes
 		ini_set("session.gc_maxlifetime", self::$idleLifetime);
-		if( !empty($_SESSION["usid".session_id()]) ){
-			$this->sid = $_SESSION["usid".session_id()];
-			$this->_authorized = true;
-		}
-		if( !empty($_COOKIE["usid_saved"]) ){
-			$this->sid = $_COOKIE["usid_saved"];
-			$this->_authorized = true;
-			$this->_saved = true;
-		}
-		if( !$this->_authorized ){
-			$this->sid = session_id();
-		}
+		$this->sid = session_id();
 		$this->ip = $this->getIPAddress();
 		$this->updateTime = time();
 		if( $this->_saved ) $this->updateTime = 0;
@@ -54,29 +60,33 @@ class Session{
 		return $this->_authorized;
 	}
 
-	public function Authorize($hash){
-		$this->sid = $_SESSION["usid".session_id()] = $hash;
+	public function authorize($hash){
+		$this->sid = $hash;
+		$this->setCookie("tmpUSID".session_id(), $hash, time() + 5);
 		$this->_authorized = true;
 	}
 
-	public function Deauthorize(){
-		if( $this->_authorized ){
-			$this->delete("usid".session_id());
-			$this->deleteCookie("usid_saved");
+	public function deauthorize(){
+		session_regenerate_id();
+		foreach ($_COOKIE as $key => $value) {
+			if( strpos($key, 'USID') !== false ){
+				$this->deleteCookie($key);
+			}
 		}
 	}
 
 	public function load(){
-		if( $this->_authorized ){
-			$query = new Query('{sessions}');
-			$data = $query->select(array('sessiondata', 'uid', 'sid'))->where()->condition('sid', '=', $this->sid)->execute();
-			if( !empty($data) ){
-				session_decode($data[0]['sessiondata']);
-				$this->uid = intval($data[0]['uid']);
-				$this->sid = $data[0]['sid'];
-				$this->isLoaded = true;
-			}else{
-				$this->Deauthorize();
+		$query = new Query('{sessions}');
+		$data = $query->select(array('sessiondata', 'uid', 'sid'))->where()->condition('sid', '=', $this->sid)->execute();
+		if( !empty($data) ){
+			session_decode($data[0]['sessiondata']);
+			$this->uid = intval($data[0]['uid']);
+			$this->sid = $data[0]['sid'];
+			$this->isLoaded = true;
+			$this->_authorized = true;
+		}else{
+			if( $this->_saved ){
+				$this->deauthorize();
 			}
 		}
 
@@ -86,7 +96,6 @@ class Session{
 		$query = new Query('{sessions}');
 		if( $this->_authorized ){
 			$data = @session_encode();
-			$data = str_replace("usid".session_id()."|s:32:\"$this->sid\";", "", $data);
 			if($this->isLoaded){
 				$query->update(array('sessiondata' => $data, 'ip' => $this->ip, 'updated' => $this->updateTime))
 				->where()->condition('sid', '=', $this->sid)->execute();
@@ -161,7 +170,6 @@ class Session{
 		return "";
 	}
 
-
 	public function delete($name){
 		if( isset($_SESSION[$name]) ){
 			unset($_SESSION[$name]);
@@ -175,14 +183,15 @@ class Session{
 		return "";
 	}
 
-	public function setCookie($name, $value, $time = 0){
+	public function setCookie($name, $value, $time = 0, $httpOnly = true, $secure = false){
 		if(!$time) $time = time() + 60 * 60 * 24 * 30;
-		return setcookie($name, $value, $time, '/');
+		return setcookie($name, $value, $time, '/', $_SERVER['SERVER_NAME'], $secure, $httpOnly);
 	}
 
 	public function deleteCookie($name){
 		if( isset($_COOKIE[$name]) ){
-			setcookie($name, "", time() - 60 * 60 * 24 * 30, "/");
+			setcookie($name, "", time() - 60 * 60 * 24 * 30, "/", $_SERVER['SERVER_NAME']);
+			unset($_COOKIE[$name]);
 		}
 	}
 
@@ -193,6 +202,10 @@ class Session{
 			session_unset();
 			session_destroy();
 		}
+	}
+
+	public function saveID($hash){
+		$this->setCookie("USID".session_id(), $hash);
 	}
 }
 ?>
