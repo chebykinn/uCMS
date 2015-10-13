@@ -1,25 +1,12 @@
 <?php
 namespace uCMS\Core\Extensions\Users;
-class Permission{
-	private $list;
-	private $gid;
-	private $name;
-	private $owner;
+use uCMS\Core\ORM\Model;
+class Permission extends Model{
 
-	public function __construct(){
-
-	}
-
-	public static function Add($name, $owner){
-
-	}
-
-	public static function Rename($oldName, $newName){
-
-	}
-
-	public static function Remove($name){
-
+	public function init(){
+		$this->primaryKey('name');
+		$this->tableName('group_permissions');
+		$this->belongsTo('\\uCMS\\Core\\Extensions\\Users\\Group');
 	}
 }
 ?>

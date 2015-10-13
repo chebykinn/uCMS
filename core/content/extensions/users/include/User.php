@@ -3,249 +3,88 @@ namespace uCMS\Core\Extensions\Users;
 use uCMS\Core\Session;
 use uCMS\Core\Settings;
 use uCMS\Core\Database\Query;
-use uCMS\Core\Object;
+use uCMS\Core\ORM\Model;
 use uCMS\Core\Tools;
 use uCMS\Core\Form;
 use uCMS\Core\Page;
 use uCMS\Core\Notification;
-class User extends Object{
+class User extends Model{
 	const AVATARS_PATH = 'content/uploads/avatars';
 	const LOGIN_ACTION = 'login';
 	const LOGOUT_ACTION = 'logout';
-	protected $uid;
-	protected $name;
-	protected $password;
-	protected $email;
-	protected $status;
-	protected $group;
-	protected $theme;
-	protected $avatar;
-	protected $language;
-	protected $timezone;
-	protected $created;
-	protected $lastlogin;
-	protected $visited;
-	protected $hash;
 	protected $info;
 	protected static $currentUser;
+
+	public function init(){
+		$this->primaryKey('uid');
+		$this->tableName('users');
+		$this->hasMany('\\uCMS\\Core\\Extensions\\Entries\\Entry', array('bind' => 'entries'));
+		$this->hasMany('\\uCMS\\Core\\Extensions\\Users\\UserInfo', array('bind' => 'info'));
+		$this->hasMany('\\uCMS\\Core\\Session', array('bind' => 'sessions', 'key' => 'uid'));
+		$this->belongsTo('\\uCMS\\Core\\Extensions\\Users\\Group', array('bind' => 'group'));
+	}
 	
-	public static function Current($id = 0){
+	public static function Current(){
 		if ( is_null( self::$currentUser ) ){
-			self::$currentUser = new self($id);
+			self::CheckAuthorization();
 		}
 		return self::$currentUser;
 	}
 
-	public function __construct($id = 0){
-		$data = array();
-		$fromArray = false;
-		if( !empty($id) ){
-			if( is_array($id) ){
-				$data = $id;
-				$fromArray = true;
-			}else{
-				if($id == 0){
-					return; //it is guest user
-				}
-				$query = new Query('{users}');
-				$rows = $query->select('*', true)->where()->condition('uid', '=', $id)->_or()
-				                                          ->condition('name', '=', $id)->limit(1)->execute();
-				if(count($rows) == 1){
-					$data = $rows[0];
-				}
-
-				/**
-				* @todo load user info
-				*/
-			}
-		}
-		$fields = array_keys( get_object_vars($this) );
-		foreach ($data as $field => $value) {
-			if(  in_array($field, $fields) ){
-				if( $field == 'password' && $fromArray ){ 
-					// If user object was created from array we should encrypt given password 
-					$value = User::EncryptPassword($value);
-				}
-				
-				$this->$field = $value;
-			}else{
-				if($field == 'gid'){
-					// If we got group id from base we should create group object
-					$this->group = new Group($value);
-				}
-			}
-		}
-	}
-
-	public static function FromArray($data, $prefixes = array(), $namespaces = array(), $returnClass = "\\uCMS\Core\Extensions\Users\\User"){
-		$prefixes = array("group" => 'Group');
-		$namespaces = array("Group" => __NAMESPACE__);
-		$user = parent::FromArray($data, $prefixes, $namespaces, $returnClass);
-		// $user->password = User::EncryptPassword($user->password);
-		return $user;
-	}
-
-	public function getID(){
-		if( !empty($this->uid) ){
-			return $this->uid;
-		}
-		return 0;
-	}
-
-	public function getName(){
-		if( !empty($this->name) ){
-			return $this->name;
-		}
-		return "";
-	}
-
-	public function getPassword(){
-		if( !empty($this->password) ){
-			return $this->password;
-		}
-		return "";
-	}
-
-	public function getEmail(){
-		if( !empty($this->email) ){
-			return $this->email;
-		}
-		return "";
-	}
-
-	public function getGroup(){
-		if( !empty($this->group) ){
-			return $this->group;
-		}
-		// Return Guest group
-		return new Group();
-	}
-
-	public function getStatus(){
-		if( !empty($this->status) ){
-			return $this->status;
-		}
-		return "";
-	}
-
-	public function getTheme(){
-		if( !empty($this->theme) ){
-			return $this->theme;
-		}
-		return "";
-	}
-
-	public function getAvatar(){
-		$enabled = (bool) Settings::Get('user_avatars');
-		if( $enabled && !empty($this->avatar) ){
-			// Should get File object's path and build the img tag
-			return $this->avatar;
-		}
-		return "";
-	}
-
-	public function getLanguage(){
-		if( !empty($this->language) ){
-			return $this->language;
-		}
-		return "";
-	}
-
-	public function getTimezone(){
-		if( !empty($this->timezone) ){
-			return $this->timezone;
-		}
-		return "";
-	}
-
-	public function getInfo($field){
-		if( !empty($this->info) ){
-			return $this->info;
-		}
-		return "";
-	}
-
-	public function getDisplayName(){
+	public function getDisplayName($row){
 		// print name or nickname if set
 		$allows = (bool)Settings::Get('allow_nicknames');
-		$nickname = $this->getInfo('nickname');
+		$nickname = $this->getInfo($row, 'nickname');
 		if( $allows && !empty($nickname) ){
 			return $nickname;
 		}
-		return $this->getName();
+		return $row->name;
 	}
 
-	public function isLoggedIn(){
-		$sid = Session::getCurrent()->getUID();
-		return ( !empty($this->uid) && !empty($this->name) && !empty($sid) );
+	public function getInfo($row, $name){
+		if( isset($row->info[$name]) ){
+			return $row->info[$name];
+		}
+		return "";
 	}
 
-	public function can($permission){
-		if( is_object($this->group) ){
-			return $this->group->hasPermission($permission);
+	public function isLoggedIn($row){
+		$sid = Session::GetCurrent()->getUID();
+		return ( !empty($row->uid) && !empty($row->name) && !empty($sid) );
+	}
+
+	public function can($row, $permission){
+		if( is_object($row->group) ){
+			return $row->group->hasPermission($permission);
 		}
 		return false;
 	}
 
-	public static function Add($user){
-		//add user
-		if( is_object($user) ){
-			$name = $user->getName();
-			$password = $user->getPassword();
-			$email = $user->getEmail();
-			$groupID = $user->getGroup()->getID();
-			if( empty($name) || empty($password) || empty($email) || empty($groupID) ){
-				return;
-			}
-			$query = new Query('{users}');
-			$query->insert( array("uid" => "NULL",
-								  "name" => $user->getName(),
-								  "password" => $user->getPassword(),
-								  "email" => $user->getEmail(),
-								  "status" => $user->getStatus(),
-								  "gid" => $user->getGroup()->getID(),
-								  "theme" => $user->getTheme(),
-								  "avatar" => $user->getAvatar(),
-								  "language" => $user->getLanguage(),
-								  "ip" => Session::getCurrent()->getIPAddress()) )->execute();
-			$amount = $query->countRows()->execute();
-			Settings::Update("users_amount", $amount);
-		}
-	}
-
-	public static function Update($user){
-
-	}
-
-	public static function Delete($userID){
-
-	}
-
 	public static function Authorize($userID, $saveCookies = false){ //private
 		if( !self::isExists($userID) ) return false; // fail if user doesn't exists
-		if( Session::getCurrent()->isAuthorized() ){
-			if( Session::getCurrent()->getUID() === intval($userID) ) return false; //fail if user already logged in
+		if( Session::GetCurrent()->isAuthorized() ){
+			if( Session::GetCurrent()->getUID() === intval($userID) ) return false; //fail if user already logged in
 			else{
-				Session::getCurrent()->Deauthorize(); // user got wrong cache saved
+				Session::GetCurrent()->Deauthorize(); // user got wrong cache saved
 			}
 		}
 		$hash = Tools::GenerateHash();
 		$updateSession = new Query("{sessions}");
 		$updated = $saveCookies ? 0 : time();
-		$updateSession->insert( array('sid' => $hash, 'uid' => $userID, 'ip' => Session::getCurrent()->getIPAddress(), 'updated' => $updated) )->execute();
+		$updateSession->insert( array('sid' => $hash, 'uid' => $userID, 'ip' => Session::getCurrent()->getIPAddress(), 'updated' => $updated, 'created' => time() ) )->execute();
 		$lastlogin = new Query("{users}");
 		$lastlogin->update(array('lastlogin' => time()))->where()->condition("uid", '=', $userID)->execute();
-		Session::getCurrent()->Authorize($hash);
 		//save cookies if needed
 		if( $saveCookies ){
-			Session::getCurrent()->setCookie('usid_saved', $hash); //save cookie for year
+			Session::GetCurrent()->saveID($hash); //save cookie for year
 		}
+		Session::GetCurrent()->authorize($hash);
 		return true;
 	}
 
 	public static function Deauthorize($userID = 0){
-		if( $userID == User::Current()->getID() || $userID === 0 ){
-			Session::GetCurrent()->deleteCookie('usid_saved');
+		if( $userID == User::Current()->uid || $userID === 0 ){
+			Session::GetCurrent()->deauthorize();
 			Session::GetCurrent()->destroy();
 		}
 	}
@@ -260,14 +99,19 @@ class User extends Object{
 		return $password;
 	}
 
-	public function load(){
-		$uid = Session::getCurrent()->getUID();
-		$hash = Session::getCurrent()->getID();
-		if( $uid > 0 && $hash != session_id() ){
-			self::$currentUser = new User($uid); //set current user to $uid
-			if(self::$currentUser->uid == 0){
-				Session::getCurrent()->Deauthorize();
+	public static function CheckAuthorization(){
+		$uid = Session::GetCurrent()->getUID();
+		$hash = Session::GetCurrent()->getID();
+		if( $uid > 0 ){
+			self::$currentUser = (new User)->find($uid); //set current user to $uid
+			if( is_null(self::$currentUser) || self::$currentUser->uid == 0 ){
+				Session::GetCurrent()->deauthorize();
 			}
+		}
+
+		if( is_null(self::$currentUser) ){
+			self::$currentUser = (new User())->clean();
+			self::$currentUser->uid = 0;
 		}
 	}
 

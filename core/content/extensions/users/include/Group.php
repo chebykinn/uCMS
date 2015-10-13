@@ -1,13 +1,9 @@
 <?php
 namespace uCMS\Core\Extensions\Users;
 use uCMS\Core\Database\Query;
-use uCMS\Core\Object;
+use uCMS\Core\ORM\Model;
 
-class Group extends Object{
-	private $permissions;
-	private $gid;
-	private $name;
-	private $position;
+class Group extends Model{
 	const ADMINISTRATOR = 1;
 	const MODERATOR     = 2;
 	const TRUSTED       = 3;
@@ -15,100 +11,24 @@ class Group extends Object{
 	const BANNED        = 5;
 	const GUEST         = 6;
 
-	public function __construct(){
-		$args = func_get_args();
-		$data = array();
-		// TODO: move to FromArray
-		// TODO: Set default group to guest.
-		if( count($args) == 1){
-			if( is_array($args[0]) ){
-				$data = $args[0];
-			}else{
-				$id = $args[0];
-				$query = new Query('{groups}');
-				$rows = $query->select('*', true)->where()->condition('gid', '=', $id)->_or()
-				                                          ->condition('name', '=', $id)->execute();
-				if(count($rows) == 1){
-					$data = $rows[0];
-				}
+	public function init(){
+		$this->primaryKey('gid');
+		$this->tableName('groups');
+		$this->hasMany("\\uCMS\\Core\\Extensions\\Users\\User", array('bind' => 'user'));
+		$this->hasMany("\\uCMS\\Core\\Extensions\\Users\\Permission", array('bind' => 'permissions', 'key' => 'gid'));
+	}
+
+	public function hasPermission($row, $name){
+		foreach ($row->permissions as $permission) {
+			if( $permission->name === $name ){
+				return true;
 			}
 		}
-		$fields = array_keys( get_object_vars($this) );
-		foreach ($data as $field => $value) {
-			if(  in_array($field, $fields) ){
-				$this->$field = $value;
-			}
-		}
-		if( !is_array($this->permissions) ){
-			$query = new Query('{group_permissions}');
-			$results = $query->select(array('name', 'owner'))->where()->condition('gid', '=', $this->gid)->execute();
-			if( count($results) > 0 ){
-				foreach ($results as $row) {
-					$this->permissions[$row['name']] = $row['owner'];
-				}
-			}
-		}
+		return false;
 	}
 
-	public static function FromArray($data, $prefixes = array(), $namespaces = array(), $returnClass = "\\uCMS\Core\Extensions\Users\\Group"){
-		//TODO: Permissions
-		// $prefixes = array("group" => 'Group');
-		// $namespaces = array("Group" => __NAMESPACE__);
-		$group = parent::FromArray($data, $prefixes, $namespaces, $returnClass);
-		return $group;
-	}
-
-	public function getID(){
-		if( !empty($this->gid) ){
-			return $this->gid;
-		}
-		return 0;
-	}
-
-	public function getName(){
-		if( !empty($this->name) ){
-			return $this->name;
-		}
-		return "";
-	}
-
-	public function getPosition(){
-		if( !empty($this->position) ){
-			return $this->position;
-		}
-		return 0;
-	}
-
-	public function hasPermission($name){
-		return isset($this->permissions[$name]);
-	}
-
-	public function getPermissions(){
-		return $this->permissions;
-	}
-
-	public static function Add($group){
-		/**
-		* @todo add checks for object
-		*/
-		$groupName = $group->getName();
-		if( is_object($group) && !empty($groupName) ){
-			$query = new Query('{groups}');
-			$query->insert( array("gid" => "NULL",
-								  "name" => $group->getName(),
-								  "position" => $group->getPosition()) )->execute();
-			/** 
-			* @todo add permissions
-			*/
-		}
-	}
-
-	public static function Update($group){
-
-	}
-
-	public static function Delete($groupID){
-
+	public function getPermissions($row){
+		return $row->permissions;
 	}
 
 	public static function GrantPermission($name, $group){
