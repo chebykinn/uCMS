@@ -4,7 +4,7 @@ use uCMS\Core\Database\Query;
 class Cache{
 	private static $blocks;
 
-	public static function init(){
+	public static function Init(){
 		$query = new Query("{cache}");
 		$data = $query->select("*", true)->execute();
 		foreach ($data as $row) {
@@ -23,7 +23,7 @@ class Cache{
 		
 	}
 
-	public static function add($cacheID, $data, $expires = 0, $isRaw = false){
+	public static function Add($cacheID, $data, $expires = 0, $isRaw = false){
 		if( !$isRaw ){
 			$data = serialize($data);
 		}
@@ -32,11 +32,11 @@ class Cache{
 		$add->insert(self::$blocks[$cacheID])->execute();
 	}
 
-	public static function isCached($cacheID){
+	public static function IsCached($cacheID){
 		return isset(self::$blocks[$cacheID]);
 	}
 
-	public static function get($cacheID){
+	public static function Get($cacheID){
 		if( !self::isCached($cacheID) ) return false;
 		if( !self::$blocks[$cacheID]['raw'] ){
 			$data = unserialize(self::$blocks[$cacheID]['data']);
@@ -46,7 +46,7 @@ class Cache{
 		return $data;
 	}
 
-	public static function set($cacheID, $data, $expires = -1){
+	public static function Set($cacheID, $data, $expires = -1){
 		if( !self::isCached($cacheID) ) return false;
 
 		if( !self::$blocks[$cacheID]['raw'] ){
@@ -58,12 +58,12 @@ class Cache{
 		}
 	}
 
-	public static function update($cacheID){
+	public static function Update($cacheID){
 		$update = new Query("{cache}");
 		$update->delete()->where()->condition('cid', '=', $cacheID)->execute();
 	}
 
-	public static function cleanAll($blockID = ""){
+	public static function CleanAll($blockID = ""){
 
 	}
 
