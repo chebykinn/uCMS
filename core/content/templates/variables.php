@@ -11,9 +11,10 @@ $action = Page::GetCurrent()->getAction();
 $adminAction = ControlPanel::GetAction();
 $siteName = Settings::Get("site_name");
 $siteDescription = Settings::Get("site_description");
-$queriesCount = DatabaseConnection::GetDefault()->getQueriesCount(); //?
-$loadTime = Loader::GetInstance()->getLoadTime(); //?
+$queriesCount = array(DatabaseConnection::GetDefault(), 'getQueriesCount');//?
+$loadTime = array(Loader::GetInstance(), 'getLoadTime'); //?
 $coreVersion = uCMS::CORE_VERSION; //?
 $currentUser = User::Current(); //?
+$loginForm = User::GetLoginForm();
 $homePage = Page::Home()->getURL();
 ?>

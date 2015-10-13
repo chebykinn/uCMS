@@ -26,10 +26,10 @@ use uCMS\Core\Admin\ControlPanel;
 ?>
 </div>
 <div id="footer">
-	<?php 
+	<?php
 	$this->region("footer");
 	p("IVaN4B's μCMS © 2011-@s Queries: @s. Load time: @s seconds. <span class=\"ucms-version\">Version: @s</span>", 
-	date('Y'), $queriesCount,
-			$loadTime, $coreVersion); ?>
+	date('Y'), $queriesCount(),
+			$loadTime(), $coreVersion); ?>
 </div>
 </div>

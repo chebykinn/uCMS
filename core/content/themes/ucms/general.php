@@ -49,8 +49,8 @@
 	<footer class="footer">
 		<?php
 		$this->region('footer');
-		echo '<br>'.$queriesCount;
-		echo '<br>'.$loadTime;
+		echo '<br>'.$queriesCount();
+		echo '<br>'.$loadTime();
 		?>
 	</footer><!-- .footer -->
 
