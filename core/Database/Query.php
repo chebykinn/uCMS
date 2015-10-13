@@ -53,8 +53,6 @@ class Query{
 		$this->type = 'insert';
 		$noQuotes = array('NULL', 'NOW()');
 		if( is_array($columnsAndValues) ){
-			//$columns = array_keys($columnsAndValues);
-			//$values = array_values($columnsAndValues);
 			$params = array();
 			$columns = array();
 			foreach ($columnsAndValues as $column => $value) {
@@ -67,11 +65,6 @@ class Query{
 			* @todo checks
 			*/
 
-		//	foreach ($values as &$value) {
-				//if( !in_array($value, $noQuotes) ){
-				//	$value = "'$value'";
-				//}
-		//	}
 			$sqlIgnore = $ignore ? "IGNORE" : "";
 			$this->sql = "INSERT $sqlIgnore INTO $this->table ($sqlColumns) VALUES ($sqlValues)";
 			$this->params = $params;
@@ -96,15 +89,6 @@ class Query{
 				$sqlUpdate .= "$column = :$column";
 			}
 
-			/*$sqlUpdate = "";
-			foreach ($columnsAndValues as $column => $value) {
-				$column = '`'.$column.'`';
-				if( !in_array($value, $noQuotes) ){
-					$value = "'$value'";
-				}
-				if($sqlUpdate != '') $sqlUpdate .= ', ';
-				$sqlUpdate .= "$column = $value";
-			}*/
 			$this->sql = "UPDATE $this->table SET $sqlUpdate";
 			$this->params = $params;
 		}
@@ -148,8 +132,15 @@ class Query{
 		/**
 		* @todo filter operators
 		*/
+		if( strpos($this->sql, 'WHERE') === false ){
+			$this->sql .= ' WHERE';
+		}
 		$safeName = $this->findNextName($column);
 		$this->params[$safeName] = $value;
+		if( strpos($column, "{") !== false ){
+			// we need to add prefix
+			$column = $this->getLocalTableNames($column);
+		}
 		$condSql = $column.' '.$operator.' '.$safeName;
 		$this->sql .= " $condSql";
 		return $this;
@@ -196,17 +187,19 @@ class Query{
 		return $this;
 	}
 
-	public function orderBy($columns, $orders){
+	public function orderBy($columnsAndOrders){
 		$orderSql = " ORDER BY ";
-		if( is_array($columns) && is_array($orders) ){
-			for ($i = 0; $i < count($columns); $i++) { 
-				$orderSql .= '`'.$columns[$i].'` '.$orders[$i];
-				if($i+1 < count($columns)) $orderSql .= ', ';
+		$allowed = array("ASC", "DESC", "asc", "desc");
+		$sorts = array();
+		if( is_array($columnsAndOrders) ){
+			foreach ($columnsAndOrders as $column => $order) {
+				if( !in_array($order, $allowed) ) continue;
+					$sorts[] = $column.' '.$order;
 			}
-		}else{
-			$orderSql .= '`'.$columns.'` '.$orders;
+
+			$orderSql .= implode(", ", $sorts);
+			$this->sql .= $orderSql;
 		}
-		$this->sql .= $orderSql;
 		return $this;
 	}
 
@@ -267,6 +260,10 @@ class Query{
 				$row = $this->database->fetch($query, $this->fetchType);
 				if( !empty($row['count']) ) return intval($row['count']);
 			break;
+
+			case 'query':
+				$returnValue = $this->database->doQuery($this->sql, $this->params);
+			break;
 			
 			default:
 				$returnValue = $this->database->doQuery($this->sql, $this->params);
@@ -297,12 +294,13 @@ class Query{
 	}
 
 	private function findNextName($column){
-		$column = preg_replace("/[^a-z0-9.]/i", "", $column);
+		$column = preg_replace("/[^a-z0-9]/i", "", $column);
 		$name = ":$column";
 		if( isset($this->params[$name]) ){
 			$name .= rand(0, 1000);
 		}
 		return $name;
 	}
+
 }
 ?>
