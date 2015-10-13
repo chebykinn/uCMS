@@ -140,8 +140,35 @@ class Block{
 		return $add;
 	}
 
-	public static function Update($name, $theme = "", $region = "", $position = -1, $visibility = -1, $actions = "", $cache = -1){
-		
+
+	// TODO: not static ?
+	public static function Update($name, $region = "", $theme = "", $position = -1, $visibility = -1, $actions = "", $cache = -1){
+		if( !Theme::IsExists($theme) ) $theme = "";
+		if( empty($theme) ) $theme = Settings::Get('theme');
+		// TODO: block is exists
+		$status = ($theme != "" && $region != "") ? 1 : 0;
+		$newData = array();
+		if( !empty($theme) ){
+			$newData['theme'] = $theme;
+		}
+		if( !empty($region) ){
+			$newData['region'] = $region;
+		}
+		if( $position > 0 ){
+			$newData['position'] = $position;
+		}
+		if( $visibility > 0 ){
+			$newData['visibility'] = $visibility;
+		}
+		// TODO: Check previous
+		$newData['actions'] = $actions;
+		if( $cache > 0 ){
+			$newData['cache'] = $cache;
+		}
+		$query = new Query("{blocks}");
+		// TODO: Check duplicate
+		$update = $query->update($newData)->where()->condition("name", "=", $name)->_and()->condition('theme', '=', $theme)->execute();
+		return $update;
 	}
 
 	public static function Delete($name){
