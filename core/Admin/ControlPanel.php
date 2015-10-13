@@ -31,7 +31,6 @@ class ControlPanel{
 
 	public static function CheckAction($extensionActions){
 		$result = array("isUsed" => false, "default" => false, "action" => "");
-
 		if( User::Current()->can('access control panel') ){
 			$currentAction = self::GetAction();
 			$baseAction = self::GetBaseAction();
@@ -53,10 +52,15 @@ class ControlPanel{
 			$result['isUsed'] = true;
 			$result['default'] = true;
 			if( !User::Current()->isLoggedIn() ){
-				Theme::GetCurrent()->setThemeTemplate('login');
+				$title = tr('Login');
+				$template = 'login';
 			}else{
-				Theme::GetCurrent()->setThemeTemplate('access_denied');
+				$title = tr('Access Denied');
+				$template = 'access_denied';
 			}
+			ControlPanel::SetTitle($title);
+			Theme::GetCurrent()->setPageTitle(self::TITLE.' :: '.$title);
+			Theme::GetCurrent()->setThemeTemplate($template);
 		}
 		return $result;
 	}
