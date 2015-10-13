@@ -59,13 +59,13 @@ class Loader{
 			require_once uCMS::CONFIG_FILE;
 			return true;
 		}else if( file_exists('../'.uCMS::CONFIG_FILE) ){
-			define("ABSPATH", getcwd()."/");
+			define("ABSPATH", dirname(__DIR__)."/");
 			require_once '../'.uCMS::CONFIG_FILE;
 			return true;
 		}
 		
 		if( !defined("ABSPATH") ){
-			define("ABSPATH", getcwd()."/");
+			define("ABSPATH", dirname(__DIR__)."/");
 			define('UCMS_DEBUG', false);
 			
 			require_once 'core/autoload.php';
@@ -84,6 +84,9 @@ class Loader{
 	* @return void
 	*/
 	public function init(){
+		@mb_internal_encoding("UTF-8");
+		date_default_timezone_set("UTC");
+		register_shutdown_function(array($this, 'shutdown'));
 		$this->startLoadTimer();
 
 		Debug::Init();
@@ -96,9 +99,6 @@ class Loader{
 
 		Form::Init();
 
-		@mb_internal_encoding("UTF-8");
-		date_default_timezone_set("UTC");
-		register_shutdown_function(array($this, 'shutdown'));
 		if( version_compare(phpversion(), uCMS::MIN_PHP_VERSION, '<') ){
 			Theme::LoadTemplate('php-version');
 			Debug::Log("Server's PHP is obsolete", Debug::LOG_CRITICAL);
