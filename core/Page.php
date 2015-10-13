@@ -1,6 +1,7 @@
 <?php
 namespace uCMS\Core;
 use uCMS\Core\Admin\ControlPanel;
+use uCMS\Core\uCMS;
 class Page{
 	const INDEX_ACTION = 'home';
 	const OTHER_ACTION = 'other';
@@ -9,6 +10,8 @@ class Page{
 	private $status;
 	private $action = self::INDEX_ACTION;
 	private $data;
+	private $host;
+	private $path;
 	private static $currentPage;
 
 	public function __construct($url = ""){
@@ -17,9 +20,13 @@ class Page{
 		}else{
 			$this->url = urldecode($url);
 		}
-
+		$url = parse_url($this->url);
+		if( isset($url['host']) ){
+			$this->host = $url['host'];
+		}
+		$this->path = $url['path'];
 		if( empty($_GET['action']) ){
-			$this->data = preg_split('#(/)#', $this->url, -1, PREG_SPLIT_NO_EMPTY);
+			$this->data = preg_split('#(/)#', $this->path, -1, PREG_SPLIT_NO_EMPTY);
 		}else{
 			$this->data[0] = $_GET['action'];
 			if( !empty($_GET['key']) ){
@@ -34,7 +41,7 @@ class Page{
 	}
 
 	public function __tostring(){
-		return $this->url;
+		return $this->path;
 	}
 
 	public static function FromAction($action, $data = ""){
@@ -146,6 +153,7 @@ class Page{
 		* @todo add params for keeping GET and keys or somewhat
 		*/
 		$url = $_SERVER['REQUEST_URI'];
+		$url = strtok($url, '?'); // Remove all GET parameters
 		if(headers_sent()){
 			echo '<script type="text/javascript">';
 			echo 'window.location.href="'.$url.'";';
@@ -184,6 +192,20 @@ class Page{
 			header('Location: '.urldecode($url));
 			exit;
 		}
+	}
+
+	public static function GoBack(){
+		if( isset($_SERVER['HTTP_REFERER']) and preg_match("#(".uCMS::GetDomain().")#", $_SERVER['HTTP_REFERER']) ){
+			$backPage = new Page($_SERVER['HTTP_REFERER']);
+			$backPath = (string)$backPage;
+			$currentPath = (string)Page::GetCurrent();
+			if( $backPath == $currentPath ){
+				$backPage = Page::Home();
+			}
+		}else{
+			$backPage = Page::Home();
+		}
+		$backPage->go();
 	}
 }
 ?>
