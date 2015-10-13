@@ -5,6 +5,7 @@ $user = User::Current();
 $cpanelLink = Page::ControlPanel();
 $profileLink = ""; //$user->get_profileLink();
 $userlistLink = ""; //$user->get_userlistLink();			
-$logoutLink = ""; //$user->getLogoutLink();
+$logoutLink = Page::FromAction(User::LOGOUT_ACTION); //$user->getLogoutLink();
 $cpanelLink = Page::ControlPanel();
+$loginForm = User::GetLoginForm();
 ?>

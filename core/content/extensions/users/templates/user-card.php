@@ -8,11 +8,11 @@
 * $userlistLink - link to users list
 * $logoutLink - link to logout
 * $cpanelLink - link to control panel
+* $loginForm - login form object
 * 
 */
 if( !$user->isLoggedIn() ):
-	echo 'login form';
-	//$login->login_form();
+	$loginForm->render();
 else:
 ?>
 	<div class="user-card"> 
@@ -23,7 +23,7 @@ else:
 	}
 	?>
 	<div class="group-tag">
-	<?php echo $user->getGroup()->getName(); ?>
+	<?php echo $user->group->name; ?>
 	</div>
 	<ul class="user-menu">
 	<li><a href="<?php echo $profileLink; ?>"><?php p("Profile"); ?></a></li>
