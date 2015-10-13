@@ -7,7 +7,7 @@ if( $entriesAmount > 0 ){
 		?>
 		<div class="entry">
 			<p class="title">
-				<a href="<?php echo $entry->getLink(); ?>" title="<?php echo $entry->getTitle(); ?>"><?php echo $entry->getTitle(); ?></a>
+				<a href="<?php echo $entry->getLink(); ?>" title="<?php echo $entry->title; ?>"><?php echo $entry->title; ?></a>
 			</p>
 			<p class="content">
 				<?php echo $entry->getContent($isShort); ?>
