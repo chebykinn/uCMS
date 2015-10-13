@@ -1,13 +1,12 @@
 <?php
-require_once getcwd().'/core/functions.php';
+require_once dirname(__DIR__).'/core/functions.php';
 spl_autoload_register(function ($class) {
 
     // project-specific namespace prefix
     $prefix = 'uCMS\\Core\\';
 
     // base directory for the namespace prefix
-    $base_dir = getcwd().'/core/';
-
+    $base_dir = dirname(__DIR__).'/core/';
     // does the class use the namespace prefix?
     $len = strlen($prefix);
     if (strncmp($prefix, $class, $len) !== 0) {
@@ -32,7 +31,7 @@ spl_autoload_register(function ($class) {
     // echo '</pre>';
 
     // if the file exists, require it
-    if (file_exists($file)) {
+    if (@file_exists($file)) {
         require_once $file;
     }
 });
