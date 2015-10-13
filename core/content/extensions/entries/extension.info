@@ -10,7 +10,8 @@
 	],
 	"actions": [
 		"home",
-		"other"
+		"other",
+		"entry"
 	],
 	"includes":[
 		"include/Term.php",
@@ -21,7 +22,6 @@
 		"separator": ["", "home"],
 		"Entries": ["entries", "home"],
 		"@Categories": "categories",
-		"separator2": "",
 		"#Entries": "settings/entries"
 	},
 
