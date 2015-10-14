@@ -35,4 +35,5 @@ spl_autoload_register(function ($class) {
         require_once $file;
     }
 });
+register_shutdown_function( 'uCMS\\Core\\Debug::ErrorHandler' );
 ?>

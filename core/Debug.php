@@ -11,8 +11,8 @@ class Debug{
 	private static $logLevel = LOG_INFO;
 
 	public static function Init(){
-		register_shutdown_function( "uCMS\Core\Debug::ErrorHandler" );
-		set_error_handler('uCMS\Core\Debug::ErrorHandler');
+		register_shutdown_function('uCMS\\Core\\Debug::ErrorHandler');
+		set_error_handler('uCMS\\Core\\Debug::ErrorHandler');
 		ini_set('display_errors', 0);
 		if(UCMS_DEBUG){ // Debug mode preparation
 			error_reporting(E_ALL);
