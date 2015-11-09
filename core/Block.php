@@ -3,6 +3,7 @@ namespace uCMS\Core;
 use uCMS\Core\Database\Query;
 use uCMS\Core\Extensions\Extension;
 use uCMS\Core\Extensions\Theme;
+use uCMS\Core\Admin\ControlPanel;
 class Block{
 	const SHOW_EXCEPT = 0;
 	const SHOW_LISTED = 1;
@@ -23,13 +24,20 @@ class Block{
 		//load blocks data
 		// status will be zero if theme or region are not set
 		$action = Page::GetCurrent()->getAction();
+		if( $action === ControlPanel::ACTION ){
+			$action .= '/'.ControlPanel::GetAction();
+		}
 		$query = new Query("SELECT * FROM {blocks} 
-			WHERE status = 1 AND 
-			((visibility = 0 AND (actions = '' OR actions NOT LIKE '%:action%')) 
+			WHERE status = 1 AND ((visibility = 1 AND actions LIKE :action) 
+				OR (visibility = 0 AND actions NOT LIKE :action) OR visibility = 2) ORDER BY position ASC", array(":action" => "%$action%"));
+		/*
+	((visibility = 0 AND (actions = '' OR actions NOT LIKE '%:action%')) 
 			OR (visibility = 1 AND (actions <> '' OR actions LIKE '%:action%'))
-			OR visibility = 2)", array(":action" => $action));
+			OR visibility = 2)
+		*/
 		// TODO: actions selection
 		$blocksData = $query->execute();
+		// \uCMS\Core\Debug::PrintVar($blocksData);
 		foreach ($blocksData as $data) {
 			# code...
 			$block = self::FromArray($data);
@@ -209,6 +217,10 @@ class Block{
 			return self::$list[$theme];
 		}
 		return array();
+	}
+
+	public function getVisibility(){
+		return $this->visibility;
 	}
 }
 ?>
