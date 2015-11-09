@@ -21,22 +21,45 @@ $isEntryPage = false;
 if( $prefix === Page::INDEX_ACTION ){
 	$prefix = "";
 }
+
 // TODO: consider exclude this block from these actions
-if ( empty($prefix) || !in_array($prefix, Extension::GetUsedActions()) ){
+if ( empty($prefix) || ( !in_array($prefix, Extension::GetUsedActions()) || $prefix == Entry::ACTION ) ){
+	$found = false;
+	$limit = Settings::Get('entries_per_page');
 	if( empty($prefix) ){
 		$prefix = Settings::Get('list_entry_type');
 	}
+	$alias = Page::GetCurrent()->getActionValue();
 
-	$type = (new EntryType())->find($prefix);
-	if ( $type != NULL ){
-		$entries = $type->entries;
-	}else{
-		// Try to get entry page
-		$entries = (new Entry())->find(array('alias' => $prefix));
-		if ( empty($entries) ){
-			Theme::LoadErrorPage(uCMS::ERR_NOT_FOUND);
-		}
+	if( $prefix == Entry::ACTION && !empty($alias) ){
+		$eid = intval($alias);
+		$entry = (new Entry())->find($eid);
+	}
+
+	if( !isset($entry) ){
+		$entry = (new Entry())->find(array('alias' => $prefix, 'limit' => 1));
+	}
+
+	if( !empty($alias) && !isset($entry) ){
+		$entry = (new Entry())->find(array('type' => $prefix, 'alias' => $alias, 'limit' => 1));
+	}
+
+	if( $entry !== NULL ){
 		$isEntryPage = true;
+		$comments = $entry->commentsList;
+		$entries[] = $entry;
+		$found = true;
+	}
+
+	if( !$found && empty($alias) ){
+		$entries = (new Entry())->find(array('type' => $prefix, 'orders' => array('changed' => 'desc'), 'limit' => $limit));
+		if ( !empty($entries) ){
+			$found = true;
+		}
+	}
+
+	if( !$found ){
+		Theme::LoadErrorPage(uCMS::ERR_NOT_FOUND);	
 	}
 } 
 ?>
