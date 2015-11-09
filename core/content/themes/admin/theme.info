@@ -2,6 +2,10 @@
 	"version": "1.0",
 	"coreVersion": "all",
 	"info": {
+		"displayname": "Default Control Panel theme",
+		"description": "Default theme for Control Panel",
+		"author": "µCMS",
+		"site": "http://ucms.ivan4b.ru",
 		"header": "head.php",
 		"sidebar": "sidebar.php",
 		"footer": "footer.php",
@@ -13,7 +17,11 @@
 
 	"regions":[
 		"header",
-		"dashboard",
+		"dashboard-top",
+		"dashboard-left-side",
+		"dashboard-right-side",
+		"dashboard-bottom",
+		"tools",
 		"footer"
 	]
 }
