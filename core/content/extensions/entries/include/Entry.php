@@ -12,11 +12,13 @@ class Entry extends Model{
 	const DRAFT = 0;
 	const PUBLISHED = 1;
 	const PINNED = 2;
+	const ACTION = "entry";
 
 	public function init(){
 		$this->primaryKey('eid');
 		$this->tableName('entries');
 		$this->hasMany("\\uCMS\\Core\\Extensions\\Entries\\Term", array('through' => 'term_taxonomy', 'bind' => 'terms'));
+		$this->hasMany("\\uCMS\\Core\\Extensions\\Comments\\Comment", array('bind' => 'commentsList', 'key' => 'eid'));
 		$this->belongsTo("\\uCMS\\Core\\Extensions\\Users\\User", array('bind' => 'author'));
 		$this->belongsTo("\\uCMS\\Core\\Extensions\\Entries\\EntryType", array('bind' => 'entryType'));
 	}
