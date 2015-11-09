@@ -9,6 +9,7 @@ class Query{
 	private $type;
 	private $fetchType = 'assoc';
 	private $doCache = false;
+	private $needLogicOperator = false;
 
 	public function __construct($sql, $params = array(), $database = NULL){
 		$this->database = DatabaseConnection::GetDatabase($database);
@@ -128,12 +129,19 @@ class Query{
 		return $this;
 	}
 
-	public function condition($column, $operator, $value){
+	public function condition($column, $operator, $value, $required = true){
 		/**
 		* @todo filter operators
 		*/
 		if( strpos($this->sql, 'WHERE') === false ){
 			$this->sql .= ' WHERE';
+		}
+		if( $this->needLogicOperator ){
+			if( $required ){
+				$this->sql .= ' AND';
+			}else{
+				$this->sql .= ' OR';
+			}
 		}
 		$safeName = $this->findNextName($column);
 		$this->params[$safeName] = $value;
@@ -143,16 +151,19 @@ class Query{
 		}
 		$condSql = $column.' '.$operator.' '.$safeName;
 		$this->sql .= " $condSql";
+		$this->needLogicOperator = true;
 		return $this;
 	}
 
 	public function _and(){
 		$this->sql .= ' AND';
+		$this->needLogicOperator = false;
 		return $this;
 	}
 
 	public function _or(){
 		$this->sql .= ' OR';
+		$this->needLogicOperator = false;
 		return $this;
 	}
 
@@ -246,7 +257,6 @@ class Query{
 			case 'select':
 				$data = array();
 				$query = $this->database->doQuery($this->sql, $this->params);
-
 				$i = 0;
 				while($row = $this->database->fetch($query, $this->fetchType)){
 					$data[$i] = $row;
