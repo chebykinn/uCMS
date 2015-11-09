@@ -29,7 +29,7 @@ abstract class Model{
 	/**
 	* @var array $associations Associations with other models.
 	*/
-	private $associations;
+	private $associations = array();
 	/**
 	* @var bool $modified A flag to determine if model data was changed after loading from database.
 	*/
@@ -231,7 +231,7 @@ abstract class Model{
 		}
 
 		if( isset($conditions['columns']) ){
-			// TODO: override $select
+			$columns = $conditions['columns'];
 		}
 		$query = $query->select($columns);
 
@@ -287,7 +287,6 @@ abstract class Model{
 				$query = $query->limit($limit);
 			}
 		}
-
 		$results = $query->execute('query');
 		$processed = $this->processResults($results);
 		if( empty($processed) ){
@@ -303,19 +302,26 @@ abstract class Model{
 		return $processed;
 	}
 
-	final public static function GetLast($conditions = array()){
-		$last = (new self())->find(array('limit' => 1));
+	final public function last($conditions = array()){
+		$last = $this->find(array('limit' => 1));
 		return $last;
 	}
 
-	final public static function GetFirst($conditions = array()){
-		$object = new self();
-		$first = $object->find(array('limit' => 1, 'orders' => array($object->primaryKey() => 'ASC')));
+	final public function first($conditions = array()){
+		$first = $this->find(array('limit' => 1, 'orders' => array($this->primaryKey() => 'ASC')));
 		return $first;
 	}
 
-	final public static function GetCount($conditions = array()){
-
+	final public function count($conditions = array()){
+		$conditions['noOrder'] = true;
+		$conditions['columns'] = 'COUNT({'.$this->tableName().'}.'.$this->primaryKey().') as count';
+		$results = $this->find($conditions);
+		if( !empty($results) ){
+			$row = $results[0];
+			$count = $row->count;
+			return $count;
+		}
+		return 0;
 	}
 
 	public function save(){
