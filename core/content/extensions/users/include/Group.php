@@ -14,7 +14,7 @@ class Group extends Model{
 	public function init(){
 		$this->primaryKey('gid');
 		$this->tableName('groups');
-		$this->hasMany("\\uCMS\\Core\\Extensions\\Users\\User", array('bind' => 'user'));
+		$this->hasMany("\\uCMS\\Core\\Extensions\\Users\\User", array('bind' => 'users'));
 		$this->hasMany("\\uCMS\\Core\\Extensions\\Users\\Permission", array('bind' => 'permissions', 'key' => 'gid'));
 	}
 
