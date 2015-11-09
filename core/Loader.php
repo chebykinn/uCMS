@@ -12,7 +12,8 @@ use uCMS\Core\Language\Language;
 use uCMS\Core\Extensions\Extension;
 use uCMS\Core\Extensions\Theme;
 use uCMS\Core\Admin\ControlPanel;
-use uCMS\Core\uCMS;
+use uCMS\Core\Events\Event;
+use uCMS\Core\Events\CoreEvents;
 /**
 * This class handles loading process.
 * 
@@ -116,8 +117,9 @@ class Loader{
 		Cache::Init();
 		Session::GetCurrent()->load();
 		Extension::Init();
+		$loadedEvent = new Event(CoreEvents::LOADED);
+		$loadedEvent->fire();
 
-		Block::Init();
 	}
 
 	/**
@@ -166,6 +168,8 @@ class Loader{
 				Theme::GetCurrent()->setTitle($siteTitle);
 			}
 		}
+
+		Block::Init();
 		
 		Theme::GetCurrent()->load();
 	}
