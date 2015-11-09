@@ -30,7 +30,7 @@ foreach ($extensions as $extension) {
 	if( is_array($extensionObject->getDependenciesList()) ){
 		foreach ($extensionObject->getDependenciesList() as $dependency) {
 			if( Extension::IsLoaded($dependency) ){ //?
-				$dependencies[] = Extension::Get($dependency)->getInfo('displayname');
+				$dependencies[] = tr(Extension::Get($dependency)->getInfo('displayname'));
 			}
 		}
 		$dependencies = implode(", ", $dependencies);
@@ -48,7 +48,7 @@ foreach ($extensions as $extension) {
 	$dependenciesMessage = !empty($dependencies) ? "<br>Depends on: @s" : "";
 	$extensionsTable->addRow( 
 		array(
-			"$displayname<br><div class=\"manage-actions\">".
+			tr($displayname)."<br><div class=\"manage-actions\">".
 			($default ? "" : $extensionsTable->manageButtons())."</div>",
 			tr($description).tr('<br><br>Version: @s | Author: @s | Site: <a href="@s">@s</a>',
 			$version, $author, $site, $site, $dependencies).tr($dependenciesMessage, $dependencies),
