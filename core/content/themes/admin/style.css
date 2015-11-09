@@ -139,6 +139,13 @@ h1, h2{
 	background: #EAF2F7;
 }
 
+.manage td ul{
+	list-style: square;
+	color: #1a5eac;
+	margin-left: 10px;
+}
+
+
 .show-sidebar{
 	display: none;
 }
@@ -181,28 +188,7 @@ h1, h2{
 	border-right: 10px #168A24 solid;
 }
 
-.summary{
-	width: 25%;
-	float: left;
-	margin-right: 5px;
-	margin-bottom: 5px;
-}
 
-.last-added{
-	width: 70%;
-	float: left;
-}
-
-.info{
-	float: left;
-	width: 50%;
-}
-
-.info .amount{
-	/*display: block;	*/
-	float: right;
-	margin-right: 20%;
-}
 
 #content .ucms-form{
 	font-size: 15px;
@@ -226,6 +212,12 @@ h1, h2{
 	float: left;
 	padding: 5px;
 }
+
+
+#content .form-item input:not([type=checkbox]):not([type=submit]){
+	width: 20%;
+}
+
 
 .form-item input[type=submit], .button{
 	background: #3C89E0;
@@ -287,4 +279,55 @@ h1, h2{
 
 .inner .form-item label{
 	font-weight: bold;
+}
+
+.permissions-block{
+	float: left;
+	width: 50%;
+}
+
+.dashboard-top{
+	clear: both;
+}
+
+.dashboard-left-side{
+	float: left;
+	width: 25%;
+	/*border: 1px #000 solid;*/
+}
+
+.dashboard-right-side{
+	float: left;
+	width: 75%;
+	/*border: 1px #000 solid;*/
+
+}
+
+.dashboard-bottom{
+	clear: both;
+}
+
+.summary{
+	width: 95%;
+	margin-bottom: 10px;
+}
+
+.last-added{
+	width: 25%;
+	float: left;
+}
+
+.actions{
+	width: 95%;
+}
+
+.info{
+	float: left;
+	width: 50%;
+}
+
+.info .amount{
+	/*display: block;	*/
+	float: right;
+	margin-right: 20%;
 }

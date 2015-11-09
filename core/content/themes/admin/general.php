@@ -1,14 +1,11 @@
-<?php
-use uCMS\Core\Admin\ControlPanel;
-?>
 <div id="wrapper">
 <a href="#sidebar" class="show-sidebar"></a>
 <div id="sidebar">
 	<?php
-		echo ControlPanel::PrintSidebar();
+		echo $adminSidebar;
 	?>
 	<ul>
-		<li><a href="<?php echo UCMS_DIR; ?>"><?php p('Go to site'); ?></a></li>
+		<li><a href="<?php echo $homePage; ?>"><?php p('Go to site'); ?></a></li>
 	</ul>
 </div>
 
@@ -19,10 +16,7 @@ use uCMS\Core\Admin\ControlPanel;
 		echo "<h2>".$this->pageTitle()."</h2>";
 	}
 	$this->showNotifications();
-	if($adminAction === 'home'){
-		$this->region("dashboard");
-	}
-	ControlPanel::LoadTemplate();
+	include_once($adminPage);
 ?>
 </div>
 <div id="footer">
