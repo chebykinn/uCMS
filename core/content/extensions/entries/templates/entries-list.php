@@ -20,7 +20,15 @@ if( $entriesAmount > 0 ){
 		<?php
 		if( $isEntryPage ){ ?>
 			<div class="comments">
-				<?php echo 'not implemented yet'; ?>
+				<?php
+					if( count($comments) > 0 ){
+						foreach ($comments as $comment) {
+							echo $comment->name.'<br>'.$comment->content;
+						}
+					}else{
+						p('No comments');
+					}
+				?>
 			</div>
 			<?php
 		}
