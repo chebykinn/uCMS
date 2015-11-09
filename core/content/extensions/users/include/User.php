@@ -12,16 +12,21 @@ class User extends Model{
 	const AVATARS_PATH = 'content/uploads/avatars';
 	const LOGIN_ACTION = 'login';
 	const LOGOUT_ACTION = 'logout';
+	const LIST_ACTION = 'users';
+	const PROFILE_ACTION = 'user';
 	protected $info;
 	protected static $currentUser;
 
 	public function init(){
 		$this->primaryKey('uid');
 		$this->tableName('users');
+		$this->belongsTo('\\uCMS\\Core\\Extensions\\Users\\Group', array('bind' => 'group'));
 		$this->hasMany('\\uCMS\\Core\\Extensions\\Entries\\Entry', array('bind' => 'entries'));
 		$this->hasMany('\\uCMS\\Core\\Extensions\\Users\\UserInfo', array('bind' => 'info'));
+		$this->hasMany('\\uCMS\\Core\\Extensions\\FileManager\\File', array('bind' => 'files', 'key' => 'uid'));
+		$this->hasMany('\\uCMS\\Core\\Extensions\\Comments\\Comment', array('bind' => 'comments', 'key' => 'uid'));
 		$this->hasMany('\\uCMS\\Core\\Session', array('bind' => 'sessions', 'key' => 'uid'));
-		$this->belongsTo('\\uCMS\\Core\\Extensions\\Users\\Group', array('bind' => 'group'));
+		$this->hasMany('\\uCMS\\Core\\Extensions\\Menus\\MenuLink', array('bind' => 'links'));
 	}
 	
 	public static function Current(){
@@ -112,6 +117,7 @@ class User extends Model{
 		if( is_null(self::$currentUser) ){
 			self::$currentUser = (new User())->clean();
 			self::$currentUser->uid = 0;
+			self::$currentUser->gid = Group::GUEST;
 		}
 	}
 
@@ -153,6 +159,10 @@ class User extends Model{
 		$form->addField("password", "password", tr("Password:"), "", "", tr("password"));
 		$form->addFlag("save_cookies", tr("Remember Me"));
 		return $form;
+	}
+
+	public function getDate($row){	
+		return Tools::FormatTime($row->created);
 	}
 }
 ?>
