@@ -16,7 +16,7 @@
 		"reset"
 	],
 	"admin": {
-		"Users": ["users", "categories"],
+		"Users": ["users", "comments"],
 		"@Groups": "users/groups",
 		"#Users": "settings/users",
 		"separator": ""

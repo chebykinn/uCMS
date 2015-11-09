@@ -10,12 +10,14 @@
 	],
 
 	"admin": {
-		"Comments": "comments",
-		"separator": ""
+		"Comments": ["comments", "categories"],
+		"separator": "",
+		"#Comments": "settings/comments"
 	},
 
 	"adminPages": {
-		"comments": "admin/comments.php"
+		"comments": "admin/comments.php",
+		"settings/comments": "admin/settings.php"
 	},
 
 	"includes": [
