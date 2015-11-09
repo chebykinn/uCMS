@@ -27,6 +27,7 @@ $form->addField("site_title", "text", tr("Site Title:"), tr("Shown on the page t
 $form->addField("site_author", "text", tr("Site Author:"), tr("Tell, who is the author of this site."), Settings::Get("site_author"));
 $form->addSelectField($languages, "language", tr("Language:"), "", Settings::Get("language"), 1, false);
 $form->addFlag("ucms_maintenance", tr("Enable maintenance mode:"), tr("Disable site for everyone but the administrators."), Settings::Get("ucms_maintenance"));
+$form->addFlag("enable_cache", tr("Enable content cache:"), tr("Caching site content may significantly increase site performance."), Settings::Get("enable_cache"));
 $form->addFlag("clean_url", tr("User-Friendly URLs:"), tr("Nice links like: @s/super-cool-entry.", uCMS::GetDomain()), Settings::Get("clean_url"));
 $form->addFlag("embedding_allowed", tr("Allow embedding site:"), tr("Allow to use site in iframe at any other domain."), Settings::Get("embedding_allowed"));
 $form->addField("site_domain", "text", tr("Site Domain:"), tr("Site Address."), uCMS::GetDomain());
