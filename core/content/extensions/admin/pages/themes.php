@@ -5,50 +5,43 @@ use uCMS\Core\Database\Query;
 use uCMS\Core\Admin\ControlPanel;
 use uCMS\Core\Extensions\Theme;
 use uCMS\Core\Page;
-$extensionsPage = new ManagePage();
-$extensionsTable = new ManageTable();
+$page = new ManagePage();
+$table = new ManageTable();
 $namespace = "\\uCMS\\Core\\Extensions\\";
-$extensionsPage->addAction('add',     'manage themes',  "{$namespace}Theme::Add");
-$extensionsPage->addAction('delete',  'manage themes',  "{$namespace}Theme::Delete");
-$extensionsPage->addAction('enable',  'manage themes',  "{$namespace}Theme::Enable");
-$extensionsPage->addAction('disable', 'manage themes',  "{$namespace}Theme::Disable");
+$page->addAction('add',     'manage themes',  "{$namespace}Theme::Add");
+$page->addAction('delete',  'manage themes',  "{$namespace}Theme::Delete");
+$page->addAction('enable',  'manage themes',  "{$namespace}Theme::Enable");
+$page->addAction('disable', 'manage themes',  "{$namespace}Theme::Disable");
 
-$extensionsPage->doActions();
+$page->doActions();
 
-$extensions = Theme::GetAll();
+$themes = Theme::GetAll();
 
-$extensionsTable->addSelectColumn('manage themes');
-$extensionsTable->addColumn(tr('Extension'), true, 'manage themes', '20%', true);
-$extensionsTable->addColumn(tr('Description'), true, 'manage themes', 0, true );
-foreach ($extensions as $extension) {
+$table->addSelectColumn('manage themes');
+$table->addColumn(tr('Theme'), true, 'manage themes', '20%', true);
+$table->addColumn(tr('Description'), true, 'manage themes', 0, true );
+foreach ($themes as $theme) {
 	$dependencies = "";
-	$extensionObject = Theme::Get($extension);
-	if( empty($extensionObject) ){
+	try{
+		$themeObject = new Theme($theme);
+		
+	}catch(\Exception $e){
 		continue;
 	}
-	// if( is_array($extensionObject->getDependenciesList()) ){
-	// 	foreach ($extensionObject->getDependenciesList() as $dependency) {
-	// 		if( Extension::IsLoaded($dependency) ){ //?
-	// 			$dependencies[] = Extension::Get($dependency)->getInfo('displayname');
-	// 		}
-	// 	}
-	// 	$dependencies = implode(", ", $dependencies);
-	// }
-	// $status = Extension::IsLoaded($extension);
-	$default = Theme::IsDefault($extension);
-	$style = $status ? "enabled" : "";
-	$displayname = $extensionObject->getInfo('displayname');
-	$description = $extensionObject->getInfo('description');
-	$extensionsTable->setInfo('idKey', $extension);
-	$extensionsTable->setInfo('status', $status);
-	$version = $extensionObject->getVersion();
-	$author = $extensionObject->getInfo('author');
-	$site = $extensionObject->getInfo('site');
+	$default = Theme::IsDefault($theme);
+	$style = $default ? "enabled" : "";
+	$displayname = $themeObject->getInfo('displayname');
+	$description = $themeObject->getInfo('description');
+	$table->setInfo('idKey', $theme);
+	$table->setInfo('status', $default);
+	$version = $themeObject->getVersion();
+	$author = $themeObject->getInfo('author');
+	$site = $themeObject->getInfo('site');
 	$dependenciesMessage = !empty($dependencies) ? "<br>Depends on: @s" : "";
-	$extensionsTable->addRow( 
+	$table->addRow( 
 		array(
 			"$displayname<br><div class=\"manage-actions\">".
-			($default ? "" : $extensionsTable->manageButtons())."</div>",
+			($default ? "" : $table->manageButtons())."</div>",
 			tr($description).tr('<br><br>Version: @s | Author: @s | Site: <a href="@s">@s</a>',
 			$version, $author, $site, $site, $dependencies).tr($dependenciesMessage, $dependencies),
 
@@ -57,5 +50,5 @@ foreach ($extensions as $extension) {
 	);
 }
 
-$extensionsTable->printTable();
+$table->printTable();
 ?>
