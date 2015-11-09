@@ -1,1 +1,3 @@
-tools
+<?php
+$this->region('tools');
+?>
