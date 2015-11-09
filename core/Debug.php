@@ -76,7 +76,8 @@ class Debug{
 			}
 			$host = Session::GetCurrent()->getHost();
 			$owner = Tools::GetCurrentOwner();
-			$outMessage = strftime("%Y-%m-%d %H:%M:%S", time())." [Host: $host] $type [$owner] $message\n";
+			// strftime("%Y-%m-%d %H:%M:%S", time())
+			$outMessage = Tools::FormatTime(time(), "Y-m-d H:i:s")." [Host: $host] $type [$owner] $message\n";
 			$logFile = @fopen(self::$logFile, 'a');
 			if($logFile){
 				fwrite($logFile, $outMessage);
@@ -177,53 +178,56 @@ class Debug{
    		echo '<h2>';
 		switch ($errno) {
 			case E_RECOVERABLE_ERROR:
-				echo "PHP Catchable Fatal Error";
+				$errTitle = "PHP Catchable Fatal Error";
 			break;
 			
 			case E_NOTICE:
-				echo "PHP Notice";
+				$errTitle = "PHP Notice";
 			break;
 
 			case E_WARNING:
-				echo "PHP Warning";
+				$errTitle = "PHP Warning";
 			break;
 
 			case E_ERROR:
-				echo "PHP Fatal Error";
+				$errTitle = "PHP Fatal Error";
 				$die = true;
 			break;
 
 			case E_PARSE:
-				echo "PHP Parse Error";
+				$errTitle = "PHP Parse Error";
 				$die = true;
 			break;
 
 			case E_COMPILE_ERROR:
-				echo "PHP Compile Fatal Error";
+				$errTitle = "PHP Compile Fatal Error";
 				$die = true;
 			break;
 
 			case E_DEPRECATED:
-				echo "PHP Deprecated Message";
+				$errTitle = "PHP Deprecated Message";
 			break;
 
 			case E_STRICT:
-				echo "PHP Strict Standars";
+				$errTitle = "PHP Strict Standars";
 			break;
 
 			default:
-				echo "PHP Error $errno";
+				$errTitle = "PHP Error $errno";
 			break;
 		}
+		echo $errTitle;
    		echo '</h2>';
+   		$errorMsg = "$errstr in <b>$errfile</b> on line <b>$errline</b>";
 		if(!UCMS_DEBUG){
-			echo "$errstr in <b>$errfile</b> on line <b>$errline</b>";
+			echo $errorMsg;
 		}else{
-			echo "$errstr in <b>$errfile</b> on line <b>$errline</b><br>";
+			echo "$errorMsg<br>";
 			echo '<p style="font-size: 8pt; padding: 10px;">';
 			echo debug_print_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
 			echo '</p>';
 		}
+		self::Log(tr($errTitle.': '.strip_tags($errorMsg)), self::LOG_ERROR);
 		self::EndBlock();
 		echo "<br>";
 		if($die) die;
