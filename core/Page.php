@@ -12,6 +12,7 @@ class Page{
 	private $data;
 	private $host;
 	private $path;
+	private $query = "";
 	private static $currentPage;
 
 	public function __construct($url = ""){
@@ -24,14 +25,20 @@ class Page{
 		if( isset($url['host']) ){
 			$this->host = $url['host'];
 		}
+		if( isset($url['query']) ){
+			$this->query = $url['query'];
+		}
+
 		$this->path = $url['path'];
-		if( empty($_GET['action']) ){
+		$data = array();
+		parse_str ( $this->query, $data );
+		if( empty($data['action']) ){
 			$this->data = preg_split('#(/)#', $this->path, -1, PREG_SPLIT_NO_EMPTY);
 		}else{
-			$this->data[0] = $_GET['action'];
-			if( !empty($_GET['key']) ){
-				$this->data = preg_split('#(/)#', $_GET['key'], -1, PREG_SPLIT_NO_EMPTY);
-				array_unshift($this->data, $_GET['action']);
+			$this->data[0] = $data['action'];
+			if( !empty($data['key']) ){
+				$this->data = preg_split('#(/)#', $data['key'], -1, PREG_SPLIT_NO_EMPTY);
+				array_unshift($this->data, $data['action']);
 			}
 		}
 
@@ -41,7 +48,7 @@ class Page{
 	}
 
 	public function __tostring(){
-		return $this->path;
+		return $this->path.(!empty($this->query) ? '?'.$this->query : '');
 	}
 
 	public static function FromAction($action, $data = ""){
@@ -109,6 +116,17 @@ class Page{
 		return $this->action;
 	}
 
+	public function getActionValue(){
+		return $this->getKeyValue($this->action);
+	}
+
+	public function getQuery($raw = false){
+		if ($raw) return $this->query;
+		$data = array();
+		parse_str($this->query, $data);
+		return $data;
+	}
+
 	public function getActionData(){
 		$data = $this->data;
 		unset($data[0]);
@@ -153,7 +171,7 @@ class Page{
 		* @todo add params for keeping GET and keys or somewhat
 		*/
 		$url = $_SERVER['REQUEST_URI'];
-		$url = strtok($url, '?'); // Remove all GET parameters
+		// $url = strtok($url, '?'); // Remove all GET parameters
 		if(headers_sent()){
 			echo '<script type="text/javascript">';
 			echo 'window.location.href="'.$url.'";';
