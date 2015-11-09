@@ -5,7 +5,7 @@ class Term extends Model{
 	public function init(){
 		$this->primaryKey('tid');
 		$this->tableName('terms');
-		$this->belongsTo("\\uCMS\\Core\\Extensions\\Entries\\Entry", array('through' => 'terms', 'bind' => 'entry'));
+		$this->belongsTo("\\uCMS\\Core\\Extensions\\Entries\\Entry", array('through' => 'term_taxonomy', 'bind' => 'entry'));
 	}
 }
 ?>
