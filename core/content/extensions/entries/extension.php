@@ -7,9 +7,11 @@ use uCMS\Core\Admin\ControlPanel;
 use uCMS\Core\uCMS;
 use uCMS\Core\Settings;
 use uCMS\Core\Database\Query;
+use uCMS\Core\Extensions\Users\Permission;
 class Entries extends \uCMS\Core\Extensions\Extension implements \uCMS\Core\Extensions\IExtension {
 
 	public function onLoad(){
+		Permission::Register('manage entries', tr('Manage Entries'), 'Allow user to add, edit and delete entries.');
 	}
 	
 	public function onInstall($stage){
