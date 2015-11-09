@@ -5,10 +5,26 @@ use uCMS\Core\Admin\ControlPanel;
 use uCMS\Core\Block;
 use uCMS\Core\Page;
 use uCMS\Core\Settings;
+use uCMS\Core\Extensions\Users\Permission;
+use uCMS\Core\Events\Event;
+use uCMS\Core\Events\CoreEvents;
 class Users extends \uCMS\Core\Extensions\Extension implements \uCMS\Core\Extensions\IExtension {
 
 	public function onLoad(){
+		Permission::Register('manage users', tr('Manage Users'), 'Allow user to add, edit and delete other users.');
 		User::CheckAuthorization();
+		// If user is banned we display simple page, saying that he doesn't have access to the site.
+		if( !User::Current()->can('access site') ){
+			Theme::LoadTemplate('access_denied');
+			exit;
+		}
+
+		if( !User::Current()->can('access site in maintenance mode') && !ControlPanel::IsActive() && Page::GetCurrent()->getAction() != "login" ){
+			if( (bool)Settings::Get('ucms_maintenance') ){
+				Theme::LoadTemplate('maintenance');
+				exit;
+			}
+		}
 	}
 
 	public function onInstall($stage){
