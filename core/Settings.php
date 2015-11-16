@@ -4,12 +4,38 @@ namespace uCMS\Core;
 use uCMS\Core\Database\Query;
 use uCMS\Core\Extensions\Extension;
 class Settings{
+	const ADMIN_EMAIL          = 'admin_email';
+	const BLOCKS_AMOUNT        = 'blocks_amount';
+	const CLEAN_URL            = 'clean_url';
+	const DATETIME_FORMAT      = 'datetime_format';
+	const DO_UPDATE_BACKUP     = 'do_update_backup';
+	const EMBEDDING_ALLOWED    = 'embedding_allowed';
+	const ENABLE_CACHE         = 'enable_cache';
+	const EXTENSIONS           = 'extensions';
+	const INSTALLED_TABLES     = 'installed_tables';
+	const LANGUAGE             = 'language';
+	const MAINTENANCE_MESSAGE  = 'maintenance_message';
+	const PER_PAGE             = 'per_page';
+	const SITE_AUTHOR          = 'site_author';
+	const SITE_DESCRIPTION     = 'site_description';
+	const SITE_DOMAIN          = 'site_domain';
+	const SITE_NAME            = 'site_name';
+	const SITE_TITLE           = 'site_title';
+	const THEME                = 'theme';
+	const UCMS_DIR             = 'ucms_dir';
+	const UCMS_MAINTENANCE     = 'ucms_maintenance';
+	const UCMS_TIMEZONE        = 'ucms_timezone';
+
 	private static $list = array();
 
 	public static function Add($name, $value, $public = false){
 		$owner = !$public ? Tools::GetCurrentOwner() : "";
 		$query = new Query('{settings}');
-		$query->insert(array('name' => $name, 'value' => $value, 'owner' => $owner), true)->execute();
+		$query->insert(
+			['name', 'value', 'owner'],
+			[[$name, $value, $owner]],
+			true
+		)->execute();
 		self::$list[$name] = array('name' => $name, 'value' => Tools::PrepareSQL($value), 'owner' => $owner);
 	}
 
