@@ -9,9 +9,10 @@ use uCMS\Core\Settings;
 use uCMS\Core\Tools;
 use uCMS\Core\Notification;
 class ControlPanel{
-	private static $sidebar;
+	private static $sidebar = array();
 	private static $action = Page::OTHER_ACTION;
 	const TITLE = "μCMS Control Panel";
+	const HOME_PAGE = 'Home';
 	const ACTION = "admin";
 	const SETTINGS_ACTION = "settings";
 	const THEME = "admin";
@@ -49,6 +50,10 @@ class ControlPanel{
 			}
 
 		}else{
+			if( self::GetAction() !== Page::INDEX_ACTION ){
+				$homePage = Page::ControlPanel();
+				$homePage->go();
+			}
 			$result['isUsed'] = true;
 			$result['default'] = true;
 			if( !User::Current()->isLoggedIn() ){
@@ -65,76 +70,103 @@ class ControlPanel{
 		return $result;
 	}
 
+	private static function SortSidebar($items){
+		$amount = count($items);
+		$added = array();
+		$limit = 10;
+		$c = 0;
+		while ( $amount > 0 && $c < $limit ) {
+			foreach ($items as $name => $item) {
+				if( !isset($added[$item['action']]) ){
+					foreach (self::$sidebar as $searchKey => $searchItem) {
+						if( $item['after'] === $searchItem['action'] ){
+							if( mb_substr($name, 0, 1) === '#' ){
+								$parent = 'settings';
+								$name = mb_substr($name, 1, mb_strlen($name));
+							}elseif( mb_substr($name, 0, 1) === '@' ){
+								$name = mb_substr($name, 1, mb_strlen($name));
+								$parent = $lastParent;
+							}else{
+								$parent = 0;
+								$lastParent = $item['action'];
+							}
+							self::$sidebar[] = array('name' => tr($name), 'action' => $item['action'], 'parent' => $parent, 'after' => $item['after'] );
+							$amount--;
+							$added[$item['action']] = true;
+							break;
+						}
+					}
+				}
+			}
+			$c++;
+		}
+	}
+
+	private static function GetWeight(&$allItems, $action = '', $maxWeight = 0){
+		foreach ($allItems as &$item) {
+			if( $item['action'] === $action || empty($action) ){
+
+				if ( $item['weight'] < 0 ){
+
+						$selfWeight = self::GetWeight($allItems, $item['after'], $maxWeight)+1;
+						if( $selfWeight <= $maxWeight ){
+							$selfWeight = ++$maxWeight;
+						}
+						$item['weight'] = $selfWeight;
+						return $item['weight'];
+				}else{
+					if( $item['weight'] > $maxWeight ){
+						$maxWeight = $item['weight'];
+					}
+					return $item['weight'];
+				}
+			}
+		}
+	}
+
+	private static function SetWeight(&$allItems, $action = ''){
+		$maxWeight = 0;
+		foreach ($allItems as &$item) {
+			if ( $item['weight'] < 0 ){
+				$item['weight'] = self::GetWeight($allItems, $item['after'])+1;
+			}
+		}
+	}
+
+	private static function sort($a, $b){
+		if( $a['weight'] == $b['weight'] ) return 0;
+		return $a['weight'] > $b['weight'] ? 1 : -1;
+	}
+
+
 	private static function LoadSidebar(){
-		$prevAction = 'home';
-		$position = 'home';
-		$waitingItems = array();
 		$loadedExtensions = Extension::GetLoaded();
-		$lastParent = "";
-		if( !empty($loadedExtensions) ){
-			foreach ($loadedExtensions as $name) {
-				$extensionItems = Extension::Get($name)->getAdminSidebarItems();
-				$positions = Extension::Get($name)->getAdminSidebarPositions();
-				if( !empty($extensionItems) && is_array($extensionItems) ){
-					foreach ($extensionItems as $name => $action) {
-						if ( $action == "" && strpos($action, "separator") === false ) continue;
-						$position = !empty($positions[$action]) ? $positions[$action] : $prevAction;
-						if( mb_substr($name, 0, 1) === '#' ){
-							$parent = 'settings';
-							$name = mb_substr($name, 1, mb_strlen($name));
-							$position = "settings";
-						}elseif( mb_substr($name, 0, 1) === '@' ){
-							$name = mb_substr($name, 1, mb_strlen($name));
-							$parent = $lastParent;
-						}else{
-							$parent = 0;
-							$lastParent = $action;
-						}
-						$item = array('name' => tr($name), 
-							'action' => $action, 'parent' => $parent, 'after' => $position);
-						if( $prevAction == $position && !isset($waitingItems[$position]) ){
-							self::$sidebar[] = $item;
-						}else{
-							$waitingItems[$action] = $item;
-						}
-						if( strpos($action, "settings/") === false && strpos($action, "separator") === false){
-							$prevAction = $action;
-						}
-					}
-				}
-			}
+		$allItems = array();
+		$allPositions = array();
+		foreach ($loadedExtensions as $name) {
+			$items = Extension::Get($name)->getAdminSidebarItems();
+			$allItems = array_merge($allItems, $items);
 		}
-		$offset = array();
-		$count = 0;
-		$limit = 32;
-		while( !empty($waitingItems) && $count < $limit ){
-			foreach ($waitingItems as $key => $item) {
-				foreach (self::$sidebar as $searchKey => $searchItem) {
-					if( $item['after'] == $searchItem['action'] ){
-						if( !isset($offset[$searchKey]) ){
-							$offset[$searchKey] = 1;
-						}else{
-							$offset[$searchKey]++;
-						}
-						array_splice(self::$sidebar, $searchKey+$offset[$searchKey], 0, array($item));
-						unset($waitingItems[$key]);
-					}
-				}
-				if( $item['after'] == "settings" ){
-					array_push(self::$sidebar, $item);
-					unset($waitingItems[$key]);
+		$prevWeight = 0;
+		$prevAfter = 'home';
+		
+		self::SetWeight($allItems);
+		uasort($allItems, __NAMESPACE__.'\\ControlPanel::sort');
+
+		foreach ($allItems as $name => $item) {
+			if( mb_substr($name, 0, 1) === '#' ){
+				$parent = 'settings';
+				$name = mb_substr($name, 1, mb_strlen($name));
+			}elseif( mb_substr($name, 0, 1) === '@' ){
+				$name = mb_substr($name, 1, mb_strlen($name));
+				$parent = $lastParent;
+			}else{
+				$parent = 0;
+				if( strpos($item['action'], "separator" ) === false ){
+					$lastParent = $item['action'];
 				}
 			}
-			$count++;
-		}
-		/* 
-		   If current item depends on item from another extension,
-		   which was disabled or deleted, this will prevent it from disappearing
-		*/
-		if( !empty($waitingItems) ){
-			foreach ($waitingItems as $key => $item) {
-				array_push(self::$sidebar, $item);
-			}
+			self::$sidebar[] = array('name' => tr($name), 'action' => $item['action'], 'parent' => $parent, 'after' => $item['after'] );
 		}
 	}
 
@@ -157,7 +189,8 @@ class ControlPanel{
 		$settingsTitle = (self::IsSettingsPage() && !empty($settingsAction) )
 		? tr('Settings').$delimeter : "";
 		$newTitle = $settingsTitle.$title;
-		Theme::GetCurrent()->setTitle($newTitle.$delimeter.self::TITLE);
+		$siteName = Settings::Get('site_name');
+		Theme::GetCurrent()->setTitle($newTitle.$delimeter.self::TITLE.$delimeter.$siteName);
 		Theme::GetCurrent()->setPageTitle($newTitle);
 	}
 
@@ -200,10 +233,9 @@ class ControlPanel{
 						$link = Page::FromAction(self::ACTION, $key['action'])->getURL();
 						$selected = self::PrintSidebar($key['action'], true);
 						if( !$selected ){
-							$selected = (mb_strpos( htmlspecialchars_decode((string)Page::GetCurrent()), htmlspecialchars_decode($link) ) !== false);
+							$selected = (mb_strpos( (string)Page::GetCurrent(), $link ) !== false);
 							if( empty($key['action']) ) { // Select home page button
-								$selected = (htmlspecialchars_decode((string)Page::GetCurrent()) == htmlspecialchars_decode($link)
-											|| htmlspecialchars_decode((string)Page::GetCurrent()).'/' == htmlspecialchars_decode($link));
+								$selected = ((string)Page::GetCurrent() == $link || (string)Page::GetCurrent().'/' == $link);
 							}
 						}
 						if( $selected and $checkSelection ){
@@ -233,7 +265,7 @@ class ControlPanel{
 			$pageFile = $extension->getAdminPageFile($currentAction);
 		}
 		if( !empty($extension) && !empty($pageFile) ){
-			include_once($pageFile);
+			return $pageFile;
 		}else{
 			Debug::Log(tr("Unable to load admin page for action: @s", $currentAction), Debug::LOG_ERROR);
 			$homePage = Page::FromAction(self::ACTION);
@@ -265,7 +297,8 @@ class ControlPanel{
 				$success->add();
 			}
 		}
-		Page::Refresh();
+		$page = Page::ControlPanel(ControlPanel::GetAction());
+		$page->go();
 	}
 }
 ?>
