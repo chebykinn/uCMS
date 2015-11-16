@@ -57,23 +57,37 @@ class Extension extends AbstractExtension{
 		$this->admin        = !empty($decodedInfo['admin'])        ? $decodedInfo['admin']        : array();
 		$this->adminPages   = !empty($decodedInfo['adminPages'])   ? $decodedInfo['adminPages']   : "";
 		$separatorIndex = 1;
+		$prevAction = 'home';
+		$separator = false;
 		foreach ($this->admin as $key => &$item) {
+			$separator = false;
 			if( is_array($item) && count($item) == 2 ){ // if sidebar position is set
-				if( empty($item[0]) ){
-					$item[0] = $key;
-					if( strpos($item[0], "separator" ) !== false ){
-						$item[0] .= $separatorIndex++;
-					}
-				}
-				$this->sidebarPosition[$item[0]] = $item[1];
-				$item = $item[0]; 
+				$action = $item[0];
+				$after  = $item[1];
+				$weight = -1;
 			}else{
-				if( empty($item) ){
-					$item = $key;
-					if( strpos($item, "separator" ) !== false ){
-						$item .= ++$separatorIndex;
-					}
+				$action = $item;
+				$after  = $prevAction;
+				$weight = -2;
+			}
+			if( empty($action) ){
+				$action = $key;
+				if( strpos($action, "separator" ) !== false ){
+					$action .= ++$separatorIndex;
+					$separator = true;
 				}
+			}
+
+			if( $this->name === 'admin' && $action === Page::INDEX_ACTION ){
+				$weight = 0;
+			}
+
+			if( strpos($action, ControlPanel::SETTINGS_ACTION.'/') !== false ){
+				$after = ControlPanel::SETTINGS_ACTION;
+			}
+			$item = array('name' => $key, 'action' => $action, 'after' => $after, 'weight' => $weight);
+			if( !$separator ){
+				$prevAction = $action;
 			}
 		}
 	}
@@ -87,7 +101,11 @@ class Extension extends AbstractExtension{
 
 	final public function getAdminActions(){
 		if( is_array($this->admin) ){
-			return array_values($this->admin);
+			$actions = array();
+			foreach ($this->admin as $key => $item) {
+				$actions[] = $item['action'];
+			}
+			return $actions;
 		}
 		return array();
 	}
@@ -95,13 +113,6 @@ class Extension extends AbstractExtension{
 	final public function getAdminSidebarItems(){
 		if( is_array($this->admin) ){
 			return $this->admin;
-		}
-		return array();
-	}
-
-	final public function getAdminSidebarPositions(){
-		if( is_array($this->sidebarPosition) ){
-			return $this->sidebarPosition;
 		}
 		return array();
 	}
@@ -137,7 +148,7 @@ class Extension extends AbstractExtension{
 		self::$list = array();
 		self::$usedActions = array();
 		self::$usedAdminActions = array();
-		self::$defaultList = array('admin', 'filemanager', 'users', 'menus', 'entries', 'comments');
+		self::$defaultList = array('users', 'admin', 'filemanager', 'menus', 'entries', 'comments', 'search');
 		$externalList = is_array(unserialize(Settings::Get('extensions'))) ? unserialize(Settings::Get('extensions')) : array();
 		$extensions = array_merge(self::$defaultList, $externalList);
 		$extensionActions = $extensionAdminActions = array();
@@ -269,7 +280,7 @@ class Extension extends AbstractExtension{
 			if( in_array($name, self::$defaultList) ){
 				return require_once(ABSPATH.self::CORE_PATH."$name/extension.php");
 			}
-			$dataExists = ( file_exists(ABSPATH.self::PATH.$name.'/extension.php') && file_exists(ABSPATH.self::PATH.$name.'/'.self::INFO) );
+			$dataExists = ( is_dir(ABSPATH.self::PATH.$name) && file_exists(ABSPATH.self::PATH.$name.'/extension.php') && file_exists(ABSPATH.self::PATH.$name.'/'.self::INFO) );
 	
 			if ( $dataExists ){
 				$extensionClass = "\\uCMS\\Core\\Extensions\\Extension";

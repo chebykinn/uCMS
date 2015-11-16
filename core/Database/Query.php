@@ -50,24 +50,51 @@ class Query{
 		return $this;
 	}
 
-	public function insert($columnsAndValues, $ignore = false){
+	public function insert($columns, $valueLists, $ignore = false){
 		$this->type = 'insert';
-		$noQuotes = array('NULL', 'NOW()');
-		if( is_array($columnsAndValues) ){
-			$params = array();
-			$columns = array();
-			foreach ($columnsAndValues as $column => $value) {
-				$params[":$column"] = $value;
-				$columns[] = $column;
+		if( is_array($columns) && is_array($valueLists) ){
+			$params = [];
+			$columnsAmount = count($columns);
+			$i = 0;
+			$lists = [];
+			foreach ($valueLists as $valueList) {
+				if( $columnsAmount == 0 || count($valueList) >= $columnsAmount ){
+					$c = 0;
+					foreach ($valueList as $value) {
+						// Ensure that we won't fall out of bounds.
+						if( $columnsAmount > 0 && $c == $columnsAmount ) break;
+						$column = md5($value.$i.$c);
+						$key = ":$column$i";
+						$params[$key] = $value;
+						$lists[$i][] = $key;
+						$c++;
+					}
+					$columnsAmount = $c;
+				}else{
+					// If we haven't got enough value, we will fill missing with zeroes.
+					$valuesLeft = $columnsAmount - count($valueList);
+					for ($c = $valuesLeft; $c < $columnsAmount; $c++) { 
+						$valueList[$c] = 0;
+					}
+				}
+				$i++;
 			}
-			$sqlColumns = implode(", ", $columns);
-			$sqlValues  = implode(", ", array_keys($params));
+			$sqlColumns = '';
+			if( !empty($columns) ){
+				$sqlColumns = '('.implode(", ", $columns).')';	
+			}
+
+			$sqlValues = [];
+			foreach ($lists as $values) {
+				$sqlValues[] = '('.implode(', ', $values).')';
+			}
+			$sqlValues  = implode(", ", $sqlValues);
 			/**
 			* @todo checks
 			*/
 
 			$sqlIgnore = $ignore ? "IGNORE" : "";
-			$this->sql = "INSERT $sqlIgnore INTO $this->table ($sqlColumns) VALUES ($sqlValues)";
+			$this->sql = "INSERT $sqlIgnore INTO $this->table $sqlColumns VALUES $sqlValues";
 			$this->params = $params;
 		}
 		return $this;
@@ -302,6 +329,11 @@ class Query{
 		if( empty($this->database) ) return;
 		return $this->table;
 	}
+
+	public function createTable(array $schema){
+		$this->type = 'createTable';
+	}
+
 
 	private function findNextName($column){
 		$column = preg_replace("/[^a-z0-9]/i", "", $column);
