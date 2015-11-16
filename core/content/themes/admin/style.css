@@ -331,3 +331,7 @@ h1, h2{
 	float: right;
 	margin-right: 20%;
 }
+
+.load-package-wrapper input{
+	clear: both;
+}

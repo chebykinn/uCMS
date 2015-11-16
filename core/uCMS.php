@@ -1,5 +1,6 @@
 <?php
 namespace uCMS\Core;
+use uCMS\Core\Extensions\FileManager\File;
 
 class uCMS{
 	const CORE_VERSION = "2.0 Alpha 5";
@@ -10,6 +11,8 @@ class uCMS{
 	const ERR_FORBIDDEN = 403;
 	const ERR_INVALID_PACKAGE = 100;
 	const ERR_HOST_FAILURE = 101;
+	const ERR_NO_UPDATE_PACKAGE = 102;
+	const ERR_NO_PERMISSIONS = 103;
 	const SUCCESS = 0;
 	const CONFIG_FILE = 'config.php';
 	const CONFIG_SAMPLE = 'config-manual.php';
@@ -48,6 +51,31 @@ class uCMS{
 
 	public static function IsUpdateAvailable(){
 		return version_compare(self::CORE_VERSION, self::GetLatestVersion(), '<');
+	}
+
+	public static function DownloadPackage($version){
+		$versionData = explode(' ', $version, 2);
+		$baseVersion = $version;
+		$stageVersion = "";
+		if( isset($versionData[1]) ){
+			$baseVersion = $versionData[0];
+			$stageVersion = mb_strtolower(str_replace(" ", "-", $versionData[1]));
+		}
+		$remotepath = self::UCMS_HOST."/pub/ucms-$baseVersion/ucms-$baseVersion".(!empty($stageVersion) ? "-$stageVersion" : '').".zip";
+		$localpath = ABSPATH.File::UPLOADS_PATH.'update.zip';
+
+		$file_headers = @get_headers($remotepath);
+		if($file_headers[0] == 'HTTP/1.1 404 Not Found') {
+			$exists = false;
+		}else {
+			$exists = true;
+		}
+
+		if( $exists ){
+			@copy($remotepath, $localpath);
+			return self::SUCCESS;
+		}
+		return self::ERR_NOT_FOUND;
 	}
 
 	public static function GetPackageHashes(){

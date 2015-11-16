@@ -1,19 +1,22 @@
 {
 	"version": "1.0",
 	"coreVersion": "2.x",
+	"dependencies":[
+		"users"
+	],
 	"actions": [
 		"admin"
 	],
 	"admin": {
 		"Home": "home",
-		"separator0": ["", "groups"],
-		"Tools": ["tools", "groups"],
+		"separator0": ["", "files"],
+		"Tools": ["tools", "files"],
 		"@Journal": "journal",
 		"@PHP Info": "phpinfo",
 		"separator1": "",
-		"Extensions": "extensions",
+		"Extensions": ["extensions", "phpinfo"],
 		"@Themes": "themes",
-		"separator2": "",
+		"separator2": ["", "themes"],
 		"Update": "update",
 		"separator3": "",
 		"Settings": "settings"

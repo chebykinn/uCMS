@@ -3,7 +3,9 @@ namespace uCMS\Core;
 use uCMS\Core\Extensions\Theme;
 use uCMS\Core\Extensions\Extension;
 use uCMS\Core\Database\DatabaseConnection;
+use uCMS\Core\Database\Query;
 use uCMS\Core\Language\Language;
+use uCMS\Core\Extensions\FileManager\File;
 
 class Installer{
 	private $stageCallback = "welcome";
@@ -140,7 +142,7 @@ class Installer{
 		$this->setTitle();
 		switch ($this->currentStage) {
 			case self::LANGUAGE_STAGE:
-				$this->setTitle('Select Language');
+				$this->setTitle(tr('Select Language'));
 				if( $isPosted ){
 					$language = isset($_POST['language']) ? $_POST['language'] : 'en_US';
 					Session::GetCurrent()->set('language', $language);
@@ -148,18 +150,21 @@ class Installer{
 			break;
 
 			case self::WELCOME_STAGE:
-				$this->setTitle('Welcome!');
+				$this->setTitle(tr('Welcome!'));
 				if( $isPosted ){
 					$nextStage = self::CONFIG_STAGE;
 				}
 			break;
 
 			case self::CONFIG_STAGE:
-				$this->setTitle('Database Connection Configuration');
+				$this->setTitle(tr('Database Connection Configuration'));
 				$server   = !empty($_POST['server']) ? $_POST['server'] : 'localhost';
 				if( $isPosted ){
 					$port     = explode(":", $server);
 					$dbPort   = !empty($port[1]) ? (int) $port[1] : "";
+					if( !empty($dbPort) ){
+						$server = $port[0];
+					}
 					$login    = !empty($_POST['user']) ? $_POST['user'] : "root";
 					$password = !empty($_POST['password']) ? $_POST['password'] : "";
 					$dbName   = !empty($_POST['name']) ? $_POST['name'] : "ucms";
@@ -182,6 +187,7 @@ class Installer{
 						if( $file === false){
 							$nextStage = self::CONNECT_ERROR_STAGE;
 						}else{
+							// Data is correct now we have to create config.php
 							fprintf($file, '%s', $config);
 							fclose($file);
 							$nextStage = self::CHECK_STAGE;
@@ -189,19 +195,18 @@ class Installer{
 					}catch(\PDOException $e){
 						$nextStage = self::CONNECT_ERROR_STAGE;
 					}
-					// Data is correct now we have to create config.php
 				}
 			break;
 
 			case self::CONNECT_ERROR_STAGE:
-				$this->setTitle('Error Connecting To Database');
+				$this->setTitle(tr('Error Connecting To Database'));
 				if( $isPosted ){
 					$nextStage = self::CONFIG_STAGE;
 				}
 			break;
 
 			case self::TABLES_STAGE:
-				$this->setTitle('Creating Tables');
+				$this->setTitle(tr('Creating Tables'));
 				if( $isPosted ){
 					// TODO: Implement
 					echo 'making tables';
@@ -210,19 +215,30 @@ class Installer{
 			break;
 
 			case self::CHECK_STAGE:
-				$this->setTitle('Checking State...');
-				// Check core tables
-				$tables = DatabaseConnection::GetDefault()->checkDefaultTables();
-				if( in_array(false, $tables) ){
-					$nextStage = self::TABLES_STAGE;
+				$this->setTitle(tr('Checking State...'));
+				// If update process was started
+				if( isset($_POST['update']) && isset($_POST['action']) ){
+					Session::GetCurrent()->set('update-action', $_POST['action']);
+					if( isset($_POST['package']) ){
+						Session::GetCurrent()->set('update-package', $_POST['package']);
+					}
+					$nextStage = self::UPDATE_STAGE;
 				}else{
-					// Check settings table
-					$nextStage = $this->checkSettings();
-					// Load extensions checks
-					if( empty($nextStage) ){
-						$needInstall = Extension::CheckInstall();
-						if( $needInstall ){
-							$nextStage = self::EXTENSIONS_STAGE;
+					// Check core tables
+					$tables = DatabaseConnection::GetDefault()->checkDefaultTables();
+					if( in_array(false, $tables) ){
+						$nextStage = self::TABLES_STAGE;
+					}else{
+						// Check settings table
+						$nextStage = $this->checkSettings();
+						// Load extensions checks
+						if( empty($nextStage) ){
+							$needInstall = Extension::CheckInstall();
+							if( $needInstall ){
+								$nextStage = self::EXTENSIONS_STAGE;
+							}else{
+								$nextStage = self::FINE_STAGE;
+							}
 						}
 					}
 				}
@@ -230,7 +246,7 @@ class Installer{
 			break;
 
 			case self::SITEINFO_STAGE:
-				$this->setTitle('Site Information');
+				$this->setTitle(tr('Site Information'));
 				if( $isPosted ){
 					// TODO: Implement
 					echo 'adding info';
@@ -245,10 +261,66 @@ class Installer{
 			break;
 
 			case self::UPDATE_STAGE:
+				$this->setTitle(tr('Update in Process'));
+				$action = Session::GetCurrent()->get('update-action');
+				$package = Session::GetCurrent()->get('update-package');
+				Session::GetCurrent()->delete('update-action');
+				Session::GetCurrent()->delete('update-package');
+				$currentVersion = uCMS::CORE_VERSION;
+				$installPath = ABSPATH;
+				$backupPath = ABSPATH.File::UPLOADS_PATH;
+				$backupName = 'ucms';
+				if( empty($package) ){
+					// If installation wasn't started from file, we should download package
+					$version = uCMS::CORE_VERSION;
+					switch ($action) {
+						case 'update':
+							$version = uCMS::GetLatestVersion();
+						break;
+						
+						case 'reinstall':
+							$version = uCMS::CORE_VERSION;
+						break;
+					}
+
+					$result = uCMS::DownloadPackage($version);
+
+					if( $result == uCMS::ERR_NOT_FOUND ){
+						$error = new Notification(tr('Error: Unable to get update package'), Notification::ERROR);
+						$error->add();
+						$back = Page::ControlPanel('update');
+						$back->go();
+					}
+					$package = ABSPATH.File::UPLOADS_PATH.'update.zip';
+				}
+				//	Backup previous files => Download package => Unpack files => Run install check with new version
+				Settings::Update(Settings::UCMS_MAINTENANCE, '1');
+				$this->createBackup($backupPath, $backupName, $currentVersion);
+				$result = $this->extractUpdate($installPath, $package);
+				if( $result != uCMS::SUCCESS ){
+					switch ($result) {
+						case uCMS::ERR_NO_PERMISSIONS:
+							$error = new Notification(tr('Error: Unable to write to: @s', $installPath), Notification::ERROR);
+						break;
+
+						case uCMS::ERR_INVALID_PACKAGE:
+							$error = new Notification(tr('Error: Invalid package provided: @s', $package), Notification::ERROR);
+						break;
+
+						case uCMS::ERR_NO_UPDATE_PACKAGE:
+							$error = new Notification(tr('Error: Package not found: @s', $package), Notification::ERROR);
+						break;
+					}
+					$error->add();
+					$back = Page::ControlPanel('update');
+					$back->go();
+				}
+				Session::GetCurrent()->set('updated', true);
+				Settings::Update(Settings::UCMS_MAINTENANCE, '0');
 			break;
 
 			case self::FINE_STAGE:
-				$this->setTitle('Everything\'s Fine');
+				$this->setTitle(tr('Everything\'s Fine'));
 			break;
 
 			case self::DONE_STAGE:
@@ -342,7 +414,7 @@ class Installer{
 	}
 
 	private function updateStage(){
-		// TODO: Implement
+		$this->switchStage(self::CHECK_STAGE);
 
 	}
 
@@ -351,7 +423,7 @@ class Installer{
 
 	}
 
-	public function fineStage(){
+	private function fineStage(){
 		print '<p>';
 		p('μCMS is already installed and everything is working flawlessly (according to our checks).<br> To reinstall μCMS please delete our tables or configuration file.');
 		print '</p>';
@@ -363,10 +435,87 @@ class Installer{
 		if( method_exists($this, $this->stageCallback) ){
 			return call_user_func_array(array($this, $this->stageCallback), $args);
 		}
-    }
+	}
 
-    private function addSettings(){
+	private function addSettings($name, $description, $title, $domain, $ucmsDir){
+		$query = new Query("{settings}");
 
-    }
+		$query->insert(['name', 'value', 'owner', 'changed'], 
+			[
+				[Settings::ADMIN_EMAIL,         '',             'core', 0],
+				[Settings::BLOCKS_AMOUNT,       '',             '',     0],
+				[Settings::CLEAN_URL,           '1',            'core', 0],
+				[Settings::DATETIME_FORMAT,     'Y-m-d H:i',    'core', 0],
+				[Settings::DO_UPDATE_BACKUP,    '1',            'core', 0],
+				[Settings::EMBEDDING_ALLOWED,   '0',            'core', 0],
+				[Settings::ENABLE_CACHE,        '1',            'core', 0],
+				[Settings::EXTENSIONS,          '',             'core', 0],
+				[Settings::INSTALLED_TABLES,    '',             'core', 0],
+				[Settings::LANGUAGE,            'en_US',        'core', 0],
+				[Settings::MAINTENANCE_MESSAGE, '',             'core', 0],
+				[Settings::PER_PAGE,            '20',           'core', 0],
+				[Settings::SITE_AUTHOR,         '',             'core', 0],
+				[Settings::SITE_DESCRIPTION,    '$description', 'core', 0],
+				[Settings::SITE_DOMAIN,         '$domain',      'core', 0],
+				[Settings::SITE_NAME,           '$name',        'core', 0],
+				[Settings::SITE_TITLE,          '$title',       'core', 0],
+				[Settings::THEME,               '',             'core', 0],
+				[Settings::UCMS_DIR,            '$ucmsDir',     'core', 0],
+				[Settings::UCMS_MAINTENANCE,    '1',            'core', 0],
+				[Settings::UCMS_TIMEZONE,       'UTC',          'core', 0]
+			]
+		);
+		$query->execute();
+	}
+
+	private function addTables(){
+
+	}
+
+	private function createBackup($path, $name, $version){
+		$isBackupEnabled = (bool)Settings::Get(Settings::DO_UPDATE_BACKUP);
+		if( $isBackupEnabled ){ // Backup all files except uploads directory
+			$name = mb_strtolower(str_replace(" ", "-", $name));
+			$version = mb_strtolower(str_replace(" ", "-", $version));
+			$backup = ABSPATH.File::UPLOADS_PATH."backup-$name-$version.zip";
+			$zip = new \ZipArchive();
+			$zip->open($backup, \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
+			
+			$files = new \RecursiveIteratorIterator( 
+				new \RecursiveDirectoryIterator(ABSPATH),
+				\RecursiveIteratorIterator::LEAVES_ONLY
+			);
+	
+			$uploads = ABSPATH.File::UPLOADS_PATH;
+			foreach ($files as $name => $file){
+				$filePath = $file->getRealPath();
+				// TODO: exclude directories
+				if ( !$file->isDir() && strpos($filePath, $uploads) === false ){
+					$relativePath = mb_substr($filePath, mb_strlen(ABSPATH));
+					$zip->addFile($filePath, $relativePath);
+				}
+			}
+			$zip->close();
+		}
+	}
+
+	private function extractUpdate($installPath, $package){
+		if( !file_exists($package) ){
+			return uCMS::ERR_NO_UPDATE_PACKAGE;
+		}
+		if( is_writable($installPath) ){
+			$zip = new \ZipArchive();
+			$res = $zip->open($package);
+			if($res === TRUE){
+				$zip->extractTo($installPath);
+				$zip->close();
+				return uCMS::SUCCESS;
+			}else{
+				return uCMS::ERR_INVALID_PACKAGE;
+			}
+		}
+		return uCMS::ERR_NO_PERMISSIONS;
+	}
+
 }
 ?>
