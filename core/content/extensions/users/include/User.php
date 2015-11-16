@@ -76,9 +76,12 @@ class User extends Model{
 		$hash = Tools::GenerateHash();
 		$updateSession = new Query("{sessions}");
 		$updated = $saveCookies ? 0 : time();
-		$updateSession->insert( array('sid' => $hash, 'uid' => $userID, 'ip' => Session::getCurrent()->getIPAddress(), 'updated' => $updated, 'created' => time() ) )->execute();
+		$updateSession->insert(
+			['sid', 'uid', 'ip', 'updated', 'created'],
+			[[$hash, $userID, Session::getCurrent()->getIPAddress(), $updated, time()]]
+		)->execute();
 		$lastlogin = new Query("{users}");
-		$lastlogin->update(array('lastlogin' => time()))->where()->condition("uid", '=', $userID)->execute();
+		$lastlogin->update(['lastlogin' => time()])->where()->condition("uid", '=', $userID)->execute();
 		//save cookies if needed
 		if( $saveCookies ){
 			Session::GetCurrent()->saveID($hash); //save cookie for year

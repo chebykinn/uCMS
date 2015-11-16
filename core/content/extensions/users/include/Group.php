@@ -38,7 +38,10 @@ class Group extends Model{
 			$data = $check->select('owner')->where()->condition('name', '=', $name)->limit(1)->execute(); //add query method to check
 			if(count($data) > 0){
 				$add = new Query('{group_permissions}');
-				$add->insert(array('gid' => $group->getID(), 'name' => $name, 'owner' => $data[0]['owner']))->execute();
+				$add->insert(
+					['gid', 'name', 'owner'],
+					[[$group->getID(), $name, $data[0]['owner']]]
+				)->execute();
 			}
 		}
 	}
