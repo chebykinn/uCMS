@@ -31,6 +31,11 @@ class Theme extends AbstractExtension{
 	*/
 	private $pageTitle, $pageContent;
 
+	public function __construct($name){
+		if( empty($name) ) $name = self::DEFAULT_THEME;
+		parent::__construct($name);
+	}
+
 	public static function SetCurrent($themeName){
 		self::$defaultList = array('install', 'ucms', 'admin');
 		self::$instance = new self($themeName);
@@ -57,9 +62,9 @@ class Theme extends AbstractExtension{
 				closedir($dh);
 			}
 		}
-		$dirs = @scandir(self::PATH);// array_filter(scandir(self::PATH), 'is_dir');
-		if ( $dh = @opendir(self::PATH) ) {
-			while ( ($theme = readdir($dh)) !== false && !in_array($theme, $exclude) ) {
+		$dirs = @scandir(ABSPATH.self::PATH);// array_filter(scandir(self::PATH), 'is_dir');
+		if ( $dh = @opendir(ABSPATH.self::PATH) ) {
+			while ( ($theme = readdir($dh)) !== false ) {
 				/**
 				* @todo check .. ?
 				*/
@@ -136,8 +141,8 @@ class Theme extends AbstractExtension{
 		$decodedInfo = json_decode($encodedInfo, true);
 		$checkRequiredFields = empty($decodedInfo['version']) || empty($decodedInfo['coreVersion']);
 		if( $decodedInfo === NULL || $checkRequiredFields ){
-			Debug::Log(tr("Can't get extension information @s", $this->name), Debug::LOG_ERROR);
-			throw new \InvalidArgumentException("Can't get extension information");
+			//Debug::Log(tr("Can't get extension information @s", $this->name), Debug::LOG_ERROR);
+			throw new \InvalidArgumentException("Can't get theme information");
 		}
 		$this->version = $decodedInfo['version'];
 		$this->coreVersion = $decodedInfo['coreVersion'];
