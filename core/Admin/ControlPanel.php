@@ -1,7 +1,7 @@
 <?php
 namespace uCMS\Core\Admin;
 use uCMS\Core\Extensions\Theme;
-use uCMS\Core\Extensions\Extension;
+use uCMS\Core\Extensions\ExtensionHandler;
 use uCMS\Core\Extensions\Users\User;
 use uCMS\Core\Page;
 use uCMS\Core\Debug;
@@ -140,11 +140,11 @@ class ControlPanel{
 
 
 	private static function LoadSidebar(){
-		$loadedExtensions = Extension::GetLoaded();
+		$loadedExtensions = ExtensionHandler::GetLoaded();
 		$allItems = array();
 		$allPositions = array();
 		foreach ($loadedExtensions as $name) {
-			$items = Extension::Get($name)->getAdminSidebarItems();
+			$items = ExtensionHandler::Get($name)->getAdminSidebarItems();
 			$allItems = array_merge($allItems, $items);
 		}
 		$prevWeight = 0;
@@ -260,7 +260,7 @@ class ControlPanel{
 
 	public static function LoadTemplate(){
 		$currentAction = self::GetAction();
-		$extension = Extension::GetExtensionByAdminAction($currentAction);
+		$extension = ExtensionHandler::GetExtensionByAdminAction($currentAction);
 		if( is_object($extension) ){
 			$pageFile = $extension->getAdminPageFile($currentAction);
 		}
