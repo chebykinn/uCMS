@@ -3,10 +3,26 @@ namespace uCMS\Core\Database;
 use uCMS\Core\Debug;
 use uCMS\Core\Loader;
 use uCMS\Core\Page;
+use uCMS\Core\Tools;
 class DatabaseConnection{
 	const DISPLAY_QUERY = false;
 	const DEFAULT_NAME = 'default';
 	const ERR_TABLE_NOT_EXIST = "42S02";
+
+	const SCHEMA_CORRECT = 0;
+	const ERR_SCHEMA_WRONG_KEY = 200;
+	const ERR_SCHEMA_NO_FIELDS = 300;
+	const ERR_SCHEMA_NO_FIELD_NAME = 400;
+	const ERR_SCHEMA_WRONG_FIELD = 500;
+	const ERR_SCHEMA_WRONG_FIELD_VALUE = 600;
+	const ERR_SCHEMA_WRONG_TYPE = 700;
+	const ERR_SCHEMA_WRONG_SIZE = 800;
+	const ERR_SCHEMA_NO_TYPE = 900;
+	const ERR_SCHEMA_NO_PRECISION = 1000;
+	const ERR_SCHEMA_NO_SCALE = 1100;
+	const ERR_SCHEMA_WRONG_ENGINE = 1200;
+	const ERR_SCHEMA_WRONG_VALUE = 1300;
+
 	private static $default;
 	private static $databases = array();
 	private $dbServer, $dbUser, $dbPassword, $dbName;
@@ -199,27 +215,156 @@ class DatabaseConnection{
 			$data = array();
 			$exists = false;
 			foreach ($this->tables as $table) {
-				try{
-					$fullTable = $this->prefix.$table;
-					$this->connection->query("SELECT 1 FROM $fullTable LIMIT 1");
-					$exists = true;
-				}catch(\PDOException $e){
-					if( $e->getCode() === self::ERR_TABLE_NOT_EXIST ){
-						$exists = false;
-					}
-				}
+				$fullTable = $this->prefix.$table;
+				$exists = $this->isTableExists($fullTable);
 				$data[$table] = $exists;
 			}
 			return $data;
 		}
 	}
 
+	public function isTableExists($table){
+		$table = Tools::PrepareSQL($table);
+		$exists = true;
+		try{
+			$this->connection->query("SELECT 1 FROM $table LIMIT 1");
+			$exists = true;
+		}catch(\PDOException $e){
+			if( $e->getCode() === self::ERR_TABLE_NOT_EXIST ){
+				$exists = false;
+			}
+		}
+		return $exists;
+	}
+
 	public function setDefaultTables(){
-		$this->tables = array('settings', 'blocks', 'cache', 'ips', 'sessions', 'menus');
+		$this->tables = array('settings', 'blocks', 'cache', 'ips', 'sessions');
 	}
 
 	public function getuCMSName(){
 		return $this->ucmsName;
+	}
+
+	public static function CheckSchema(array $schema){
+		// Schema definition is almost compatible with Drupal
+		$baseKeys = [
+			'description', // Description of table
+			'fields', // And array of fields
+			'unique keys', // An associative array of unique keys ('keyname' => specification). Each specification is an array of one or more key column specifiers.
+			'indexes', //An associative array of indexes ('indexname' => specification). Each specification is an array of one or more key column specifiers that form an index on the table.
+			'primary key', // Primary key for table
+			'mysql_engine', // In MySQL databases, the engine to use instead of the default
+			'mysql_character_set', // In MySQL databases, the character set to use instead of the default.
+			'collation' // In MySQL databases, the collation to use instead of the default.
+		];
+
+		$keys = [
+			'description', // Description of field
+			'type', // Type of field
+			'mysql_type', // Database driver dependent type
+			'size', // Data size
+			'not null', // If true, no null values will be allowed in field. Default: false
+			'default', // Default value for field
+			'length', // Length of length
+			'unsigned', // A boolean indicating whether a type 'int', 'float' and 'numeric' only is signed or unsigned.
+			'precision', // For type 'numeric' fields, indicates the precision (total number of significant digits) and scale (decimal digits right of the decimal point). 
+			'scale', // See previous
+			'serialize', // A boolean indicating whether the field will be stored as a serialized string.
+			'binary', // A boolean indicating that MySQL should force 'char', 'varchar' or 'text' fields to use case-sensitive binary collation. This has no effect on other database types for which case sensitivity is already the default behavior.
+			
+		];
+		$arrayKeys = ['fields', 'unique keys', 'indexes'];
+		$engines = ['InnoDB', 'MyISAM'];
+		$types = ['varchar', 'char', 'int', 'serial', 'float', 'numeric', 'text', 'blob', 'datetime'];
+		$sizes = ['tiny', 'small', 'medium', 'normal', 'big'];
+		$hasFields = false;
+		$hasType = false;
+
+		foreach ($schema as $key => $value) {
+			if( !in_array($key, $baseKeys) ) return self::ERR_SCHEMA_WRONG_KEY;
+			if( in_array($key, $arrayKeys) && !is_array($value) ) return self::ERR_SCHEMA_WRONG_VALUE;
+			if( $key === 'fields' ){
+				if( count($value) == 0 ) return self::ERR_SCHEMA_NO_FIELDS;
+				$hasFields = true;
+				foreach ($value as $columnName => $columnData) {
+					$precisionSet = -1;
+					$scaleSet = -1;
+					if( $columnName == "" ) return self::ERR_SCHEMA_NO_FIELD_NAME;
+					$hasType = false;
+					foreach ($columnData as $fieldKey => $fieldValue) {
+						if( is_int($fieldKey) ) continue;
+						if( !in_array($fieldKey, $keys) ) return self::ERR_SCHEMA_WRONG_FIELD;
+						
+						if( $fieldKey === 'type' ){
+							
+							if( !in_array($fieldValue, $types) ) return self::ERR_SCHEMA_WRONG_TYPE;
+							if( $fieldValue == 'numeric' ){
+								// We set flags to search precision and scale columns
+								$precisionSet = 0;
+								$scaleSet = 0;
+							}
+							$hasType = true;
+						}
+
+						if( $fieldKey === 'size' ){
+							if( !in_array($fieldValue, $sizes) ) return self::ERR_SCHEMA_WRONG_SIZE;
+						}
+	
+						if( $fieldKey === 'precision' ){
+							$precisionSet = 1;
+						}
+	
+						if( $fieldKey === 'scale' ){
+							$scaleSet = 1;
+						}
+					}
+					if( !$hasType ) return self::ERR_SCHEMA_NO_TYPE;
+					if( $precisionSet == 0 ) return self::ERR_SCHEMA_NO_PRECISION;
+					if( $scaleSet == 0 ) return self::ERR_SCHEMA_NO_SCALE;
+				}
+			}
+
+			if( $key == 'mysql_engine' ){
+				if( !in_array($value, $engines) ) return self::ERR_SCHEMA_WRONG_ENGINE;
+			}
+		}
+		return self::SCHEMA_CORRECT;
+	}
+
+	public function getSQLSize($type, $size, $precision = 0, $scale = 0){
+		// TODO: Call driver-specific method
+		$types = ['varchar', 'char', 'int', 'serial', 'float', 'numeric', 'text', 'blob', 'datetime'];
+		$sizes = ['tiny', 'small', 'medium', 'normal', 'big'];
+		if( !in_array($type, $types) ) return 0;
+		if( !in_array($size, $sizes) ) return 0;
+		if( $type == 'serial' || $type == 'int '){
+			$prefix = $size != 'normal' ? $size : '';
+			return $prefix.'int';
+		}
+
+		if( $type == 'float' ){
+			if( $size == 'big' ) return 'double';
+			return 'float';
+		}
+
+		if( $type == 'numeric' ){
+			return "decimal($precision, $scale)";
+		}
+
+		if( $type == 'varchar' ){
+			$length = 64;
+			if( $size == 'big')
+				$length = 255;
+			return $type."($length)";
+		}
+
+		if( $type == 'text' || $type == 'blob' ){
+			$prefix = ($size != 'big' && $size != 'small' && $size != 'normal') ? $size : '';
+			if( $size == 'big' ) $prefix = 'long';
+			return $prefix.$type;
+		}
+
+		return $type;
 	}
 
 }
