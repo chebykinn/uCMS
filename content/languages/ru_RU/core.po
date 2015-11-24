@@ -16,8 +16,17 @@ msgstr ""
 msgid "Users"
 msgstr "Пользователи"
 
-msgid "Posts"
+msgid "Groups"
+msgstr "Группы"
+
+msgid "Entries"
 msgstr "Записи"
+
+msgid "Categories"
+msgstr "Категории"
+
+msgid "Comments"
+msgstr "Комментарии"
 
 msgid "Home"
 msgstr "Главная"
@@ -25,8 +34,29 @@ msgstr "Главная"
 msgid "Extensions"
 msgstr "Расширения"
 
+msgid "Menu"
+msgstr "Меню"
+
+msgid "Files"
+msgstr "Файлы"
+
+msgid "Themes"
+msgstr "Темы"
+
 msgid "Settings"
 msgstr "Настройки"
+
+msgid "Tools"
+msgstr "Утилиты"
+
+msgid "Journal"
+msgstr "Журнал"
+
+msgid "PHP Info"
+msgstr "PHP Инфо"
+
+msgid "Update"
+msgstr "Обновления"
 
 msgid "Go to site"
 msgstr "Перейти к сайту"
