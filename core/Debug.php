@@ -14,11 +14,15 @@ class Debug{
 		register_shutdown_function('uCMS\\Core\\Debug::ErrorHandler');
 		set_error_handler('uCMS\\Core\\Debug::ErrorHandler');
 		ini_set('display_errors', 0);
+		self::$logFile = ABSPATH.'content/ucms.log';
+		if( !file_exists(self::$logFile) ){
+			touch(self::$logFile);
+		}
 		if(UCMS_DEBUG){ // Debug mode preparation
+			$debugFile = ABSPATH.'content/debug.log';
 			error_reporting(E_ALL);
 			ini_set('log_errors', 1);
-			ini_set('error_log', ABSPATH.'content/debug.log');
-			self::$logFile = ABSPATH.'content/ucms.log';
+			ini_set('error_log', $debugFile);
 			self::$logLevel = LOG_DEBUG;
 		}else{
 			error_reporting(E_ALL ^ (E_DEPRECATED | E_NOTICE | E_STRICT));
@@ -40,10 +44,13 @@ class Debug{
 		echo '</pre>';
 	}
 
-	public static function PrintVar($var){
+	public static function PrintVar($var, $raw = false){
 		self::BeginBlock();
 		// debug_print_backtrace();
-		var_dump($var);
+		if( !$raw )
+			var_dump($var);
+		else
+			echo $var;
 		self::EndBlock();
 	}
 
