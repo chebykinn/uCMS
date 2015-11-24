@@ -3,13 +3,15 @@ namespace uCMS\Core\Database;
 use uCMS\Core\Debug;
 class Query{
 	private $database;
-	private $sql;
+	private $sql = "";
 	private $params = array();
 	private $table;
 	private $type;
 	private $fetchType = 'assoc';
 	private $doCache = false;
 	private $needLogicOperator = false;
+	private $schemaError = DatabaseConnection::SCHEMA_CORRECT;
+	private $placeholderIndex = 0;
 
 	public function __construct($sql, $params = array(), $database = NULL){
 		$this->database = DatabaseConnection::GetDatabase($database);
@@ -46,7 +48,7 @@ class Query{
 
 	public function countRows(){
 		$this->type = "count";
-		$this->sql = "SELECT COUNT(*) as count FROM $this->table";
+		$this->sql = "SELECT 1 FROM $this->table";
 		return $this;
 	}
 
@@ -63,8 +65,7 @@ class Query{
 					foreach ($valueList as $value) {
 						// Ensure that we won't fall out of bounds.
 						if( $columnsAmount > 0 && $c == $columnsAmount ) break;
-						$column = md5($value.$i.$c);
-						$key = ":$column$i";
+						$key = $this->getNextPlaceholder();
 						$params[$key] = $value;
 						$lists[$i][] = $key;
 						$c++;
@@ -110,11 +111,12 @@ class Query{
 
 			$sqlUpdate = "";
 			foreach ($columnsAndValues as $column => $value) {
-				$params[":$column"] = $value;
+				$key = $this->getNextPlaceholder();
+				$params[$key] = $value;
 				$columns[] = $column;
 				$values[]  = $value;
 				if($sqlUpdate != '') $sqlUpdate .= ', ';
-				$sqlUpdate .= "$column = :$column";
+				$sqlUpdate .= "$column = $key";
 			}
 
 			$this->sql = "UPDATE $this->table SET $sqlUpdate";
@@ -170,7 +172,7 @@ class Query{
 				$this->sql .= ' OR';
 			}
 		}
-		$safeName = $this->findNextName($column);
+		$safeName = $this->getNextPlaceholder();
 		$this->params[$safeName] = $value;
 		if( strpos($column, "{") !== false ){
 			// we need to add prefix
@@ -294,8 +296,8 @@ class Query{
 
 			case 'count':
 				$query = $this->database->doQuery($this->sql, $this->params);
-				$row = $this->database->fetch($query, $this->fetchType);
-				if( !empty($row['count']) ) return intval($row['count']);
+				$count = $query->rowCount();
+				return $count;
 			break;
 
 			case 'query':
@@ -309,6 +311,7 @@ class Query{
 		$this->type = "";
 		$this->sql = "";
 		$this->params = array();
+		$this->placeholderIndex = 0;
 		if( is_null($returnValue) ) $returnValue = $this->database->doQuery($this->sql, $this->params);
 		return $returnValue;
 	}
@@ -332,17 +335,156 @@ class Query{
 
 	public function createTable(array $schema){
 		$this->type = 'createTable';
-	}
+		$result = DatabaseConnection::CheckSchema($schema);
 
-
-	private function findNextName($column){
-		$column = preg_replace("/[^a-z0-9]/i", "", $column);
-		$name = ":$column";
-		if( isset($this->params[$name]) ){
-			$name .= rand(0, 1000);
+		if( $result != DatabaseConnection::SCHEMA_CORRECT ){
+			// If we got wrong schema, we should save error code
+			$this->schemaError = $result;
+			return $this;
 		}
-		return $name;
+		$sql = "CREATE TABLE {$this->table} (\n";
+		$i = 0;
+		$amount = count($schema['fields']);
+		$needIncrement = false;
+		$serialSpec = "";
+
+		// Adding fields
+		foreach ($schema['fields'] as $name => $data) {
+			$increment = '';
+			$default = '';
+			$precision = 0;
+			$scale = 0;
+			if( !isset($data['size']) ){
+				$data['size'] = 'normal';
+			}
+
+			if( $data['type'] == 'numeric' ){
+				$precision = intval($data['precision']);
+				$scale = intval($data['scale']);
+			}
+
+			// This will get correct sql type from generic type
+			$type = $this->database->getSQLSize($data['type'], $data['size'], $precision, $scale);
+			if( isset($data['length']) && $data['type'] != 'numeric' && $data['type'] != 'text'  && $data['type'] != 'blob' ){
+				$length = intval($data['length']);
+				if( $data['type'] == 'varchar' ){
+					$type = "varchar($length)";
+				}else{
+					$type .= "($length)";
+				}
+			}
+
+			// If we want to set auto increment, we should check primary key, and add it, if it's not exists
+			if( $data['type'] == 'serial' ){
+				$needIncrement = true;
+				if( isset($schema['primary key']) && is_array($schema['primary key']) ){
+					if( !in_array($name, $schema['primary key']) ){
+						$schema['primary key'][] = $name;
+					}
+				}
+
+				if( !isset($schema['primary key']) ){
+					$schema['primary key'] = $name;
+				}else{
+					if( $schema['primary key'] != $name ){
+						$needIncrement = false;
+					}
+				}
+			}
+
+			$notNull = (isset($data['not null']) && (bool)$data['not null']) ? ' NOT NULL' : ''; 
+			
+			if( isset($data['default']) ){
+				$value = $data['default'];
+				if( !is_integer($value) ){
+					$value = "'$value'";
+				}
+				$default = " DEFAULT $value";
+			}
+			$name = preg_replace("/[^a-zA-Z0-9]/i", '', $name);
+			$sql .= "$name $type$notNull$default";
+			if( $needIncrement && $data['type'] == 'serial' ){
+				$serialSpec = "$name $type$notNull$default";
+			}
+			if( $i+1 < $amount ) $sql .= ",\n";
+			$i++;
+		}
+
+		$sql .= "\n)";
+
+		$charset = 'utf8';
+		if( isset($schema['mysql_character_set']) ){
+			$charset = $schema['mysql_character_set'];
+		}
+
+		$engine = 'InnoDB';
+		if( isset($schema['mysql_engine']) ){
+			$engine = $schema['mysql_engine'];
+		}
+
+		$sql .= " ENGINE=$engine DEFAULT CHARSET=$charset;\n";
+		$keysRegex = "/[^a-zA-Z0-9,.\s]/i";
+		if( isset($schema['primary key']) || isset($schema['unique keys']) || isset($schema['indexes']) || $needIncrement ){
+			$sql .= "ALTER TABLE {$this->table}\n";
+			$isFirst = true;
+			if( isset($schema['primary key']) ){
+				$key = $schema['primary key'];
+				if( is_array($key) ){
+					$key = implode(', ', $key);
+				}
+				$key = preg_replace("/[^a-zA-Z0-9]/i", '', $key);
+				$sql .= "ADD PRIMARY KEY ($key)";
+				$isFirst = false;
+			}
+
+			if( isset($schema['unique keys']) ){
+				foreach ($schema['unique keys'] as $name => $keys) {
+					if( is_array($keys) ){
+						$keys = implode(', ', $keys);
+					}
+					$name = preg_replace("/[^a-zA-Z0-9]/i", '', $name);
+					$keys = preg_replace($keysRegex, '', $keys);
+					$sql .= (!$isFirst ? ",\n" : "")."ADD UNIQUE KEY $name ($keys)";
+					$isFirst = false;
+				}
+			}
+
+			if( isset($schema['indexes']) ){
+				foreach ($schema['indexes'] as $name => $keys) {
+					if( is_array($keys) ){
+						$keys = implode(', ', $keys);
+					}
+					$name = preg_replace("/[^a-zA-Z0-9]/i", '', $name);
+					$keys = preg_replace($keysRegex, '', $keys);
+					$sql .= (!$isFirst ? ",\n" : "")."ADD KEY $name ($keys)";
+					$isFirst = false;
+				}
+			}
+
+			if( $needIncrement ){
+				$sql .= (!$isFirst ? ",\n" : "")."MODIFY $serialSpec AUTO_INCREMENT, AUTO_INCREMENT=1";
+			}
+
+			$sql .= ";\n";
+		}
+		$this->sql = $sql;
+		return $this;
 	}
+
+
+	public function getSchemaError(){
+		return $this->schemaError;
+	}
+	
+	public function tableExists(){
+		return $this->database->isTableExists($this->table);
+	}
+
+
+	private function getNextPlaceholder(){
+		return ":field_placeholder".$this->placeholderIndex++;
+	}
+
 
 }
 ?>
