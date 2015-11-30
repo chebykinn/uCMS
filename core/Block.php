@@ -1,8 +1,9 @@
 <?php
 namespace uCMS\Core;
 use uCMS\Core\Database\Query;
-use uCMS\Core\Extensions\Extension;
+use uCMS\Core\Extensions\ExtensionHandler;
 use uCMS\Core\Extensions\Theme;
+use uCMS\Core\Extensions\ThemeHandler;
 use uCMS\Core\Admin\ControlPanel;
 class Block{
 	const SHOW_EXCEPT = 0;
@@ -93,7 +94,7 @@ class Block{
 	public function render(){
 		//load data
 		//$data from cache or
-		$ownerExtension = Extension::Get($this->owner);
+		$ownerExtension = ExtensionHandler::Get($this->owner);
 
 		$loadFile = $ownerExtension->getFilePath("$this->name.load.php");
 		if( true && file_exists($loadFile) ) { // TODO: add cache check
@@ -124,34 +125,34 @@ class Block{
 
 	public static function Add($name, $region = "", $theme = "", $position = -1, $visibility = self::SHOW_EXCEPT, $actions = "", $cache = 0){
 
-		if( !Theme::IsExists($theme) ) $theme = "";
+		if( !ThemeHandler::IsExists($theme) ) $theme = "";
 		if( empty($theme) ) $theme = Settings::Get('theme');
 		// TODO: region check
 		// TODO: Check if block exists
 		$status = ($theme != "" && $region != "") ? 1 : 0;
 		$owner = Tools::GetCurrentOwner();
 		$query = new Query("{blocks}");
-		$add = $query->insert( 
-			array(
-				"name"       => $name,
-				"owner"      => $owner,
-				"status"     => $status,
-				"theme"      => $theme,
-				"region"     => $region,
-				"visibility" => $visibility,
-				"actions"    => $actions,
-				"cache"      => $cache,
-				"position"   => $position				
-			), true
-		)->execute();
-		Settings::Increment("blocks_amount");
-		return $add;
+		$check = $query->select('name')
+		->condition('theme',  '=', $theme)
+		->condition('region', '=', $region)
+		->condition('name',   '=', $name)
+		->limit(1)->execute('count');
+		if( $check === 0 ){
+			$add = $query->insert(
+				['name', 'owner', 'status', 'theme', 'region', 'visibility', 'actions', 'cache', 'position'], 
+				[[$name, $owner, $status, $theme, $region, $visibility, $actions, $cache, $position]], true
+			)->execute();
+
+			Settings::Increment("blocks_amount");
+			return $add;
+		}
+		return false;
 	}
 
 
 	// TODO: not static ?
 	public static function Update($name, $region = "", $theme = "", $position = -1, $visibility = -1, $actions = "", $cache = -1){
-		if( !Theme::IsExists($theme) ) $theme = "";
+		if( !ThemeHandler::IsExists($theme) ) $theme = "";
 		if( empty($theme) ) $theme = Settings::Get('theme');
 		// TODO: block is exists
 		$status = ($theme != "" && $region != "") ? 1 : 0;
@@ -204,7 +205,7 @@ class Block{
 	}
 
 	public static function GetList($region = "", $theme = ""){
-		if ( !Theme::IsExists($theme) ){
+		if ( !ThemeHandler::IsExists($theme) ){
 			$theme = Tools::GetCurrentOwner();
 		}
 		if( isset(self::$list[$theme]) ){
