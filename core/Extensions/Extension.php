@@ -8,18 +8,20 @@ use uCMS\Core\Admin\ControlPanel;
 use uCMS\Core\Database\Query;
 use uCMS\Core\Database\DatabaseConnection;
 use uCMS\Core\uCMS;
-class Extension extends AbstractExtension{
+use uCMS\Core\Session;
+use uCMS\Core\Installer;
+class Extension extends AbstractExtension implements ExtensionInterface{
 	const INFO = 'extension.info';
 	const PATH = 'content/extensions/';
 	const CORE_PATH = 'core/content/extensions/';
 
 	private $loadAfter = NULL;
-	private $includes;
-	private $actions;
-	private $admin;
+	private $includes = [];
+	private $actions = [];
+	private $admin = [];
 	private $sidebarPosition;
 	private $adminPages = NULL;
-	private static $list = array();
+	private static $list = [];
 	private static $usedActions;
 	private static $usedAdminActions;
 	private static $defaultList;
@@ -36,6 +38,44 @@ class Extension extends AbstractExtension{
 		}
 	}
 
+	public function onLoad(){
+
+	}
+
+	public function onInstall($stage){
+		if( $stage === Installer::CHECK_STAGE ){
+			return $this->checkStage();
+		}
+
+		if( $stage === Installer::UPDATE_STAGE ){
+			return $this->updateStage();
+		}
+
+		if( $stage === Installer::PREPARE_STAGE ){
+			return $this->prepareStage();
+		}
+
+		if( $stage === Installer::PRINT_STAGE ){
+			$this->printStage();
+		}
+	}
+
+	public function onUninstall(){
+
+	}
+
+	public function onAction($action){
+
+	}
+
+	public function onAdminAction($action){
+
+	}
+
+	public function onShutdown(){
+
+	}
+
 	protected function loadInfo(){
 
 		$encodedInfo = @file_get_contents($this->getExtensionInfoPath());
@@ -43,21 +83,23 @@ class Extension extends AbstractExtension{
 		$decodedInfo = json_decode($encodedInfo, true);
 		$checkRequiredFields = empty($decodedInfo['version']) || empty($decodedInfo['coreVersion']);
 		if( $decodedInfo === NULL || $checkRequiredFields ){
-			Debug::Log(tr("Can't get extension information @s", $this->name), Debug::LOG_ERROR);
 			throw new \InvalidArgumentException("Can't get extension information");
 		}
 		$this->version = $decodedInfo['version'];
 		$this->coreVersion = $decodedInfo['coreVersion'];
 
-		$this->dependencies = !empty($decodedInfo['dependencies']) ? $decodedInfo['dependencies'] : "";
-		$this->info         = !empty($decodedInfo['info'])         ? $decodedInfo['info']         : "";
-		$this->loadAfter    = !empty($decodedInfo['loadAfter'])    ? $decodedInfo['loadAfter']    : "";
-		$this->includes     = !empty($decodedInfo['includes'])     ? $decodedInfo['includes']     : "";
-		$this->actions      = !empty($decodedInfo['actions'])      ? $decodedInfo['actions']      : "";
-		$this->admin        = !empty($decodedInfo['admin'])        ? $decodedInfo['admin']        : array();
-		$this->adminPages   = !empty($decodedInfo['adminPages'])   ? $decodedInfo['adminPages']   : "";
+		$this->dependencies = !empty($decodedInfo['dependencies']) ? $decodedInfo['dependencies'] : [];
+		$this->info         = !empty($decodedInfo['info'])         ? $decodedInfo['info']         : [];
+		$this->loadAfter    = !empty($decodedInfo['loadAfter'])    ? $decodedInfo['loadAfter']    : [];
+		$this->includes     = !empty($decodedInfo['includes'])     ? $decodedInfo['includes']     : [];
+		$this->actions      = !empty($decodedInfo['actions'])      ? $decodedInfo['actions']      : [];
+		$this->admin        = !empty($decodedInfo['admin'])        ? $decodedInfo['admin']        : [];
+		$this->adminPages   = !empty($decodedInfo['adminPages'])   ? $decodedInfo['adminPages']   : [];
+		$this->settings     = !empty($decodedInfo['settings'])     ? $decodedInfo['settings']     : [];
+		$this->permissions  = !empty($decodedInfo['permissions'])  ? $decodedInfo['permissions']  : [];
+		$this->blocks       = !empty($decodedInfo['blocks'])       ? $decodedInfo['blocks']       : [];
 		$separatorIndex = 1;
-		$prevAction = 'home';
+		$prevAction = Page::INDEX_ACTION;
 		$separator = false;
 		foreach ($this->admin as $key => &$item) {
 			$separator = false;
@@ -93,28 +135,19 @@ class Extension extends AbstractExtension{
 	}
 
 	final public function getActions(){
-		if( is_array($this->actions) ){
-			return $this->actions;
-		}
-		return array();
+		return $this->actions;
 	}
 
 	final public function getAdminActions(){
-		if( is_array($this->admin) ){
-			$actions = array();
-			foreach ($this->admin as $key => $item) {
-				$actions[] = $item['action'];
-			}
-			return $actions;
+		$actions = [];
+		foreach ($this->admin as $key => $item) {
+			$actions[] = $item['action'];
 		}
-		return array();
+		return $actions;
 	}
 
 	final public function getAdminSidebarItems(){
-		if( is_array($this->admin) ){
-			return $this->admin;
-		}
-		return array();
+		return $this->admin;
 	}
 
 	final public function getAdminPageFile($action){
@@ -125,332 +158,175 @@ class Extension extends AbstractExtension{
 	}
 
 	final public function getIncludes(){
-		if( is_array($this->includes) ){
-			return $this->includes;
-		}
-		return array();
+		return $this->includes;
 	}
 
 	final public function getTables(){
 		if( is_array($this->getInfo('tables')) ){
 			return $this->getInfo('tables');
 		}
-		return array();
+		return [];
 	}
 
 	final public function getDatabase(){
 		$database = $this->getInfo('database');
 		return $database;
 	}
-	
-	final public static function Init(){
-		
-		self::$list = array();
-		self::$usedActions = array();
-		self::$usedAdminActions = array();
-		self::$defaultList = array('users', 'admin', 'filemanager', 'menus', 'entries', 'comments', 'search');
-		$externalList = is_array(unserialize(Settings::Get('extensions'))) ? unserialize(Settings::Get('extensions')) : array();
-		$extensions = array_merge(self::$defaultList, $externalList);
-		$extensionActions = $extensionAdminActions = array();
-		foreach ($extensions as $extension) {
-			if( self::IsExtention($extension) ){
-				try{  
-					$namespace = self::IsDefault($extension) ? __NAMESPACE__ : "uCMS\\Extensions";
-					$extensionClass = "$namespace\\$extension\\$extension";
-					if( class_exists($extensionClass) ){
-						self::$list[$extension] = new $extensionClass($extension);
-						$e = self::$list[$extension];
-						$e->onLoad();
-						$extensionActions = is_array($e->getActions()) ? $e->getActions() : array();
-						$extensionAdminActions = is_array($e->getAdminActions()) ? $e->getAdminActions() : array();
-						self::$usedActions = array_merge(self::$usedActions, $extensionActions);
-						self::$usedAdminActions = array_merge(self::$usedAdminActions, $extensionAdminActions);
-					}else{
-						// error
-					}
-				}catch(\Exception $e){
-					Debug::Log(tr("Can't load extension: @s, error: @s", $extension, $e->getMessage()), Debug::LOG_ERROR);
-				}
-					
-			}
-		}
-		self::$usedActions = array_unique(self::$usedActions);
-		self::$usedAdminActions = array_unique(self::$usedAdminActions);
-	}
-
-	final public static function LoadOnAction($action){
-		$isUsed = false;
-		$cPanelResult = array('isUsed' => false);
-		foreach (self::$list as $name => $extension) {
-			if( ControlPanel::IsActive() ){
-				if( !$cPanelResult['isUsed'] ){
-					$cPanelResult = ControlPanel::CheckAction($extension->getAdminActions());
-					$isUsed = $cPanelResult['isUsed'];
-					if( $isUsed && !$cPanelResult['default'] ){
-						$extension->onAdminAction($cPanelResult['action']);
-					}
-				}
-			}else{
-				if( !in_array($action, self::$usedActions) ){
-					$action = Page::OTHER_ACTION;
-				}
-				if( in_array($action, $extension->getActions()) ){
-					$extension->onAction($action);
-					$isUsed = true;
-				}
-			}
-		}
-		return $isUsed;
-	}
-
-	final public static function CheckInstall(){
-		foreach (self::$list as $name => $extension) {
-			$tables = $extension->getTables();
-			foreach ($tables as $table) {
-				// TODO: SQL Preparation
-				$database = $extension->getDatabase();
-				$table = DatabaseConnection::GetDatabase($database)->getPrefix().stripslashes($table);
-				$checkQuery = new Query("SELECT 1 FROM $table LIMIT 1");
-				$result = $checkQuery->execute();
-				if( $result === false ){
-					// If some of the tables are missing we signal the installer of the need to start installation.
-					return true;
-				}
-			}
-		}
-		return false;
-	}
-
-	final public static function Install($stage){
-		foreach (self::$list as $name => $extension) {
-			$extension->onInstall($stage);
-		}
-	}
 
 	final protected function getRelativePath(){
-		return self::IsDefault($this->name) ? self::CORE_PATH : self::PATH;
+		return ExtensionHandler::IsDefault($this->name) ? ExtensionHandler::CORE_PATH : ExtensionHandler::PATH;
 	}
 
-	/**
-	* Check if extension $name is default.
-	*
-	* This method allows you to check if given extension is default.
-	*
-	* @since 2.0
-	* @param $name The name of given extension.
-	* @return bool True if extension is default, false if not.
-	*/
-	final public static function IsDefault($name){
-		return in_array($name, self::$defaultList);
-	}
-
-	final public static function GetUsedAdminActions(){
-		return self::$usedAdminActions;
-	}
-
-	final public static function GetUsedActions(){
-		return self::$usedActions;
-	}
-
-	final public static function Get($name){
-		if( !empty(self::$list[$name]) && is_object(self::$list[$name]) ){
-			return self::$list[$name];
+	protected function checkStage(){
+		if( !empty($this->settings) && is_array($this->settings) ){
+			Settings::AddMultiple($this->settings);
 		}
-		if( self::isExists($name) ){
-			try{
-				$extension = new Extension($name);
-				return $extension;
-			}catch(\Exception $e){
-				return "";
+		$tables = $this->getInfo('tables');
+
+		if( !empty($tables) && is_array($tables) ){
+			$missing = $this->checkTables($tables);
+			if( !empty($missing) ){
+				Session::GetCurrent()->set($this->name.'_missing_tables', serialize($missing));
+				Installer::GetInstance()->sendRequest($this->name.'_need_tables');
+				return true;
 			}
 		}
-		return '';
-	}
 
-	public static function IsLoaded($name){
-		return (!empty(self::$list[$name]) && is_object(self::$list[$name]));
-	}
-
-	final public static function IsExists($name){
-		return in_array($name, self::GetAll());
-	}
-
-	final public static function IsExtention($name){
-		if( !is_object($name) ){
-			if( in_array($name, self::$defaultList) ){
-				return require_once(ABSPATH.self::CORE_PATH."$name/extension.php");
-			}
-			$dataExists = ( is_dir(ABSPATH.self::PATH.$name) && file_exists(ABSPATH.self::PATH.$name.'/extension.php') && file_exists(ABSPATH.self::PATH.$name.'/'.self::INFO) );
-	
-			if ( $dataExists ){
-				$extensionClass = "\\uCMS\\Core\\Extensions\\Extension";
-				$extensionInterface = "\\uCMS\\Core\\Extensions\\IExtension";
-				include_once(ABSPATH.self::PATH.$name.'/extension.php');
-				return ( class_exists($name) && is_subclass_of($name, $extensionClass) 
-					&& in_array($extensionInterface, class_implements($name)) );
-	
-			}
-			return false;
-		}else{
-			return is_subclass_of($name, "Extension");
-		}
-	}
-
-	final public static function GetLoaded(){
-		$names = array();
-		foreach (self::$list as $name => $extension) {
-			if( is_object($extension) ){
-				$names[] = $name;
-			}
-		}
-		return $names;
-	}
-
-	final public static function GetAll(){
-		$names = array();
-		if( UCMS_DEBUG ){
-			$dirs = scandir(self::CORE_PATH);// array_filter(scandir(self::PATH), 'is_dir');
-			if ( $dh = @opendir(self::CORE_PATH) ) {
-				while ( ($extension = readdir($dh)) !== false ) {
-					if( self::IsExtention($extension) ){
-						/**
-						* @todo check .. ?
-						*/
-						$names[] = $extension;
-					}
-				}
-				closedir($dh);
-			}
-		}
-		$dirs = scandir(self::PATH);// array_filter(scandir(self::PATH), 'is_dir');
-		if ( $dh = @opendir(self::PATH) ) {
-			while ( ($extension = readdir($dh)) !== false ) {
-				if( self::IsExtention($extension) ){
-					/**
-					* @todo check .. ?
-					*/
-					$names[] = $extension;
+		$tablesToFill = $this->getInfo('tablesToFill');
+		if( !empty($tablesToFill) && is_array($tablesToFill) ){
+			$emptyTables = [];
+			foreach ($tablesToFill as $table) {
+				$query = new Query('{'.$table.'}');
+				$count = $query->countRows()->execute();
+				if( $count === 0 ){ // TODO: min size
+					$emptyTables[] = $table;
 				}
 			}
-			closedir($dh);
-		}
-		return $names;
-	}
 
-	final public static function GetExtensionByAdminAction($action){
-		foreach (self::$list as $name => $extension) {
-			if( is_object($extension) ){
-				if( in_array($action, $extension->getAdminActions()) ){
-					return $extension;
+			if( !empty($emptyTables) ){
+				Session::GetCurrent()->set($this->name.'_empty_tables', serialize($emptyTables));
+				Installer::GetInstance()->sendRequest($this->name.'_fill_tables');
+				return true;
+			}
+		}
+		if( !empty($this->permissions) ){
+			$amount = count($this->permissions);
+			foreach ($this->permissions as $permission => $gids) {
+				if( is_array($gids) ){
+					$amount += count($gids)-1;
 				}
 			}
-		}
-	}
 
-	final public static function GetExtensionByAction($action){
-		foreach (self::$list as $name => $extension) {
-			if( is_object($extension) ){
-				if( in_array($action, $extension->getActions()) ){
-					return $extension;
-				}
+			$havePermissions = $this->checkPermissions($amount);
+			if( !$havePermissions ){
+				Installer::GetInstance()->sendRequest($this->name.'_need_permissions');
+				return true;
 			}
 		}
-		return NULL;
-	}
 
-	final public static function Delete($name){
-		if( self::IsDefault($name) || !self::IsExtention($name) ){
-			$message = new Notification(tr("Unable to delete extension \"@s\"", $name), Notification::ERROR);
-			$message->add();
-			return false;
-		}
-		self::Disable($name);
-		//remove dir
-
-		Notification::ClearPending();
-		$message = new Notification(tr("Extension \"@s\" was successfully deleted", $name), Notification::SUCCESS);
-		$message->add();
-		return true;
-	}
-
-	final public static function Enable($name){
-		if( self::IsLoaded($name) ){
-			$message = new Notification(tr("Extension \"@s\" is already enabled", $name), Notification::ERROR);
-			$message->add();
-			return false;
-		}
-		$exists = false;
-
-		if( file_exists(self::PATH.$name.'/extension.php') ){
-			include self::PATH.$name.'/extension.php';
-
-			if( class_exists($name) ){
-				try{
-					self::$list[$name] = new $name($name);
-					$exists = true;
-				}catch(Exception $e){
-					Debug::Log(tr("Can't load extension: @s, error: @s", $extension, $e->getMessage()), Debug::LOG_ERROR);
-				}
-			}
-		}
-		if($exists){
-			$extensions = array();
-			foreach (self::$list as $name => $extension) {
-				$extensions[] = $name;
-			}
-			$extensions = implode(",", $extensions);
-			Settings::Update('extensions', $extensions);
-			$message = new Notification(tr("Extension \"@s\" was successfully enabled", $name), Notification::SUCCESS);
-			$message->add();
-			return true;
-		}
-		$message = new Notification(tr("Extension \"@s\" doesn't exists", $name), Notification::ERROR);
-		$message->add();
 		return false;
-		/**
-		* @todo event or something
-		*/
+	}
 
+	protected function prepareStage(){
+		
+		if( Installer::GetInstance()->isRequested($this->name.'_need_tables') ){
+			$needForm = false;
+			$schemas = $this->getSchemas();
+			$missingTables = unserialize(Session::GetCurrent()->get($this->name.'_missing_tables'));
+			Session::GetCurrent()->delete($this->name.'_missing_tables');
+
+			$tablesToFill = is_array($this->getInfo('tablesToFill')) ? $this->getInfo('tablesToFill') : [];
+			if( !is_array($missingTables) ) return ExtensionHandler::DONE_INSTALL;
+			foreach ($missingTables as $table) {
+				if( !isset($schemas[$table]) ) continue;
+				$query = new Query('{'.$table.'}');
+				$query->createTable($schemas[$table])->execute();
+
+				// If we need to fill the table, we call method to fill it
+				// or to notify us, that installer needs form to fill it
+				if( in_array($table, $tablesToFill) ){
+					$needForm = $this->fillTable($table);
+				}
+			}
+
+			if( $needForm ){
+				return ExtensionHandler::NEED_USER_INPUT;
+			}
+
+			return ExtensionHandler::DONE_INSTALL;
+		}
+
+		if( Installer::GetInstance()->isRequested($this->name.'_fill_tables') ){
+
+			$needForm = false;
+			$emptyTables = unserialize(Session::GetCurrent()->get($this->name.'_empty_tables'));
+			Session::GetCurrent()->delete($this->name.'_empty_tables');
+			if( !is_array($emptyTables) ) return ExtensionHandler::DONE_INSTALL;
+			foreach ($emptyTables as $table) {
+				$needForm = $this->fillTable($table);
+			}
+
+			if( $needForm ){
+				return ExtensionHandler::NEED_USER_INPUT;
+			}
+			return ExtensionHandler::DONE_INSTALL;
+		}
+
+		if( Installer::GetInstance()->isRequested($this->name.'_need_permissions') ){
+			$this->addPermissions();
+		}
+		return ExtensionHandler::DONE_INSTALL;
+	}
+
+	protected function updateStage(){
+		return false;
+	}
+
+	protected function printStage(){
 
 	}
 
-	final public static function Disable($name){
-		if( !self::IsLoaded($name) ){
-			$message = new Notification(tr("Extension \"@s\" is already disabled", $name), Notification::ERROR);
-			$message->add();
-			return false;
-		}
-		if( self::IsDefault($name) ){
-			$message = new Notification(tr("Extension \"@s\" can't be disabled", $name), Notification::ERROR);
-			$message->add();
-			return false;
-		}
-		unset(self::$list[$name]);
-		/**
-		* @todo event or something
-		*/
-		$extensions = array();
-		foreach (self::$list as $name => $extension) {
-			$extensions[] = $name;
-		}
-		$extensions = implode(",", $extensions);
-		Settings::Update('extensions', $extensions);
-		$message = new Notification(tr("Extension \"@s\" was successfully disabled", $name), Notification::SUCCESS);
-		$message->add();
-		return true;
+	protected function getSchemas(){
+		return [];
 	}
 
-	final public static function Add($name){
-		var_dump($name);
-		$message = new Notification(tr("Extension \"@s\" was successfully added", $name), Notification::SUCCESS);
-		$message->add();
-		return true;
+	protected function fillTable($table){
+		return false;
 	}
 
-	final public static function Shutdown(){
-		foreach (self::$list as $name => $extension) {
-			$extension->onShutdown();
+	protected function addPermissions(){
+		$rows = [];
+		$owner = $this->name;
+		foreach ($this->permissions as $permission => $gids) {
+			if( is_array($gids) ){
+				foreach ($gids as $gid) {
+					$rows[] = [$gid, $permission, $owner];
+				}
+			}else{
+				$rows[] = [$gids, $permission, $owner];
+			}
 		}
+		$query = new Query('{group_permissions}');
+		$query->insert(['gid', 'name', 'owner'], $rows)->execute();
+	}
+
+	protected function checkTables(array $tables){
+		$missing = [];
+		foreach ($tables as $table) {
+			$query = new Query('{'.$table.'}');
+			$exists = $query->tableExists();
+			if( !$exists ){
+				$missing[] = $table;
+			}
+		}
+		return $missing;
+	}
+
+	protected function checkPermissions($amount){
+		$query = new Query('{group_permissions}');
+		$owner = $this->name;
+		$count = $query->select('1')->condition('owner', '=', $owner)->execute('count');
+		return ($count >= $amount);
 	}
 }
 ?>
