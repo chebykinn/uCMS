@@ -2,7 +2,6 @@
 namespace uCMS\Core;
 
 use uCMS\Core\Database\Query;
-use uCMS\Core\Extensions\Extension;
 class Settings{
 	const ADMIN_EMAIL          = 'admin_email';
 	const BLOCKS_AMOUNT        = 'blocks_amount';
@@ -26,17 +25,46 @@ class Settings{
 	const UCMS_MAINTENANCE     = 'ucms_maintenance';
 	const UCMS_TIMEZONE        = 'ucms_timezone';
 
+	const DEFAULT_AMOUNT = 21;
+
 	private static $list = array();
 
 	public static function Add($name, $value, $public = false){
 		$owner = !$public ? Tools::GetCurrentOwner() : "";
 		$query = new Query('{settings}');
-		$query->insert(
-			['name', 'value', 'owner'],
-			[[$name, $value, $owner]],
-			true
-		)->execute();
-		self::$list[$name] = array('name' => $name, 'value' => Tools::PrepareSQL($value), 'owner' => $owner);
+		if( empty($name) ) return false;
+		if( !isset(self::$list[$name]) ){
+			$query->insert(
+				['name', 'value', 'owner'],
+				[[$name, $value, $owner]],
+				true
+			)->execute();
+			self::$list[$name] = array('name' => $name, 'value' => Tools::PrepareSQL($value), 'owner' => $owner);
+			return true;
+		}
+		return false;
+	}
+
+	public static function AddMultiple(array $namesAndValues){
+		$owner = Tools::GetCurrentOwner();
+		$query = new Query('{settings}');
+		$rows = [];
+		foreach ($namesAndValues as $name => $value) {
+			if( isset(self::$list[$name]) ) continue;
+			if( empty($name) ) continue;
+			$rows[] = [$name, $value, $owner];
+			self::$list[$name] = ['name' => $name, 'value' => Tools::PrepareSQL($value), 'owner' => $owner];
+		}
+
+		if( !empty($rows) ){
+			$query->insert(
+				['name', 'value', 'owner'],
+				$rows,
+				true
+			)->execute();
+			return true;
+		}
+		return false;
 	}
 
 	public static function Load(){
@@ -129,6 +157,10 @@ class Settings{
 			return true;
 		}
 		return false;
+	}
+
+	public static function GetCount(){
+		return count(self::$list);
 	}
 }
 ?>
