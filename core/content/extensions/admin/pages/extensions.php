@@ -3,19 +3,19 @@ use uCMS\Core\Admin\ManagePage;
 use uCMS\Core\Admin\ManageTable;
 use uCMS\Core\Database\Query;
 use uCMS\Core\Admin\ControlPanel;
-use uCMS\Core\Extensions\Extension;
+use uCMS\Core\Extensions\ExtensionHandler;
 use uCMS\Core\Page;
 $extensionsPage = new ManagePage();
 $namespace = "\\uCMS\\Core\\Extensions\\";
-$extensionsPage->addAction('add',     'manage extensions',  "{$namespace}Extension::Add");
-$extensionsPage->addAction('delete',  'manage extensions',  "{$namespace}Extension::Delete");
-$extensionsPage->addAction('enable',  'manage extensions',  "{$namespace}Extension::Enable");
-$extensionsPage->addAction('disable', 'manage extensions',  "{$namespace}Extension::Disable");
+$extensionsPage->addAction('add',     'manage extensions',  "{$namespace}ExtensionHandler::Add");
+$extensionsPage->addAction('delete',  'manage extensions',  "{$namespace}ExtensionHandler::Delete");
+$extensionsPage->addAction('enable',  'manage extensions',  "{$namespace}ExtensionHandler::Enable");
+$extensionsPage->addAction('disable', 'manage extensions',  "{$namespace}ExtensionHandler::Disable");
 
 $extensionsPage->doActions();
 
 $extensionsTable = new ManageTable();
-$extensions = Extension::GetAll();
+$extensions = ExtensionHandler::GetList();
 
 $siteLink = Page::Home();
 $extensionsTable->addSelectColumn('manage extensions');
@@ -23,20 +23,20 @@ $extensionsTable->addColumn(tr('Extension'), true, 'manage extensions', '20%', t
 $extensionsTable->addColumn(tr('Description'), true, 'manage extensions', 0, true );
 foreach ($extensions as $extension) {
 	$dependencies = "";
-	$extensionObject = Extension::Get($extension);
+	$extensionObject = ExtensionHandler::Get($extension);
 	if( empty($extensionObject) ){
 		continue;
 	}
 	if( is_array($extensionObject->getDependenciesList()) ){
 		foreach ($extensionObject->getDependenciesList() as $dependency) {
-			if( Extension::IsLoaded($dependency) ){ //?
-				$dependencies[] = tr(Extension::Get($dependency)->getInfo('displayname'));
+			if( ExtensionHandler::IsLoaded($dependency) ){ //?
+				$dependencies[] = tr(ExtensionHandler::Get($dependency)->getInfo('displayname'));
 			}
 		}
 		$dependencies = implode(", ", $dependencies);
 	}
-	$status = Extension::IsLoaded($extension);
-	$default = Extension::IsDefault($extension);
+	$status = ExtensionHandler::IsLoaded($extension);
+	$default = ExtensionHandler::IsDefault($extension);
 	$style = $status ? "enabled" : "";
 	$displayname = $extensionObject->getInfo('displayname');
 	$description = $extensionObject->getInfo('description');

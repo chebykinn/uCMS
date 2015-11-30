@@ -1,6 +1,7 @@
 <?php
-use uCMS\Core\Extensions\Extension;
+use uCMS\Core\Extensions\ExtensionHandler;
 use uCMS\Core\Extensions\Theme;
+use uCMS\Core\Extensions\ThemeHandler;
 use uCMS\Core\Settings;
 use uCMS\Core\uCMS;
 use uCMS\Core\Tools;
@@ -10,8 +11,8 @@ $groups = (int) Settings::Get('groups_amount');
 $entries = (int) Settings::Get('entries_amount');
 $categories = (int) Settings::Get('categories_amount');
 $blocks = (int) Settings::Get('blocks_amount');
-$extensions = count(Extension::GetAll());
-$themes = count(Theme::GetAll());
+$extensions = count(ExtensionHandler::GetList());
+$themes = count(ThemeHandler::GetList());
 $coreVersion = uCMS::CORE_VERSION;
 $siteName = Settings::Get('site_name');
 $currentTime = Tools::FormatTime(time());

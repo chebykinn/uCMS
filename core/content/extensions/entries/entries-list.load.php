@@ -5,7 +5,7 @@ use uCMS\Core\Debug;
 use uCMS\Core\uCMS;
 use uCMS\Core\Database\Query;
 use uCMS\Core\Extensions\Theme;
-use uCMS\Core\Extensions\Extension;
+use uCMS\Core\Extensions\ExtensionHandler;
 use uCMS\Core\Extensions\Entries\Entry;
 use uCMS\Core\Extensions\Entries\EntryType;
 use uCMS\Core\Extensions\Users\User;
@@ -23,7 +23,7 @@ if( $prefix === Page::INDEX_ACTION ){
 }
 
 // TODO: consider exclude this block from these actions
-if ( empty($prefix) || ( !in_array($prefix, Extension::GetUsedActions()) || $prefix == Entry::ACTION ) ){
+if ( empty($prefix) || ( !in_array($prefix, ExtensionHandler::GetUsedActions()) || $prefix == Entry::ACTION ) ){
 	$found = false;
 	$limit = Settings::Get('entries_per_page');
 	if( empty($prefix) ){
@@ -57,8 +57,8 @@ if ( empty($prefix) || ( !in_array($prefix, Extension::GetUsedActions()) || $pre
 			$found = true;
 		}
 	}
-
-	if( !$found ){
+	
+	if( !$found && Page::GetCurrent()->getAction() != Page::INDEX_ACTION ){
 		Theme::LoadErrorPage(uCMS::ERR_NOT_FOUND);	
 	}
 } 
