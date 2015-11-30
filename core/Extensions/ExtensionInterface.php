@@ -1,6 +1,6 @@
 <?php
 namespace uCMS\Core\Extensions;
-interface IExtension{
+interface ExtensionInterface{
 	public function onLoad();
 	public function onInstall($stage);
 	public function onUninstall();
