@@ -3,7 +3,7 @@ namespace uCMS\Core;
 use uCMS\Core\Extensions\FileManager\File;
 
 class uCMS{
-	const CORE_VERSION = "2.0 Alpha 5";
+	const CORE_VERSION = "2.0 Alpha 6";
 	const COMPATIBILITY_VERSION = "2.x";
 	const MIN_PHP_VERSION = "5.4";
 	const MIN_MYSQL_VERSION = "5.0";
