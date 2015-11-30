@@ -15,9 +15,6 @@ class Debug{
 		set_error_handler('uCMS\\Core\\Debug::ErrorHandler');
 		ini_set('display_errors', 0);
 		self::$logFile = ABSPATH.'content/ucms.log';
-		if( !file_exists(self::$logFile) ){
-			touch(self::$logFile);
-		}
 		if(UCMS_DEBUG){ // Debug mode preparation
 			$debugFile = ABSPATH.'content/debug.log';
 			error_reporting(E_ALL);
@@ -54,7 +51,15 @@ class Debug{
 		self::EndBlock();
 	}
 
-	public static function Log($message, $level = self::LOG_INFO){
+	public static function Log($message, $level = self::LOG_INFO, $logFile = ""){
+		if( empty($logFile) ){
+			$logFile = self::$logFile;
+		}
+		$hasFile = false;
+		if( !file_exists($logFile) && file_exists(dirname($logFile)) && is_writable(dirname($logFile)) ){
+			$hasFile = touch($logFile);
+		}
+
 		if(self::$logLevel > $level){
 			switch ($level) {
 				case self::LOG_DEBUG:
@@ -85,10 +90,15 @@ class Debug{
 			$owner = Tools::GetCurrentOwner();
 			// strftime("%Y-%m-%d %H:%M:%S", time())
 			$outMessage = Tools::FormatTime(time(), "Y-m-d H:i:s")." [Host: $host] $type [$owner] $message\n";
-			$logFile = @fopen(self::$logFile, 'a');
-			if($logFile){
-				fwrite($logFile, $outMessage);
-				fclose($logFile);
+
+			// If error is repeating rapidly this will prevent logs from bloating
+			$lastMessage = self::GetLastMessage();
+			if( !empty($lastMessage) && $lastMessage['text'] !== $message && $hasFile ){
+				$logHandle = @fopen($logFile, 'a');
+				if($logHandle){
+					fwrite($logHandle, $outMessage);
+					fclose($logHandle);
+				}
 			}
 			if( $level === self::LOG_CRITICAL && UCMS_DEBUG ){
 				echo "<pre>";
@@ -97,6 +107,24 @@ class Debug{
 				die;
 			}
 		}
+	}
+
+	public static function GetLogMessage($rawLine){
+		$dateOffset = 0;
+		$hostOffset = 3;
+		$typeOffset = 4;
+		$ownerOffset = 5;
+		$messageOffset = 6;
+		$headerLimit = 7;
+		$data = explode(" ", $rawLine, $headerLimit);
+		$message = [
+			"type" => preg_replace("/\[|\]/", "", $data[$typeOffset]),
+			"text" => htmlspecialchars($data[$messageOffset]),
+			"host" => substr($data[$hostOffset], 0, -1),
+			"owner" => htmlspecialchars(preg_replace("/\[|\]/", "", $data[$ownerOffset])),
+			"date" => $data[$dateOffset].' '.$data[$dateOffset+1]
+		];
+		return $message;
 	}
 
 	/**
@@ -116,26 +144,13 @@ class Debug{
 		}else{
 			$journalLines = array();
 		}
-		$dateOffset = 0;
-		$hostOffset = 3;
-		$typeOffset = 4;
-		$ownerOffset = 5;
-		$messageOffset = 6;
-		$headerLimit = 7;
-		$messages = array();
 		$count = count($journalLines);
 		$i = 0;
+		$messages = [];
 		foreach ($journalLines as $line) {
 			$id = $count-$i;
-			$data = explode(" ", $line, $headerLimit);
-			$message = array(
-				"id" => $id,
-				"type" => preg_replace("/\[|\]/", "", $data[$typeOffset]),
-				"text" => htmlspecialchars($data[$messageOffset]),
-				"host" => substr($data[$hostOffset], 0, -1),
-				"owner" => htmlspecialchars(preg_replace("/\[|\]/", "", $data[$ownerOffset])),
-				"date" => $data[$dateOffset].' '.$data[$dateOffset+1]
-			);
+			$message = self::GetLogMessage($line);
+			$message['id'] = $id;
 			$messages[] = $message;
 			$i++;
 		}
@@ -177,12 +192,12 @@ class Debug{
 		}
 
 		if (!(error_reporting() & $errno) || error_reporting() === 0) {
-   		    return;
-   		}
-   		$die = false;
-   		echo "<br>";
+			return;
+		}
+		$die = false;
+		echo "<br>";
 		self::BeginBlock();
-   		echo '<h2>';
+		echo '<h2>';
 		switch ($errno) {
 			case E_RECOVERABLE_ERROR:
 				$errTitle = "PHP Catchable Fatal Error";
@@ -224,8 +239,8 @@ class Debug{
 			break;
 		}
 		echo $errTitle;
-   		echo '</h2>';
-   		$errorMsg = "$errstr in <b>$errfile</b> on line <b>$errline</b>";
+		echo '</h2>';
+		$errorMsg = "$errstr in <b>$errfile</b> on line <b>$errline</b>";
 		if(!UCMS_DEBUG){
 			echo $errorMsg;
 		}else{
@@ -238,6 +253,51 @@ class Debug{
 		self::EndBlock();
 		echo "<br>";
 		if($die) die;
+	}
+
+	public static function GetLastMessage($raw = false, $logFile = ""){
+		$line = '';
+
+		if( empty($logFile) ){
+			$logFile = self::$logFile;
+		}
+
+		if( !file_exists($logFile) ) return "";
+
+		$f = fopen(self::$logFile, 'r');
+		$cursor = -1;
+		
+		fseek($f, $cursor, SEEK_END);
+		$char = fgetc($f);
+		
+		// Trim trailing newline chars of the file
+		while ($char === "\n" || $char === "\r") {
+			fseek($f, $cursor--, SEEK_END);
+			$char = fgetc($f);
+		}
+		
+		// Read until the start of file or first newline char
+		while ($char !== false && $char !== "\n" && $char !== "\r") {
+			// Prepend the new char
+			$line = $char . $line;
+			fseek($f, $cursor--, SEEK_END);
+			$char = fgetc($f);
+		}
+		if( !$raw ){
+			return self::GetLogMessage($line);
+		}
+		return $line;
+	}
+
+	public static function ClearLog($logFile = ""){
+		if( empty($logFile) ){
+			$logFile = self::$logFile;
+		}
+		if( file_exists($logFile) ){
+			unlink($logFile);
+			return true;
+		}
+		return false;
 	}
 }
 ?>
