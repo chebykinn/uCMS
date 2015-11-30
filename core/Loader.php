@@ -9,7 +9,7 @@
 namespace uCMS\Core;
 use uCMS\Core\Database\DatabaseConnection;
 use uCMS\Core\Language\Language;
-use uCMS\Core\Extensions\Extension;
+use uCMS\Core\Extensions\ExtensionHandler;
 use uCMS\Core\Extensions\Theme;
 use uCMS\Core\Admin\ControlPanel;
 use uCMS\Core\Events\Event;
@@ -92,17 +92,15 @@ class Loader{
 
 		Debug::Init();
 		Session::Start();
-
+		
 		// If we have saved language preference in session we are able to load language at this stage
-		if( Language::IsSaved() ){
-			Language::Init();
-		}
+		Language::Init();
 
 		Form::Init();
 
 		if( version_compare(phpversion(), uCMS::MIN_PHP_VERSION, '<') ){
 			Theme::LoadTemplate('php-version');
-			Debug::Log("Server's PHP is obsolete", Debug::LOG_CRITICAL);
+			Debug::Log(tr("Server's PHP is obsolete"), Debug::LOG_CRITICAL);
 			exit;
 		}
 
@@ -116,10 +114,12 @@ class Loader{
 
 		Cache::Init();
 		Session::GetCurrent()->load();
-		Extension::Init();
+		ExtensionHandler::Init();
+
+		Page::Check();
+
 		$loadedEvent = new Event(CoreEvents::LOADED);
 		$loadedEvent->fire();
-
 	}
 
 	/**
@@ -138,10 +138,10 @@ class Loader{
 		if ($currentAction === Page::INSTALL_ACTION ){
 			$this->install();
 		}
-		$siteTitle = Settings::Get('site_title');
+		$siteTitle = Settings::Get(Settings::SITE_TITLE);
 		if( empty($siteTitle) ) $siteTitle = tr("Untitled");
 		if( $currentAction != ControlPanel::ACTION ){
-			$themeName = Settings::Get('theme');
+			$themeName = Settings::Get(Settings::THEME);
 			if( empty($themeName) ) $themeName = Theme::DEFAULT_THEME;
 		}else{
 		 	// load control panel
@@ -158,9 +158,8 @@ class Loader{
 			p("[@s]: ".$e->getMessage(), $themeName);
 		}
 
-		$isUsed = Extension::LoadOnAction( $currentAction );
-		// Debug::PrintVar($isUsed);
-		// exit;
+		$isUsed = ExtensionHandler::LoadOnAction( $currentAction );
+
 		if( !$isUsed ){
 			Theme::LoadErrorPage(uCMS::ERR_NOT_FOUND);
 		}else{
@@ -199,12 +198,7 @@ class Loader{
 	* @return void
 	*/
 	public function shutdown(){
-		// If stage mark was left after installation we have to remove it
-		if( Session::GetCurrent()->have('install-stage')
-			&& Page::GetCurrent()->getAction() != Page::INSTALL_ACTION ){
-			Session::GetCurrent()->delete('install-stage');
-		}
-		Extension::Shutdown();
+		ExtensionHandler::Shutdown();
 		$this->stopLoadTimer();
 		Session::GetCurrent()->save();
 		DatabaseConnection::Shutdown();
