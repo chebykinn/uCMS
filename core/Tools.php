@@ -1,6 +1,7 @@
 <?php
 namespace uCMS\Core;
-use uCMS\Core\Extensions\Extension;
+use uCMS\Core\Extensions\ExtensionHandler;
+use uCMS\Core\Extensions\ThemeHandler;
 use uCMS\Core\Extensions\Theme;
 use uCMS\Core\Extensions\Users\User;
 class Tools{
@@ -31,8 +32,8 @@ class Tools{
 			foreach ($level as $key => $value) {
 				$found = false;
 				if( $key == 'file' && is_file($value) ){
-					if( strpos($value, Extension::PATH) !== false ){
-						$path = explode(Extension::PATH, dirname($value));
+					if( strpos($value, ExtensionHandler::PATH) !== false ){
+						$path = explode(ExtensionHandler::PATH, dirname($value));
 					}else{
 						$path = explode(Theme::PATH, dirname($value));
 					}
@@ -42,11 +43,11 @@ class Tools{
 							$name = explode("/", $name);
 							$name = $name[0];
 						}
-						if( Extension::IsLoaded($name) ){ 
+						if( ExtensionHandler::IsLoaded($name) ){ 
 							$found = true;
-							break;
+							return $name;
 						}
-						if( Theme::IsExists($name) ){
+						if( ThemeHandler::IsExists($name) ){
 							$found = true;
 						}
 					}
@@ -60,7 +61,7 @@ class Tools{
 	public static function OverrideOwner($newOwner = "core"){
 		if( strpos(__NAMESPACE__, "uCMS\\Core") !== false ){
 			self::$isOwnerOverridden = true;
-			if( Extension::IsExists($newOwner) || Theme::IsExists($newOwner) ){
+			if( ExtensionHandler::IsExists($newOwner) || ThemeHandler::IsExists($newOwner) ){
 				self::$owner = $newOwner;
 			}
 		}
@@ -82,11 +83,15 @@ class Tools{
 		if( empty($format) ){
 			$format = Settings::Get('datetime_format');
 		}
-		// If user have his own timezone we will use it.
-		$timezone = User::Current()->getTimezone();
+		if( class_exists('User') ){
+			// If user have his own timezone we will use it.
+			$timezone = User::Current()->getTimezone();
+		}
 		if( empty($timezone) ){
 			$timezone = Settings::Get('ucms_timezone');
 		}
+		if( empty($timezone) ) $timezone = 'UTC';
+
 		$datetime = new \DateTime("@$time");
 		// DateTime ignores $timezone parameter when created from timestamp, so
 		// we have to set in explicitly.
