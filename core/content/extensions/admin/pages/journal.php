@@ -1,6 +1,20 @@
 <?php
 use uCMS\Core\Debug;
+use uCMS\Core\Form;
+use uCMS\Core\Page;
+use uCMS\Core\Notification;
 use uCMS\Core\Admin\ManageTable;
+
+if( isset($_POST['clear-journal']) ){
+	Debug::ClearLog();
+	$msg = new Notification(tr('Journal was successfully cleared.'), Notification::SUCCESS);
+	$msg->add();
+	Page::Refresh();
+}
+
+$clearForm = new Form('clear-journal', '', tr('Clear journal'));
+$clearForm->render();
+
 $table = new ManageTable();
 
 $permission = 'access control panel';
