@@ -8,6 +8,8 @@ body {
 	font-size: 15px;
 	text-align: center;
 	background: #f1f1f1;
+
+	line-height: 150%;
 }
 
 a{
@@ -103,7 +105,7 @@ a:hover{
 	text-align: left;
 }
 
-.error, .warning, .success{
+/*.error, .warning, .success{
 	border-radius: 2px;
 	width: 80%;
 	color: #000;
@@ -125,4 +127,42 @@ a:hover{
 .success{
 	border: 1px #168A24 solid;
 	background: #74D96F;
+}
+*/
+
+.error, .warning, .success{
+	width: 100%;
+	box-sizing: border-box;
+	font-size: 15px;
+	padding: 10px;
+	margin: 10px auto;
+	background: #fdfdfd;
+	box-shadow: 0 1px 5px 0 rgba(0, 0, 0, 0.1);
+	overflow: hidden;
+}
+
+.error{
+	background: #FFF9F9;
+	border-left: 10px #D93030 solid;
+	border-right: 10px #D93030 solid;
+}
+
+.warning{
+	background: #FCFCF9;
+	border-left: 10px #C4AF23 solid;
+	border-right: 10px #C4AF23 solid;
+}
+
+.success{
+	background: #F7FFF8;
+	border-left: 10px #168A24 solid;
+	border-right: 10px #168A24 solid;
+}
+
+ul {
+	text-align: left;
+	margin: 5px auto;
+	display: block;
+	width: 50%;
+	font-weight: bold;
 }
