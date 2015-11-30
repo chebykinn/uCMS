@@ -18,6 +18,7 @@ abstract class AbstractExtension{
 	protected $coreVersion;
 	protected $dependencies = NULL;
 	protected $info;
+	protected $settings;
 
 	public function __construct($name){
 		$this->name = $name;
