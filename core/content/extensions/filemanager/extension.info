@@ -28,5 +28,9 @@
 		"site": "http://ucms.ivan4b.ru",
 		"updateURL": "http://ucms.ivan4b.ru/pub/extensions/filemanager",
 		"tables": ["uploaded_files"]
+	},
+
+	"permissions": {
+		"manage files": 1
 	}
 }

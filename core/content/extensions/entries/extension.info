@@ -37,6 +37,17 @@
 		"author": "µCMS",
 		"site": "http://ucms.ivan4b.ru",
 		"updateURL": "http://ucms.ivan4b.ru/pub/extensions/entries",
-		"tables": ["entries", "entry_types", "entry_access", "terms", "term_hierarchy", "term_taxonomy"]
+		"tables": ["entries", "entry_types", "entry_access", "terms", "term_hierarchy", "term_taxonomy"],
+		"tablesToFill": ["entry_types", "terms"]
+	},
+
+	"settings": {
+		"entries_amount": 0,
+		"entry_types_amount": 2,
+		"categories_amount": 1
+	},
+
+	"permissions": {
+		"manage entries": 1
 	}
 }

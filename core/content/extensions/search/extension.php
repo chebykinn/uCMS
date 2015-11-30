@@ -1,30 +1,11 @@
 <?php
 namespace uCMS\Core\Extensions\Search;
 use uCMS\Core\Extensions\Extension;
-use uCMS\Core\Extensions\IExtension;
+use uCMS\Core\Extensions\ExtensionInterface;
 use uCMS\Core\Admin\ControlPanel;
-class Search extends Extension implements IExtension{
+use uCMS\Core\Installer;
 
-	public function onInstall($stage){
-
-	}
-
-	public function onUninstall(){
-
-	}
-
-	public function onShutdown(){
-
-	}
-
-	public function onLoad(){
-		
-	}
-
-	public function onAction($action){
-		
-	}
-
+class Search extends Extension{
 	public function onAdminAction($action){
 		ControlPanel::SetTitle(tr('Search'));
 	}

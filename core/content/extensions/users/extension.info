@@ -39,6 +39,20 @@
 		"author": "µCMS",
 		"site": "http://ucms.ivan4b.ru",
 		"updateURL": "http://ucms.ivan4b.ru/pub/extensions/users",
-		"tables": ["users", "user_info", "groups", "group_permissions"]
+		"tables": ["users", "user_info", "groups", "group_permissions"],
+		"tablesToFill": ["users", "groups"]
+	},
+
+	"permissions": {
+		"manage users": 1
+	},
+
+	"settings": {
+		"groups_amount": 6,
+		"users_amount": 1,
+		"password_min_size": 6,
+		"password_max_size": 32,
+		"login_min_size": 4,
+		"login_max_size": 20
 	}
 }

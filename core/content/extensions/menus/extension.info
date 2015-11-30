@@ -26,6 +26,12 @@
 		"description": "Menus system extension",
 		"author": "µCMS",
 		"site": "http://ucms.ivan4b.ru",
-		"updateURL": "http://ucms.ivan4b.ru/pub/extensions/menus"
+		"updateURL": "http://ucms.ivan4b.ru/pub/extensions/menus",
+		"tables": ["menus"],
+		"tablesToFill": ["menus"]	
+	},
+
+	"permissions": {
+		"manage menu links": 1
 	}
 }
