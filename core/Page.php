@@ -24,16 +24,21 @@ class Page{
 		$url = parse_url($this->url);
 		if( isset($url['host']) ){
 			$this->host = $url['host'];
+		}else{
+			$this->host = $_SERVER['SERVER_NAME'];
 		}
+
 		if( isset($url['query']) ){
 			$this->query = $url['query'];
 		}
 
 		$this->path = $url['path'];
+
+		$rawData = str_replace(uCMS::GetDirectory(), "/", $this->path);
 		$data = array();
 		parse_str ( $this->query, $data );
 		if( empty($data['action']) ){
-			$this->data = preg_split('#(/)#', $this->path, -1, PREG_SPLIT_NO_EMPTY);
+			$this->data = preg_split('#(/)#', $rawData, -1, PREG_SPLIT_NO_EMPTY);
 		}else{
 			$this->data[0] = $data['action'];
 			if( !empty($data['key']) ){
@@ -52,7 +57,7 @@ class Page{
 	}
 
 	public static function FromAction($action, $data = ""){
-		$isCleanUrl = (bool)Settings::get('clean_url');
+		$isCleanUrl = (bool)Settings::get(Settings::CLEAN_URL);
 		if( $action === self::INDEX_ACTION ) $action = "";
 		$urlAction = "";
 		$urlData = "";
@@ -142,6 +147,14 @@ class Page{
 		return $this->url;
 	}
 
+	public function getHost(){
+		return $this->host;
+	}
+
+	public function getPath(){
+		return $this->path;
+	}
+
 	public function containsKey($name){
 		return ( is_array($this->data) && in_array($name, $this->data) );
 	}
@@ -195,6 +208,7 @@ class Page{
 		/**
 		* @todo add some checks
 		*/
+		session_write_close();
 		if(headers_sent()){
 			echo '<script type="text/javascript">';
 			echo 'window.location.href="'.$url.'";';
@@ -224,6 +238,16 @@ class Page{
 			$backPage = Page::Home();
 		}
 		$backPage->go();
+	}
+
+	public static function Check(){
+		$isCleanUrl = (bool) Settings::Get(Settings::CLEAN_URL);
+
+		if( $isCleanUrl && preg_match('/apache/i', $_SERVER['SERVER_SOFTWARE']) ){
+			if( !in_array('mod_rewrite', apache_get_modules()) ){
+				Settings::Update(Settings::CLEAN_URL, 0);
+			}
+		}
 	}
 }
 ?>
