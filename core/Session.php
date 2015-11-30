@@ -29,7 +29,6 @@ class Session extends Model{
 		$this->tableName('sessions');
 		$this->primaryKey('sid');
 		$this->belongsTo('\\uCMS\\Core\\Extensions\\Users\\User', array('bind' => 'user'));
-
 		foreach ($_COOKIE as $key => $value) {
 			if( strpos($key, 'USID') !== false ){
 				$this->sid = $value;
@@ -45,6 +44,7 @@ class Session extends Model{
 		if ( !isset($_SESSION) ){
 			session_start();
 		}
+
 		self::$idleLifetime = 2 * 3600;
 		ini_set('session.cookie_lifetime', 0); // set session life until the browser closes
 		ini_set('session.cookie_httponly', 1); // set session life until the browser closes
@@ -89,7 +89,6 @@ class Session extends Model{
 				$this->deauthorize();
 			}
 		}
-
 	}
 
 	public function save(){
@@ -185,7 +184,10 @@ class Session extends Model{
 
 	public function setCookie($name, $value, $time = 0, $httpOnly = true, $secure = false){
 		if(!$time) $time = time() + 60 * 60 * 24 * 30;
-		return setcookie($name, $value, $time, '/', $_SERVER['SERVER_NAME'], $secure, $httpOnly);
+
+		// If server name is at first domain level, cookie domain should be empty
+		$serverName = (mb_strpos($_SERVER['SERVER_NAME'], ".") !== false) ? $_SERVER['SERVER_NAME'] : "";
+		return setcookie($name, $value, $time, '/', $serverName, $secure, $httpOnly);
 	}
 
 	public function deleteCookie($name){
