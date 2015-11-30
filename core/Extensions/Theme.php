@@ -3,6 +3,7 @@ namespace uCMS\Core\Extensions;
 use uCMS\Core\Debug;
 use uCMS\Core\Settings;
 use uCMS\Core\Page;
+use uCMS\Core\uCMS;
 use uCMS\Core\Block;
 use uCMS\Core\Notification;
 class Theme extends AbstractExtension{
@@ -39,42 +40,6 @@ class Theme extends AbstractExtension{
 	public static function SetCurrent($themeName){
 		self::$defaultList = array('install', 'ucms', 'admin');
 		self::$instance = new self($themeName);
-	}
-
-	public static function isExists($name){
-		return in_array($name, self::GetAll());
-	}
-
-	final public static function GetAll(){
-		$names = array();
-		$exclude = array('.', '..');
-		if( UCMS_DEBUG ){
-			$dirs = @scandir(self::CORE_PATH);// array_filter(scandir(self::PATH), 'is_dir');
-			if ( $dh = @opendir(self::CORE_PATH) ) {
-				while ( ($theme = readdir($dh)) !== false ) {
-					/**
-					* @todo check .. ?
-					*/
-					if( !in_array($theme, $exclude) ){
-						$names[] = $theme;
-					}
-				}
-				closedir($dh);
-			}
-		}
-		$dirs = @scandir(ABSPATH.self::PATH);// array_filter(scandir(self::PATH), 'is_dir');
-		if ( $dh = @opendir(ABSPATH.self::PATH) ) {
-			while ( ($theme = readdir($dh)) !== false ) {
-				/**
-				* @todo check .. ?
-				*/
-				if( !in_array($theme, $exclude) ){
-					$names[] = $theme;
-				}
-			}
-			closedir($dh);
-		}
-		return $names;
 	}
 
 	public static function IsLoaded(){
@@ -136,7 +101,10 @@ class Theme extends AbstractExtension{
 	}
 
 	public function loadInfo(){
-		$encodedInfo = @file_get_contents($this->getExtensionInfoPath());
+		if( !file_exists($this->getExtensionInfoPath()) ){
+			throw new \InvalidArgumentException("Can't get theme information");
+		}
+		$encodedInfo = file_get_contents($this->getExtensionInfoPath());
 
 		$decodedInfo = json_decode($encodedInfo, true);
 		$checkRequiredFields = empty($decodedInfo['version']) || empty($decodedInfo['coreVersion']);
@@ -175,7 +143,7 @@ class Theme extends AbstractExtension{
 	}
 
 	protected function getURLPath(){
-		return UCMS_DIR.$this->getRelativePath()."$this->name/";
+		return uCMS::GetDirectory().$this->getRelativePath()."$this->name/";
 	}
 
 	protected function getExtensionInfoPath(){
@@ -183,12 +151,12 @@ class Theme extends AbstractExtension{
 	}
 
 	public function getURLFilePath($file){
-		return UCMS_DIR.$this->getRelativePath()."$this->name/$file";
+		return uCMS::GetDirectory().$this->getRelativePath()."$this->name/$file";
 	}
 
 	public function load($variables = true){
 		if( $variables ){
-			include_once(self::VARIABLES_LOAD);
+			include_once(ABSPATH.self::VARIABLES_LOAD);
 			// Load blocks
 			$blocks = Block::GetList('', $this->getName());
 			foreach ($blocks as $regions) {
@@ -201,7 +169,7 @@ class Theme extends AbstractExtension{
 		if( file_exists($themeLoad) && is_file($themeLoad) ){
 			include_once($themeLoad);
 		}
-		include_once(self::PAGE_TEMPLATE);
+		include_once(ABSPATH.self::PAGE_TEMPLATE);
 	}
 
 	public function setThemeTemplate($name){
