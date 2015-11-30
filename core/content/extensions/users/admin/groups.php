@@ -6,7 +6,7 @@ use uCMS\Core\Admin\ControlPanel;
 use uCMS\Core\Extensions\Users\Permission;
 use uCMS\Core\Extensions\Users\Group;
 use uCMS\Core\Extensions\Users\User;
-use uCMS\Core\Extensions\Extension;
+use uCMS\Core\Extensions\ExtensionHandler;
 use uCMS\Core\Settings;
 $groupsPage = new ManagePage();
 $groupsTable = new ManageTable();
@@ -29,16 +29,16 @@ foreach ($groups as $group) {
 	foreach ($perms as $permission) {
 		$info = $permission->getInfo();
 		if( empty($info) ){
-			$data = tr($permission->name);
+			$data = $permission->name;
 		}else{
-			$data = tr($info['title']).'<br>'.tr($info['description']);
+			$data = $info['title'].'<br>'.$info['description'];
 		}
 		if( $prevOwner != $permission->owner ){
 			$owner = $permission->owner;
 			if ( $owner === 'core' ){
 				$owner = tr('General');
 			}
-			$extension = Extension::Get($permission->owner);
+			$extension = ExtensionHandler::Get($permission->owner);
 			if( !empty($extension) ){
 				$owner = tr($extension->getInfo('displayname'));
 			}
