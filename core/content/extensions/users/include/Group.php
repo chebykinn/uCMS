@@ -2,6 +2,7 @@
 namespace uCMS\Core\Extensions\Users;
 use uCMS\Core\Database\Query;
 use uCMS\Core\ORM\Model;
+use uCMS\Core\Tools;
 
 class Group extends Model{
 	const ADMINISTRATOR = 1;
@@ -10,6 +11,7 @@ class Group extends Model{
 	const USER          = 4;
 	const BANNED        = 5;
 	const GUEST         = 6;
+	const DEFAULT_AMOUNT = 6;
 
 	public function init(){
 		$this->primaryKey('gid');
@@ -34,15 +36,12 @@ class Group extends Model{
 	public static function GrantPermission($name, $group){
 		if( !is_object($group) ) return false;
 		if( !$group->hasPermission($name) ){
-			$check = new Query('{group_permissions}');
-			$data = $check->select('owner')->where()->condition('name', '=', $name)->limit(1)->execute(); //add query method to check
-			if(count($data) > 0){
-				$add = new Query('{group_permissions}');
-				$add->insert(
-					['gid', 'name', 'owner'],
-					[[$group->getID(), $name, $data[0]['owner']]]
-				)->execute();
-			}
+			$owner = Tools::GetCurrentOwner();
+			$add = new Query('{group_permissions}');
+			$add->insert(
+				['gid', 'name', 'owner'],
+				[[$group->gid, $name, $owner]]
+			)->execute();
 		}
 	}
 

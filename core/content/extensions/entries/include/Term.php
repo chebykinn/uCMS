@@ -2,6 +2,7 @@
 namespace uCMS\Core\Extensions\Entries;
 use uCMS\Core\ORM\Model;
 class Term extends Model{
+	const DEFAULT_AMOUNT = 1;
 	public function init(){
 		$this->primaryKey('tid');
 		$this->tableName('terms');
