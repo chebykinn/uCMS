@@ -14,6 +14,21 @@ class User extends Model{
 	const LOGOUT_ACTION = 'logout';
 	const LIST_ACTION = 'users';
 	const PROFILE_ACTION = 'user';
+	const NAME_REGEX = "/[^a-zA-Z0-9-_]/";
+	const DEFAULT_MIN_PASSWORD = 6;
+	const DEFAULT_MAX_PASSWORD = 32;
+	const DEFAULT_MIN_LOGIN = 4;
+	const DEFAULT_MAX_LOGIN = 20;
+	const INACTIVE_STATUS = 0;
+	const ACTIVE_STATUS = 1;
+	const SUPERUSER_ID = 1;
+
+	const SUCCESS = 0;
+	const ERR_WRONG_PASSWORD_SIZE = 10;
+	const ERR_WRONG_LOGIN_SIZE = 20;
+	const ERR_WRONG_LOGIN_CHARS = 30;
+	const ERR_WRONG_EMAIL = 40;
+
 	protected $info;
 	protected static $currentUser;
 
@@ -65,8 +80,8 @@ class User extends Model{
 		return false;
 	}
 
-	public static function Authorize($userID, $saveCookies = false){ //private
-		if( !self::isExists($userID) ) return false; // fail if user doesn't exists
+	public static function Authorize($userID, $saveCookies = false){
+		if( !self::IsExists($userID) ) return false; // fail if user doesn't exists
 		if( Session::GetCurrent()->isAuthorized() ){
 			if( Session::GetCurrent()->getUID() === intval($userID) ) return false; //fail if user already logged in
 			else{
@@ -102,8 +117,7 @@ class User extends Model{
 	}
 
 	public static function EncryptPassword($password){
-		$salt = substr(sha1($password), 0, 22);
-		$password = crypt($password, '$2a$10$'.$salt);
+		$password = crypt($password, '$2a$10$'.UCMS_HASH_SALT);
 		return $password;
 	}
 
@@ -166,6 +180,108 @@ class User extends Model{
 
 	public function getDate($row){	
 		return Tools::FormatTime($row->created);
+	}
+
+	public function setGID($value){
+		if($value <= Group::DEFAULT_AMOUNT ){
+			return $value;
+		}
+		$check = (new Group())->find($value);
+		if( $check != NULL ){
+			return $value;
+		}
+	}
+
+	public function setName($value){
+		$value = preg_replace(self::NAME_REGEX, "", $value);
+		return $value;
+	}
+
+	public function setPassword($value){
+		$value = self::EncryptPassword($value);
+		return $value;
+	}
+
+	public function setEmail($value){
+		if( preg_match("/@/", $value) ){
+			return $value;
+		}
+	}
+
+	public function create($row){
+		if( empty($row->gid) ){
+			$row->gid = Group::USER;
+		}
+		$row->ip = Session::GetCurrent()->getIPAddress();
+		$row->created = time();
+		$result = parent::create($row);
+		if( !$result ) return false;
+		Settings::Increment('users_amount');
+	}
+
+	public function delete($row){
+		foreach ($row->sessions as $session) {
+			$session->delete();
+		}
+		$result = parent::delete($row);
+		if( !$result ) return false;
+		Settings::Decrement('users_amount');
+	}
+
+
+	public static function CheckPasswordConstraints($password){
+		$minSize = (int)Settings::Get('password_min_size');
+		$maxSize = (int)Settings::Get('password_max_size');
+		$size = mb_strlen($password);
+		if ( $size < $minSize || $size > $maxSize ){
+			return self::ERR_WRONG_PASSWORD_SIZE;
+		}
+		return self::SUCCESS;
+	}
+
+	public static function CheckLoginConstraints($login){
+		$minSize = (int)Settings::Get('login_min_size');
+		$maxSize = (int)Settings::Get('login_max_size');
+		$size = mb_strlen($login);
+		if ( $size < $minSize || $size > $maxSize ){
+			return self::ERR_WRONG_LOGIN_SIZE;
+		}
+		if( preg_match(self::NAME_REGEX, $login) ){
+			return self::ERR_WRONG_LOGIN_CHARS;
+		}
+		return self::SUCCESS;
+	}
+
+	public static function CheckEmailConstraints($email){
+		if( !preg_match("/@/", $email) ){
+			return self::ERR_WRONG_EMAIL;
+		}
+		return self::SUCCESS;
+	}
+
+	public static function GetErrorMessage($errno){
+		switch ($errno) {
+			case self::ERR_WRONG_PASSWORD_SIZE:
+				$minSize = (int)Settings::Get('password_min_size');
+				$maxSize = (int)Settings::Get('password_max_size');
+				return tr('Password must be at least @s characters length and not more than @s characters.', $minSize, $maxSize);
+			break;
+
+			case self::ERR_WRONG_LOGIN_SIZE:
+				$minSize = (int)Settings::Get('login_min_size');
+				$maxSize = (int)Settings::Get('login_max_size');
+				return tr('Login must be at least @s characters length and not more than @s characters.', $minSize, $maxSize);
+			break;
+
+			case self::ERR_WRONG_LOGIN_CHARS:
+				return tr('Login contains wrong characters.');
+			break;
+
+			case self::ERR_WRONG_EMAIL:
+				return tr('Invalid e-mail.');
+			break;
+		}
+		return "";
 	}
 }
 ?>
