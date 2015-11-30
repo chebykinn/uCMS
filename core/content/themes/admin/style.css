@@ -174,21 +174,22 @@ h1, h2{
 }
 
 .error{
+	background: #FFF9F9;
 	border-left: 10px #D93030 solid;
 	border-right: 10px #D93030 solid;
 }
 
 .warning{
+	background: #FCFCF9;
 	border-left: 10px #C4AF23 solid;
 	border-right: 10px #C4AF23 solid;
 }
 
 .success{
+	background: #F7FFF8;
 	border-left: 10px #168A24 solid;
 	border-right: 10px #168A24 solid;
 }
-
-
 
 #content .ucms-form{
 	font-size: 15px;
