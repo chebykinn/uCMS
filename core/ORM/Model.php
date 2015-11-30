@@ -206,6 +206,10 @@ abstract class Model{
 		return new Row($this, $row);
 	}
 
+	final public function setModified(){
+		$this->modified = true;
+	}
+
 	final public function find($conditions = array()){
 		$usedKeys = array('columns', 'where', 'start', 'limit', 'orders', 'noOrder');
 		// If we got a number we will try to select row by ID
@@ -324,12 +328,43 @@ abstract class Model{
 		return 0;
 	}
 
-	public function save(){
-
+	public function create($row){
+		if( !$this->exists && $this->modified ){
+			$data = $row->getColumns();
+			$columns = array_keys($data);
+			$values = array_values($data);
+			$query = new Query('{'.$this->tableName().'}');
+			$key = $this->primaryKey();
+			if( isset($data[$key]) ){
+				$check = $query->select($key)->condition($key, '=', $data[$key])->execute('count');
+				if( $check > 0 ) return false; // Prevent from adding duplicate entry 
+			}
+			$result = $query->insert($columns, [$values])->execute();
+			return $result;
+		}
+		return false;
 	}
 
-	public function remove(){
-		
+	public function update($row){
+		if( $this->exists && $this->modified ){
+			$data = $row->getColumns();
+			$query = new Query('{'.$this->tableName().'}');
+			$key = $this->primaryKey();
+			if( !isset($data[$key]) ) return false;
+			$result = $query->update($data)->condition($key, '=', $data[$key])->execute();
+			return $result;
+		}
+		return false;
+	}
+
+	public function delete($row){
+		if( $this->exists ){
+			$key = $this->primaryKey();
+			$query = new Query('{'.$this->tableName().'}');
+			$result = $query->delete()->condition($key, '=', $row->$key)->execute();
+			return $result;
+		}
+		return false;
 	}
 
 	final public function clean(){
