@@ -60,6 +60,7 @@ class Query{
 			$i = 0;
 			$lists = [];
 			foreach ($valueLists as $valueList) {
+				if( !is_array($valueList) ) return $this;
 				if( $columnsAmount == 0 || count($valueList) >= $columnsAmount ){
 					$c = 0;
 					foreach ($valueList as $value) {
@@ -432,7 +433,7 @@ class Query{
 				if( is_array($key) ){
 					$key = implode(', ', $key);
 				}
-				$key = preg_replace("/[^a-zA-Z0-9]/i", '', $key);
+				$key = preg_replace($keysRegex, '', $key);
 				$sql .= "ADD PRIMARY KEY ($key)";
 				$isFirst = false;
 			}
