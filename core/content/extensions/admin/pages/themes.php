@@ -4,6 +4,7 @@ use uCMS\Core\Admin\ManageTable;
 use uCMS\Core\Database\Query;
 use uCMS\Core\Admin\ControlPanel;
 use uCMS\Core\Extensions\Theme;
+use uCMS\Core\Extensions\ThemeHandler;
 use uCMS\Core\Page;
 $page = new ManagePage();
 $table = new ManageTable();
@@ -15,7 +16,7 @@ $page->addAction('disable', 'manage themes',  "{$namespace}Theme::Disable");
 
 $page->doActions();
 
-$themes = Theme::GetAll();
+$themes = ThemeHandler::GetList();
 
 $table->addSelectColumn('manage themes');
 $table->addColumn(tr('Theme'), true, 'manage themes', '20%', true);
@@ -28,7 +29,7 @@ foreach ($themes as $theme) {
 	}catch(\Exception $e){
 		continue;
 	}
-	$default = Theme::IsDefault($theme);
+	$default = ThemeHandler::IsDefault($theme);
 	$style = $default ? "enabled" : "";
 	$displayname = $themeObject->getInfo('displayname');
 	$description = $themeObject->getInfo('description');
