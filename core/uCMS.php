@@ -19,9 +19,12 @@ class uCMS{
 	const UCMS_HOST = 'http://ucms.ivan4b.ru';
 
 	public static function GetDirectory(){
-		$storedValue = Settings::Get('ucms_dir');
-		// TODO: more complex default value
-		return empty($storedValue) ? '/' : $storedValue;
+		$storedValue = Settings::Get(Settings::UCMS_DIR);
+
+		if( empty($storedValue) ){
+			$storedValue = Page::GetCurrent()->getPath();
+		}
+		return $storedValue;
 	}
 
 	public static function GetDomain(){
