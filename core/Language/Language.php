@@ -2,8 +2,10 @@
 namespace uCMS\Core\Language;
 use uCMS\Core\Settings;
 use uCMS\Core\Session;
+
 class Language{
 	const PATH = 'content/languages/';
+	const EN_US = 'en_US';
 	private static $instance;
 	private $langStrings;
 
@@ -15,7 +17,7 @@ class Language{
 	}
 
 	public static function IsLoaded(){
-		return is_null( self::$instance );
+		return !is_null( self::$instance );
 	}
 
 	public static function IsSaved(){
@@ -25,9 +27,15 @@ class Language{
 
 	public static function Init(){
 		$sessionLang = Session::GetCurrent()->get('language');
-		$storedValue = Settings::Get('language');
-		$language = (!empty($sessionLang) && $sessionLang === $storedValue) ? $sessionLang : Settings::Get('language');
+		$storedValue = Settings::Get(Settings::LANGUAGE);
+		if( empty($storedValue) ){
+			if( empty($sessionLang) ) return false;
+			$language = $sessionLang;
+		}else{
+			$language = $storedValue;
+		}
 		Language::GetCurrent()->load($language);
+		return true;
 	}
 
 	public function __construct(){
