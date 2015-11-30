@@ -32,6 +32,7 @@ class DatabaseConnection{
 	private $connected = false;
 	private $prefix;
 	private $ucmsName;
+	private $lastStatement = NULL;
 
 	public static function Init(){
 		if( empty($GLOBALS['databases']) || !is_array($GLOBALS['databases']) ){
@@ -138,8 +139,14 @@ class DatabaseConnection{
 			echo $sql;
 			Debug::EndBlock();
 		}
+
+		if( is_object($this->lastStatement) ){
+			$this->lastStatement->closeCursor();
+		}
+
 		try{
 			$result->execute($params);
+			$this->lastStatement = $result;
 			$this->queriesCount++;
 		}catch(\PDOException $e){
 			if( $e->getCode() === self::ERR_TABLE_NOT_EXIST ){
