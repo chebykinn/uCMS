@@ -45,7 +45,7 @@
 
 	"permissions": {
 		"access site": [1, 2, 3, 4, 6],
-		"access site in maintenance": 1,
+		"access site in maintenance mode": 1,
 		"access control panel": 1,
 		"manage extensions": 1,
 		"manage themes": 1,
