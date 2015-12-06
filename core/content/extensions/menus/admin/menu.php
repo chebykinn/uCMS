@@ -8,8 +8,12 @@ $page = new ManagePage();
 $table = new ManageTable();
 $page->doActions();
 
+$amount = (new MenuLink())->count();
+
+$table->setInfo("amount", $amount);
 $table->addSelectColumn('manage menu links');
 $table->addColumn(tr('Title'), true, 'manage menu links', 0, true);
+$table->addColumn(tr('Link'), true, 'manage menu links', 0, true);
 $table->addColumn(tr('Menu'), true, 'manage menu links', 0, true);
 
 $limit = Settings::Get('per_page');
@@ -17,7 +21,8 @@ $links = (new MenuLink())->find(array('limit' => $limit));
 foreach ($links as $link) {
 	$table->setInfo("idKey", $link->lid);
 	$table->addRow( array(
-			$link->title,
+			tr($link->title),
+			$link->getLink(),
 			$link->menu,
 		)
 	);
