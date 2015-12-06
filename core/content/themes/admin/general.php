@@ -1,4 +1,11 @@
 <div id="wrapper">
+<?php
+	use uCMS\Core\Notification;
+	if( !$isPanel ){
+		$error = new Notification(tr('Error: Attempted to use control panel theme as site theme!'), Notification::ERROR);
+		$error->add();
+	}
+?>
 <a href="#sidebar" class="show-sidebar"></a>
 <div id="sidebar">
 	<?php
@@ -12,18 +19,23 @@
 <div id="content">
 <?php
 	$this->region("header");
+	$this->showNotifications();
 	if( $this->pageTitle() ){
 		echo "<h2>".$this->pageTitle()."</h2>";
 	}
-	$this->showNotifications();
-	include_once($adminPage);
+	if( !empty($adminPage) ){
+		include_once($adminPage);
+	}
 ?>
 </div>
 <div id="footer">
 	<?php
 	$this->region("footer");
-	p("IVaN4B's μCMS © 2011-@s Queries: @s. Load time: @s seconds. <span class=\"ucms-version\">Version: @s</span>", 
-	date('Y'), $queriesCount(),
-			$loadTime(), $coreVersion); ?>
+	echo "μCMS © 2011-".date('Y').' ';
+	p("Queries: @s.", $queriesCount());
+	echo ' ';
+	p("Load time: @s seconds.", $loadTime());
+	echo '<span class="ucms-version">'.tr("Version: @s", $coreVersion).'</span>';
+	?>
 </div>
 </div>
