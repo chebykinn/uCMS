@@ -184,8 +184,9 @@ abstract class Model{
 	*/
 	final private function processResults($results){
 		$processed = array();
+		if( empty($results) ) return [];
 		$rowCount = $results->rowCount();
-		if( !empty($rowCount) && $results->rowCount() > 0 ){
+		if( $rowCount > 0 ){
 			while ($row = $results->fetch(\PDO::FETCH_OBJ) ) {
 				$processed[] = $this->processRow($row);
 			}
