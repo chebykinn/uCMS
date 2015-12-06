@@ -37,14 +37,14 @@ if( isset($_POST['load-package']) && isset($_FILES['package']) && UCMS_DEBUG ){
 		break;
 	}
 }
-
+echo '<div class="update-block">';
 if( uCMS::IsUpdateAvailable() || $isPackage ){
 	if( !$isPackage ){
 		$version = uCMS::GetLatestVersion();
 		$notes = uCMS::GetUpdateNotes();
-		p("<br><h2>Update is Available: μCMS @s</h2>", $version);
+		p("<h2>Update is Available: μCMS @s</h2>", $version);
 	}else{
-		p("<br><h2>Update from Package: μCMS @s</h2>", $version);
+		p("<h2>Update from Package: μCMS @s</h2>", $version);
 	}
 	if( !empty($notes) ){
 		p("<h3>Please read the notes for this update:</h3><br>");
@@ -69,4 +69,5 @@ if( !isset($_POST['load-package']) && !isset($_FILES['package']) && UCMS_DEBUG )
 	$packageForm->addField('package', 'file', tr('Install update from file:'));
 	$packageForm->render();
 }
+echo '</div>';
 ?>
