@@ -46,9 +46,27 @@
 	width: 100%;
 }
 
-.last-added{
+.actions{
 	width: 100%;
 }
 
+.last-added{
+	width: 100%;
+	margin-bottom: 10px;
+}
+
+.dashboard-left-side{
+	float: left;
+	width: 100%;
+	/*border: 1px #000 solid;*/
+}
+
+.dashboard-right-side{
+	margin-top: 10px;
+	float: left;
+	width: 100%;
+	/*border: 1px #000 solid;*/
+
+}
 
 }
