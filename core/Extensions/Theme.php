@@ -64,24 +64,6 @@ class Theme extends AbstractExtension{
 		}
 	}
 
-	public static function LoadTemplate($name){
-		$path = 'content/templates/';
-		$corePath = 'core/'.$path;
-		$coreFile = ABSPATH.$corePath.$name.'.php';
-		$file = ABSPATH.$path.$name.'.php';
-		if ( file_exists($coreFile) && is_file($coreFile) ){
-			include_once $coreFile;
-			return true;
-		}
-
-		if ( file_exists($file) && is_file($file) ){
-			include_once $file;
-			return true;
-		}
-		Debug::Log(tr("Unable to load template @s", $name), Debug::LOG_ERROR);
-		return false;	
-	}
-
 	public static function LoadErrorPage($errorCode){
 		Debug::Log(tr("Error @s at: @s", $errorCode,
 						Page::GetCurrent()->getURL()), Debug::LOG_WARNING);
@@ -181,29 +163,58 @@ class Theme extends AbstractExtension{
 
 
 	public function loadStyles(){
-		// TODO: Add default uCMS styles
-		$style = $this->getInfo('style');
-		if( empty($style) ) return;
-		if( !is_array($style) ) $style = array($style);
-		foreach ($style as $css) {
-			if( file_exists($this->getFilePath($css)) ){
-				$cssHref = $this->getURLFilePath($css);
-				print '<link rel="stylesheet" type="text/css" href="'.$cssHref.'">'."\n";
+		$styleList = $this->getInfo('style');
+		if( empty($styleList) ) return;
+		if( !is_array($styleList) ) $styleList = [$styleList];
+		$extensions = ExtensionHandler::GetList();
+		foreach ($extensions as $name) {
+			$extension = ExtensionHandler::Get($name);
+			$styles = $extension->getInfo('styles');
+			if( is_array($styles) && !empty($styles[$this->name]) && is_array($styles[$this->name]) ){
+				foreach ($styles[$this->name] as $extStyle) {
+					$styleList[] = $extension->getURLFilePath($extStyle);
+				}
 			}
+		}
+
+		foreach ($styleList as $css) {
+			$cssHref = "";
+			if( file_exists(ABSPATH.$css) ){
+				$cssHref = $css;
+			}
+			if( file_exists($this->getFilePath($css)) ){
+				$cssHref = $this->getURLFilePath($css);	
+			}
+			if( empty($cssHref) ) continue;
+			print '<link rel="stylesheet" type="text/css" href="'.$cssHref.'">'."\n";
 		}
 
 	}
 
 	public function loadScripts(){
-		// TODO: Add default uCMS scripts
-		$script = $this->getInfo('script');
-		if( empty($script) ) return;
-		if( !is_array($script) ) $script = array($script);
-		foreach ($script as $file) {
-			if( file_exists($this->getFilePath($file)) ){
-				$scriptSrc = $this->getURLFilePath($file);
-				print '<script type="text/javascript" src="'.$scriptSrc.'"></script>'."\n";
+		$scriptList = $this->getInfo('script');
+		if( empty($scriptList) ) return;
+		if( !is_array($scriptList) ) $scriptList = [$scriptList];
+		$extensions = ExtensionHandler::GetList();
+		foreach ($extensions as $name) {
+			$extension = ExtensionHandler::Get($name);
+			$scripts = $extension->getInfo('scripts');
+			if( is_array($scripts) && !empty($scripts[$this->name]) && is_array($scripts[$this->name]) ){
+				foreach ($scripts[$this->name] as $extStyle) {
+					$scriptList[] = $extension->getURLFilePath($extStyle);
+				}
 			}
+		}
+		foreach ($scriptList as $file) {
+			$scriptSrc = "";
+			if( file_exists(ABSPATH.$file) ){
+				$scriptSrc = $file;
+			}
+			if( file_exists($this->getFilePath($file)) ){
+				$scriptSrc = $this->getURLFilePath($file);	
+			}
+			if( empty($scriptSrc) ) continue;
+			print '<script type="text/javascript" src="'.$scriptSrc.'"></script>'."\n";
 		}
 
 	}
