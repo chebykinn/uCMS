@@ -38,7 +38,11 @@
 		"site": "http://ucms.ivan4b.ru",
 		"updateURL": "http://ucms.ivan4b.ru/pub/extensions/entries",
 		"tables": ["entries", "entry_types", "entry_access", "terms", "term_hierarchy", "term_taxonomy"],
-		"tablesToFill": ["entry_types", "terms"]
+		"tablesToFill": ["entry_types", "terms"],
+		"tinymce": "include/tinymce/tinymce.min.js",
+		"styles": {
+			"admin": ["admin/style.css"]
+		}
 	},
 
 	"settings": {
