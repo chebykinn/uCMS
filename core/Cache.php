@@ -7,6 +7,7 @@ class Cache{
 	public static function Init(){
 		$query = new Query("{cache}");
 		$data = $query->select("*", true)->execute();
+		if( !is_array($data) ) $data = [];
 		foreach ($data as $row) {
 			self::$blocks[$row['cid']] = array('cid' => $row['cid'], "data" => $row['data'], "expires" => $row['expires'], 'raw' => $row['raw'], 'created' => $row['created']);
 		}
