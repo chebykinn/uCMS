@@ -1,5 +1,5 @@
 <?php
-use uCMS\Core\Language\Language;
+use uCMS\Core\Localization\Language;
 function p($string){
 	$args = func_get_args();
 	echo call_user_func_array(array(Language::GetCurrent(), 'get'), $args);
