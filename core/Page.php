@@ -172,6 +172,13 @@ class Page{
 		return $this->getKeyValue('page');
 	}
 
+	public function addAction($action){
+		if( !$this->containsKey($action) ){
+			$this->data[] = $action;
+		}
+		return false;
+	}
+
 	public static function GetCurrent(){
 		if( self::$currentPage === NULL ){
 			self::$currentPage = new self();
