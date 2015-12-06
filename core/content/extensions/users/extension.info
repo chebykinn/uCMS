@@ -49,7 +49,7 @@
 
 	"settings": {
 		"groups_amount": 6,
-		"users_amount": 1,
+		"users_amount": 0,
 		"password_min_size": 6,
 		"password_max_size": 32,
 		"login_min_size": 4,
