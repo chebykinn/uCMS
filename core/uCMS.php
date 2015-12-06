@@ -16,13 +16,15 @@ class uCMS{
 	const SUCCESS = 0;
 	const CONFIG_FILE = 'config.php';
 	const CONFIG_SAMPLE = 'config-manual.php';
-	const UCMS_HOST = 'http://ucms.ivan4b.ru';
+	const UCMS_HOST = 'http://ucms.ivan4b.ru/';
+	const PUBLIC_PATH = 'pub/';
 
 	public static function GetDirectory(){
 		$storedValue = Settings::Get(Settings::UCMS_DIR);
 
 		if( empty($storedValue) ){
-			$storedValue = Page::GetCurrent()->getPath();
+			$url = parse_url(urldecode($_SERVER['REQUEST_URI']));
+			$storedValue = $url['path'];
 		}
 		return $storedValue;
 	}
@@ -37,7 +39,7 @@ class uCMS{
 	}
 
 	public static function GetLatestVersion(){
-		$file = self::UCMS_HOST."/pub/version";
+		$file = self::UCMS_HOST.self::PUBLIC_PATH."version";
 		$file_headers = @get_headers($file);
 		$strings = @file($file);
 		if(!empty($strings[0])) return $strings[0];
@@ -45,7 +47,7 @@ class uCMS{
 	}
 
 	public static function GetUpdateNotes(){
-		$file = self::UCMS_HOST."/pub/notes";
+		$file = self::UCMS_HOST.self::PUBLIC_PATH."notes";
 		$file_headers = @get_headers($file);
 		$text = @file_get_contents($file);
 		if( !empty($text) ) return $text;
@@ -56,7 +58,7 @@ class uCMS{
 		return version_compare(self::CORE_VERSION, self::GetLatestVersion(), '<');
 	}
 
-	public static function DownloadPackage($version){
+	public static function GetRemoteBasePath($version = self::CORE_VERSION){
 		$versionData = explode(' ', $version, 2);
 		$baseVersion = $version;
 		$stageVersion = "";
@@ -64,7 +66,20 @@ class uCMS{
 			$baseVersion = $versionData[0];
 			$stageVersion = mb_strtolower(str_replace(" ", "-", $versionData[1]));
 		}
-		$remotepath = self::UCMS_HOST."/pub/ucms-$baseVersion/ucms-$baseVersion".(!empty($stageVersion) ? "-$stageVersion" : '').".zip";
+		$path = self::UCMS_HOST.self::PUBLIC_PATH;
+		$remotepath = "{$path}ucms-$baseVersion/";
+		return $remotepath;
+	}
+
+	public static function GetRemotePath($version = self::CORE_VERSION){
+		$basePath = self::GetRemoteBasePath($version);
+		$pathVersion = mb_strtolower(str_replace(" ", "-", $version));
+		$fullpath = $basePath.$pathVersion.'/';
+		return $fullpath;
+	}
+
+	public static function DownloadPackage($version){
+		$remotepath = self::GetRemotePath($version)."ucms.zip";
 		$localpath = ABSPATH.File::UPLOADS_PATH.'update.zip';
 
 		$file_headers = @get_headers($remotepath);
@@ -82,7 +97,7 @@ class uCMS{
 	}
 
 	public static function GetPackageHashes(){
-		$file = self::UCMS_HOST."/pub/hashes";
+		$file = self::UCMS_HOST.self::PUBLIC_PATH."hashes";
 		$file_headers = @get_headers($file);
 		$hashes = @file($file);
 		return !empty($hashes) ? $hashes : array();
