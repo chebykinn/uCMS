@@ -1,5 +1,8 @@
 <?php
 namespace uCMS\Core\Extensions;
+use uCMS\Core\Tools;
+use uCMS\Core\uCMS;
+use uCMS\Core\Settings;
 
 class ThemeHandler{
 	const PATH = 'content/themes/';
@@ -10,7 +13,22 @@ class ThemeHandler{
 		self::$instance = new self($themeName);
 	}
 
-	public static function isExists($name){
+	public static function IsCurrent($name){
+		$current = Settings::Get(Settings::THEME);
+		return ( $current === $name );
+	}
+
+	public static function ChangeTheme($name){
+		$current = Settings::Get(Settings::THEME);
+		if( $current === $name ) return false;
+		if( !self::IsExists($name) ) return false;
+
+		Tools::OverrideOwner();
+		Settings::Update(Settings::THEME, $name);
+		return true;
+	}
+
+	public static function IsExists($name){
 		return in_array($name, self::GetList());
 	}
 
@@ -49,22 +67,31 @@ class ThemeHandler{
 		}
 	}
 
-	public static function LoadTemplate($name){
+	public static function GetTemplate($name, $url = false, $nophp = false){
 		$path = 'content/templates/';
 		$corePath = 'core/'.$path;
-		$coreFile = ABSPATH.$corePath.$name.'.php';
-		$file = ABSPATH.$path.$name.'.php';
-		if ( file_exists($coreFile) && is_file($coreFile) ){
-			include_once $coreFile;
-			return true;
+		$coreFile = $corePath.$name.($nophp ? '' : '.php');
+		$file = $path.$name.($nophp ? '' : '.php');
+		$template = "";
+		if ( file_exists(ABSPATH.$coreFile) && is_file(ABSPATH.$coreFile) ){
+			$template = (!$url ? ABSPATH : uCMS::GetDirectory()).$coreFile;
 		}
 
-		if ( file_exists($file) && is_file($file) ){
-			include_once $file;
-			return true;
+		if ( file_exists(ABSPATH.$file) && is_file(ABSPATH.$file) ){
+			$template = (!$url ? ABSPATH : uCMS::GetDirectory()).$file;
 		}
-		Debug::Log(tr("Unable to load template @s", $name), Debug::LOG_ERROR);
-		return false;	
+		return $template;
+	}
+
+	public static function LoadTemplate($name){
+		$file = self::GetTemplate($name);
+		if( empty($file) ){
+			Debug::Log(tr("Unable to load template @s", $name), Debug::LOG_ERROR);
+			return false;
+		}
+
+		include_once $file;
+		return true;
 	}
 
 	public static function LoadErrorPage($errorCode){
