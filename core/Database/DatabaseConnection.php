@@ -8,7 +8,7 @@ class DatabaseConnection{
 	const DISPLAY_QUERY = false;
 	const DEFAULT_NAME = 'default';
 	const ERR_TABLE_NOT_EXIST = "42S02";
-
+	const ERR_DRIVER_NOT_LOADED = 10000;
 	const SCHEMA_CORRECT = 0;
 	const ERR_SCHEMA_WRONG_KEY = 200;
 	const ERR_SCHEMA_NO_FIELDS = 300;
@@ -24,8 +24,10 @@ class DatabaseConnection{
 	const ERR_SCHEMA_WRONG_VALUE = 1300;
 
 	private static $default;
-	private static $databases = array();
+	private static $databases = [];
+	private static $supportedDrivers = ['mysql'];
 	private $dbServer, $dbUser, $dbPassword, $dbName;
+	private $driver;
 	private $tables;
 	private $queriesCount;
 	private $connection;
@@ -39,6 +41,7 @@ class DatabaseConnection{
 			Loader::GetInstance()->install();
 			Debug::Log(tr("No configuration file was found"), Debug::LOG_CRITICAL);
 		}
+
 		foreach ($GLOBALS['databases'] as $dbName => $dbData) {
 			try{
 				$fields = array('server', 'user', 'password', 'name', 'port', 'prefix');
@@ -63,6 +66,10 @@ class DatabaseConnection{
 				*/
 				self::$databases[$dbName] = $database;
 			}catch(\Exception $e){
+				if( $e->getCode() === self::ERR_DRIVER_NOT_LOADED ){
+					Loader::GetInstance()->panic($e->getMessage());
+				}
+
 				if( $e->getCode() == 1045 || $e->getCode() == 1049 ){
 					Debug::Log(tr("Wrong configuration file was provided"), Debug::LOG_CRITICAL);
 					Loader::GetInstance()->install();
@@ -72,6 +79,12 @@ class DatabaseConnection{
 			}
 		}
 		unset($GLOBALS['databases']); // We don't want to have global variables, so we delete this
+	}
+
+	public function checkDriver(){
+		if (!extension_loaded('pdo_'.$this->driver)) {
+			throw new \RuntimeException(tr("Database Connection Error, @s driver is not loaded", $this->driver), self::ERR_DRIVER_NOT_LOADED);
+		}
 	}
 
 	public function isConnected(){
@@ -97,7 +110,7 @@ class DatabaseConnection{
 		}
 	}
 
-	public function __construct($server, $login, $password, $dbName, $dbPort, $prefix, $ucmsName){
+	public function __construct($server, $login, $password, $dbName, $dbPort, $prefix, $ucmsName, $driver = ""){
 		$this->dbServer = $server;
 		$this->dbUser = $login;
 		$this->dbPassword = $password;
@@ -105,6 +118,8 @@ class DatabaseConnection{
 		$this->dbPort = (int) $dbPort;
 		$this->prefix = $prefix;
 		$this->ucmsName = $ucmsName;
+		$this->driver = (!empty($driver) && in_array($driver, self::$supportedDrivers)) ? $driver : 'mysql';
+		$this->checkDriver();
 		$this->connect();
 		$this->connected = true;
 		if($ucmsName == self::DEFAULT_NAME){
@@ -114,7 +129,7 @@ class DatabaseConnection{
 	}
 
 	public function connect(){
-		$this->connection = new \PDO("mysql:host=$this->dbServer;port=$this->dbPort;dbname=$this->dbName;charset=utf8", $this->dbUser, $this->dbPassword);
+		$this->connection = new \PDO($this->driver.":host=$this->dbServer;port=$this->dbPort;dbname=$this->dbName;charset=utf8", $this->dbUser, $this->dbPassword);
 		
 		$this->connection->exec("set names utf8");
 		$this->connection->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
@@ -165,6 +180,8 @@ class DatabaseConnection{
 					echo "<br><h3>Trace:</h3>".$e->getTraceAsString();
 				}
 				Debug::EndBlock();
+				Debug::Log(tr('Query failed: @s, error: @s', $sql, $e->getMessage()), Debug::LOG_ERROR);
+				return false;
 			}
 			
 		}
