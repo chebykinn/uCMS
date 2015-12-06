@@ -15,6 +15,8 @@ $limit = Settings::Get('per_page');
 $users = (new User())->find(array('limit' => $limit));
 
 $usersTable->addSelectColumn('manage users');
+$usersTable->setInfo("amount", Settings::Get('users_amount'));
+
 $usersTable->addColumn(tr('User'), true, 'manage users', '20%', true);
 $usersTable->addColumn(tr('Group'), true, 'manage users', 0, true);
 $usersTable->addColumn(tr('Email'), true, 'manage users');
