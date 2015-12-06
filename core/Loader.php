@@ -8,7 +8,7 @@
 */
 namespace uCMS\Core;
 use uCMS\Core\Database\DatabaseConnection;
-use uCMS\Core\Language\Language;
+use uCMS\Core\Localization\Language;
 use uCMS\Core\Extensions\ExtensionHandler;
 use uCMS\Core\Extensions\Theme;
 use uCMS\Core\Admin\ControlPanel;
@@ -32,6 +32,11 @@ class Loader{
 	* @var integer $stopTime Contains main loading timer stop time.
 	*/
 	private $stopTime = 0;
+
+	/**
+	* @var string $error Contains last loading error message.
+	*/
+	private $error;
 
 	/**
 	* Singleton method that provides access to the current instance of uCMS.
@@ -96,12 +101,8 @@ class Loader{
 		// If we have saved language preference in session we are able to load language at this stage
 		Language::Init();
 
-		Form::Init();
-
 		if( version_compare(phpversion(), uCMS::MIN_PHP_VERSION, '<') ){
-			Theme::LoadTemplate('php-version');
-			Debug::Log(tr("Server's PHP is obsolete"), Debug::LOG_CRITICAL);
-			exit;
+			$this->panic(tr("Your PHP is obsolete, got: @s, need: @s", PHP_VERSION, uCMS::MIN_PHP_VERSION));
 		}
 
 		DatabaseConnection::Init();
@@ -120,6 +121,36 @@ class Loader{
 
 		$loadedEvent = new Event(CoreEvents::LOADED);
 		$loadedEvent->fire();
+	}
+
+	/**
+	* Halt loading with error message.
+	*
+	* This method stops loading process and displays default template with given error message.
+	* After that loading will be halted.
+	*
+	* @since 2.0
+	* @param string $message Error message.
+	* @return void
+	*/
+	public function panic($message){
+		$this->error = $message;
+		Theme::LoadTemplate('panic');
+		Debug::Log($this->error, Debug::LOG_CRITICAL);
+		exit;
+	}
+
+	/**
+	* Get last error.
+	*
+	* This method allows you to get last loading error message.
+	*
+	* @since 2.0
+	* @param none
+	* @return string Error message, empty string if no error occurred.
+	*/
+	public function getErrorMessage(){
+		return $this->error;
 	}
 
 	/**
@@ -198,10 +229,12 @@ class Loader{
 	* @return void
 	*/
 	public function shutdown(){
-		ExtensionHandler::Shutdown();
-		$this->stopLoadTimer();
-		Session::GetCurrent()->save();
-		DatabaseConnection::Shutdown();
+		if( empty($this->error) ){
+			ExtensionHandler::Shutdown();
+			$this->stopLoadTimer();
+			Session::GetCurrent()->save();
+			DatabaseConnection::Shutdown();
+		}
 	}
 
 	/**
