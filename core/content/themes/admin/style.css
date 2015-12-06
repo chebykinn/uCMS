@@ -26,7 +26,7 @@ h1, h2{
 }
 
 #wrapper{
-	min-height: 1024px;
+	height: 100%;
 	text-align: left;
 	border-left: 150px #12223D solid;
 	position: relative;
@@ -46,6 +46,8 @@ h1, h2{
 	color: #fff;
 	margin-left: -150px;
 	position: fixed;
+	top: 0;
+	bottom: 0;
 }
 
 #sidebar ul{
@@ -191,6 +193,15 @@ h1, h2{
 	border-right: 10px #168A24 solid;
 }
 
+#content h2{
+	float: left;
+}
+
+#content p {
+	margin: 10px;
+	clear: both;
+}
+
 #content .ucms-form{
 	font-size: 15px;
 	/*width: 100%;*/
@@ -206,19 +217,19 @@ h1, h2{
 #content .form-item label{
 	font-weight: bold;
 	float: left;
-	width: 20%;
+	min-width: 15%;
 }
 
 #content .form-item input:not([type=submit]), .form-item select{
 	float: left;
 	padding: 5px;
+	font-size: 15px;
 }
 
 
 #content .form-item input:not([type=checkbox]):not([type=submit]){
 	width: 20%;
 }
-
 
 .form-item input[type=submit], .button{
 	background: #3C89E0;
@@ -227,6 +238,8 @@ h1, h2{
 	border-radius: 4px;
 	color: #fff;
 	font-size: 16px;
+	display: block;
+	float: left;
 }
 
 .form-item input[type=submit]:hover, .button:hover{
@@ -328,11 +341,33 @@ h1, h2{
 }
 
 .info .amount{
-	/*display: block;	*/
 	float: right;
 	margin-right: 20%;
 }
 
 .load-package-wrapper input{
+	clear: both;
+}
+
+.section-button{
+	float: left;
+	margin: 5px;
+}
+
+.section-title{
+	position: relative;
+	float: left;
+	border-radius: 2px;
+	margin: 5px 0 5px 10px;
+	padding: 5px;
+	background: #0B5991;
+	color: #efefef;
+}
+
+.manage-table{
+	clear: both;
+}
+
+.update-block, .update-block h3{
 	clear: both;
 }
