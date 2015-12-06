@@ -8,6 +8,9 @@ $page = new ManagePage();
 $table = new ManageTable();
 $page->doActions();
 
+$amount = (new File())->count();
+
+$table->setInfo("amount", $amount);
 $table->addSelectColumn('manage files');
 $table->addColumn(tr('Name'), true, 'manage files', 0, true);
 $table->addColumn(tr('Type'), true, 'manage files', 0, true);
