@@ -69,6 +69,7 @@ class Admin extends \uCMS\Core\Extensions\Extension{
 			case 'phpinfo':    $title = tr("PHP Information"); break;
 			case 'journal':    $title = tr("System Journal");  break;
 			case 'update':     $title = tr("Update");          break;
+			case 'blocks':     $title = tr("Blocks");          break;
 			default:           $title = tr("Dashboard");       break;
 		}
 		ControlPanel::SetTitle($title);

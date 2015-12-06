@@ -16,6 +16,7 @@
 		"separator1": "",
 		"Extensions": ["extensions", "phpinfo"],
 		"@Themes": "themes",
+		"@Blocks": "blocks",
 		"separator2": ["", "themes"],
 		"Update": "update",
 		"separator3": "",
@@ -28,6 +29,7 @@
 		"phpinfo": "pages/phpinfo.php",
 		"extensions": "pages/extensions.php",
 		"themes": "pages/themes.php",
+		"blocks": "pages/blocks.php",
 		"settings": "pages/settings.php",
 		"update": "pages/update.php"
 	},
