@@ -1,0 +1,20 @@
+@media only screen and (max-device-width: 960px) {
+	.middle {
+		border-right: 0px;
+		position: static;
+		clear: both;
+	}
+
+	.right-sidebar {
+		clear: both;
+		position: static;
+		margin-right: 0px;
+		width: 100%;
+		background: #222;
+	}
+
+	img {
+		max-width: 100%;
+		height: auto;
+	}
+}
