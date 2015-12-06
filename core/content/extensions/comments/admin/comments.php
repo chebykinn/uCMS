@@ -8,7 +8,11 @@ $page = new ManagePage();
 $table = new ManageTable();
 $page->doActions();
 
+$amount = (new Comment())->count();
+
 $table->addSelectColumn('manage comments');
+$table->setInfo("amount", $amount);
+
 $table->addColumn(tr('Content'), true, 'manage comments', 0, true);
 $table->addColumn(tr('Author'), true, 'manage comments', 0, true);
 $table->addColumn(tr('Entry'), true, 'manage comments', 0, true);

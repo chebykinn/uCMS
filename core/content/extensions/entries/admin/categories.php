@@ -8,6 +8,8 @@ $page = new ManagePage();
 $table = new ManageTable();
 $page->doActions();
 $table->addSelectColumn('manage entries');
+$table->setInfo("amount", Settings::Get('categories_amount'));
+
 $table->addColumn(tr('Name'), true, 'manage entries', 0, true);
 $table->addColumn(tr('Type'), true, 'manage entries', 0, true);
 $table->addColumn(tr('Created'), true, 'manage entries', 0, true);

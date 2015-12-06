@@ -14,6 +14,8 @@ $groupsTable = new ManageTable();
 $limit = Settings::Get('per_page');
 $groups = (new Group())->find(array('limit' => $limit));
 $groupsTable->addSelectColumn('manage users');
+$groupsTable->setInfo("amount", Settings::Get('groups_amount'));
+
 $groupsTable->addColumn(tr('Name'), true, 'manage users', 0, true);
 $groupsTable->addColumn(tr('Permissions'), true, 'manage users', '40%', true);
 $groupsTable->addColumn(tr('Users count'), true, 'manage users');

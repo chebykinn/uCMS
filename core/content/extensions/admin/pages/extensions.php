@@ -5,6 +5,7 @@ use uCMS\Core\Database\Query;
 use uCMS\Core\Admin\ControlPanel;
 use uCMS\Core\Extensions\ExtensionHandler;
 use uCMS\Core\Page;
+use uCMS\Core\Settings;
 $extensionsPage = new ManagePage();
 $namespace = "\\uCMS\\Core\\Extensions\\";
 $extensionsPage->addAction('add',     'manage extensions',  "{$namespace}ExtensionHandler::Add");
@@ -21,6 +22,7 @@ $siteLink = Page::Home();
 $extensionsTable->addSelectColumn('manage extensions');
 $extensionsTable->addColumn(tr('Extension'), true, 'manage extensions', '20%', true);
 $extensionsTable->addColumn(tr('Description'), true, 'manage extensions', 0, true );
+$extensionsTable->setInfo("amount", count(ExtensionHandler::GetList()));
 foreach ($extensions as $extension) {
 	$dependencies = "";
 	$extensionObject = ExtensionHandler::Get($extension);
