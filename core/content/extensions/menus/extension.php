@@ -1,13 +1,9 @@
 <?php
 namespace uCMS\Core\Extensions\Menus;
 use uCMS\Core\Extensions\Extension;
-use uCMS\Core\Extensions\ExtensionHandler;
-use uCMS\Core\Extensions\ExtensionInterface;
 use uCMS\Core\Extensions\Users\Permission;
-use uCMS\Core\Extensions\Users\Group;
 use uCMS\Core\Admin\ControlPanel;
-use uCMS\Core\Database\Query;
-use uCMS\Core\Installer;
+use uCMS\Core\Block;
 
 class Menus extends Extension{
 	public function onLoad(){
@@ -16,6 +12,11 @@ class Menus extends Extension{
 
 	public function onAdminAction($action){
 		ControlPanel::SetTitle(tr("Menu"));
+	}
+
+	protected function checkStage(){
+		Block::Add('menu', 'header', 'ucms');
+		return parent::checkStage();
 	}
 
 	protected function getSchemas(){

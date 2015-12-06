@@ -33,5 +33,9 @@
 
 	"permissions": {
 		"manage menu links": 1
+	},
+
+	"settings": {
+		"selected_menu": "navigation"
 	}
 }
