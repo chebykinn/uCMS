@@ -9,37 +9,34 @@ class Form{
 	private $started = false;
 	private $class = "";
 	private $submitCaption = "";
-	private static $types = array();
-
-	public static function Init(){
-		self::$types = array(
-			'button',
-			'checkbox',
-			'file',
-			'hidden',
-			'image',
-			'password',
-			'radio',
-			'reset',
-			'submit',
-			'text',
-			'color',
-			'date',
-			'datetime',
-			'datetime-local',
-			'email',
-			'number',
-			'range',
-			'search',
-			'tel',
-			'time',
-			'url',
-			'month',
-			'week',
-			'textarea',
-			'select'
-		);
-	}
+	private $allowedTags = '<p><strong><em><u><h1><h2><h3><h4><h5><h6><img><li><ol><ul><span><div><br><ins><del>';
+	private static $types = [
+		'button',
+		'checkbox',
+		'file',
+		'hidden',
+		'image',
+		'password',
+		'radio',
+		'reset',
+		'submit',
+		'text',
+		'color',
+		'date',
+		'datetime',
+		'datetime-local',
+		'email',
+		'number',
+		'range',
+		'search',
+		'tel',
+		'time',
+		'url',
+		'month',
+		'week',
+		'textarea',
+		'select'
+	];
 
 	public function __construct($name, $action = "", $submitCaption = "", $method = "POST", $class = ""){
 		$this->name = htmlspecialchars(strip_tags($name));
@@ -59,7 +56,7 @@ class Form{
 				'name' => htmlspecialchars(strip_tags($name)),
 				'type' => 'hidden',
 				'title' => "",
-				'defaultValue' => htmlspecialchars(strip_tags($value)),
+				'defaultValue' => strip_tags($value, $this->allowedTags),
 				'description' => "",
 				'require' => false,
 				'placeholder' => "",
@@ -77,8 +74,8 @@ class Form{
 			'name' => htmlspecialchars(strip_tags($name)),
 			'type' => $type,
 			'title' => strip_tags($title),
-			'defaultValue' => htmlspecialchars(strip_tags($defaultValue)),
-			'description' => strip_tags($description, '<a><p><br>'),
+			'defaultValue' => strip_tags($defaultValue, $this->allowedTags),
+			'description' => strip_tags($description, $this->allowedTags),
 			'require' => (bool)$require,
 			'placeholder' => htmlspecialchars(strip_tags($placeholder)),
 			'printed' => false
@@ -96,18 +93,6 @@ class Form{
 			$this->addField($name, 'select', $title, $description, $defaultValue, "", $require);
 			$this->fields[$name]['list'] = $list;
 			$this->fields[$name]['size'] = (int) $size;
-			// $this->fields[$name] = array(
-			// 'name' => htmlspecialchars(strip_tags($name)),
-			// 'type' => 'select',
-			// 'title' => strip_tags($title),
-			// 'defaultValue' => htmlspecialchars(strip_tags($defaultValue)),
-			// 'description' => strip_tags($description, '<a><p><br>'),
-			// 'require' => (bool)$require,
-			// 'placeholder' => "",
-			// 'list' => $list,
-			// 'size' => (int) $size,
-			// 'printed' => false
-			// );
 		}
 		return false;
 	}
@@ -160,13 +145,17 @@ class Form{
 						print "<select name=\"{$field['name']}\"$size$require>";
 						foreach ($field['list'] as $title => $value) {
 							$selected = $value === $field['defaultValue'] ? " selected" : "";
+							$value = htmlspecialchars($value);
+							$title = htmlspecialchars($title);
 							print "<option value=\"$value\"$selected>$title</option>\n";
 						}
 						print "</select>";
 					break;
 					
 					default:
-						print "<input type=\"{$field['type']}\" name=\"{$field['name']}\" value=\"{$field['defaultValue']}\"$placeholder$require$checked>\n";
+						$preparedValue = htmlspecialchars($field['defaultValue']);
+						print "<input type=\"{$field['type']}\" name=\"{$field['name']}\"
+						value=\"$preparedValue\"$placeholder$require$checked>\n";
 					break;
 				}
 				if( !empty($field['description']) ){
