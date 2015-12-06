@@ -21,5 +21,9 @@ if( $isPanel ){
 	$adminAction = ControlPanel::GetAction();
 	$adminSidebar = ControlPanel::PrintSidebar();
 	$adminPage = ControlPanel::LoadTemplate();
+}else{
+	$adminAction = "";
+	$adminSidebar = "";
+	$adminPage = "";
 }
 ?>
