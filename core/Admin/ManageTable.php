@@ -25,6 +25,14 @@ class ManageTable{
 		$this->form = new Form("tableForm");
 	}
 
+	public function addFilter($column){
+
+	}
+
+	public function addAction($action){
+
+	}
+
 	public function manageButtons($list = array('Enable|Disable' => 'switch-status',
 		'Edit' => 'edit', 'Delete' => 'delete'), $delimeter = " | "){
 		$buttons = array('switch-status', 'edit', 'delete');
@@ -50,7 +58,7 @@ class ManageTable{
 				$id = $this->getInfo('idKey');
 				$link = Page::ControlPanel(ControlPanel::GetAction()."/$action/$id");
 				$del = ($i === $size) ? "" : $delimeter;
-				$content .= "<a class=\"$action-button\" href=\"$link\">".tr($name)."</a>$del\n";
+				$content .= "<a class=\"$action-button\" href=\"$link\">".$name."</a>$del\n";
 			}
 		}
 		return $content;
@@ -75,7 +83,6 @@ class ManageTable{
 	}
 
 	public function addColumn($name, $sort, $permission, $size = 0, $alwaysShow = false){
-		// # - means data column, @ means snippet for content, % means info
 		if( !empty($name) ){
 			$this->columns[] = array("name" => $name, 'sort' => $sort, 'permission' => $permission, 'size' => $size, 'show' => $alwaysShow);
 		}
@@ -89,6 +96,8 @@ class ManageTable{
 	public function printTable($paginal = true, $class = 'manage'){
 		$user = User::Current();
 		$amountOfAllowed = 0;
+		echo '<div class="manage-table">';
+		echo '<span class="label">Amount:</span> '.intval($this->getInfo('amount'));
 		echo '<table class="'.$class.'">';
 		echo '<tr>';
 			foreach ($this->columns as $column) {
@@ -126,6 +135,7 @@ class ManageTable{
 			echo '<tr><td colspan="'.$size.'">'.$message.'</td></tr>';
 		}
 		echo '</table>';
+		echo '</div>';
 	}
 
 	public function printPages($amount, $displayNumber){
