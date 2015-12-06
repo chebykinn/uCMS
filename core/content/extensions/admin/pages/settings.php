@@ -1,7 +1,7 @@
 <?php
 use uCMS\Core\Form;
 use uCMS\Core\Settings;
-use uCMS\Core\Language\Language;
+use uCMS\Core\Localization\Language;
 use uCMS\Core\uCMS;
 $languages = Language::GetList();
 // TODO: Move this to somewhere specific
