@@ -27,7 +27,7 @@ class Settings{
 
 	const DEFAULT_AMOUNT = 21;
 
-	private static $list = array();
+	private static $list = [];
 
 	public static function Add($name, $value, $public = false){
 		$owner = !$public ? Tools::GetCurrentOwner() : "";
@@ -70,6 +70,7 @@ class Settings{
 	public static function Load(){
 		$query = new Query('{settings}');
 		$list = $query->select(array('name', 'value', 'owner'))->execute();
+		if( !is_array($list) ) $list = [];
 		foreach ($list as $setting) {
 			self::$list[$setting['name']] = $setting;
 		}
