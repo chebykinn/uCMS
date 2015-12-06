@@ -9,7 +9,7 @@ class Form{
 	private $started = false;
 	private $class = "";
 	private $submitCaption = "";
-	private $allowedTags = '<p><strong><em><u><h1><h2><h3><h4><h5><h6><img><li><ol><ul><span><div><br><ins><del>';
+	private $allowedTags = '<p><strong><em><u><h1><h2><h3><h4><h5><h6><img><li><ol><ul><span><div><br><ins><del><a>';
 	private static $types = [
 		'button',
 		'checkbox',
