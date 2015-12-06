@@ -39,7 +39,30 @@ class Entry extends Model{
 	}
 
 	public function getContent($row, $short = false){
-		// TODO: cut content
+		$captionRegex = "/@-more-@(((.*)-@)?(.*)-@)?/";
+		$class = "more-link";
+		$caption = tr('Continue reading');
+		if( preg_match("$captionRegex", $row->content, $matches) ){
+			$tag = $matches[0];
+			if( $short ){
+				$contentData = explode($tag, $row->content);
+				$content = $contentData[0];
+	
+				if( !empty($matches[3]) ){
+					$class = $matches[3];
+				}
+	
+				if( !empty($matches[4]) ){
+					$caption = $matches[4];
+				}
+
+				$link = '<a class="'.$class.'" href="'.$row->getLink().'" title="'.$caption.'">'.$caption.'</a>';
+				$content .= $link;
+			}else{
+				$content = str_replace($tag, "", $row->content);
+			}
+			return $content;
+		}
 		return $row->content;
 	}
 
@@ -69,6 +92,66 @@ class Entry extends Model{
 			return !( (bool) $accessAllow );	
 		}
 		return true;
+	}
+
+	public function getEditLink($row){
+		$user = User::Current();
+		$editLink = Page::ControlPanel('entries/edit/'.$row->eid);
+		return $editLink;
+	}
+
+	public function prepareFields($row){
+		if( empty($row->title) || empty($row->content) ){
+			return false;
+		}
+
+		if( empty($row->alias) ){
+			$row->alias = $row->title;
+		}
+
+		if( empty($row->type) ){
+			$row->type = EntryType::ARTICLE;
+		}
+
+		if( empty($row->uid) ){
+			$user = User::Current();
+			$row->uid = $user->uid;
+		}
+
+		if( empty($row->created) ){
+			$row->created = time();
+		}
+
+		if( empty($row->changed) ){
+			$row->changed = time();
+		}
+		return true;
+	}
+
+	public function create($row){
+		$result = $this->prepareFields($row);
+		if( !$result ) return false;
+
+		$result = parent::create($row);
+		if( $result ){
+			Settings::Increment('entries_amount');
+		}
+		return $result;
+	}
+
+	public function update($row){
+		$result = $this->prepareFields($row);
+		if( !$result ) return false;
+		$result = parent::update($row);
+		return $result;
+	}
+
+	public function delete($row){
+		$result = parent::delete($row);
+		if( $result ){
+			Settings::Decrement('entries_amount');
+		}
+		return $result;
 	}
 }
 ?>
