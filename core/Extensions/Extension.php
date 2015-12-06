@@ -177,6 +177,10 @@ class Extension extends AbstractExtension implements ExtensionInterface{
 		return ExtensionHandler::IsDefault($this->name) ? ExtensionHandler::CORE_PATH : ExtensionHandler::PATH;
 	}
 
+	public function getURLFilePath($file){
+		return uCMS::GetDirectory().$this->getRelativePath()."$this->name/$file";
+	}
+
 	protected function checkStage(){
 		if( !empty($this->settings) && is_array($this->settings) ){
 			Settings::AddMultiple($this->settings);
