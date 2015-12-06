@@ -4,7 +4,7 @@ use uCMS\Core\Extensions\Theme;
 use uCMS\Core\Extensions\ExtensionHandler;
 use uCMS\Core\Database\DatabaseConnection;
 use uCMS\Core\Database\Query;
-use uCMS\Core\Language\Language;
+use uCMS\Core\Localization\Language;
 use uCMS\Core\Extensions\FileManager\File;
 
 class Installer{
