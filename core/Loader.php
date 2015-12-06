@@ -11,6 +11,7 @@ use uCMS\Core\Database\DatabaseConnection;
 use uCMS\Core\Localization\Language;
 use uCMS\Core\Extensions\ExtensionHandler;
 use uCMS\Core\Extensions\Theme;
+use uCMS\Core\Extensions\ThemeHandler;
 use uCMS\Core\Admin\ControlPanel;
 use uCMS\Core\Events\Event;
 use uCMS\Core\Events\CoreEvents;
@@ -135,7 +136,7 @@ class Loader{
 	*/
 	public function panic($message){
 		$this->error = $message;
-		Theme::LoadTemplate('panic');
+		ThemeHandler::LoadTemplate('panic');
 		Debug::Log($this->error, Debug::LOG_CRITICAL);
 		exit;
 	}

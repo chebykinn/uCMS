@@ -1,6 +1,7 @@
 <?php
 namespace uCMS\Core\Extensions\Users;
 use uCMS\Core\Extensions\Theme;
+use uCMS\Core\Extensions\ThemeHandler;
 use uCMS\Core\Admin\ControlPanel;
 use uCMS\Core\Database\Query;
 use uCMS\Core\Block;
@@ -23,13 +24,13 @@ class Users extends \uCMS\Core\Extensions\Extension {
 		if( !in_array(Page::GetCurrent()->getAction(), $allowedActions) ){
 			// If user is banned we display simple page, saying that he doesn't have access to the site.
 			if( !User::Current()->can('access site') ){
-				Theme::LoadTemplate('access_denied');
+				ThemeHandler::LoadTemplate('access_denied');
 				exit;
 			}
 	
 			if( !User::Current()->can('access site in maintenance mode') && !ControlPanel::IsActive() ){
 				if( (bool)Settings::Get('ucms_maintenance') ){
-					Theme::LoadTemplate('maintenance');
+					ThemeHandler::LoadTemplate('maintenance');
 					exit;
 				}
 			}
