@@ -17,7 +17,9 @@
 	</header><!-- .header-->
 
 	<div class="middle">
-
+		<div class="nav">
+			<?php $this->region('navigation'); ?>
+		</div>
 		<div class="container">
 			<main class="content">
 				<?php

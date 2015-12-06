@@ -14,10 +14,11 @@
 		"footer": "footer.php",
 		"home": "home.php",
 		"error404": "error.php",
-		"style": "style.css"
+		"style": ["style.css", "mobile.css"]
 	},
 	"regions": [
 		"header",
+		"navigation",
 		"content",
 		"right-sidebar",
 		"footer"

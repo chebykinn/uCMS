@@ -12,8 +12,7 @@ body {
 }
 
 .wrapper {
-	min-width: 1024px;
-	max-width: 1600px;
+	width: 100%;
 	min-height: 1024px;
 	margin: 0 auto;
 }
@@ -42,7 +41,7 @@ body {
 /* Middle
 -----------------------------------------------------------------------------*/
 .middle {
-	border-right: 250px solid #000;
+	border-right: 250px solid #222;
 	position: relative;
 }
 
@@ -50,6 +49,28 @@ body {
 	display: table;
 	clear: both;
 	content: '';
+}
+
+.nav{
+	clear: both;
+	background: #222;
+	overflow: hidden;
+}
+
+.nav ul{
+	list-style: none;
+}
+
+.nav ul li a{
+	padding: 10px;
+	float: left;
+	color: #fff;
+	display: block;
+	text-decoration: none;
+}
+
+.nav ul li a:hover, .nav ul li a.selected{
+	background: #1a5eac;
 }
 
 .container {
@@ -123,7 +144,7 @@ body {
 -----------------------------------------------------------------------------*/
 .footer {
 	height: 100px;
-	background: #1e5eac;
+	background: #262626;
 	color: #fff;
 	text-align: center;
 }
