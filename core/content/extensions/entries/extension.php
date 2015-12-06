@@ -91,7 +91,8 @@ class Entries extends \uCMS\Core\Extensions\Extension implements \uCMS\Core\Exte
 					'default' => time()
 				]
 			],
-			'primary key' => 'eid'
+			'primary key' => 'eid',
+			'unique keys' => ['entry' => ['alias', 'type']]
 		];
 
 		$schemas['entry_access'] = [
