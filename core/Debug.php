@@ -1,5 +1,7 @@
 <?php
 namespace uCMS\Core;
+use uCMS\Core\Extensions\ThemeHandler;
+
 class Debug{
 	const LOG_OFF = 0;
 	const LOG_CRITICAL = 1;
@@ -9,6 +11,7 @@ class Debug{
 	const LOG_DEBUG = 5;
 	private static $logFile;
 	private static $logLevel = LOG_INFO;
+	private static $blocksAmount = 0;
 
 	public static function Init(){
 		register_shutdown_function('uCMS\\Core\\Debug::ErrorHandler');
@@ -27,14 +30,14 @@ class Debug{
 	}
 
 	public static function BeginBlock(){
-		echo '<pre style="
-		text-align: left; 
-		background: #fff; 
-		color: #000; 
-		padding: 5px;
-		border: 1px #aa1111 solid; 
-		margin: 20px; 
-		z-index: 9999;">';
+		$css = ThemeHandler::GetTemplate('ucms.css', false, true);
+		$style = file_get_contents($css);
+		$size = 200;
+		$position = $size*self::$blocksAmount;
+		echo '<style type="text/css">'.$style.'
+		.ucms-debug'.self::$blocksAmount.'{ top: '.$position.'; }</style>
+		<pre class="ucms-debug ucms-debug'.self::$blocksAmount.'">';
+		self::$blocksAmount++;
 	}
 
 	public static function EndBlock(){
@@ -55,7 +58,7 @@ class Debug{
 		if( empty($logFile) ){
 			$logFile = self::$logFile;
 		}
-		$hasFile = false;
+		$hasFile = file_exists($logFile);
 		if( !file_exists($logFile) && file_exists(dirname($logFile)) && is_writable(dirname($logFile)) ){
 			$hasFile = touch($logFile);
 		}
@@ -117,12 +120,18 @@ class Debug{
 		$messageOffset = 6;
 		$headerLimit = 7;
 		$data = explode(" ", $rawLine, $headerLimit);
+		$type = !empty($data[$typeOffset]) ? preg_replace("/\[|\]/", "", $data[$typeOffset]) : 'ERROR';
+		$text = !empty($data[$messageOffset]) ? htmlspecialchars($data[$messageOffset]) : tr('Unknown error');
+		$host = !empty($data[$hostOffset]) ? substr($data[$hostOffset], 0, -1) : tr('Unknown host');
+		$owner = !empty($data[$ownerOffset]) ? htmlspecialchars(preg_replace("/\[|\]/", "", $data[$ownerOffset])) : 'core';
+		$date = (!empty($data[$dateOffset]) && !empty($data[$dateOffset+1]))
+		? $data[$dateOffset].' '.$data[$dateOffset+1] : Tools::FormatTime(time(), "Y-m-d H:i:s");
 		$message = [
-			"type" => preg_replace("/\[|\]/", "", $data[$typeOffset]),
-			"text" => htmlspecialchars($data[$messageOffset]),
-			"host" => substr($data[$hostOffset], 0, -1),
-			"owner" => htmlspecialchars(preg_replace("/\[|\]/", "", $data[$ownerOffset])),
-			"date" => $data[$dateOffset].' '.$data[$dateOffset+1]
+			"type" => $type,
+			"text" => $text,
+			"host" => $host,
+			"owner" => $owner,
+			"date" => $date
 		];
 		return $message;
 	}
@@ -240,12 +249,12 @@ class Debug{
 		}
 		echo $errTitle;
 		echo '</h2>';
-		$errorMsg = "$errstr in <b>$errfile</b> on line <b>$errline</b>";
+		$errorMsg = "<p>$errstr in <b>$errfile</b> on line <b>$errline</b></p>";
 		if(!UCMS_DEBUG){
 			echo $errorMsg;
 		}else{
 			echo "$errorMsg<br>";
-			echo '<p style="font-size: 8pt; padding: 10px;">';
+			echo '<p class="ucms-debug-trace">';
 			echo debug_print_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
 			echo '</p>';
 		}
