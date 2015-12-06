@@ -105,6 +105,9 @@ class Block{
 		$template = "templates/$this->name.php";
 		$theme = new Theme($this->theme);
 		ob_start();
+
+		include(ABSPATH.Theme::VARIABLES_LOAD);
+		
 		if( file_exists($theme->getFilePath($template)) ){
 			include_once $theme->getFilePath($template);
 		}else if( file_exists($ownerExtension->getFilePath($template)) ){
