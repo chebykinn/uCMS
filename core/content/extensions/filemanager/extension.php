@@ -6,7 +6,7 @@ use uCMS\Core\Extensions\Users\Group;
 use uCMS\Core\Database\Query;
 use uCMS\Core\Installer;
 use uCMS\Core\Page;
-use uCMS\Core\Language\Language;
+use uCMS\Core\Localization\Language;
 use uCMS\Core\Extensions\ExtensionHandler;
 use uCMS\Core\Extensions\ThemeHandler;
 class FileManager extends \uCMS\Core\Extensions\Extension {
