@@ -52,12 +52,13 @@ if ( empty($prefix) || ( !in_array($prefix, ExtensionHandler::GetUsedActions()) 
 	}
 
 	if( !$found && empty($alias) ){
+		if( empty($prefix) ) $prefix = EntryType::ARTICLE;
 		$entries = (new Entry())->find(array('type' => $prefix, 'orders' => array('changed' => 'desc'), 'limit' => $limit));
 		if ( !empty($entries) ){
 			$found = true;
 		}
 	}
-	
+
 	if( !$found && Page::GetCurrent()->getAction() != Page::INDEX_ACTION ){
 		Theme::LoadErrorPage(uCMS::ERR_NOT_FOUND);	
 	}
