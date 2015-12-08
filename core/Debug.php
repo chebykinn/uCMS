@@ -29,14 +29,25 @@ class Debug{
 		}
 	}
 
-	public static function BeginBlock(){
+	public static function BeginBlock($floating = true){
 		$css = ThemeHandler::GetTemplate('ucms.css', false, true);
 		$style = file_get_contents($css);
 		$size = 200;
 		$position = $size*self::$blocksAmount;
-		echo '<style type="text/css">'.$style.'
-		.ucms-debug'.self::$blocksAmount.'{ top: '.$position.'; }</style>
-		<pre class="ucms-debug ucms-debug'.self::$blocksAmount.'">';
+		$blockID = 'ucms-debug-block-'.self::$blocksAmount;
+		if( $floating ){
+			$blockStyle = '
+			<style type="text/css">'.$style.'
+				#'.$blockID.'{
+					position: fixed;
+					top: '.$position.'; 
+				}
+			</style>';
+		}else{
+			$blockStyle = '<style type="text/css">'.$style.'</style>';
+		}
+		echo $blockStyle.'<pre class="ucms-debug" id="'.$blockID.'">';
+		echo '#'.self::$blocksAmount.' ';
 		self::$blocksAmount++;
 	}
 

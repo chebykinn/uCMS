@@ -150,7 +150,7 @@ class DatabaseConnection{
 		if($sql == "") return false;
 		$result = $this->connection->prepare($sql, array(\PDO::ATTR_CURSOR => \PDO::CURSOR_FWDONLY));
 		if(self::DISPLAY_QUERY) {
-			Debug::BeginBlock();
+			Debug::BeginBlock(false);
 			echo $sql;
 			Debug::EndBlock();
 		}
