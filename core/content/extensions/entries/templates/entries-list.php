@@ -30,7 +30,7 @@ if( $entriesAmount > 0 ){
 			</div>
 			<div class="info">
 				<div class="comments">
-					<?php echo $commentsCount; ?>
+					<a href="<?php echo $entry->getLink(); ?>#comments" title="<?php p("View comments"); ?>"><?php echo $commentsCount; ?></a>
 				</div>
 				<div class="tags">
 				<?php
@@ -53,7 +53,7 @@ if( $entriesAmount > 0 ){
 		</div>
 		<?php
 		if( $isEntryPage ){ ?>
-			<div class="comments">
+			<div id="comments">
 				<?php
 					if( count($comments) > 0 ){
 						foreach ($comments as $comment) {

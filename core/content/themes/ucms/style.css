@@ -153,6 +153,24 @@ body {
 	padding: 5px;
 }
 
+.entry .info .comments a{
+	padding: 5px;
+	text-decoration: none;
+	color: #000;
+}
+
+.entry .info .comments a:before{
+	content: '';
+	background: url(images/comments.png);
+	background-size: 100% 100%;
+	margin-top: 2px;
+	width: 16px;
+	height: 16px;
+	display: block;
+	float: left;
+}
+
+
 .entry .info .tags{
 	float: left;
 	color: #333;
