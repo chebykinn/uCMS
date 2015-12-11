@@ -5,31 +5,51 @@ if( $entriesAmount > 0 ){
 		// Flag to cut content when listing entries
 		$isShort = !$isEntryPage;
 		?>
-		<div class="entry">
-			<p class="title">
+		<div class="entry" id="<?php echo $entry->eid; ?>">
+			<div class="header">
+				<div class="categories">
+					<?php echo tr('Uncategorized'); ?>
+				</div>
+				<div class="title">
 				<?php
 					if( $isEntryPage ){
 						echo $entry->title;
 					}else{
 						?>
-						<a href="<?php echo $entry->getLink(); ?>" title="<?php echo $entry->title; ?>"><?php echo $entry->title; ?></a>
+						<a href="<?php echo $entry->getLink(); ?>" title="<?php p("View entry"); ?>"><?php echo $entry->title; ?></a>
 						<?php
 					}
 				?>
-			</p>
-			<p class="content">
+				</div>
+				<div class="date">
+				<?php echo $entry->getDate(); ?>
+				</div>
+			</div>
+			<div class="content">
 				<?php echo $entry->getContent($isShort); ?>
-			</p>
-			<p class="info">
-				<?php $delimeter = '<span class="delimeter"> | </span>'; ?>
-				<?php echo tr('Date:').' '.$entry->getDate().$delimeter.tr('Tags:').' none'; ?>
+			</div>
+			<div class="info">
+				<div class="comments">
+					<?php echo $commentsCount; ?>
+				</div>
+				<div class="tags">
+				<?php
+					p('no tags');
+				?>
+				</div>
 				<?php
 					if( $entry->uid === $currentUser->uid || $currentUser->can('manage entries') ){
+				?>
+				<div class="admin">
+					<?php 
 						$editLink = $entry->getEditLink();
-						echo '<a href="'.$editLink.'" title="'.tr('Edit this entry').'">'.tr('Edit').'</a>';
+						echo '<a class="edit-link" href="'.$editLink.'" title="'.tr('Edit this entry').'">'.tr('Edit').'</a>';
+					?>
+				</div>
+				<?php
 					}
 				?>
-			</p>
+			</div>
 		</div>
 		<?php
 		if( $isEntryPage ){ ?>
