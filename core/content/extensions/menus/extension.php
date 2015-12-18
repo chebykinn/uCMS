@@ -1,6 +1,7 @@
 <?php
 namespace uCMS\Core\Extensions\Menus;
 use uCMS\Core\Extensions\Extension;
+use uCMS\Core\Extensions\Theme;
 use uCMS\Core\Extensions\Users\Permission;
 use uCMS\Core\Admin\ControlPanel;
 use uCMS\Core\Block;
@@ -14,8 +15,17 @@ class Menus extends Extension{
 		ControlPanel::SetTitle(tr("Menu"));
 	}
 
+	private function addBlocks(){
+		$menu = (new Block())->clean();
+		$menu->name = "menu";
+		$menu->region = "navigation";
+		$menu->theme = Theme::DEFAULT_THEME;
+		$menu->status = Block::ENABLED;
+		$menu->create();
+	}
+
 	protected function checkStage(){
-		Block::Add('menu', 'header', 'ucms');
+		$this->addBlocks();
 		return parent::checkStage();
 	}
 

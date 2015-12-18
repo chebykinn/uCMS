@@ -9,7 +9,7 @@ use uCMS\Core\Extensions\Users\Permission;
 use uCMS\Core\Extensions\Users\Group;
 use uCMS\Core\Database\Query;
 class Admin extends \uCMS\Core\Extensions\Extension{
-	const PERMISSIONS_AMOUNT = 6;
+
 	public function onLoad(){
 		Permission::Register('access site', tr('Access Site'), tr('Allow user to view site pages.'));
 		Permission::Register('access site in maintenance mode', tr('Access Site in maintenance mode.'), tr('Allow user visit site in maintenance mode.'));
@@ -18,12 +18,31 @@ class Admin extends \uCMS\Core\Extensions\Extension{
 		Permission::Register('manage themes', tr('Manage Themes'), tr('Allow user to add, edit and delete themes.'));
 		Permission::Register('update core settings', tr('Update Core Settings'), tr('Allow user to change core settings using control panel.'));
 	}
-	
-	protected function checkStage(){
-		$status = parent::checkStage();
-		Block::Add("last-added", "dashboard-right-side", "admin", 0, Block::SHOW_LISTED, ControlPanel::ACTION.'/'.Page::INDEX_ACTION);
-		Block::Add("stats", "dashboard-left-side", "admin", 0, Block::SHOW_LISTED, ControlPanel::ACTION.'/'.Page::INDEX_ACTION);
-		Block::Add("quick-actions", "dashboard-left-side", "admin", 1, Block::SHOW_LISTED, ControlPanel::ACTION.'/'.Page::INDEX_ACTION);
+
+	private function addBlocks(){
+		$actions = ControlPanel::ACTION.'/'.Page::INDEX_ACTION;
+
+		$lastAdded = (new Block())->clean();
+		$stats = (new Block())->clean();
+		$quickActions = (new Block())->clean();
+
+		$lastAdded->name = "last-added";
+		$stats->name = "stats";
+		$quickActions->name = "quick-actions";
+
+		$lastAdded->visibility = $stats->visibility = $quickActions->visibility = Block::SHOW_LISTED;
+		$lastAdded->actions = $stats->actions = $quickActions->actions = $actions;
+		$lastAdded->theme = $stats->theme = $quickActions->theme = ControlPanel::THEME;
+		$lastAdded->status = $stats->status = $quickActions->status = Block::ENABLED;
+		$stats->region = $quickActions->region = "dashboard-left-side";
+
+		$lastAdded->region = "dashboard-right-side";
+
+		$quickActions->position = 1;
+
+		$lastAdded->create();
+		$stats->create();
+		$quickActions->create();
 		$defaultModels = [
 			'Articles' => [
 				'owner' => 'entries',
@@ -51,6 +70,11 @@ class Admin extends \uCMS\Core\Extensions\Extension{
 			]
 		];
 		Settings::Update('last_added_models', json_encode($defaultModels));
+	}
+	
+	protected function checkStage(){
+		$status = parent::checkStage();
+		$this->addBlocks();
 		return $status;
 	}
 

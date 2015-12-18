@@ -89,9 +89,25 @@ class Users extends \uCMS\Core\Extensions\Extension {
 		Settings::Update(Settings::SITE_AUTHOR, $admin->name);
 	}
 
+	private function addBlocks(){
+		$login = (new Block())->clean();
+		$login->name = "login-form";
+		$login->region = "content";
+		$login->theme = Theme::DEFAULT_THEME;
+		$login->visibility = Block::SHOW_LISTED;
+		$login->actions = User::LOGIN_ACTION;
+		$login->status = Block::ENABLED;
+		$login->create();
+		$card = (new Block())->clean();
+		$card->name = "user-card";
+		$card->region = "right-sidebar";
+		$card->theme = Theme::DEFAULT_THEME;
+		$card->status = Block::ENABLED;
+		$card->create();
+	}
+
 	protected function checkStage(){
-		Block::Add("login-form", "content", "ucms", -1, Block::SHOW_MANUAL);
-		Block::Add("user-card", "right-sidebar", "ucms");
+		$this->addBlocks();
 		return parent::checkStage();
 	}
 

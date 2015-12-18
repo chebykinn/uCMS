@@ -20,9 +20,19 @@ class Entries extends \uCMS\Core\Extensions\Extension implements \uCMS\Core\Exte
 		Permission::Register('manage entries', tr('Manage Entries'), tr('Allow user to add, edit and delete entries.'));
 	}
 
+	private function addBlocks(){
+		$list = (new Block())->clean();
+		$list->name = "entries-list";
+		$list->region = "content";
+		$list->theme = Theme::DEFAULT_THEME;
+		$list->visibility = Block::SHOW_MANUAL;
+		$list->status = Block::ENABLED;
+		$list->create();
+	}
+
 	protected function checkStage(){
 		$status = parent::checkStage();
-		Block::Add("entries-list", "content", "ucms", -1, Block::SHOW_MANUAL);
+		$this->addBlocks();
 		return $status;
 	}
 
