@@ -29,18 +29,19 @@ class Debug{
 		}
 	}
 
-	public static function BeginBlock($floating = true){
+	public static function BeginBlock($floating = true, $height = 200){
+		$height = intval($height);
 		$css = ThemeHandler::GetTemplate('ucms.css', false, true);
 		$style = file_get_contents($css);
-		$size = 200;
-		$position = $size*self::$blocksAmount;
+		$position = $height*self::$blocksAmount;
 		$blockID = 'ucms-debug-block-'.self::$blocksAmount;
 		if( $floating ){
 			$blockStyle = '
 			<style type="text/css">'.$style.'
 				#'.$blockID.'{
 					position: fixed;
-					top: '.$position.'; 
+					top: '.$position.';
+					max-height: '.$height.';
 				}
 			</style>';
 		}else{
@@ -55,8 +56,8 @@ class Debug{
 		echo '</pre>';
 	}
 
-	public static function PrintVar($var, $raw = false){
-		self::BeginBlock();
+	public static function PrintVar($var, $raw = false, $floating = true, $height = 200){
+		self::BeginBlock($floating, $height);
 		// debug_print_backtrace();
 		if( !$raw )
 			var_dump($var);
