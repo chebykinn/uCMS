@@ -6,7 +6,7 @@
 	padding: 5px;
 	border: 1px #aa1111 solid; 
 	margin: 20px;
-	max-height: 200px;
+	min-width: 50%;
 	z-index: 9999;
 	overflow: auto;
 }
