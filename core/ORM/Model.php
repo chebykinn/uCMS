@@ -243,20 +243,23 @@ abstract class Model{
 
 		if( isset($conditions['where']) ){
 			$where = $conditions['where'];
-			foreach ($conditions['where'] as $condition) {
-				if( isset($condition['column']) && isset($condition['operator']) && isset($condition['value']) ){
-					$query = $query->condition($condition['column'], $condition['operator'], $condition['value']);
+			$amount = count($where);
+			$i = 0;
+			foreach ($where as $condition) {
+				if( isset($condition[0]) && isset($condition[1]) && isset($condition[2]) ){
+					$query = $query->condition($condition[0], $condition[1], $condition[2]);
 				}
-				// TODO: ignore if last
-				if( isset($condition['next']) ){
-					if( $condition['next'] === 'and' ){
+
+				if( isset($condition[3]) && $i+1 < $amount ){
+					if( $condition[3] === 'and' ){
 						$query = $query->_and();
 					}
 
-					if( $condition['next'] === 'or' ){
+					if( $condition[3] === 'or' ){
 						$query = $query->_or();
 					}
 				}
+				$i++;
 			}
 		}
 
@@ -292,8 +295,10 @@ abstract class Model{
 				$query = $query->limit($limit);
 			}
 		}
+		
 		$results = $query->execute('query');
 		$processed = $this->processResults($results);
+
 		if( empty($processed) ){
 			if( $limit === 1 ){
 				return NULL;
