@@ -200,7 +200,7 @@ class Loader{
 			}
 		}
 
-		Block::Init();
+		Block::Load();
 		
 		Theme::GetCurrent()->load();
 	}
