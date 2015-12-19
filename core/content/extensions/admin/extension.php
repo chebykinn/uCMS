@@ -16,6 +16,7 @@ class Admin extends \uCMS\Core\Extensions\Extension{
 		Permission::Register('access control panel', tr('Access Control Panel'), tr('Allow user to view administration panel.'));
 		Permission::Register('manage extensions', tr('Manage Extensions'), tr('Allow user to add, edit and delete extensions.'));
 		Permission::Register('manage themes', tr('Manage Themes'), tr('Allow user to add, edit and delete themes.'));
+		Permission::Register('manage blocks', tr('Manage Blocks'), tr('Allow user to add, edit and delete blocks.'));
 		Permission::Register('update core settings', tr('Update Core Settings'), tr('Allow user to change core settings using control panel.'));
 	}
 
