@@ -44,7 +44,7 @@ class Row{
 					break;
 					
 					case 'belongsTo':
-							$value = $class->find($this->$assocKey);
+						$value = $class->find($this->$assocKey);
 					break;
 				}
 				$this->addData($name, $value);
