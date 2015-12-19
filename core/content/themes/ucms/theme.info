@@ -27,6 +27,6 @@
 	"blocks": {
 		"navigation": "menu",
 		"content": ["entries-list", "login-form"],
-		"right-sidebar": "user-card",
+		"right-sidebar": "user-card"
 	}
 }
