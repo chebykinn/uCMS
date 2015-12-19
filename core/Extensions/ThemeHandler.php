@@ -3,6 +3,7 @@ namespace uCMS\Core\Extensions;
 use uCMS\Core\Tools;
 use uCMS\Core\uCMS;
 use uCMS\Core\Settings;
+use uCMS\Core\Block;
 
 class ThemeHandler{
 	const PATH = 'content/themes/';
@@ -23,8 +24,41 @@ class ThemeHandler{
 		if( $current === $name ) return false;
 		if( !self::IsExists($name) ) return false;
 
+		// Check blocks for new theme
+		// TODO: consider deleting old blocks
+		$blocks = (new Block())->count(['theme' => $name]);
+
+		if( $blocks == 0 ){
+			try{
+				$theme = new Theme($name);
+				$list = $theme->getBlocksMap();
+				foreach ($list as $region => $blocks) {
+					if( !is_array($blocks) ) $blocks = [$blocks];
+					foreach ($blocks as $blockName) {
+						$source = (new Block())->find(['name' => $blockName]);
+						if( empty($source) ) continue;
+						if( !is_array($source) ) $source = [$source];
+						
+						$block = (new Block())->clean();
+						$block->name = $blockName;
+						$block->region = $region;
+						$block->status = Block::ENABLED;
+						$block->theme = $name;
+						$block->owner = $source[0]->owner;
+						$block->title = $source[0]->title;
+						$block->visibility = $source[0]->visibility;
+						$block->actions = $source[0]->actions;
+						$block->create();
+					}
+				}
+			}catch(\Exception $e){
+				return false;
+			}
+		}
+
 		Tools::OverrideOwner();
 		Settings::Update(Settings::THEME, $name);
+
 		return true;
 	}
 

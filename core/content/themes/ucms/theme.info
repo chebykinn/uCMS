@@ -22,5 +22,11 @@
 		"content",
 		"right-sidebar",
 		"footer"
-	]
+	],
+
+	"blocks": {
+		"navigation": "menu",
+		"content": ["entries-list", "login-form"],
+		"right-sidebar": "user-card",
+	}
 }

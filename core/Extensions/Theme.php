@@ -99,8 +99,9 @@ class Theme extends AbstractExtension{
 
 		$this->dependencies = !empty($decodedInfo['dependencies']) ? $decodedInfo['dependencies'] : "";
 		$this->info         = !empty($decodedInfo['info'])         ? $decodedInfo['info']         : "";
-		$this->regions      = !empty($decodedInfo['regions']) ? $decodedInfo['regions'] : array();
-		if( !is_array($this->regions) ) $this->regions = array($this->regions);
+		$this->regions      = !empty($decodedInfo['regions']) ? $decodedInfo['regions'] : [];
+		$this->blocks       = !empty($decodedInfo['blocks']) ? $decodedInfo['blocks'] : [];
+		if( !is_array($this->regions) ) $this->regions = [$this->regions];
 	}
 
 
@@ -349,6 +350,19 @@ class Theme extends AbstractExtension{
 	public function setPageContent($content){
 		// TODO: XSS protection
 		$this->pageContent = $content;
+	}
+
+	/**
+	* Get blocks mapping for regions.
+	*
+	* Get array of blocks that should be added to theme regions.
+	*
+	* @since 2.0
+	* @param none
+	* @return array Associative array of regions and blocks in them.
+	*/
+	public function getBlocksMap(){
+		return $this->blocks;
 	}
 }
 ?>
