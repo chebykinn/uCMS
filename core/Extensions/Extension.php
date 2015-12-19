@@ -311,7 +311,7 @@ class Extension extends AbstractExtension implements ExtensionInterface{
 			}
 		}
 		$query = new Query('{group_permissions}');
-		$query->insert(['gid', 'name', 'owner'], $rows)->execute();
+		$query->insert(['gid', 'name', 'owner'], $rows, true)->execute();
 	}
 
 	protected function checkTables(array $tables){
