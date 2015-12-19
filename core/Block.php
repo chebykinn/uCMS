@@ -91,7 +91,9 @@ class Block extends Model{
 			$row->status = ($row->region != "") ? self::ENABLED : self::DISABLED;
 		}
 
-		$row->owner = Tools::GetCurrentOwner();
+		if( empty($row->owner) ){
+			$row->owner = Tools::GetCurrentOwner();
+		}
 
 		if( $row->visibility < self::SHOW_EXCEPT ){
 			$row->visibility = self::SHOW_EXCEPT;
