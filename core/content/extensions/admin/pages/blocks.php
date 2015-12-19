@@ -19,16 +19,43 @@ $blocks = (new Block())->find(['limit' => Settings::Get(Settings::PER_PAGE), 'or
 
 $table->addSelectColumn('manage blocks');
 $table->addColumn(tr('Name'), true, 'manage blocks', 0, true);
+$table->addColumn(tr('Title'), true, 'manage blocks', 0, false);
 $table->addColumn(tr('Theme'), true, 'manage blocks', 0, true);
 $table->addColumn(tr('Region'), true, 'manage blocks', 0, true);
-$table->setInfo("amount", (new Block)->count());
+$table->addColumn(tr('Owner'), true, 'manage blocks', 0, false);
+$table->addColumn(tr('Actions'), true, 'manage blocks', 0, false);
+$table->setInfo("amount", Settings::Get(Settings::BLOCKS_AMOUNT));
 foreach ($blocks as $block) {
 	$table->setInfo('idKey', $block->bid);
+	if( $block->status == Block::ENABLED ){
+		if( $block->visibility == Block::SHOW_LISTED ){
+			$actionsMsg = tr("Displayed at:")."<br>".$block->actions;
+		}
+	
+		if( $block->visibility == Block::SHOW_EXCEPT ){
+			if( !empty($block->actions) ){
+				$actionsMsg = tr("Displayed at every page except:")."<br>".$block->actions;
+			}else{
+				$actionsMsg = tr("Displayed at every page.");
+			}
+		}
+	
+		if( $block->visibility == Block::SHOW_MANUAL ){
+			$actionsMsg = tr("Block controls visibility manually.");
+		}
+	}else{
+		$actionsMsg = tr("Block is disabled.");
+	}
+
+	$titleMsg = empty($block->title) ? tr("None") : $block->title;
 	$table->addRow(
 		[
 			$block->name,
+			$titleMsg,
 			$block->theme,
-			$block->region
+			$block->region,
+			$block->owner,
+			$actionsMsg,
 		]
 	);
 }
