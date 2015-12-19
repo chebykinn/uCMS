@@ -174,7 +174,7 @@ class User extends Model{
 		$form = new Form("login-form", Page::FromAction(self::LOGIN_ACTION), tr("Log In"));
 		$form->addField("login", "text", tr("Username:"), "", "", tr("username or email"));
 		$form->addField("password", "password", tr("Password:"), "", "", tr("password"));
-		$form->addFlag("save_cookies", tr("Remember Me"));
+		$form->addFlag("save_cookies", tr("Remember Me:"));
 		return $form;
 	}
 

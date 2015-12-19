@@ -371,3 +371,23 @@ h1, h2{
 .update-block, .update-block h3{
 	clear: both;
 }
+
+.login-form input[type=submit]{
+	float: none;
+	margin: 0 auto;
+}
+
+.login-form .form-item-save_cookies{
+	width: 150px;
+	height: 10px;
+	margin: 10px auto;
+	line-height: 1px;
+}
+
+.login-form .form-item-save_cookies label{
+	float: left;
+}
+
+.login-form .form-item-save_cookies input[type=checkbox]{
+	clear: none;
+}

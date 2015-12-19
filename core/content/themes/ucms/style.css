@@ -244,6 +244,38 @@ body {
 	color: #ccc;
 }
 
+/* Login form
+-----------------------------------------------------------------------------*/
+.login-form{
+	margin: 10px;
+}
+
+.login-form .form-item{
+	clear: both;
+	padding-top: 10px;
+}
+
+.login-form .form-item label{
+	float: left;
+	width: 40%;
+}
+
+.login-form .form-item input{
+	float: left;
+	width: 50%;
+	font-size: 15px;
+	border: none;
+	padding: 5px;
+	color: #000;
+	background: #eee;
+	border-radius: 1px;
+}
+
+.login-form .form-item input[type=submit]:hover{
+	cursor: pointer;
+	background: #ccc;
+}
+
 /* User card
 -----------------------------------------------------------------------------*/
 .user-card{
