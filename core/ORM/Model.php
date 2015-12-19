@@ -219,9 +219,7 @@ abstract class Model{
 			$conditions = array();
 			$conditions['limit'] = 1;
 			$conditions['noOrder'] = true;
-			$conditions['where'][0]['column'] = $this->primaryKey();
-			$conditions['where'][0]['operator'] = '=';
-			$conditions['where'][0]['value'] = $id;
+			$conditions['where'][0] = [$this->primaryKey(), '=', $id];
 		}
 
 		// Creating query
