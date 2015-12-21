@@ -199,10 +199,15 @@ class Extension extends AbstractExtension implements ExtensionInterface{
 		$tablesToFill = $this->getInfo('tablesToFill');
 		if( !empty($tablesToFill) && is_array($tablesToFill) ){
 			$emptyTables = [];
-			foreach ($tablesToFill as $table) {
+			foreach ($tablesToFill as $table => $minSize) {
+				if( empty($table) ) continue;
+				$minSize = intval($minSize);
+				if( $minSize < 0 ){
+					$minSize = 0;
+				}
 				$query = new Query('{'.$table.'}');
 				$count = $query->countRows()->execute();
-				if( $count === 0 ){ // TODO: min size
+				if( $count < $minSize ){
 					$emptyTables[] = $table;
 				}
 			}
