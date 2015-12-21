@@ -30,8 +30,8 @@
 		"updateURL": "http://ucms.ivan4b.ru/pub/extensions/menus",
 		"tables": ["menus", "menu_links"],
 		"tablesToFill": {
-			"menus": 1,
-			"menu_links": 4 
+			"menus": 3,
+			"menu_links": 7
 		}
 	},
 
