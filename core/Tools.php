@@ -76,7 +76,8 @@ class Tools{
 	}
 
 	public static function PrepareXSS($value){
-
+		$value = htmlspecialchars(strip_tags($value));
+		return $value;
 	}
 
 	public static function FormatTime($time, $format = ""){
