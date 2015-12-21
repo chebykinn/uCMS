@@ -62,5 +62,9 @@ if ( empty($prefix) || ( !in_array($prefix, ExtensionHandler::GetUsedActions()) 
 	if( !$found && Page::GetCurrent()->getAction() != Page::INDEX_ACTION ){
 		Theme::LoadErrorPage(uCMS::ERR_NOT_FOUND);	
 	}
+
+	if( $found && $isEntryPage ){
+		Theme::GetCurrent()->setTitle($entries[0]->title);
+	}
 } 
 ?>
