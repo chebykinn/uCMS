@@ -1,0 +1,1 @@
+<?php $currentMenu->render(); ?>
