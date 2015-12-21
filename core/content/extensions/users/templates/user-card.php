@@ -25,14 +25,11 @@ else:
 	<div class="group-tag">
 	<?php echo $user->group->name; ?>
 	</div>
-	<ul class="user-menu">
-	<li><a href="<?php echo $profileLink; ?>"><?php p("Profile"); ?></a></li>
-	<li><a href="<?php echo $userlistLink; ?>"><?php p("Users") ?></a></li>
-	<li><a href="<?php echo $logoutLink; ?>"><?php p("Logout"); ?></a></li>
-	<?php if( $user->can("access control panel") ): ?>
-	<li><a href="<?php echo $cpanelLink; ?>"><?php p("Control Panel"); ?></a></li>
-	<?php endif; ?>
-	</ul>
+	<?php
+		if( $userMenu != NULL ){
+			$userMenu->render('user-menu');
+		}
+	?>
 	</div> 
 <?php
 endif; 
