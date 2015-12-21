@@ -14,6 +14,8 @@ use uCMS\Core\Notification;
 use uCMS\Core\Extensions\ExtensionHandler;
 use uCMS\Core\Events\Event;
 use uCMS\Core\Events\CoreEvents;
+use uCMS\Core\Extensions\Menus\MenuLink;
+use uCMS\Core\Extensions\Menus\Menu;
 class Users extends \uCMS\Core\Extensions\Extension {
 
 	public function onLoad(){
@@ -106,8 +108,47 @@ class Users extends \uCMS\Core\Extensions\Extension {
 		$card->create();
 	}
 
+	private function addMenu(){
+		$check = (new Menu())->find('user-menu');
+		if( $check == NULL ){
+			$userMenu = (new Menu())->clean();
+			$userMenu->menu = 'user-menu';
+			$userMenu->title = 'User Menu';
+			$userMenu->description = 'User actions, displayed at the user card in sidebar.';
+			$userMenu->create();
+
+			$profileLink  = (new MenuLink())->clean();
+			$userlistLink = (new MenuLink())->clean();
+			$logoutLink   = (new MenuLink())->clean();
+			$cpanelLink   = (new MenuLink())->clean();
+
+			$profileLink->menu = $userlistLink->menu =
+			$logoutLink->menu = $cpanelLink->menu = 'user-menu';
+
+			$profileLink->status = $userlistLink->status =
+			$logoutLink->status = $cpanelLink->status = 1;
+
+			$profileLink->link  = User::PROFILE_ACTION;
+			$userlistLink->link = User::LIST_ACTION;
+			$logoutLink->link   = User::LOGOUT_ACTION;
+			$cpanelLink->link   = ControlPanel::ACTION;
+
+			$profileLink->title  = "Profile";
+			$userlistLink->title = "Users";
+			$logoutLink->title   = "Logout";
+			$cpanelLink->title   = "Control Panel";
+			$cpanelLink->permission = "access control panel";
+
+			$profileLink->create();
+			$userlistLink->create();
+			$logoutLink->create();
+			$cpanelLink->create();
+		}
+	}
+
 	protected function checkStage(){
 		$this->addBlocks();
+		$this->addMenu();
 		return parent::checkStage();
 	}
 
