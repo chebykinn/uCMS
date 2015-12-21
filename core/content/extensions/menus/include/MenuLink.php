@@ -4,9 +4,10 @@ use uCMS\Core\ORM\Model;
 use uCMS\Core\Page;
 class MenuLink extends Model{
 	public function init(){
-		$this->tableName('menus');
+		$this->tableName('menu_links');
 		$this->primaryKey('lid');
-		$this->belongsTo('\\uCMS\\Core\\Extensions\\Users\\User', array('bind' => 'author'));
+		$this->belongsTo('\\uCMS\\Core\\Extensions\\Users\\User', ['bind' => 'author']);
+		$this->belongsTo('\\uCMS\\Core\\Extensions\\Menus\\Menu', ['bind' => 'baseMenu']);
 	}
 
 	public function getLink($row){

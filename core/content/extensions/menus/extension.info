@@ -18,7 +18,8 @@
 	},
 
 	"includes": [
-		"include/MenuLink.php"
+		"include/MenuLink.php",
+		"include/Menu.php"
 	],
 
 	"info": {
@@ -27,15 +28,15 @@
 		"author": "µCMS",
 		"site": "http://ucms.ivan4b.ru",
 		"updateURL": "http://ucms.ivan4b.ru/pub/extensions/menus",
-		"tables": ["menus"],
-		"tablesToFill": ["menus"]	
+		"tables": ["menus", "menu_links"],
+		"tablesToFill": {
+			"menus": 1,
+			"menu_links": 4 
+		}
 	},
 
 	"permissions": {
+		"manage menus": 1,
 		"manage menu links": 1
-	},
-
-	"settings": {
-		"selected_menu": "navigation"
 	}
 }
