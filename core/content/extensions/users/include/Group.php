@@ -21,6 +21,7 @@ class Group extends Model{
 	}
 
 	public function hasPermission($row, $name){
+		if( empty($name) ) return true;
 		foreach ($row->permissions as $permission) {
 			if( $permission->name === $name ){
 				return true;
