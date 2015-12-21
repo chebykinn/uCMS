@@ -62,8 +62,20 @@ class Users extends \uCMS\Core\Extensions\Extension {
 				Page::GoBack();
 			break;
 			
-			case 'profile':
-				Theme::GetCurrent()->setTitle(tr("Profile of @s", User::Current()->getName()));
+			case 'user':
+				$userName = Page::GetCurrent()->getActionValue();
+				$user = (new User())->find(['name' => $userName, 'limit' => 1]);
+				if( empty($user) ){
+					// If user is not found, redirect to current user page
+					if( User::Current()->isLoggedIn() ){
+						$profilePage = Page::FromAction(User::PROFILE_ACTION, User::Current()->name);
+					}else{
+						// If user is not authorized we redirect him to the home page.
+						$profilePage = Page::Home();
+					}
+					$profilePage->go();
+				}
+				Theme::GetCurrent()->setTitle($user->getDisplayName());
 			break;
 		}
 	}
@@ -106,6 +118,15 @@ class Users extends \uCMS\Core\Extensions\Extension {
 		$card->theme = Theme::DEFAULT_THEME;
 		$card->status = Block::ENABLED;
 		$card->create();
+
+		$profile = (new Block())->clean();
+		$profile->name = "user-profile";
+		$profile->region = "content";
+		$profile->theme = Theme::DEFAULT_THEME;
+		$profile->status = Block::ENABLED;
+		$profile->visibility = Block::SHOW_LISTED;
+		$profile->actions = User::PROFILE_ACTION;
+		$profile->create();
 	}
 
 	private function addMenu(){
