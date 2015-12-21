@@ -52,13 +52,26 @@ class Block extends Model{
 
 		$ownerExtension = ExtensionHandler::Get($blockRow->owner);
 
+		$isCached = false;  // TODO: add cache check
+		$generalLoadFile = $ownerExtension->getFilePath("block.load.php");
 		$loadFile = $ownerExtension->getFilePath("$blockRow->name.load.php");
-		if( true && file_exists($loadFile) ) { // TODO: add cache check
-			include_once $loadFile;
+		if( !$isCached ) {
+			if( file_exists($generalLoadFile) ){
+				include $generalLoadFile;
+			}
+
+			if( file_exists($loadFile) ){
+				include $loadFile;
+			}
 		}else{
 			// get from cache or do nothing
 		}
+
 		$template = "templates/$blockRow->name.php";
+		if( !file_exists($ownerExtension->getFilePath($template)) ){
+			// If there is no template for selected block, extension can use general template
+			$template = "templates/$blockRow->owner-block.tpl.php";
+		}
 		$theme = new Theme($blockRow->theme);
 		// Caution: includes can overwrite previously declared variables 
 		ob_start();
