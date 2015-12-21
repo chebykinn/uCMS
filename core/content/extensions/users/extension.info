@@ -40,7 +40,10 @@
 		"site": "http://ucms.ivan4b.ru",
 		"updateURL": "http://ucms.ivan4b.ru/pub/extensions/users",
 		"tables": ["users", "user_info", "groups", "group_permissions"],
-		"tablesToFill": ["users", "groups"]
+		"tablesToFill": {
+			"users": 1,
+			"groups": 6
+		}
 	},
 
 	"permissions": {
