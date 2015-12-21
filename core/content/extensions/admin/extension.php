@@ -25,25 +25,20 @@ class Admin extends \uCMS\Core\Extensions\Extension{
 
 		$lastAdded = (new Block())->clean();
 		$stats = (new Block())->clean();
-		$quickActions = (new Block())->clean();
 
 		$lastAdded->name = "last-added";
 		$stats->name = "stats";
-		$quickActions->name = "quick-actions";
 
-		$lastAdded->visibility = $stats->visibility = $quickActions->visibility = Block::SHOW_LISTED;
-		$lastAdded->actions = $stats->actions = $quickActions->actions = $actions;
-		$lastAdded->theme = $stats->theme = $quickActions->theme = ControlPanel::THEME;
-		$lastAdded->status = $stats->status = $quickActions->status = Block::ENABLED;
-		$stats->region = $quickActions->region = "dashboard-left-side";
+		$lastAdded->visibility = $stats->visibility = Block::SHOW_LISTED;
+		$lastAdded->actions = $stats->actions = $actions;
+		$lastAdded->theme = $stats->theme = ControlPanel::THEME;
+		$lastAdded->status = $stats->status = Block::ENABLED;
+		$stats->region = "dashboard-left-side";
 
 		$lastAdded->region = "dashboard-right-side";
 
-		$quickActions->position = 1;
-
 		$lastAdded->create();
 		$stats->create();
-		$quickActions->create();
 		$defaultModels = [
 			'Articles' => [
 				'owner' => 'entries',
