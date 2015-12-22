@@ -29,6 +29,7 @@
 	"includes": [
 		"include/Permission.php",
 		"include/Group.php",
+		"include/UserInfoField.php",
 		"include/UserInfo.php",
 		"include/User.php"
 	],
@@ -39,10 +40,11 @@
 		"author": "µCMS",
 		"site": "http://ucms.ivan4b.ru",
 		"updateURL": "http://ucms.ivan4b.ru/pub/extensions/users",
-		"tables": ["users", "user_info", "groups", "group_permissions"],
+		"tables": ["users", "user_info", "user_fields", "groups", "group_permissions"],
 		"tablesToFill": {
 			"users": 1,
-			"groups": 6
+			"groups": 6,
+			"user_fields": 1
 		}
 	},
 
@@ -56,6 +58,9 @@
 		"password_min_size": 6,
 		"password_max_size": 32,
 		"login_min_size": 4,
-		"login_max_size": 20
+		"login_max_size": 20,
+		"enable_user_messaging": 1,
+		"enable_user_avatars": 1,
+		"enable_registration": 1
 	}
 }
