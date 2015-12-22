@@ -34,6 +34,7 @@ class Page{
 
 		$this->path = $url['path'];
 
+		$this->path = preg_replace('@/+@', '/', $this->path);
 		$rawData = str_replace(uCMS::GetDirectory(), "/", $this->path);
 		$data = array();
 		parse_str ( $this->query, $data );
@@ -69,7 +70,6 @@ class Page{
 			$amp = empty($action) ? "?" : "&";
 			$urlData = ($isCleanUrl ? "$data/" : $amp."key=$data");
 		}
-
 		$url = uCMS::GetDirectory().$urlAction.$urlData;
 		$page = new self($url);
 		return $page;
