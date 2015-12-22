@@ -198,6 +198,41 @@ body {
 	text-decoration: none;
 }
 
+/* User Profile
+-----------------------------------------------------------------------------*/
+
+.user-profile{
+	padding: 10px;
+}
+
+.user-profile ul{
+	list-style: none;
+}
+
+
+.user-sidebar{
+	float: left;
+	background: #fefefe;
+	padding: 10px;
+	margin-right: 20px;
+}
+
+.user-data{
+
+}
+
+.profile-menu{
+
+}
+
+.profile-content{
+
+}
+
+.user-info{
+	float: left;
+}
+
 /*---------------------------------------------------------------------------*/
 
 .error, .warning, .success{
