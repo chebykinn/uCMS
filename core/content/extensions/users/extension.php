@@ -362,6 +362,29 @@ class Users extends \uCMS\Core\Extensions\Extension {
 			],
 			'primary key' => ['uid', 'name']
 		];
+
+		$schemas['user_fields'] = [
+			'fields' => [
+				'name' => [
+					'type' => 'varchar',
+					'size' => 'big',
+					'not null' => true
+				],
+				'title' => [
+					'type' => 'varchar',
+					'size' => 'big'
+				],
+				'description' => [
+					'type' => 'text',
+					'size' => 'big'
+				],
+				'type' => [
+					'type' => 'varchar',
+					'default' => 'string'
+				]
+			],
+			'primary key' => ['name']
+		];
 		return $schemas;
 	}
 
@@ -376,9 +399,14 @@ class Users extends \uCMS\Core\Extensions\Extension {
 				$this->addDefaultGroups();
 				return false;
 			break;
+
+			case 'user_fields':
+				$this->addDefaultFields();
+			break;
 		}
 		return false;
 	}
+
 
 	private function getDefaultGroups(){
 		$defaultGroups = [
@@ -390,6 +418,21 @@ class Users extends \uCMS\Core\Extensions\Extension {
 			[Group::GUEST,         'Guest'        ]
 		];
 		return $defaultGroups;
+	}
+
+	private function addDefaultFields(){
+		$firstname = (new UserInfoField())->clean();
+		$surname = (new UserInfoField())->clean();
+		$firstname->name = 'firstname';
+		$firstname->title = 'First Name';
+		$firstname->description = 'User\'s first name.';
+
+		$surname->name = 'surname';
+		$surname->title = 'Surname';
+		$surname->description = 'User\'s surname.';
+
+		$firstname->create();
+		$surname->create();
 	}
 
 	private function addDefaultGroups(){

@@ -29,7 +29,6 @@ class User extends Model{
 	const ERR_WRONG_LOGIN_CHARS = 30;
 	const ERR_WRONG_EMAIL = 40;
 
-	protected $info;
 	protected static $currentUser;
 
 	public function init(){
@@ -37,7 +36,8 @@ class User extends Model{
 		$this->tableName('users');
 		$this->belongsTo('\\uCMS\\Core\\Extensions\\Users\\Group', array('bind' => 'group'));
 		$this->hasMany('\\uCMS\\Core\\Extensions\\Entries\\Entry', array('bind' => 'entries'));
-		$this->hasMany('\\uCMS\\Core\\Extensions\\Users\\UserInfo', array('bind' => 'info'));
+		$this->hasMany('\\uCMS\\Core\\Extensions\\Users\\UserInfoField', array('bind' => 'fields'));
+		$this->hasMany('\\uCMS\\Core\\Extensions\\Users\\UserInfo', array('bind' => 'info', 'key' => 'uid'));
 		$this->hasMany('\\uCMS\\Core\\Extensions\\FileManager\\File', array('bind' => 'files', 'key' => 'uid'));
 		$this->hasMany('\\uCMS\\Core\\Extensions\\Comments\\Comment', array('bind' => 'comments', 'key' => 'uid'));
 		$this->hasMany('\\uCMS\\Core\\Session', array('bind' => 'sessions', 'key' => 'uid'));
