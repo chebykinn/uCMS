@@ -105,6 +105,8 @@ class Entry extends Model{
 			return false;
 		}
 
+		$row->title = htmlspecialchars($row->title);
+
 		if( empty($row->alias) ){
 			$row->alias = $row->title;
 		}
