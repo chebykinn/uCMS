@@ -192,7 +192,7 @@ class Session extends Model{
 
 	public function deleteCookie($name){
 		if( isset($_COOKIE[$name]) ){
-			setcookie($name, "", time() - 60 * 60 * 24 * 30, "/", $_SERVER['SERVER_NAME']);
+			$this->setCookie($name, "", time() - 60 * 60 * 24 * 30);
 			unset($_COOKIE[$name]);
 		}
 	}
