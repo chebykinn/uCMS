@@ -169,7 +169,9 @@ class Page{
 	}
 
 	public function getPageNumber(){
-		return $this->getKeyValue('page');
+		$page = intval($this->getKeyValue('page'));
+		if( $page <= 0 ) $page = 1;
+		return $page;
 	}
 
 	public function addAction($action){
