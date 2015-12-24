@@ -371,8 +371,8 @@ abstract class Model{
 		return false;
 	}
 
-	final public function clean(){
-		return $this->processRow($this, array());
+	final public function empty(){
+		return $this->processRow($this, []);
 	}
 }
 ?>

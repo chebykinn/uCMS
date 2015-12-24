@@ -132,7 +132,7 @@ class User extends Model{
 		}
 
 		if( is_null(self::$currentUser) ){
-			self::$currentUser = (new User())->clean();
+			self::$currentUser = (new User())->empty();
 			self::$currentUser->uid = 0;
 			self::$currentUser->gid = Group::GUEST;
 		}

@@ -21,7 +21,7 @@ class Entries extends \uCMS\Core\Extensions\Extension implements \uCMS\Core\Exte
 	}
 
 	private function addBlocks(){
-		$list = (new Block())->clean();
+		$list = (new Block())->empty();
 		$list->name = "entries-list";
 		$list->region = "content";
 		$list->theme = Theme::DEFAULT_THEME;
@@ -274,7 +274,7 @@ class Entries extends \uCMS\Core\Extensions\Extension implements \uCMS\Core\Exte
 	}
 
 	private function addDefaultTypes(){
-		$article = (new EntryType())->clean();
+		$article = (new EntryType())->empty();
 		$article->type        = 'article';
 		$article->name        = 'Article';
 		$article->description = 'Default entry type for articles that will be displayed on home page.';
@@ -287,7 +287,7 @@ class Entries extends \uCMS\Core\Extensions\Extension implements \uCMS\Core\Exte
 		$article->terms       = 1;
 		$article->menu        = '';
 
-		$page = (new EntryType())->clean();
+		$page = (new EntryType())->empty();
 		$page->type        = 'page';
 		$page->name        = 'Page';
 		$page->description = 'Default entry type for pages that will not be listed, but shown in navigation menu.';
@@ -305,7 +305,7 @@ class Entries extends \uCMS\Core\Extensions\Extension implements \uCMS\Core\Exte
 	}
 
 	private function addDefaultTerm(){
-		$uncategorized = (new Term())->clean();
+		$uncategorized = (new Term())->empty();
 
 		$uncategorized->tid = 1;
 		$uncategorized->name = 'Uncategorized';

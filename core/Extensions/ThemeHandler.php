@@ -39,7 +39,7 @@ class ThemeHandler{
 						if( empty($source) ) continue;
 						if( !is_array($source) ) $source = [$source];
 						
-						$block = (new Block())->clean();
+						$block = (new Block())->empty();
 						$block->name = $blockName;
 						$block->region = $region;
 						$block->status = Block::ENABLED;

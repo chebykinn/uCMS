@@ -17,14 +17,14 @@ class Menus extends Extension{
 	}
 
 	private function addBlocks(){
-		$navMenu = (new Block())->clean();
+		$navMenu = (new Block())->empty();
 		$navMenu->name = "navigation";
 		$navMenu->region = "navigation";
 		$navMenu->theme = Theme::DEFAULT_THEME;
 		$navMenu->status = Block::ENABLED;
 		$navMenu->create();
 
-		$quickActions = (new Block())->clean();
+		$quickActions = (new Block())->empty();
 		$quickActions->name = "quick-actions";
 		$quickActions->region = "dashboard-left-side";
 		$quickActions->actions = ControlPanel::ACTION.'/'.Page::INDEX_ACTION;
@@ -132,8 +132,8 @@ class Menus extends Extension{
 	protected function fillTable($table){
 		switch ($table) {
 			case 'menus':
-				$navMenu = (new Menu())->clean();
-				$dashMenu = (new Menu())->clean();
+				$navMenu = (new Menu())->empty();
+				$dashMenu = (new Menu())->empty();
 				$navMenu->menu = "navigation";
 				$navMenu->title = "Navigation";
 				$navMenu->description = "Default main navigation menu.";
@@ -146,21 +146,21 @@ class Menus extends Extension{
 			break;
 			
 			case 'menu_links':
-				$homePageLink = (new MenuLink())->clean();
+				$homePageLink = (new MenuLink())->empty();
 				$homePageLink->menu = 'navigation';
 				$homePageLink->title = 'Home';
 				$homePageLink->link = '';
 				$homePageLink->status = 1;
 				$homePageLink->owner = 'core';
 
-				$dashboardAddUser = (new MenuLink())->clean();
+				$dashboardAddUser = (new MenuLink())->empty();
 				$dashboardAddUser->menu = 'quick-actions';
 				$dashboardAddUser->title = 'Add user';
 				$dashboardAddUser->link = 'admin/users/add';
 				$dashboardAddUser->status = 1;
 				$dashboardAddUser->owner = 'admin';
 
-				$dashboardAddEntry = (new MenuLink())->clean();
+				$dashboardAddEntry = (new MenuLink())->empty();
 				$dashboardAddEntry->menu = 'quick-actions';
 				$dashboardAddEntry->title = 'Add entry';
 				$dashboardAddEntry->link = 'admin/entries/add';

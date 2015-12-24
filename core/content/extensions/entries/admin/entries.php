@@ -50,7 +50,7 @@ switch ($page->getSection()) {
 					Page::Refresh();
 				}
 			}else{
-				$entry = (new Entry())->clean();
+				$entry = (new Entry())->empty();
 			}
 			$entry->title = $_POST['title'];
 			$entry->status = 1;

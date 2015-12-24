@@ -91,7 +91,7 @@ class Users extends \uCMS\Core\Extensions\Extension {
 	}
 
 	private function addSuperUser($email, $login, $password){
-		$admin = (new User())->clean();
+		$admin = (new User())->empty();
 		$admin->uid = User::SUPERUSER_ID;
 		$admin->gid = Group::ADMINISTRATOR;
 		$admin->email = $email;
@@ -104,7 +104,7 @@ class Users extends \uCMS\Core\Extensions\Extension {
 	}
 
 	private function addBlocks(){
-		$login = (new Block())->clean();
+		$login = (new Block())->empty();
 		$login->name = "login-form";
 		$login->region = "content";
 		$login->theme = Theme::DEFAULT_THEME;
@@ -112,14 +112,14 @@ class Users extends \uCMS\Core\Extensions\Extension {
 		$login->actions = User::LOGIN_ACTION;
 		$login->status = Block::ENABLED;
 		$login->create();
-		$card = (new Block())->clean();
+		$card = (new Block())->empty();
 		$card->name = "user-card";
 		$card->region = "right-sidebar";
 		$card->theme = Theme::DEFAULT_THEME;
 		$card->status = Block::ENABLED;
 		$card->create();
 
-		$profile = (new Block())->clean();
+		$profile = (new Block())->empty();
 		$profile->name = "user-profile";
 		$profile->region = "content";
 		$profile->theme = Theme::DEFAULT_THEME;
@@ -132,16 +132,16 @@ class Users extends \uCMS\Core\Extensions\Extension {
 	private function addMenu(){
 		$check = (new Menu())->find('user-menu');
 		if( $check == NULL ){
-			$userMenu = (new Menu())->clean();
+			$userMenu = (new Menu())->empty();
 			$userMenu->menu = 'user-menu';
 			$userMenu->title = 'User Menu';
 			$userMenu->description = 'User actions, displayed at the user card in sidebar.';
 			$userMenu->create();
 
-			$profileLink  = (new MenuLink())->clean();
-			$userlistLink = (new MenuLink())->clean();
-			$logoutLink   = (new MenuLink())->clean();
-			$cpanelLink   = (new MenuLink())->clean();
+			$profileLink  = (new MenuLink())->empty();
+			$userlistLink = (new MenuLink())->empty();
+			$logoutLink   = (new MenuLink())->empty();
+			$cpanelLink   = (new MenuLink())->empty();
 
 			$profileLink->menu = $userlistLink->menu =
 			$logoutLink->menu = $cpanelLink->menu = 'user-menu';
@@ -421,8 +421,8 @@ class Users extends \uCMS\Core\Extensions\Extension {
 	}
 
 	private function addDefaultFields(){
-		$firstname = (new UserInfoField())->clean();
-		$surname = (new UserInfoField())->clean();
+		$firstname = (new UserInfoField())->empty();
+		$surname = (new UserInfoField())->empty();
 		$firstname->name = 'firstname';
 		$firstname->title = 'First Name';
 		$firstname->description = 'User\'s first name.';
