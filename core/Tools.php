@@ -80,7 +80,8 @@ class Tools{
 		return $value;
 	}
 
-	public static function FormatTime($time, $format = ""){
+	public static function FormatTime($time = 0, $format = ""){
+		if( $time === 0 ) $time = time();
 		if( empty($format) ){
 			$format = Settings::Get('datetime_format');
 		}
