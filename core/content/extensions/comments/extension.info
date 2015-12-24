@@ -35,5 +35,9 @@
 
 	"permissions": {
 		"manage comments": 1
+	},
+
+	"settings": {
+		"comments_amount": 0
 	}
 }
