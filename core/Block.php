@@ -184,5 +184,20 @@ class Block extends Model{
 		}
 		return array();
 	}
+
+	/**
+	* Prepare $value.
+	*
+	* This method allows templates to print variables without safety concern.
+	*
+	* @since 2.0
+	* @param $value Variable to prepare
+	* @api
+	* @return void
+	*/
+	public function prepare($value){
+		// TODO: complex rendering
+		return htmlspecialchars($value);
+	}
 }
 ?>

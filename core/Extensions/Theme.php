@@ -242,7 +242,7 @@ class Theme extends AbstractExtension{
 	* @return void
 	*/
 	public function setTitle($title){
-		$this->title = htmlspecialchars($title);
+		$this->title = $title;
 	}
 
 	/**
@@ -363,6 +363,21 @@ class Theme extends AbstractExtension{
 	*/
 	public function getBlocksMap(){
 		return $this->blocks;
+	}
+
+	/**
+	* Prepare $value.
+	*
+	* This method allows templates to print variables without safety concern.
+	*
+	* @since 2.0
+	* @param $value Variable to prepare
+	* @api
+	* @return void
+	*/
+	public function prepare($value){
+		// TODO: complex rendering
+		return htmlspecialchars($value);
 	}
 }
 ?>
