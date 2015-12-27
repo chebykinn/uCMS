@@ -5,32 +5,34 @@ if( $entriesAmount > 0 ){
 		// Flag to cut content when listing entries
 		$isShort = !$isEntryPage;
 		?>
-		<div class="entry" id="<?php echo $entry->eid; ?>">
+		<div class="entry" id="<?php print $this->prepare($entry->eid); ?>">
 			<div class="header">
 				<div class="categories">
-					<?php echo tr('Uncategorized'); ?>
+					<?php print $this->prepare(tr('Uncategorized')); ?>
 				</div>
 				<div class="title">
 				<?php
 					if( $isEntryPage ){
-						echo $entry->title;
+						print $this->prepare($entry->title);
 					}else{
 						?>
-						<a href="<?php echo $entry->getLink(); ?>" title="<?php p("View entry"); ?>"><?php echo $entry->title; ?></a>
+						<a href="<?php print $this->prepare($entry->getLink()); ?>" title="<?php p("View entry"); ?>"><?php
+						print $this->prepare($entry->title); ?></a>
 						<?php
 					}
 				?>
 				</div>
 				<div class="date">
-				<?php echo $entry->getDate(); ?>
+				<?php print $this->prepare($entry->getDate()); ?>
 				</div>
 			</div>
 			<div class="content">
-				<?php echo $entry->getContent($isShort); ?>
+				<?php print $entry->getContent($isShort); ?>
 			</div>
 			<div class="info">
 				<div class="comments">
-					<a href="<?php echo $entry->getLink(); ?>#comments" title="<?php p("View comments"); ?>"><?php echo $commentsCount; ?></a>
+					<a href="<?php print $this->prepare($entry->getLink()); ?>#comments" title="<?php p("View comments"); ?>"><?php
+					print $this->prepare($commentsCount); ?></a>
 				</div>
 				<div class="tags">
 				<?php
@@ -43,7 +45,7 @@ if( $entriesAmount > 0 ){
 				<div class="admin">
 					<?php 
 						$editLink = $entry->getEditLink();
-						echo '<a class="edit-link" href="'.$editLink.'" title="'.tr('Edit this entry').'">'.tr('Edit').'</a>';
+						print '<a class="edit-link" href="'.$editLink.'" title="'.tr('Edit this entry').'">'.tr('Edit').'</a>';
 					?>
 				</div>
 				<?php
@@ -57,7 +59,7 @@ if( $entriesAmount > 0 ){
 				<?php
 					if( count($comments) > 0 ){
 						foreach ($comments as $comment) {
-							echo $comment->name.'<br>'.$comment->content;
+							print $this->prepare($comment->name).'<br>'.$this->prepare($comment->content);
 						}
 					}else{
 						p('No comments');
