@@ -7,6 +7,6 @@
 $this->loadStyles();
 $this->loadScripts();
 ?>
-<title><?php echo (UCMS_DEBUG ? tr("[DEBUG] ") : "").$this->getTitle(); ?></title>
+<title><?php echo (UCMS_DEBUG ? tr("[DEBUG] ") : "").htmlspecialchars($this->getTitle()); ?></title>
 </head>
 <body>

@@ -141,7 +141,7 @@ switch ($page->getSection()) {
 			$table->setInfo("idKey", $entry->eid);
 			$table->setInfo('status', $entry->status);
 			$table->addRow( array(
-				'<a href="'.$entry->getLink().'">'.$entry->title.'</a><br><div class="manage-actions">'.
+				'<a href="'.$entry->getLink().'">'.htmlspecialchars($entry->title).'</a><br><div class="manage-actions">'.
 				$table->manageButtons(array(
 					tr("Publish")."|".tr("Draft") => 'switch-status',
 					tr("Edit") => 'edit',
