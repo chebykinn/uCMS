@@ -9,22 +9,22 @@ use uCMS\Core\Page;
 
 class Menus extends Extension{
 	public function onLoad(){
-		Permission::Register('manage menu links', tr('Manage Menu Links'), tr('Allow user to add, edit and delete menu links.'));
+		Permission::Register('manage menu links', $this->tr('Manage Menu Links'), $this->tr('Allow user to add, edit and delete menu links.'));
 	}
 
 	public function onAdminAction($action){
-		ControlPanel::SetTitle(tr("Menu"));
+		ControlPanel::SetTitle($this->tr("Menu"));
 	}
 
 	private function addBlocks(){
-		$navMenu = (new Block())->empty();
+		$navMenu = (new Block())->emptyRow();
 		$navMenu->name = "navigation";
 		$navMenu->region = "navigation";
 		$navMenu->theme = Theme::DEFAULT_THEME;
 		$navMenu->status = Block::ENABLED;
 		$navMenu->create();
 
-		$quickActions = (new Block())->empty();
+		$quickActions = (new Block())->emptyRow();
 		$quickActions->name = "quick-actions";
 		$quickActions->region = "dashboard-left-side";
 		$quickActions->actions = ControlPanel::ACTION.'/'.Page::INDEX_ACTION;
@@ -132,8 +132,8 @@ class Menus extends Extension{
 	protected function fillTable($table){
 		switch ($table) {
 			case 'menus':
-				$navMenu = (new Menu())->empty();
-				$dashMenu = (new Menu())->empty();
+				$navMenu = (new Menu())->emptyRow();
+				$dashMenu = (new Menu())->emptyRow();
 				$navMenu->menu = "navigation";
 				$navMenu->title = "Navigation";
 				$navMenu->description = "Default main navigation menu.";
@@ -146,21 +146,21 @@ class Menus extends Extension{
 			break;
 			
 			case 'menu_links':
-				$homePageLink = (new MenuLink())->empty();
+				$homePageLink = (new MenuLink())->emptyRow();
 				$homePageLink->menu = 'navigation';
 				$homePageLink->title = 'Home';
 				$homePageLink->link = '';
 				$homePageLink->status = 1;
 				$homePageLink->owner = 'core';
 
-				$dashboardAddUser = (new MenuLink())->empty();
+				$dashboardAddUser = (new MenuLink())->emptyRow();
 				$dashboardAddUser->menu = 'quick-actions';
 				$dashboardAddUser->title = 'Add user';
 				$dashboardAddUser->link = 'admin/users/add';
 				$dashboardAddUser->status = 1;
 				$dashboardAddUser->owner = 'admin';
 
-				$dashboardAddEntry = (new MenuLink())->empty();
+				$dashboardAddEntry = (new MenuLink())->emptyRow();
 				$dashboardAddEntry->menu = 'quick-actions';
 				$dashboardAddEntry->title = 'Add entry';
 				$dashboardAddEntry->link = 'admin/entries/add';
