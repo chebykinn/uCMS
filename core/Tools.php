@@ -18,6 +18,7 @@ class Tools{
 	}
 
 	public static function GetCurrentOwner(){
+
 		$name = "core";
 		if ( self::$isOwnerOverridden ){
 
@@ -83,14 +84,14 @@ class Tools{
 	public static function FormatTime($time = 0, $format = ""){
 		if( $time === 0 ) $time = time();
 		if( empty($format) ){
-			$format = Settings::Get('datetime_format');
+			$format = Setting::Get('datetime_format');
 		}
 		if( class_exists('User') ){
 			// If user have his own timezone we will use it.
 			$timezone = User::Current()->getTimezone();
 		}
 		if( empty($timezone) ){
-			$timezone = Settings::Get('ucms_timezone');
+			$timezone = Setting::Get('ucms_timezone');
 		}
 		if( empty($timezone) ) $timezone = 'UTC';
 
