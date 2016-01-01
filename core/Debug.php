@@ -1,8 +1,9 @@
 <?php
 namespace uCMS\Core;
 use uCMS\Core\Extensions\ThemeHandler;
+use uCMS\Core\Object;
 
-class Debug{
+class Debug extends Object{
 	const LOG_OFF = 0;
 	const LOG_CRITICAL = 1;
 	const LOG_ERROR = 2;
@@ -56,7 +57,7 @@ class Debug{
 		echo '</pre>';
 	}
 
-	public static function PrintVar($var, $raw = false, $floating = true, $height = 200){
+	public static function PrintVar($var, $raw = false, $floating = false, $height = 200){
 		self::BeginBlock($floating, $height);
 		// debug_print_backtrace();
 		if( !$raw )
@@ -117,7 +118,7 @@ class Debug{
 			}
 			if( $level === self::LOG_CRITICAL && UCMS_DEBUG ){
 				echo "<pre>";
-				p($outMessage);
+				$this->p($outMessage);
 				echo "</pre>";
 				die;
 			}
@@ -133,8 +134,8 @@ class Debug{
 		$headerLimit = 7;
 		$data = explode(" ", $rawLine, $headerLimit);
 		$type = !empty($data[$typeOffset]) ? preg_replace("/\[|\]/", "", $data[$typeOffset]) : 'ERROR';
-		$text = !empty($data[$messageOffset]) ? htmlspecialchars($data[$messageOffset]) : tr('Unknown error');
-		$host = !empty($data[$hostOffset]) ? substr($data[$hostOffset], 0, -1) : tr('Unknown host');
+		$text = !empty($data[$messageOffset]) ? htmlspecialchars($data[$messageOffset]) : self::Translate('Unknown error');
+		$host = !empty($data[$hostOffset]) ? substr($data[$hostOffset], 0, -1) : self::Translate('Unknown host');
 		$owner = !empty($data[$ownerOffset]) ? htmlspecialchars(preg_replace("/\[|\]/", "", $data[$ownerOffset])) : 'core';
 		$date = (!empty($data[$dateOffset]) && !empty($data[$dateOffset+1]))
 		? $data[$dateOffset].' '.$data[$dateOffset+1] : Tools::FormatTime(time(), "Y-m-d H:i:s");
@@ -270,7 +271,7 @@ class Debug{
 			echo debug_print_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
 			echo '</p>';
 		}
-		self::Log(tr($errTitle.': '.strip_tags($errorMsg)), self::LOG_ERROR);
+		self::Log(self::Translate($errTitle.': '.strip_tags($errorMsg)), self::LOG_ERROR);
 		self::EndBlock();
 		echo "<br>";
 		if($die) die;

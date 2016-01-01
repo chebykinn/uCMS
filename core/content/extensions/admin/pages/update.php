@@ -20,14 +20,14 @@ if( isset($_POST['load-package']) && isset($_FILES['package']) && UCMS_DEBUG ){
 	switch ($result) {
 		case uCMS::ERR_INVALID_PACKAGE:
 			unlink($packagePath);
-			$error = new Notification(tr("This file is not a valid μCMS package."), Notification::ERROR);
+			$error = new Notification($this->tr("This file is not a valid μCMS package."), Notification::ERROR);
 			$error->add();
 			Page::Refresh();
 		break;
 
 		case uCMS::ERR_HOST_FAILURE:
 			unlink($packagePath);
-			$error = new Notification(tr("Unable to check package signature."), Notification::ERROR);
+			$error = new Notification($this->tr("Unable to check package signature."), Notification::ERROR);
 			$error->add();
 			Page::Refresh();
 		break;
@@ -42,31 +42,31 @@ if( uCMS::IsUpdateAvailable() || $isPackage ){
 	if( !$isPackage ){
 		$version = uCMS::GetLatestVersion();
 		$notes = uCMS::GetUpdateNotes();
-		p("<h2>Update is Available: μCMS @s</h2>", $version);
+		$this->p("<h2>Update is Available: μCMS @s</h2>", $version);
 	}else{
-		p("<h2>Update from Package: μCMS @s</h2>", $version);
+		$this->p("<h2>Update from Package: μCMS @s</h2>", $version);
 	}
 	if( !empty($notes) ){
-		p("<h3>Please read the notes for this update:</h3><br>");
+		$this->p("<h3>Please read the notes for this update:</h3><br>");
 		echo "<pre>$notes</pre>";
 	}
-	$updateForm = new Form('update', Page::Install('check'), tr('Update'));
+	$updateForm = new Form('update', Page::Install('check'), $this->tr('Update'));
 	$updateForm->addHiddenField('action', 'update');
 	if( $isPackage ){
 		$updateForm->addHiddenField('package', $packagePath);
 	}
 	$updateForm->render();
 }else{
-	p("<h2>Your μCMS version is up to date.</h2>");
+	$this->p("<h2>Your μCMS version is up to date.</h2>");
 }
-p("<h3>You can reinstall your current version of μCMS if something's wrong with it. This will not affect your themes or extensions.</h3>");
-$reinstallForm = new Form('update', Page::Install('check'), tr('Reinstall'));
+$this->p("<h3>You can reinstall your current version of μCMS if something's wrong with it. This will not affect your themes or extensions.</h3>");
+$reinstallForm = new Form('update', Page::Install('check'), $this->tr('Reinstall'));
 $reinstallForm->addHiddenField('action', 'reinstall');
 $reinstallForm->render();
 
 if( !isset($_POST['load-package']) && !isset($_FILES['package']) && UCMS_DEBUG ){
-	$packageForm = new Form('load-package', "", tr('Upload package'));
-	$packageForm->addField('package', 'file', tr('Install update from file:'));
+	$packageForm = new Form('load-package', "", $this->tr('Upload package'));
+	$packageForm->addField('package', 'file', $this->tr('Install update from file:'));
 	$packageForm->render();
 }
 echo '</div>';

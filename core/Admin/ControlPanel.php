@@ -5,10 +5,11 @@ use uCMS\Core\Extensions\ExtensionHandler;
 use uCMS\Core\Extensions\Users\User;
 use uCMS\Core\Page;
 use uCMS\Core\Debug;
-use uCMS\Core\Settings;
+use uCMS\Core\Setting;
 use uCMS\Core\Tools;
 use uCMS\Core\Notification;
-class ControlPanel{
+use uCMS\Core\Object;
+class ControlPanel extends Object{
 	private static $sidebar = array();
 	private static $action = Page::OTHER_ACTION;
 	const TITLE = "μCMS Control Panel";
@@ -25,7 +26,7 @@ class ControlPanel{
 			if( empty(self::$action) ) self::$action = 'home'; 
 		}
 	}
-
+	
 	public static function GetDefaultActions(){
 		return array_keys(self::$defaultItems);
 	}
@@ -57,10 +58,10 @@ class ControlPanel{
 			$result['isUsed'] = true;
 			$result['default'] = true;
 			if( !User::Current()->isLoggedIn() ){
-				$title = tr('Login');
+				$title = self::Translate('Login');
 				$template = 'login';
 			}else{
-				$title = tr('Access Denied');
+				$title = self::Translate('Access Denied');
 				$template = 'access_denied';
 			}
 			ControlPanel::SetTitle($title);
@@ -90,7 +91,7 @@ class ControlPanel{
 								$parent = 0;
 								$lastParent = $item['action'];
 							}
-							self::$sidebar[] = array('name' => tr($name), 'action' => $item['action'], 'parent' => $parent, 'after' => $item['after'] );
+							self::$sidebar[] = array('name' => self::Translate($name), 'action' => $item['action'], 'parent' => $parent, 'after' => $item['after'] );
 							$amount--;
 							$added[$item['action']] = true;
 							break;
@@ -166,14 +167,14 @@ class ControlPanel{
 					$lastParent = $item['action'];
 				}
 			}
-			self::$sidebar[] = array('name' => tr($name), 'action' => $item['action'], 'parent' => $parent, 'after' => $item['after'] );
+			self::$sidebar[] = array('name' => self::Translate($name), 'action' => $item['action'], 'parent' => $parent, 'after' => $item['after'] );
 		}
 	}
 
 	public static function AddMenuItem($name, $action, $parent = "", $after = "home"){
 		if( empty($name) || empty($action) ) return false;
 		if( empty($after) ) $after = 'home';
-		$item = array('name' => tr($name), 'action' => $action, 'parent' => $parent, 'after' => $after);
+		$item = array('name' => self::Translate($name), 'action' => $action, 'parent' => $parent, 'after' => $after);
 		foreach (self::$sidebar as $searchKey => $searchItem) {
 			if( $after == $searchItem['action'] ){
 				array_splice(self::$sidebar, $searchKey+1, 0, array($item));
@@ -187,9 +188,9 @@ class ControlPanel{
 		$delimeter = " :: ";
 		$settingsAction = self::GetSettingsAction();
 		$settingsTitle = (self::IsSettingsPage() && !empty($settingsAction) )
-		? tr('Settings').$delimeter : "";
+		? self::Translate('Settings').$delimeter : "";
 		$newTitle = $settingsTitle.$title;
-		$siteName = Settings::Get('site_name');
+		$siteName = Setting::Get('site_name');
 		Theme::GetCurrent()->setTitle($newTitle.$delimeter.self::TITLE.$delimeter.$siteName);
 		Theme::GetCurrent()->setPageTitle($newTitle);
 	}
@@ -267,7 +268,7 @@ class ControlPanel{
 		if( !empty($extension) && !empty($pageFile) ){
 			return $pageFile;
 		}else{
-			Debug::Log(tr("Unable to load admin page for action: @s", $currentAction), Debug::LOG_ERROR);
+			Debug::Log(self::Translate("Unable to load admin page for action: @s", $currentAction), Debug::LOG_ERROR);
 			$homePage = Page::FromAction(self::ACTION);
 			$homePage->go();
 		}
@@ -276,24 +277,28 @@ class ControlPanel{
 	public static function UpdateSettings(){
 		// TODO: Consider use some method for multiple changes in one query
 		if( User::Current()->can("update core settings") ){
-			$failures = array();
+			$failures = [];
 			unset($_POST['settings']);
 			foreach ($_POST as $name => $value) {
-				if( self::GetSettingsAction() === "" ){
-					// If core settings are being updated, we need to override admin extension with core
-					Tools::OverrideOwner();
+				if( !Setting::IsExists($name) ){
+					$failures[] = $name;
+					continue;
 				}
-				$result = Settings::Update($name, $value);
-				if( !$result ){
+
+				$setting = Setting::GetRow($name, new self());
+				if( !$setting ){
 					$failures[] = $name;
 				}
+
+				$setting->value = $value;
+				$setting->update();
 			}
 			if( !empty($failures) ){
 				$list = implode("<br>", $failures);
-				$fail = new Notification(tr("Error: Some settings weren't updated: @s", $list), Notification::ERROR);
+				$fail = new Notification(self::Translate("Error: Some settings weren't updated: @s", $list), Notification::ERROR);
 				$fail->add();
 			}else{
-				$success = new Notification(tr("Settings have been successfully updated."), Notification::SUCCESS);
+				$success = new Notification(self::Translate("Settings have been successfully updated."), Notification::SUCCESS);
 				$success->add();
 			}
 		}

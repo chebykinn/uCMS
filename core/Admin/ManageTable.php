@@ -3,7 +3,8 @@ namespace uCMS\Core\Admin;
 use uCMS\Core\Extensions\Users\User;
 use uCMS\Core\Page;
 use uCMS\Core\Form;
-class ManageTable{
+use uCMS\Core\Object;
+class ManageTable extends Object{
 	private $action;
 	private $rows;
 	private $perpage;
@@ -20,8 +21,8 @@ class ManageTable{
 		$this->columns = array();
 		$this->info = array();
 		$this->rows = array();
-		$this->info['emptyMessage'] = tr('No elements to display');
-		$this->info['notAllowed'] = tr("You don't have permissions to view this content");
+		$this->info['emptyMessage'] = $this->tr('No elements to display');
+		$this->info['notAllowed'] = $this->tr("You don't have permissions to view this content");
 		$this->form = new Form("tableForm");
 	}
 

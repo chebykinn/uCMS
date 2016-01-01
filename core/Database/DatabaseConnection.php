@@ -4,7 +4,8 @@ use uCMS\Core\Debug;
 use uCMS\Core\Loader;
 use uCMS\Core\Page;
 use uCMS\Core\Tools;
-class DatabaseConnection{
+use uCMS\Core\Object;
+class DatabaseConnection extends Object{
 	const DISPLAY_QUERY = false;
 	const DEFAULT_NAME = 'default';
 	const ERR_TABLE_NOT_EXIST = "42S02";
@@ -38,8 +39,8 @@ class DatabaseConnection{
 
 	public static function Init(){
 		if( empty($GLOBALS['databases']) || !is_array($GLOBALS['databases']) ){
+			Debug::Log($this->tr("No configuration file was found"), Debug::LOG_CRITICAL);
 			Loader::GetInstance()->install();
-			Debug::Log(tr("No configuration file was found"), Debug::LOG_CRITICAL);
 		}
 
 		foreach ($GLOBALS['databases'] as $dbName => $dbData) {
@@ -47,7 +48,7 @@ class DatabaseConnection{
 				$fields = array('server', 'user', 'password', 'name', 'port', 'prefix');
 				foreach ($fields as $field) {
 					if( !isset($dbData[$field]) ){
-						Debug::Log(tr("Wrong configuration file was provided"), Debug::LOG_CRITICAL);
+						Debug::Log($this->tr("Wrong configuration file was provided"), Debug::LOG_CRITICAL);
 						Loader::GetInstance()->install();
 					}
 				}
@@ -71,10 +72,10 @@ class DatabaseConnection{
 				}
 
 				if( $e->getCode() == 1045 || $e->getCode() == 1049 ){
-					Debug::Log(tr("Wrong configuration file was provided"), Debug::LOG_CRITICAL);
+					Debug::Log($this->tr("Wrong configuration file was provided"), Debug::LOG_CRITICAL);
 					Loader::GetInstance()->install();
 				}else{
-					Debug::Log(tr("Database @s connection error @s: @s", $dbName, $e->getCode(), $e->getMessage()), Debug::LOG_CRITICAL);
+					Debug::Log($this->tr("Database @s connection error @s: @s", $dbName, $e->getCode(), $e->getMessage()), Debug::LOG_CRITICAL);
 				}
 			}
 		}
@@ -83,7 +84,7 @@ class DatabaseConnection{
 
 	public function checkDriver(){
 		if (!extension_loaded('pdo_'.$this->driver)) {
-			throw new \RuntimeException(tr("Database Connection Error, @s driver is not loaded", $this->driver), self::ERR_DRIVER_NOT_LOADED);
+			throw new \RuntimeException($this->tr("Database Connection Error, @s driver is not loaded", $this->driver), self::ERR_DRIVER_NOT_LOADED);
 		}
 	}
 
@@ -173,14 +174,14 @@ class DatabaseConnection{
 				}
 			}else{
 				Debug::BeginBlock();
-				echo "<h2>".tr("Query failed")."</h2><br>";
+				echo "<h2>".$this->tr("Query failed")."</h2><br>";
 				echo "$sql<br><br>";
 				echo $e->getMessage();
 				if(UCMS_DEBUG){
 					echo "<br><h3>Trace:</h3>".$e->getTraceAsString();
 				}
 				Debug::EndBlock();
-				Debug::Log(tr('Query failed: @s, error: @s', $sql, $e->getMessage()), Debug::LOG_ERROR);
+				Debug::Log($this->tr('Query failed: @s, error: @s', $sql, $e->getMessage()), Debug::LOG_ERROR);
 				return false;
 			}
 			

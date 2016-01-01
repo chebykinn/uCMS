@@ -10,11 +10,11 @@ use uCMS\Core\Extensions\Users\Group;
 use uCMS\Core\Database\Query;
 class Comments extends Extension{
 	public function onLoad(){
-		Permission::Register('manage comments', tr('Manage Comments'), tr('Allow user to add, edit and delete comments.'));
+		Permission::Register('manage comments', $this->tr('Manage Comments'), $this->tr('Allow user to add, edit and delete comments.'));
 	}
 
 	public function onAdminAction($action){
-		ControlPanel::SetTitle(tr("Comments"));
+		ControlPanel::SetTitle($this->tr("Comments"));
 	}
 
 	protected function getSchemas(){

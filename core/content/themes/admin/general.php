@@ -2,7 +2,7 @@
 <?php
 	use uCMS\Core\Notification;
 	if( !$isPanel ){
-		$error = new Notification(tr('Error: Attempted to use control panel theme as site theme!'), Notification::ERROR);
+		$error = new Notification($this->tr('Error: Attempted to use control panel theme as site theme!'), Notification::ERROR);
 		$error->add();
 	}
 ?>
@@ -12,7 +12,7 @@
 		echo $adminSidebar;
 	?>
 	<ul>
-		<li><a href="<?php echo $homePage; ?>"><?php p('Go to site'); ?></a></li>
+		<li><a href="<?php echo $homePage; ?>"><?php $this->p('Go to site'); ?></a></li>
 	</ul>
 </div>
 
@@ -32,10 +32,10 @@
 	<?php
 	$this->region("footer");
 	echo "μCMS © 2011-".date('Y').' ';
-	p("Queries: @s.", $queriesCount());
+	$this->p("Queries: @s.", $queriesCount());
 	echo ' ';
-	p("Load time: @s seconds.", $loadTime());
-	echo '<span class="ucms-version">'.tr("Version: @s", $coreVersion).'</span>';
+	$this->p("Load time: @s seconds.", $loadTime());
+	echo '<span class="ucms-version">'.$this->tr("Version: @s", $coreVersion).'</span>';
 	?>
 </div>
 </div>

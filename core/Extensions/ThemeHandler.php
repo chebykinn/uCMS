@@ -2,10 +2,12 @@
 namespace uCMS\Core\Extensions;
 use uCMS\Core\Tools;
 use uCMS\Core\uCMS;
-use uCMS\Core\Settings;
+use uCMS\Core\Setting;
 use uCMS\Core\Block;
+use uCMS\Core\Object;
 
-class ThemeHandler{
+
+class ThemeHandler extends Object{
 	const PATH = 'content/themes/';
 	const CORE_PATH = 'core/content/themes/';
 	static $defaultList = ['install', 'ucms', 'admin'];
@@ -15,12 +17,12 @@ class ThemeHandler{
 	}
 
 	public static function IsCurrent($name){
-		$current = Settings::Get(Settings::THEME);
+		$current = Setting::Get(Setting::THEME);
 		return ( $current === $name );
 	}
 
 	public static function ChangeTheme($name){
-		$current = Settings::Get(Settings::THEME);
+		$current = Setting::Get(Setting::THEME);
 		if( $current === $name ) return false;
 		if( !self::IsExists($name) ) return false;
 
@@ -39,7 +41,7 @@ class ThemeHandler{
 						if( empty($source) ) continue;
 						if( !is_array($source) ) $source = [$source];
 						
-						$block = (new Block())->empty();
+						$block = (new Block())->emptyRow();
 						$block->name = $blockName;
 						$block->region = $region;
 						$block->status = Block::ENABLED;
@@ -57,7 +59,7 @@ class ThemeHandler{
 		}
 
 		Tools::OverrideOwner();
-		Settings::Update(Settings::THEME, $name);
+		Setting::Update(Setting::THEME, $name);
 
 		return true;
 	}
@@ -95,9 +97,9 @@ class ThemeHandler{
 		try{
 			Theme::SetCurrent($newTheme);
 		}catch(\InvalidArgumentException $e){
-			p("[@s]: ".$e->getMessage(), $newTheme);
+			$this->p("[@s]: ".$e->getMessage(), $newTheme);
 		}catch(\RuntimeException $e){
-			p("[@s]: ".$e->getMessage(), $newTheme);
+			$this->p("[@s]: ".$e->getMessage(), $newTheme);
 		}
 	}
 
@@ -120,7 +122,7 @@ class ThemeHandler{
 	public static function LoadTemplate($name){
 		$file = self::GetTemplate($name);
 		if( empty($file) ){
-			Debug::Log(tr("Unable to load template @s", $name), Debug::LOG_ERROR);
+			Debug::Log($this->tr("Unable to load template @s", $name), Debug::LOG_ERROR);
 			return false;
 		}
 
@@ -129,9 +131,9 @@ class ThemeHandler{
 	}
 
 	public static function LoadErrorPage($errorCode){
-		Debug::Log(tr("Error @s at: @s", $errorCode,
+		Debug::Log($this->tr("Error @s at: @s", $errorCode,
 						Page::GetCurrent()->getURL()), Debug::LOG_WARNING);
-		$theme = Settings::get('theme');
+		$theme = Setting::get('theme');
 		if( empty($theme) ) $theme = self::DEFAULT_THEME;
 		if( !self::IsLoaded() || $theme != self::GetCurrent()->getName() ) {
 			self::ReloadTheme($theme);
@@ -139,9 +141,9 @@ class ThemeHandler{
 		// TODO: Add HTTP Header
 		// TODO: Fix XSS
 		self::GetCurrent()->setErrorCode($errorCode);
-		self::GetCurrent()->setTitle(tr("404 Not Found"));
-		self::GetCurrent()->setPageTitle(tr("404 Not Found"));
-		self::GetCurrent()->setPageContent(tr("Page \"@s\" was not found.",
+		self::GetCurrent()->setTitle($this->tr("404 Not Found"));
+		self::GetCurrent()->setPageTitle($this->tr("404 Not Found"));
+		self::GetCurrent()->setPageContent($this->tr("Page \"@s\" was not found.",
 			Page::GetCurrent()->getURL()));
 		self::GetCurrent()->setThemeTemplate(self::ERROR_TEMPLATE_NAME);
 	}

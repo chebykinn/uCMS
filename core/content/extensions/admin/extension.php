@@ -2,7 +2,7 @@
 namespace uCMS\Core\Extensions\Admin;
 use uCMS\Core\Admin\ControlPanel;
 use uCMS\Core\Block;
-use uCMS\Core\Settings;
+use uCMS\Core\Setting;
 use uCMS\Core\Installer;
 use uCMS\Core\Page;
 use uCMS\Core\Extensions\Users\Permission;
@@ -11,20 +11,20 @@ use uCMS\Core\Database\Query;
 class Admin extends \uCMS\Core\Extensions\Extension{
 
 	public function onLoad(){
-		Permission::Register('access site', tr('Access Site'), tr('Allow user to view site pages.'));
-		Permission::Register('access site in maintenance mode', tr('Access Site in maintenance mode.'), tr('Allow user visit site in maintenance mode.'));
-		Permission::Register('access control panel', tr('Access Control Panel'), tr('Allow user to view administration panel.'));
-		Permission::Register('manage extensions', tr('Manage Extensions'), tr('Allow user to add, edit and delete extensions.'));
-		Permission::Register('manage themes', tr('Manage Themes'), tr('Allow user to add, edit and delete themes.'));
-		Permission::Register('manage blocks', tr('Manage Blocks'), tr('Allow user to add, edit and delete blocks.'));
-		Permission::Register('update core settings', tr('Update Core Settings'), tr('Allow user to change core settings using control panel.'));
+		Permission::Register('access site', $this->tr('Access Site'), $this->tr('Allow user to view site pages.'));
+		Permission::Register('access site in maintenance mode', $this->tr('Access Site in maintenance mode.'), $this->tr('Allow user visit site in maintenance mode.'));
+		Permission::Register('access control panel', $this->tr('Access Control Panel'), $this->tr('Allow user to view administration panel.'));
+		Permission::Register('manage extensions', $this->tr('Manage Extensions'), $this->tr('Allow user to add, edit and delete extensions.'));
+		Permission::Register('manage themes', $this->tr('Manage Themes'), $this->tr('Allow user to add, edit and delete themes.'));
+		Permission::Register('manage blocks', $this->tr('Manage Blocks'), $this->tr('Allow user to add, edit and delete blocks.'));
+		Permission::Register('update core settings', $this->tr('Update Core settings'), $this->tr('Allow user to change core settings using control panel.'));
 	}
 
 	private function addBlocks(){
 		$actions = ControlPanel::ACTION.'/'.Page::INDEX_ACTION;
 
-		$lastAdded = (new Block())->empty();
-		$stats = (new Block())->empty();
+		$lastAdded = (new Block())->emptyRow();
+		$stats = (new Block())->emptyRow();
 
 		$lastAdded->name = "last-added";
 		$stats->name = "stats";
@@ -65,7 +65,7 @@ class Admin extends \uCMS\Core\Extensions\Extension{
 				'template' => 'templates/last.php'
 			]
 		];
-		Settings::Update('last_added_models', json_encode($defaultModels));
+		Setting::Update('last_added_models', json_encode($defaultModels));
 	}
 	
 	protected function checkStage(){
@@ -76,21 +76,21 @@ class Admin extends \uCMS\Core\Extensions\Extension{
 
 	public function onAdminAction($action){
 		switch ($action) {
-			case 'home':       $title = tr('Dashboard');       break;
+			case 'home':       $title = $this->tr('Dashboard');       break;
 			case 'settings':
 				if ( isset($_POST['settings']) ){
 					ControlPanel::UpdateSettings();
 				}
-				$title = tr("Settings");
+				$title = $this->tr("Settings");
 			break; 
-			case 'extensions': $title = tr("Extensions");      break; 
-			case 'themes':     $title = tr("Themes");          break;
-			case 'tools':      $title = tr("Tools");           break;
-			case 'phpinfo':    $title = tr("PHP Information"); break;
-			case 'journal':    $title = tr("System Journal");  break;
-			case 'update':     $title = tr("Update");          break;
-			case 'blocks':     $title = tr("Blocks");          break;
-			default:           $title = tr("Dashboard");       break;
+			case 'extensions': $title = $this->tr("Extensions");      break; 
+			case 'themes':     $title = $this->tr("Themes");          break;
+			case 'tools':      $title = $this->tr("Tools");           break;
+			case 'phpinfo':    $title = $this->tr("PHP Information"); break;
+			case 'journal':    $title = $this->tr("System Journal");  break;
+			case 'update':     $title = $this->tr("Update");          break;
+			case 'blocks':     $title = $this->tr("Blocks");          break;
+			default:           $title = $this->tr("Dashboard");       break;
 		}
 		ControlPanel::SetTitle($title);
 	}

@@ -24,7 +24,7 @@ class Menu extends Model{
 		foreach ($links as $link) {
 			$selected = $link->isCurrentPage() ? ' class="selected"' : '';
 			if( $currentUser->can($link->permission) ){
-				echo '<li><a '.$selected.' href="'.$link->getLink().'" title="'.tr($link->title).'">'.tr($link->title).'</a></li>';
+				echo '<li><a '.$selected.' href="'.$link->getLink().'" title="'.$this->tr($link->title).'">'.$this->tr($link->title).'</a></li>';
 			}
 		}
 		echo "</ul>";

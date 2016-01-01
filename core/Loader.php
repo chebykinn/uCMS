@@ -20,7 +20,7 @@ use uCMS\Core\Events\CoreEvents;
 * 
 * Through this class all uCMS classes perform their initialization.
 */
-class Loader{
+class Loader extends Object{
 	/**
 	* @var Loader $instance Contains current instance of uCMS.
 	*/
@@ -103,11 +103,11 @@ class Loader{
 		Language::Init();
 
 		if( version_compare(phpversion(), uCMS::MIN_PHP_VERSION, '<') ){
-			$this->panic(tr("Your PHP is obsolete, got: @s, need: @s", PHP_VERSION, uCMS::MIN_PHP_VERSION));
+			$this->panic($this->tr("Your PHP is obsolete, got: @s, need: @s", PHP_VERSION, uCMS::MIN_PHP_VERSION));
 		}
 
 		DatabaseConnection::Init();
-		Settings::Load();
+		Setting::Load();
 		
 		// Load site language from database preference
 		if( !Language::IsLoaded() ){
@@ -170,10 +170,10 @@ class Loader{
 		if ($currentAction === Page::INSTALL_ACTION ){
 			$this->install();
 		}
-		$siteTitle = Settings::Get(Settings::SITE_TITLE);
-		if( empty($siteTitle) ) $siteTitle = tr("Untitled");
+		$siteTitle = Setting::Get(Setting::SITE_TITLE);
+		if( empty($siteTitle) ) $siteTitle = $this->tr("Untitled");
 		if( $currentAction != ControlPanel::ACTION ){
-			$themeName = Settings::Get(Settings::THEME);
+			$themeName = Setting::Get(Setting::THEME);
 			if( empty($themeName) ) $themeName = Theme::DEFAULT_THEME;
 		}else{
 		 	// load control panel
@@ -185,9 +185,9 @@ class Loader{
 		try{
 			Theme::SetCurrent($themeName);
 		}catch(\InvalidArgumentException $e){
-			p("[@s]: ".$e->getMessage(), $themeName);
+			$this->p("[@s]: ".$e->getMessage(), $themeName);
 		}catch(\RuntimeException $e){
-			p("[@s]: ".$e->getMessage(), $themeName);
+			$this->p("[@s]: ".$e->getMessage(), $themeName);
 		}
 
 		$isUsed = ExtensionHandler::LoadOnAction( $currentAction );

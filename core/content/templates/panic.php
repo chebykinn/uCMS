@@ -5,7 +5,7 @@ use uCMS\Core\Loader;
 <html>
 <head>
 <meta charset="utf-8">
-<title><?php p('μCMS Error'); ?></title>
+<title><?php $this->p('μCMS Error'); ?></title>
 </head>
 <body>
 	<?php

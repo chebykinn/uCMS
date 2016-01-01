@@ -1,6 +1,6 @@
 <?php
 namespace uCMS\Core;
-class Form{
+class Form extends Object{
 	private $fields = array();
 	private $name;
 	private $owner;
@@ -45,7 +45,7 @@ class Form{
 		$this->owner = Tools::GetCurrentOwner();
 		$this->class = !empty($class) ? htmlspecialchars(strip_tags($class)) : $this->name;
 		if( empty($submitCaption) ){
-			$submitCaption = tr('Submit');
+			$submitCaption = $this->tr('Submit');
 		}
 		$this->submitCaption = $submitCaption;
 	}

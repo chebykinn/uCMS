@@ -1,7 +1,8 @@
 <?php
 namespace uCMS\Core\Database;
 use uCMS\Core\Debug;
-class Query{
+use uCMS\Core\Object;
+class Query extends Object{
 	private $database;
 	private $sql = "";
 	private $params = array();
@@ -16,7 +17,7 @@ class Query{
 	public function __construct($sql, $params = array(), $database = NULL){
 		$this->database = DatabaseConnection::GetDatabase($database);
 		if( empty($this->database) ){
-			Debug::Log(tr("No connection to the database"), Debug::LOG_ERROR);
+			Debug::Log($this->tr("No connection to the database"), Debug::LOG_ERROR);
 			return;
 		}
 		$outType = array();

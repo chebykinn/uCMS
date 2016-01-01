@@ -7,18 +7,18 @@ use uCMS\Core\Extensions\Users\Permission;
 use uCMS\Core\Extensions\Users\Group;
 use uCMS\Core\Extensions\Users\User;
 use uCMS\Core\Extensions\ExtensionHandler;
-use uCMS\Core\Settings;
+use uCMS\Core\Setting;
 $groupsPage = new ManagePage();
 $groupsTable = new ManageTable();
 
-$limit = Settings::Get('per_page');
+$limit = Setting::Get('per_page');
 $groups = (new Group())->find(array('limit' => $limit));
 $groupsTable->addSelectColumn('manage users');
-$groupsTable->setInfo("amount", Settings::Get('groups_amount'));
+$groupsTable->setInfo("amount", Setting::Get('groups_amount'));
 
-$groupsTable->addColumn(tr('Name'), true, 'manage users', 0, true);
-$groupsTable->addColumn(tr('Permissions'), true, 'manage users', '40%', true);
-$groupsTable->addColumn(tr('Users count'), true, 'manage users');
+$groupsTable->addColumn($this->tr('Name'), true, 'manage users', 0, true);
+$groupsTable->addColumn($this->tr('Permissions'), true, 'manage users', '40%', true);
+$groupsTable->addColumn($this->tr('Users count'), true, 'manage users');
 foreach ($groups as $group) {
 	$groupsTable->setInfo('idKey', $group->gid);
 	$permissions = array();
@@ -38,11 +38,11 @@ foreach ($groups as $group) {
 		if( $prevOwner != $permission->owner ){
 			$owner = $permission->owner;
 			if ( $owner === 'core' ){
-				$owner = tr('General');
+				$owner = $this->tr('General');
 			}
 			$extension = ExtensionHandler::Get($permission->owner);
 			if( !empty($extension) ){
-				$owner = tr($extension->getInfo('displayname'));
+				$owner = $this->tr($extension->getInfo('displayname'));
 			}
 			$permissions[$c] = ($c > 0 ? "</div>" : "")."\n<div class=\"permissions-block\"><b>$owner</b>:<br>$data";
 		}else{
@@ -57,7 +57,7 @@ foreach ($groups as $group) {
 
 	$groupsTable->addRow(
 		array(
-			tr($group->name)."<br><div class=\"manage-actions\">".$groupsTable->manageButtons(array(
+			$this->tr($group->name)."<br><div class=\"manage-actions\">".$groupsTable->manageButtons(array(
 				'Edit' => 'edit',
 				'Delete' => 'delete'))."</div>",
 			implode("<br>", $permissions),

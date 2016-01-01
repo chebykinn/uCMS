@@ -7,7 +7,7 @@ use uCMS\Core\Database\Query;
 use uCMS\Core\Localization\Language;
 use uCMS\Core\Extensions\FileManager\File;
 
-class Installer{
+class Installer extends Object{
 	private $stageCallback = "welcome";
 	private $currentStage = "";
 	const LANGUAGE_STAGE = 'language';
@@ -197,7 +197,7 @@ class Installer{
 	public function setTitle($newTitle = ""){
 		$delimeter = " :: ";
 		if( empty($newTitle) ) $delimeter = "";
-		$title = tr('µCMS Installation').$delimeter.$newTitle;
+		$title = $this->tr('µCMS Installation').$delimeter.$newTitle;
 		Theme::GetCurrent()->setTitle($title);
 	}
 
@@ -218,9 +218,9 @@ class Installer{
 			try{
 				Theme::SetCurrent('install');
 			}catch(\InvalidArgumentException $e){
-				p("[@s]: ".$e->getMessage(), 'Installer');
+				$this->p("[@s]: ".$e->getMessage(), 'Installer');
 			}catch(\RuntimeException $e){
-				p("[@s]: ".$e->getMessage(), 'Installer');
+				$this->p("[@s]: ".$e->getMessage(), 'Installer');
 			}
 			$this->prepareStage();
 			// Load theme without preparing environment variables
@@ -237,7 +237,7 @@ class Installer{
 		$this->setTitle();
 		switch ($this->currentStage) {
 			case self::LANGUAGE_STAGE:
-				$this->setTitle(tr('Select Language'));
+				$this->setTitle($this->tr('Select Language'));
 				if( $isPosted ){
 					$language = isset($_POST['language']) ? $_POST['language'] : 'en_US';
 					Session::GetCurrent()->set('language', $language);
@@ -246,7 +246,7 @@ class Installer{
 			break;
 
 			case self::WELCOME_STAGE:
-				$this->setTitle(tr('Welcome!'));
+				$this->setTitle($this->tr('Welcome!'));
 				if( $isPosted ){
 					$nextStage = self::CONFIG_STAGE;
 				}
@@ -258,7 +258,7 @@ class Installer{
 			break;
 
 			case self::CONNECT_ERROR_STAGE:
-				$this->setTitle(tr('Error Connecting To Database'));
+				$this->setTitle($this->tr('Error Connecting To Database'));
 				if( $isPosted ){
 					$nextStage = self::CONFIG_STAGE;
 				}
@@ -273,7 +273,7 @@ class Installer{
 			break;
 
 			case self::SITEINFO_STAGE:
-				$this->setTitle(tr('Site Information'));
+				$this->setTitle($this->tr('Site Information'));
 				if( $isPosted ){
 					$nextStage = $this->checkSettings($isPosted);
 				}
@@ -288,13 +288,13 @@ class Installer{
 			break;
 
 			case self::FINE_STAGE:
-				Settings::Update(Settings::UCMS_MAINTENANCE, '0');
-				$this->setTitle(tr('Everything\'s Fine'));
+				Setting::Update(Setting::UCMS_MAINTENANCE, '0');
+				$this->setTitle($this->tr('Everything\'s Fine'));
 			break;
 
 			case self::DONE_STAGE:
-				Settings::Update(Settings::UCMS_MAINTENANCE, '0');
-				$this->setTitle(tr('Well done!'));
+				Setting::Update(Setting::UCMS_MAINTENANCE, '0');
+				$this->setTitle($this->tr('Well done!'));
 			break;
 		}
 		if( $isPosted ){
@@ -303,7 +303,7 @@ class Installer{
 	}
 
 	private function prepareConfigStage($isPosted){
-		$this->setTitle(tr('Database Connection Configuration'));
+		$this->setTitle($this->tr('Database Connection Configuration'));
 		$server = !empty($_POST['server']) ? $_POST['server'] : 'localhost';
 		$nextStage = "";
 		if( $isPosted ){
@@ -347,7 +347,7 @@ class Installer{
 	}
 
 	private function prepareTablesStage($isPosted){
-		$this->setTitle(tr('Creating Tables'));
+		$this->setTitle($this->tr('Creating Tables'));
 		$nextStage = "";
 		if( $isPosted ){
 			// TODO: Update tables
@@ -372,7 +372,7 @@ class Installer{
 	}
 
 	private function prepareCheckStage(){
-		$this->setTitle(tr('Checking State...'));
+		$this->setTitle($this->tr('Checking State...'));
 		// If update process was started
 		if( isset($_POST['update']) && isset($_POST['action']) ){
 			Session::GetCurrent()->set('update-action', $_POST['action']);
@@ -414,7 +414,7 @@ class Installer{
 	}
 
 	private function prepareUpdateStage(){
-		$this->setTitle(tr('Update in Process'));
+		$this->setTitle($this->tr('Update in Process'));
 		$action = Session::GetCurrent()->get('update-action');
 		$package = Session::GetCurrent()->get('update-package');
 		Session::GetCurrent()->delete('update-action');
@@ -439,7 +439,7 @@ class Installer{
 			$result = uCMS::DownloadPackage($version);
 
 			if( $result == uCMS::ERR_NOT_FOUND ){
-				$error = new Notification(tr('Error: Unable to get update package'), Notification::ERROR);
+				$error = new Notification($this->tr('Error: Unable to get update package'), Notification::ERROR);
 				$error->add();
 				$back = Page::ControlPanel('update');
 				$back->go();
@@ -447,21 +447,21 @@ class Installer{
 			$package = ABSPATH.File::UPLOADS_PATH.'update.zip';
 		}
 		//	Backup previous files => Download package => Unpack files => Run install check with new version
-		Settings::Update(Settings::UCMS_MAINTENANCE, '1');
+		Setting::Update(Setting::UCMS_MAINTENANCE, '1');
 		$this->createBackup($backupPath, $backupName, $currentVersion);
 		$result = $this->extractUpdate($installPath, $package);
 		if( $result != uCMS::SUCCESS ){
 			switch ($result) {
 				case uCMS::ERR_NO_PERMISSIONS:
-					$error = new Notification(tr('Error: Unable to write to: @s', $installPath), Notification::ERROR);
+					$error = new Notification($this->tr('Error: Unable to write to: @s', $installPath), Notification::ERROR);
 				break;
 
 				case uCMS::ERR_INVALID_PACKAGE:
-					$error = new Notification(tr('Error: Invalid package provided: @s', $package), Notification::ERROR);
+					$error = new Notification($this->tr('Error: Invalid package provided: @s', $package), Notification::ERROR);
 				break;
 
 				case uCMS::ERR_NO_UPDATE_PACKAGE:
-					$error = new Notification(tr('Error: Package not found: @s', $package), Notification::ERROR);
+					$error = new Notification($this->tr('Error: Package not found: @s', $package), Notification::ERROR);
 				break;
 			}
 			$error->add();
@@ -469,7 +469,7 @@ class Installer{
 			$back->go();
 		}
 		$this->sendRequest('updated');
-		Settings::Update(Settings::UCMS_MAINTENANCE, '0');
+		Setting::Update(Setting::UCMS_MAINTENANCE, '0');
 	}
 
 	public function printStage(){
@@ -479,7 +479,7 @@ class Installer{
 
 	public function installForm($name, $button = ''){
 		if ( empty($button) ){
-			$button = tr('Next');
+			$button = $this->tr('Next');
 		}
 		$form = new Form($name, Page::Install($this->currentStage), $button);
 		$form->addHiddenField("stage", $this->currentStage);
@@ -507,51 +507,51 @@ class Installer{
 
 	private function welcomeStage(){
 		print '<p>';
-		p('Welcome to μCMS! Before you can enjoy your site, we need some information on database, where all data will be stored.<br>After a few steps of configuration you\'ll be ready to use your site.');
+		$this->p('Welcome to μCMS! Before you can enjoy your site, we need some information on database, where all data will be stored.<br>After a few steps of configuration you\'ll be ready to use your site.');
 		print '</p>';
 
-		$form = $this->installForm('welcome-form', tr('Let\'s do this!'));
+		$form = $this->installForm('welcome-form', $this->tr('Let\'s do this!'));
 		$form->render();
 	}
 
 	private function configStage(){
 		$form = $this->installForm('config-form');
-		$form->addField('server', 'text', tr('Database Server:'), tr('Most likely it\'s "localhost".'), 'localhost', tr('server'));
-		$form->addField('user', 'text', tr('User:'), tr('Login of database user, provided by website hosting.'), 'root', tr('user'));
-		$form->addField('password', 'text', tr('Password:'), tr('Password of database user, provided by website hosting.'), '', tr('password'), false);
-		$form->addField('name', 'text', tr('Database name:'), tr('Name of database, where you want to install μCMS.'), 'ucms', tr('name'));
-		$form->addField('prefix', 'text', tr('Tables prefix:'), tr('You can change it to install different μCMS sites in one database.'), 'uc_', tr('prefix'));
+		$form->addField('server', 'text', $this->tr('Database Server:'), $this->tr('Most likely it\'s "localhost".'), 'localhost', $this->tr('server'));
+		$form->addField('user', 'text', $this->tr('User:'), $this->tr('Login of database user, provided by website hosting.'), 'root', $this->tr('user'));
+		$form->addField('password', 'text', $this->tr('Password:'), $this->tr('Password of database user, provided by website hosting.'), '', $this->tr('password'), false);
+		$form->addField('name', 'text', $this->tr('Database name:'), $this->tr('Name of database, where you want to install μCMS.'), 'ucms', $this->tr('name'));
+		$form->addField('prefix', 'text', $this->tr('Tables prefix:'), $this->tr('You can change it to install different μCMS sites in one database.'), 'uc_', $this->tr('prefix'));
 		$form->render();
 		print '<p>';
-		p("<b>Note:</b> If config.php will not be created you can use config-manual.php to create it yourself.");
+		$this->p("<b>Note:</b> If config.php will not be created you can use config-manual.php to create it yourself.");
 		print '</p>';
 	}
 
 	private function connectionErrorStage(){
 		print '<p>';
-		p("An error occurred while connecting to database, this means either you have provided incorrect username and password, or we can't reach your database server.<br>Please make sure that you're entered correct data and try again. If this error still occurs, contact server administrator.");
+		$this->p("An error occurred while connecting to database, this means either you have provided incorrect username and password, or we can't reach your database server.<br>Please make sure that you're entered correct data and try again. If this error still occurs, contact server administrator.");
 		print '</p>';
 
-		$form = $this->installForm('error-form', tr('Try again'));
+		$form = $this->installForm('error-form', $this->tr('Try again'));
 		$form->render();
 	}
 
 	private function tablesStage(){
 		print '<p>';
-		p('There is lack of our tables in your database, need to create some!');
+		$this->p('There is lack of our tables in your database, need to create some!');
 		print '</p>';
-		$form = $this->installForm('allow-tables', tr('Alrighty then!'));
+		$form = $this->installForm('allow-tables', $this->tr('Alrighty then!'));
 		$form->render();
 	}
 
 	private function siteInformationStage(){
 		print '<p>';
-		p('Just a few more steps to go!');
+		$this->p('Just a few more steps to go!');
 
 		$form = $this->installForm('info-form');
-		$form->addField('name', 'text', tr('Site Name:'), tr('Give yor site a name, like: "Bob\'s site".'), 'Site on μCMS', tr('Name'));
-		$form->addField('description', 'text', tr('Site Description:'), tr('Describe your site, like: "Cool site about me!".'), 'The site indeed', tr('Description'));
-		$form->addField('title', 'text', tr('Site Title:'), tr('Displayed at the top of the browser\'s page,<br> for instance: "Bob\'s site is the best site in the world!".'), 'The Best Site on μCMS', tr('Title'));
+		$form->addField('name', 'text', $this->tr('Site Name:'), $this->tr('Give yor site a name, like: "Bob\'s site".'), 'Site on μCMS', $this->tr('Name'));
+		$form->addField('description', 'text', $this->tr('Site Description:'), $this->tr('Describe your site, like: "Cool site about me!".'), 'The site indeed', $this->tr('Description'));
+		$form->addField('title', 'text', $this->tr('Site Title:'), $this->tr('Displayed at the top of the browser\'s page,<br> for instance: "Bob\'s site is the best site in the world!".'), 'The Best Site on μCMS', $this->tr('Title'));
 		$form->render();
 		print '</p>';
 	}
@@ -562,22 +562,22 @@ class Installer{
 
 	private function checkSettings($isPosted){
 		// TODO: Update
-		$settingsAmount = Settings::GetCount();
-		if( $settingsAmount < Settings::DEFAULT_AMOUNT ){
-			$name = Settings::Get(Settings::SITE_NAME);
-			$description = Settings::Get(Settings::SITE_DESCRIPTION);
-			$title = Settings::Get(Settings::SITE_TITLE);
-			$domain = Settings::Get(Settings::SITE_DOMAIN);
-			$ucmsDir = Settings::Get(Settings::UCMS_DIR);
+		$settingsAmount = (new Setting())->count();
+		if( $settingsAmount < Setting::DEFAULT_AMOUNT ){
+			$name = Setting::Get(Setting::SITE_NAME);
+			$description = Setting::Get(Setting::SITE_DESCRIPTION);
+			$title = Setting::Get(Setting::SITE_TITLE);
+			$domain = Setting::Get(Setting::SITE_DOMAIN);
+			$ucmsDir = Setting::Get(Setting::UCMS_DIR);
 
 			$newName  = '';
 			$newDesc  = '';
 			$newTitle = '';
 			if( empty($name) || empty($description) || empty($title) ){
 				if( !$isPosted ) return self::SITEINFO_STAGE;
-				$newName  = !empty($_POST['name'])        ? $_POST['name']        : tr('Site on μCMS');
-				$newDesc  = !empty($_POST['description']) ? $_POST['description'] : tr('The site indeed');
-				$newTitle = !empty($_POST['title'])       ? $_POST['title']       : tr('The Best Site on μCMS');
+				$newName  = !empty($_POST['name'])        ? $_POST['name']        : $this->tr('Site on μCMS');
+				$newDesc  = !empty($_POST['description']) ? $_POST['description'] : $this->tr('The site indeed');
+				$newTitle = !empty($_POST['title'])       ? $_POST['title']       : $this->tr('The Best Site on μCMS');
 			}
 			$newDomain = Page::GetCurrent()->getHost();
 			$newUcmsDir = Page::GetCurrent()->getPath();
@@ -595,18 +595,18 @@ class Installer{
 
 	private function doneStage(){
 		print '<p>';
-		p('μCMS was successfully installed, so go and explore your new site.');
+		$this->p('μCMS was successfully installed, so go and explore your new site.');
 		print '</p>';
 		$homePage = Page::Home();
-		print '<br><a class="button" href="'.$homePage.'">'.tr('To the home page').'</a>';
+		print '<br><a class="button" href="'.$homePage.'">'.$this->tr('To the home page').'</a>';
 	}
 
 	private function fineStage(){
 		print '<p>';
-		p('μCMS is already installed and everything is working flawlessly (according to our checks).<br> To reinstall μCMS please delete our tables or configuration file.');
+		$this->p('μCMS is already installed and everything is working flawlessly (according to our checks).<br> To reinstall μCMS please delete our tables or configuration file.');
 		print '</p>';
 		$homePage = Page::Home();
-		print '<br><a class="button" href="'.$homePage.'">'.tr('Back to the home page').'</a>';
+		print '<br><a class="button" href="'.$homePage.'">'.$this->tr('Back to the home page').'</a>';
 	}
 
 	public function __call($method, $args){
@@ -616,7 +616,7 @@ class Installer{
 	}
 
 	private function createBackup($path, $name, $version){
-		$isBackupEnabled = (bool)Settings::Get(Settings::DO_UPDATE_BACKUP);
+		$isBackupEnabled = (bool)Setting::Get(Setting::DO_UPDATE_BACKUP);
 		if( $isBackupEnabled ){ // Backup all files except uploads directory
 			$name = mb_strtolower(str_replace(" ", "-", $name));
 			$version = mb_strtolower(str_replace(" ", "-", $version));
@@ -665,27 +665,27 @@ class Installer{
 		$language = Session::GetCurrent()->get('language');
 		$query->insert(['name', 'value', 'owner', 'changed'], 
 			[
-				[Settings::ADMIN_EMAIL,         '',           'core', 0],
-				[Settings::BLOCKS_AMOUNT,       '',           '',     0],
-				[Settings::CLEAN_URL,           '0',          'core', 0],
-				[Settings::DATETIME_FORMAT,     'Y-m-d H:i',  'core', 0],
-				[Settings::DO_UPDATE_BACKUP,    '1',          'core', 0],
-				[Settings::EMBEDDING_ALLOWED,   '0',          'core', 0],
-				[Settings::ENABLE_CACHE,        '1',          'core', 0],
-				[Settings::EXTENSIONS,          '',           'core', 0],
-				[Settings::INSTALLED_TABLES,    '',           'core', 0],
-				[Settings::LANGUAGE,            $language,    'core', 0],
-				[Settings::MAINTENANCE_MESSAGE, '',           'core', 0],
-				[Settings::PER_PAGE,            '20',         'core', 0],
-				[Settings::SITE_AUTHOR,         '',           'core', 0],
-				[Settings::SITE_DESCRIPTION,    $description, 'core', 0],
-				[Settings::SITE_DOMAIN,         $domain,      'core', 0],
-				[Settings::SITE_NAME,           $name,        'core', 0],
-				[Settings::SITE_TITLE,          $title,       'core', 0],
-				[Settings::THEME,               '',           'core', 0],
-				[Settings::UCMS_DIR,            $ucmsDir,     'core', 0],
-				[Settings::UCMS_MAINTENANCE,    '1',          'core', 0],
-				[Settings::UCMS_TIMEZONE,       'UTC',        'core', 0]
+				[Setting::ADMIN_EMAIL,         '',           'core', 0],
+				[Setting::BLOCKS_AMOUNT,       '',           '',     0],
+				[Setting::CLEAN_URL,           '0',          'core', 0],
+				[Setting::DATETIME_FORMAT,     'Y-m-d H:i',  'core', 0],
+				[Setting::DO_UPDATE_BACKUP,    '1',          'core', 0],
+				[Setting::EMBEDDING_ALLOWED,   '0',          'core', 0],
+				[Setting::ENABLE_CACHE,        '1',          'core', 0],
+				[Setting::EXTENSIONS,          '',           'core', 0],
+				[Setting::INSTALLED_TABLES,    '',           'core', 0],
+				[Setting::LANGUAGE,            $language,    'core', 0],
+				[Setting::MAINTENANCE_MESSAGE, '',           'core', 0],
+				[Setting::PER_PAGE,            '20',         'core', 0],
+				[Setting::SITE_AUTHOR,         '',           'core', 0],
+				[Setting::SITE_DESCRIPTION,    $description, 'core', 0],
+				[Setting::SITE_DOMAIN,         $domain,      'core', 0],
+				[Setting::SITE_NAME,           $name,        'core', 0],
+				[Setting::SITE_TITLE,          $title,       'core', 0],
+				[Setting::THEME,               '',           'core', 0],
+				[Setting::UCMS_DIR,            $ucmsDir,     'core', 0],
+				[Setting::UCMS_MAINTENANCE,    '1',          'core', 0],
+				[Setting::UCMS_TIMEZONE,       'UTC',        'core', 0]
 			], true
 		);
 		$query->execute();

@@ -18,11 +18,11 @@ class FileManager extends \uCMS\Core\Extensions\Extension {
 		Language::PATH,
 		ExtensionHandler::PATH,
 		ThemeHandler::PATH];
-		Permission::Register('manage files', tr('Manage Files'), tr('Allow user to add, edit and delete files.'));
+		Permission::Register('manage files', $this->tr('Manage Files'), $this->tr('Allow user to add, edit and delete files.'));
 	}
 
 	public function onAdminAction($action){
-		ControlPanel::SetTitle(tr('File Manager'));
+		ControlPanel::SetTitle($this->tr('File Manager'));
 	}
 
 	protected function checkStage(){
@@ -43,14 +43,14 @@ class FileManager extends \uCMS\Core\Extensions\Extension {
 	protected function prepareStage(){
 		$result = $this->createDirectories();
 		if( !$result ){
-			Installer::GetInstance()->setTitle(tr('Error creating directories'));
+			Installer::GetInstance()->setTitle($this->tr('Error creating directories'));
 			return ExtensionHandler::NEED_USER_INPUT;
 		}
 		return parent::prepareStage();
 	}
 
 	protected function printStage(){
-		p('Installer is unable to create directories due to insufficient permissions.<br>Please make sure that following directories are created to continue installation:');
+		$this->p('Installer is unable to create directories due to insufficient permissions.<br>Please make sure that following directories are created to continue installation:');
 		print '<ul>';
 		foreach ($this->dirs as $dir) {
 			$path = ABSPATH.$dir;
@@ -58,7 +58,7 @@ class FileManager extends \uCMS\Core\Extensions\Extension {
 		}
 		$check = Page::Install(Installer::CHECK_STAGE);
 		print '</ul>';
-		print '<br><a class="button" href="'.$check.'">'.tr('Continue').'</a>';
+		print '<br><a class="button" href="'.$check.'">'.$this->tr('Continue').'</a>';
 	}
 
 	private function createDirectories(){

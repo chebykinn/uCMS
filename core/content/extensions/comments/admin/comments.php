@@ -2,7 +2,7 @@
 use uCMS\Core\Admin\ManagePage;
 use uCMS\Core\Admin\ManageTable;
 use uCMS\Core\Extensions\Comments\Comment;
-use uCMS\Core\Settings;
+use uCMS\Core\Setting;
 use uCMS\Core\Tools;
 $page = new ManagePage();
 $table = new ManageTable();
@@ -13,14 +13,14 @@ $amount = (new Comment())->count();
 $table->addSelectColumn('manage comments');
 $table->setInfo("amount", $amount);
 
-$table->addColumn(tr('Content'), true, 'manage comments', 0, true);
-$table->addColumn(tr('Author'), true, 'manage comments', 0, true);
-$table->addColumn(tr('Entry'), true, 'manage comments', 0, true);
-$table->addColumn(tr('Email'), true, 'manage comments', 0, true);
-$table->addColumn(tr('IP'), true, 'manage comments', 0, true);
-$table->addColumn(tr('Added'), true, 'manage comments', 0, true);
+$table->addColumn($this->tr('Content'), true, 'manage comments', 0, true);
+$table->addColumn($this->tr('Author'), true, 'manage comments', 0, true);
+$table->addColumn($this->tr('Entry'), true, 'manage comments', 0, true);
+$table->addColumn($this->tr('Email'), true, 'manage comments', 0, true);
+$table->addColumn($this->tr('IP'), true, 'manage comments', 0, true);
+$table->addColumn($this->tr('Added'), true, 'manage comments', 0, true);
 
-$limit = Settings::Get('per_page');
+$limit = Setting::Get('per_page');
 $comments = (new Comment())->find(array('limit' => $limit));
 foreach ($comments as $comment) {
 	$table->setInfo("idKey", $comment->fid);

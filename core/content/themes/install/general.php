@@ -4,7 +4,7 @@
 use uCMS\Core\Installer;
 use uCMS\Core\Notification;
 if( !Installer::IsRunning() ){
-	$error = new Notification(tr('Error: Attempted to use install theme as site theme!'), Notification::ERROR);
+	$error = new Notification($this->tr('Error: Attempted to use install theme as site theme!'), Notification::ERROR);
 	$error->add();
 	$this->showNotifications();
 }else{

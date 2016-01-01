@@ -8,7 +8,7 @@ if( $entriesAmount > 0 ){
 		<div class="entry" id="<?php print $this->prepare($entry->eid); ?>">
 			<div class="header">
 				<div class="categories">
-					<?php print $this->prepare(tr('Uncategorized')); ?>
+					<?php print $this->prepare($this->tr('Uncategorized')); ?>
 				</div>
 				<div class="title">
 				<?php
@@ -16,7 +16,7 @@ if( $entriesAmount > 0 ){
 						print $this->prepare($entry->title);
 					}else{
 						?>
-						<a href="<?php print $this->prepare($entry->getLink()); ?>" title="<?php p("View entry"); ?>"><?php
+						<a href="<?php print $this->prepare($entry->getLink()); ?>" title="<?php $this->p("View entry"); ?>"><?php
 						print $this->prepare($entry->title); ?></a>
 						<?php
 					}
@@ -31,12 +31,12 @@ if( $entriesAmount > 0 ){
 			</div>
 			<div class="info">
 				<div class="comments">
-					<a href="<?php print $this->prepare($entry->getLink()); ?>#comments" title="<?php p("View comments"); ?>"><?php
+					<a href="<?php print $this->prepare($entry->getLink()); ?>#comments" title="<?php $this->p("View comments"); ?>"><?php
 					print $this->prepare($commentsCount); ?></a>
 				</div>
 				<div class="tags">
 				<?php
-					p('no tags');
+					$this->p('no tags');
 				?>
 				</div>
 				<?php
@@ -45,7 +45,7 @@ if( $entriesAmount > 0 ){
 				<div class="admin">
 					<?php 
 						$editLink = $entry->getEditLink();
-						print '<a class="edit-link" href="'.$editLink.'" title="'.tr('Edit this entry').'">'.tr('Edit').'</a>';
+						print '<a class="edit-link" href="'.$editLink.'" title="'.$this->tr('Edit this entry').'">'.$this->tr('Edit').'</a>';
 					?>
 				</div>
 				<?php
@@ -62,7 +62,7 @@ if( $entriesAmount > 0 ){
 							print $this->prepare($comment->name).'<br>'.$this->prepare($comment->content);
 						}
 					}else{
-						p('No comments');
+						$this->p('No comments');
 					}
 				?>
 			</div>
@@ -72,7 +72,7 @@ if( $entriesAmount > 0 ){
 }else{
 	?>
 	<div class="warning">
-		<?php p("There are no entries to display."); ?>
+		<?php $this->p("There are no entries to display."); ?>
 	</div>
 	<?php
 }

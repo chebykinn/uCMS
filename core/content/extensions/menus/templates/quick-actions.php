@@ -7,7 +7,7 @@
 ?>
 <table class="manage actions">
 	<tr>
-		<th class="always-show"><?php p($currentMenu->title); ?></th>
+		<th class="always-show"><?php $this->p($currentMenu->title); ?></th>
 	</tr>
 	<tr>
 		<td class="always-show">

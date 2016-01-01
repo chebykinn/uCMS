@@ -1,14 +1,14 @@
 <?php
 if( empty($models) ):
 	echo '<table class="manage"><tr><td class="always-show">';
-	p('No content selected to display.');
+	$this->p('No content selected to display.');
 	echo '</td></tr></table>';
 else:
 	foreach ($models as $title => $data) {
 		?>
 		<table class="manage last-added">
 		<tr>
-		<th class="always-show"><?php p($title); ?></th>
+		<th class="always-show"><?php $this->p($title); ?></th>
 		</tr>
 		<?php
 		if ( !empty($data['rows']) ){
@@ -21,7 +21,7 @@ else:
 			}
 		}else{
 			echo '<tr><td class="always-show">';
-			p('No elements');
+			$this->p('No elements');
 			echo '<br><br></td></tr>';
 		}
 		echo '</table>';

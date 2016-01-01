@@ -7,7 +7,7 @@ use uCMS\Core\Database\Query;
 use uCMS\Core\Block;
 use uCMS\Core\Page;
 use uCMS\Core\Tools;
-use uCMS\Core\Settings;
+use uCMS\Core\Setting;
 use uCMS\Core\Installer;
 use uCMS\Core\Session;
 use uCMS\Core\Notification;
@@ -20,7 +20,7 @@ class Users extends \uCMS\Core\Extensions\Extension {
 
 	public function onLoad(){
 		$allowedActions = [User::LOGIN_ACTION, Page::INSTALL_ACTION];
-		Permission::Register('manage users', tr('Manage Users'), tr('Allow user to add, edit and delete other users.'));
+		Permission::Register('manage users', $this->tr('Manage Users'), $this->tr('Allow user to add, edit and delete other users.'));
 		User::CheckAuthorization();
 
 		if( !in_array(Page::GetCurrent()->getAction(), $allowedActions) ){
@@ -31,7 +31,7 @@ class Users extends \uCMS\Core\Extensions\Extension {
 			}
 	
 			if( !User::Current()->can('access site in maintenance mode') && !ControlPanel::IsActive() ){
-				if( (bool)Settings::Get('ucms_maintenance') ){
+				if( (bool)Setting::Get('ucms_maintenance') ){
 					ThemeHandler::LoadTemplate('maintenance');
 					exit;
 				}
@@ -50,7 +50,7 @@ class Users extends \uCMS\Core\Extensions\Extension {
 						}
 						Page::Refresh();
 					}else{
-						Theme::GetCurrent()->setPageTitle(tr("Login"));
+						Theme::GetCurrent()->setPageTitle($this->tr("Login"));
 					}
 				}else{
 					Page::GoBack();
@@ -81,17 +81,17 @@ class Users extends \uCMS\Core\Extensions\Extension {
 	}
 
 	public function onAdminAction($action){
-		$title = tr("Users");
+		$title = $this->tr("Users");
 		switch ($action) {
 			case 'users/groups':
-				$title = tr("Groups");
+				$title = $this->tr("Groups");
 			break;
 		}
 		ControlPanel::SetTitle($title);
 	}
 
 	private function addSuperUser($email, $login, $password){
-		$admin = (new User())->empty();
+		$admin = (new User())->emptyRow();
 		$admin->uid = User::SUPERUSER_ID;
 		$admin->gid = Group::ADMINISTRATOR;
 		$admin->email = $email;
@@ -100,11 +100,11 @@ class Users extends \uCMS\Core\Extensions\Extension {
 		$admin->status = User::ACTIVE_STATUS;
 		$admin->create();
 		User::Authorize($admin->uid, true);
-		Settings::Update(Settings::SITE_AUTHOR, $admin->name);
+		Setting::Update(Setting::SITE_AUTHOR, $admin->name);
 	}
 
 	private function addBlocks(){
-		$login = (new Block())->empty();
+		$login = (new Block())->emptyRow();
 		$login->name = "login-form";
 		$login->region = "content";
 		$login->theme = Theme::DEFAULT_THEME;
@@ -112,14 +112,14 @@ class Users extends \uCMS\Core\Extensions\Extension {
 		$login->actions = User::LOGIN_ACTION;
 		$login->status = Block::ENABLED;
 		$login->create();
-		$card = (new Block())->empty();
+		$card = (new Block())->emptyRow();
 		$card->name = "user-card";
 		$card->region = "right-sidebar";
 		$card->theme = Theme::DEFAULT_THEME;
 		$card->status = Block::ENABLED;
 		$card->create();
 
-		$profile = (new Block())->empty();
+		$profile = (new Block())->emptyRow();
 		$profile->name = "user-profile";
 		$profile->region = "content";
 		$profile->theme = Theme::DEFAULT_THEME;
@@ -132,16 +132,16 @@ class Users extends \uCMS\Core\Extensions\Extension {
 	private function addMenu(){
 		$check = (new Menu())->find('user-menu');
 		if( $check == NULL ){
-			$userMenu = (new Menu())->empty();
+			$userMenu = (new Menu())->emptyRow();
 			$userMenu->menu = 'user-menu';
 			$userMenu->title = 'User Menu';
 			$userMenu->description = 'User actions, displayed at the user card in sidebar.';
 			$userMenu->create();
 
-			$profileLink  = (new MenuLink())->empty();
-			$userlistLink = (new MenuLink())->empty();
-			$logoutLink   = (new MenuLink())->empty();
-			$cpanelLink   = (new MenuLink())->empty();
+			$profileLink  = (new MenuLink())->emptyRow();
+			$userlistLink = (new MenuLink())->emptyRow();
+			$logoutLink   = (new MenuLink())->emptyRow();
+			$cpanelLink   = (new MenuLink())->emptyRow();
 
 			$profileLink->menu = $userlistLink->menu =
 			$logoutLink->menu = $cpanelLink->menu = 'user-menu';
@@ -180,7 +180,7 @@ class Users extends \uCMS\Core\Extensions\Extension {
 	protected function prepareStage(){
 		$isPosted = (isset($_POST['stage']) && $_POST['stage'] === Installer::GetInstance()->getCurrentStage());
 		if( !$isPosted ){
-			Installer::GetInstance()->setTitle(tr('Creating an Administrator'));
+			Installer::GetInstance()->setTitle($this->tr('Creating an Administrator'));
 			return parent::prepareStage();
 		}
 
@@ -195,12 +195,12 @@ class Users extends \uCMS\Core\Extensions\Extension {
 				}
 			}
 			if( $notAllFields ){
-				$error = new Notification(tr('Error: All fields are required.'), Notification::ERROR);
+				$error = new Notification($this->tr('Error: All fields are required.'), Notification::ERROR);
 				$error->add();
 				Page::Refresh();
 			}
 			if( $_POST['password'] != $_POST['password_check'] ){
-				$error = new Notification(tr('Error: Passwords do not match.'), Notification::ERROR);
+				$error = new Notification($this->tr('Error: Passwords do not match.'), Notification::ERROR);
 				$error->add();
 				Page::Refresh();
 			}
@@ -211,12 +211,12 @@ class Users extends \uCMS\Core\Extensions\Extension {
 			foreach ($errors as $error) {
 				$message = User::GetErrorMessage($error);
 				if( !empty($message) ){
-					$errorMessages[] = tr($message);
+					$errorMessages[] = $this->tr($message);
 				}
 			}
 			if( !empty($errorMessages) ){
 				$messages = implode('<br>', $errorMessages);
-				$error = new Notification(tr('Unable to register user due to errors below:<br> @s', $messages), Notification::ERROR);
+				$error = new Notification($this->tr('Unable to register user due to errors below:<br> @s', $messages), Notification::ERROR);
 				$error->add();
 				Page::Refresh();
 			}
@@ -421,8 +421,8 @@ class Users extends \uCMS\Core\Extensions\Extension {
 	}
 
 	private function addDefaultFields(){
-		$firstname = (new UserInfoField())->empty();
-		$surname = (new UserInfoField())->empty();
+		$firstname = (new UserInfoField())->emptyRow();
+		$surname = (new UserInfoField())->emptyRow();
 		$firstname->name = 'firstname';
 		$firstname->title = 'First Name';
 		$firstname->description = 'User\'s first name.';
@@ -442,13 +442,13 @@ class Users extends \uCMS\Core\Extensions\Extension {
 	}
 
 	private function addAdminFormStage(){
-		echo '<h3>'.tr('Let\'s create you an administrator!').'</h3>';
-		$domain = preg_replace("/([a-zA-Z]\:\/\/)/i", '', Settings::Get(Settings::SITE_DOMAIN));
+		echo '<h3>'.$this->tr('Let\'s create you an administrator!').'</h3>';
+		$domain = preg_replace("/([a-zA-Z]\:\/\/)/i", '', Setting::Get(Setting::SITE_DOMAIN));
 		$form = Installer::GetInstance()->installForm('user-form');
-		$form->addField('email', 'email', tr('E-mail:'), tr('Set e-mail address for all system notifications.'), "admin@$domain", tr('e-mail'));
-		$form->addField('login', 'text', tr('Login:'), tr('Set login for administrator.'), "admin", tr('login'));
-		$form->addField('password', 'password', tr('Password:'), tr("Set password for administrator:<br> choose wisely, security of the site depends on it."), '', tr('password'));
-		$form->addField('password_check', 'password', tr('Confirm Password:'), '', '', tr('password'));
+		$form->addField('email', 'email', $this->tr('E-mail:'), $this->tr('Set e-mail address for all system notifications.'), "admin@$domain", $this->tr('e-mail'));
+		$form->addField('login', 'text', $this->tr('Login:'), $this->tr('Set login for administrator.'), "admin", $this->tr('login'));
+		$form->addField('password', 'password', $this->tr('Password:'), $this->tr("Set password for administrator:<br> choose wisely, security of the site depends on it."), '', $this->tr('password'));
+		$form->addField('password_check', 'password', $this->tr('Confirm Password:'), '', '', $this->tr('password'));
 		$form->render();
 	}
 }

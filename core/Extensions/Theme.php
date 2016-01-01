@@ -1,7 +1,7 @@
 <?php
 namespace uCMS\Core\Extensions;
 use uCMS\Core\Debug;
-use uCMS\Core\Settings;
+use uCMS\Core\Setting;
 use uCMS\Core\Page;
 use uCMS\Core\uCMS;
 use uCMS\Core\Block;
@@ -48,7 +48,7 @@ class Theme extends AbstractExtension{
 
 	public static function GetCurrent(){
 		if ( is_null( self::$instance ) ){
-			Debug::Log(tr("Theme is not loaded"), Debug::LOG_CRITICAL);
+			Debug::Log($this->tr("Theme is not loaded"), Debug::LOG_CRITICAL);
 			return false;
 		}
 		return self::$instance;
@@ -58,16 +58,16 @@ class Theme extends AbstractExtension{
 		try{
 			Theme::SetCurrent($newTheme);
 		}catch(\InvalidArgumentException $e){
-			p("[@s]: ".$e->getMessage(), $newTheme);
+			$this->p("[@s]: ".$e->getMessage(), $newTheme);
 		}catch(\RuntimeException $e){
-			p("[@s]: ".$e->getMessage(), $newTheme);
+			$this->p("[@s]: ".$e->getMessage(), $newTheme);
 		}
 	}
 
 	public static function LoadErrorPage($errorCode){
-		Debug::Log(tr("Error @s at: @s", $errorCode,
+		Debug::Log($this->tr("Error @s at: @s", $errorCode,
 						Page::GetCurrent()->getURL()), Debug::LOG_WARNING);
-		$theme = Settings::get('theme');
+		$theme = Setting::get('theme');
 		if( empty($theme) ) $theme = self::DEFAULT_THEME;
 		if( !self::IsLoaded() || $theme != self::GetCurrent()->getName() ) {
 			self::ReloadTheme($theme);
@@ -75,9 +75,9 @@ class Theme extends AbstractExtension{
 		// TODO: Add HTTP Header
 		// TODO: Fix XSS
 		self::GetCurrent()->setErrorCode($errorCode);
-		self::GetCurrent()->setTitle(tr("404 Not Found"));
-		self::GetCurrent()->setPageTitle(tr("404 Not Found"));
-		self::GetCurrent()->setPageContent(tr("Page \"@s\" was not found.",
+		self::GetCurrent()->setTitle($this->tr("404 Not Found"));
+		self::GetCurrent()->setPageTitle($this->tr("404 Not Found"));
+		self::GetCurrent()->setPageContent($this->tr("Page \"@s\" was not found.",
 			Page::GetCurrent()->getURL()));
 		self::GetCurrent()->setThemeTemplate(self::ERROR_TEMPLATE_NAME);
 	}
@@ -91,7 +91,7 @@ class Theme extends AbstractExtension{
 		$decodedInfo = json_decode($encodedInfo, true);
 		$checkRequiredFields = empty($decodedInfo['version']) || empty($decodedInfo['coreVersion']);
 		if( $decodedInfo === NULL || $checkRequiredFields ){
-			//Debug::Log(tr("Can't get extension information @s", $this->name), Debug::LOG_ERROR);
+			//Debug::Log($this->tr("Can't get extension information @s", $this->name), Debug::LOG_ERROR);
 			throw new \InvalidArgumentException("Can't get theme information");
 		}
 		$this->version = $decodedInfo['version'];

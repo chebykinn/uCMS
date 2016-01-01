@@ -6,8 +6,8 @@
 	}
 	?>
 	<div class="error">	
-	<?php p("You don't have access to this page."); ?>
+	<?php $this->p("You don't have access to this page."); ?>
 	</div>
-	<a class="button" href="<?php echo $homePage; ?>"><?php p("Go To Home Page"); ?></a>
+	<a class="button" href="<?php echo $homePage; ?>"><?php $this->p("Go To Home Page"); ?></a>
 </div>
 </div>

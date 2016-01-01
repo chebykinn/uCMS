@@ -7,26 +7,26 @@ use uCMS\Core\Admin\ManageTable;
 
 if( isset($_POST['clear-journal']) ){
 	Debug::ClearLog();
-	$msg = new Notification(tr('Journal was successfully cleared.'), Notification::SUCCESS);
+	$msg = new Notification($this->tr('Journal was successfully cleared.'), Notification::SUCCESS);
 	$msg->add();
 	Page::Refresh();
 }
 
-$clearForm = new Form('clear-journal', '', tr('Clear journal'));
+$clearForm = new Form('clear-journal', '', $this->tr('Clear journal'));
 $clearForm->render();
 
 $table = new ManageTable();
 $messages = Debug::GetLogMessages();
 
 $permission = 'access control panel';
-$table->setInfo('emptyMessage', tr('There are no log messages to display'));
+$table->setInfo('emptyMessage', $this->tr('There are no log messages to display'));
 $table->setInfo("amount", count($messages));
 
-$table->addColumn(tr('Type'), false, $permission, '10%', true);
-$table->addColumn(tr('Message'), false, $permission, 0, true);
-$table->addColumn(tr('Host'), false, $permission, '10%');
-$table->addColumn(tr('Owner'), false, $permission, '10%');
-$table->addColumn(tr('Date'), true, $permission, '15%', true);
+$table->addColumn($this->tr('Type'), false, $permission, '10%', true);
+$table->addColumn($this->tr('Message'), false, $permission, 0, true);
+$table->addColumn($this->tr('Host'), false, $permission, '10%');
+$table->addColumn($this->tr('Owner'), false, $permission, '10%');
+$table->addColumn($this->tr('Date'), true, $permission, '15%', true);
 
 
 foreach ($messages as $message) {

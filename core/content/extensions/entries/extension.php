@@ -8,7 +8,7 @@ use uCMS\Core\Block;
 use uCMS\Core\Admin\ControlPanel;
 use uCMS\Core\uCMS;
 use uCMS\Core\Session;
-use uCMS\Core\Settings;
+use uCMS\Core\Setting;
 use uCMS\Core\Database\Query;
 use uCMS\Core\Installer;
 use uCMS\Core\Extensions\Users\Permission;
@@ -17,11 +17,11 @@ use uCMS\Core\Extensions\Users\Group;
 class Entries extends \uCMS\Core\Extensions\Extension implements \uCMS\Core\Extensions\ExtensionInterface {
 
 	public function onLoad(){
-		Permission::Register('manage entries', tr('Manage Entries'), tr('Allow user to add, edit and delete entries.'));
+		Permission::Register('manage entries', $this->tr('Manage Entries'), $this->tr('Allow user to add, edit and delete entries.'));
 	}
 
 	private function addBlocks(){
-		$list = (new Block())->empty();
+		$list = (new Block())->emptyRow();
 		$list->name = "entries-list";
 		$list->region = "content";
 		$list->theme = Theme::DEFAULT_THEME;
@@ -37,10 +37,10 @@ class Entries extends \uCMS\Core\Extensions\Extension implements \uCMS\Core\Exte
 	}
 
 	public function onAdminAction($action){
-		$title = tr("Entries");
+		$title = $this->tr("Entries");
 		switch ($action) {
 			case 'categories':
-				$title = tr("Categories");
+				$title = $this->tr("Categories");
 			break;
 		}
 		ControlPanel::SetTitle($title);
@@ -274,7 +274,7 @@ class Entries extends \uCMS\Core\Extensions\Extension implements \uCMS\Core\Exte
 	}
 
 	private function addDefaultTypes(){
-		$article = (new EntryType())->empty();
+		$article = (new EntryType())->emptyRow();
 		$article->type        = 'article';
 		$article->name        = 'Article';
 		$article->description = 'Default entry type for articles that will be displayed on home page.';
@@ -287,7 +287,7 @@ class Entries extends \uCMS\Core\Extensions\Extension implements \uCMS\Core\Exte
 		$article->terms       = 1;
 		$article->menu        = '';
 
-		$page = (new EntryType())->empty();
+		$page = (new EntryType())->emptyRow();
 		$page->type        = 'page';
 		$page->name        = 'Page';
 		$page->description = 'Default entry type for pages that will not be listed, but shown in navigation menu.';
@@ -305,7 +305,7 @@ class Entries extends \uCMS\Core\Extensions\Extension implements \uCMS\Core\Exte
 	}
 
 	private function addDefaultTerm(){
-		$uncategorized = (new Term())->empty();
+		$uncategorized = (new Term())->emptyRow();
 
 		$uncategorized->tid = 1;
 		$uncategorized->name = 'Uncategorized';

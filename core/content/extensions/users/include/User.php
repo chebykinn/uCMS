@@ -1,7 +1,7 @@
 <?php
 namespace uCMS\Core\Extensions\Users;
 use uCMS\Core\Session;
-use uCMS\Core\Settings;
+use uCMS\Core\Setting;
 use uCMS\Core\Database\Query;
 use uCMS\Core\ORM\Model;
 use uCMS\Core\Tools;
@@ -53,7 +53,7 @@ class User extends Model{
 
 	public function getDisplayName($row){
 		// print name or nickname if set
-		$allows = (bool)Settings::Get('allow_nicknames');
+		$allows = (bool)Setting::Get('allow_nicknames');
 		$nickname = $this->getInfo($row, 'nickname');
 		if( $allows && !empty($nickname) ){
 			return $nickname;
@@ -132,7 +132,7 @@ class User extends Model{
 		}
 
 		if( is_null(self::$currentUser) ){
-			self::$currentUser = (new User())->empty();
+			self::$currentUser = (new User())->emptyRow();
 			self::$currentUser->uid = 0;
 			self::$currentUser->gid = Group::GUEST;
 		}
@@ -160,7 +160,7 @@ class User extends Model{
 		}
 
 		if( !$result ){
-			$error = new Notification(tr("Wrong username or password"), Notification::ERROR);
+			$error = new Notification($this->tr("Wrong username or password"), Notification::ERROR);
 			$error->add();
 		}
 		return $result;
@@ -171,10 +171,10 @@ class User extends Model{
 	}
 
 	public static function GetLoginForm(){
-		$form = new Form("login-form", Page::FromAction(self::LOGIN_ACTION), tr("Log In"));
-		$form->addField("login", "text", tr("Username:"), "", "", tr("username or email"));
-		$form->addField("password", "password", tr("Password:"), "", "", tr("password"));
-		$form->addFlag("save_cookies", tr("Remember Me:"));
+		$form = new Form("login-form", Page::FromAction(self::LOGIN_ACTION), self::Current()->tr("Log In"));
+		$form->addField("login", "text", self::Current()->tr("Username:"), "", "", self::Current()->tr("username or email"));
+		$form->addField("password", "password", self::Current()->tr("Password:"), "", "", self::Current()->tr("password"));
+		$form->addFlag("save_cookies", self::Current()->tr("Remember Me:"));
 		return $form;
 	}
 
@@ -216,7 +216,7 @@ class User extends Model{
 		$row->created = time();
 		$result = parent::create($row);
 		if( !$result ) return false;
-		Settings::Increment('users_amount');
+		Setting::Increment('users_amount');
 	}
 
 	public function delete($row){
@@ -225,13 +225,13 @@ class User extends Model{
 		}
 		$result = parent::delete($row);
 		if( !$result ) return false;
-		Settings::Decrement('users_amount');
+		Setting::Decrement('users_amount');
 	}
 
 
 	public static function CheckPasswordConstraints($password){
-		$minSize = (int)Settings::Get('password_min_size');
-		$maxSize = (int)Settings::Get('password_max_size');
+		$minSize = (int)Setting::Get('password_min_size');
+		$maxSize = (int)Setting::Get('password_max_size');
 		$size = mb_strlen($password);
 		if ( $size < $minSize || $size > $maxSize ){
 			return self::ERR_WRONG_PASSWORD_SIZE;
@@ -240,8 +240,8 @@ class User extends Model{
 	}
 
 	public static function CheckLoginConstraints($login){
-		$minSize = (int)Settings::Get('login_min_size');
-		$maxSize = (int)Settings::Get('login_max_size');
+		$minSize = (int)Setting::Get('login_min_size');
+		$maxSize = (int)Setting::Get('login_max_size');
 		$size = mb_strlen($login);
 		if ( $size < $minSize || $size > $maxSize ){
 			return self::ERR_WRONG_LOGIN_SIZE;
@@ -262,23 +262,23 @@ class User extends Model{
 	public static function GetErrorMessage($errno){
 		switch ($errno) {
 			case self::ERR_WRONG_PASSWORD_SIZE:
-				$minSize = (int)Settings::Get('password_min_size');
-				$maxSize = (int)Settings::Get('password_max_size');
-				return tr('Password must be at least @s characters length and not more than @s characters.', $minSize, $maxSize);
+				$minSize = (int)Setting::Get('password_min_size');
+				$maxSize = (int)Setting::Get('password_max_size');
+				return $this->tr('Password must be at least @s characters length and not more than @s characters.', $minSize, $maxSize);
 			break;
 
 			case self::ERR_WRONG_LOGIN_SIZE:
-				$minSize = (int)Settings::Get('login_min_size');
-				$maxSize = (int)Settings::Get('login_max_size');
-				return tr('Login must be at least @s characters length and not more than @s characters.', $minSize, $maxSize);
+				$minSize = (int)Setting::Get('login_min_size');
+				$maxSize = (int)Setting::Get('login_max_size');
+				return $this->tr('Login must be at least @s characters length and not more than @s characters.', $minSize, $maxSize);
 			break;
 
 			case self::ERR_WRONG_LOGIN_CHARS:
-				return tr('Login contains wrong characters.');
+				return $this->tr('Login contains wrong characters.');
 			break;
 
 			case self::ERR_WRONG_EMAIL:
-				return tr('Invalid e-mail.');
+				return $this->tr('Invalid e-mail.');
 			break;
 		}
 		return "";

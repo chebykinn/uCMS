@@ -1,15 +1,15 @@
 <?php
-use uCMS\Core\Settings;
+use uCMS\Core\Setting;
 ?>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="utf-8">
-<title><?php echo tr('Site on Maintenance').' — '.htmlspecialchars(Settings::Get('site_title')); ?></title>
+<title><?php echo $this->tr('Site on Maintenance').' — '.htmlspecialchars(Setting::Get('site_title')); ?></title>
 </head>
 <body>
 <?php
-p('@s is on maintenance.', Settings::Get('site_name'));
+$this->p('@s is on maintenance.', Setting::Get('site_name'));
 ?>
 </body>
 </html>

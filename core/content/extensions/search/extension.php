@@ -7,7 +7,7 @@ use uCMS\Core\Installer;
 
 class Search extends Extension{
 	public function onAdminAction($action){
-		ControlPanel::SetTitle(tr('Search'));
+		ControlPanel::SetTitle($this->tr('Search'));
 	}
 }
 ?>

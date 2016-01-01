@@ -1,7 +1,7 @@
 <?php
 namespace uCMS\Core\Extensions;
 use uCMS\Core\Debug;
-use uCMS\Core\Settings;
+use uCMS\Core\Setting;
 use uCMS\Core\Page;
 use uCMS\Core\Session;
 use uCMS\Core\Installer;
@@ -10,8 +10,9 @@ use uCMS\Core\Admin\ControlPanel;
 use uCMS\Core\Database\Query;
 use uCMS\Core\Database\DatabaseConnection;
 use uCMS\Core\uCMS;
+use uCMS\Core\Object;
 
-class ExtensionHandler{
+class ExtensionHandler extends Object{
 
 	const INFO = 'extension.info';
 	const PATH = 'content/extensions/';
@@ -25,7 +26,7 @@ class ExtensionHandler{
 	private static $defaultList = ['users', 'admin', 'filemanager', 'menus', 'entries', 'comments', 'search'];
 	
 	final public static function Init(){
-		$externalList = is_array(unserialize(Settings::Get('extensions'))) ? unserialize(Settings::Get('extensions')) : [];
+		$externalList = is_array(unserialize(Setting::Get('extensions'))) ? unserialize(Setting::Get('extensions')) : [];
 		$extensions = array_merge(self::$defaultList, $externalList);
 		$extensionActions = $extensionAdminActions = [];
 		foreach ($extensions as $extension) {
@@ -43,10 +44,10 @@ class ExtensionHandler{
 					self::$usedActions = array_merge(self::$usedActions, $extensionActions);
 					self::$usedAdminActions = array_merge(self::$usedAdminActions, $extensionAdminActions);
 				}else{
-					Debug::Log(tr("Unable to find extension: @s", $extension), Debug::LOG_ERROR);
+					Debug::Log($this->tr("Unable to find extension: @s", $extension), Debug::LOG_ERROR);
 				}
 			}catch(\Exception $e){
-				Debug::Log(tr("Can't load extension: @s, error: @s", $extension, $e->getMessage()), Debug::LOG_ERROR);
+				Debug::Log($this->tr("Can't load extension: @s, error: @s", $extension, $e->getMessage()), Debug::LOG_ERROR);
 			}
 		}
 		self::$usedActions = array_unique(self::$usedActions);
@@ -249,7 +250,7 @@ class ExtensionHandler{
 
 	final public static function Delete($name){
 		if( self::IsDefault($name) || !self::IsExtention($name) ){
-			$message = new Notification(tr("Unable to delete extension \"@s\"", $name), Notification::ERROR);
+			$message = new Notification($this->tr("Unable to delete extension \"@s\"", $name), Notification::ERROR);
 			$message->add();
 			return false;
 		}
@@ -257,14 +258,14 @@ class ExtensionHandler{
 		//remove dir
 
 		Notification::ClearPending();
-		$message = new Notification(tr("Extension \"@s\" was successfully deleted", $name), Notification::SUCCESS);
+		$message = new Notification($this->tr("Extension \"@s\" was successfully deleted", $name), Notification::SUCCESS);
 		$message->add();
 		return true;
 	}
 
 	final public static function Enable($name){
 		if( self::IsLoaded($name) ){
-			$message = new Notification(tr("Extension \"@s\" is already enabled", $name), Notification::ERROR);
+			$message = new Notification($this->tr("Extension \"@s\" is already enabled", $name), Notification::ERROR);
 			$message->add();
 			return false;
 		}
@@ -278,7 +279,7 @@ class ExtensionHandler{
 					self::$list[$name] = new $name($name);
 					$exists = true;
 				}catch(Exception $e){
-					Debug::Log(tr("Can't load extension: @s, error: @s", $extension, $e->getMessage()), Debug::LOG_ERROR);
+					Debug::Log($this->tr("Can't load extension: @s, error: @s", $extension, $e->getMessage()), Debug::LOG_ERROR);
 				}
 			}
 		}
@@ -288,12 +289,12 @@ class ExtensionHandler{
 				$extensions[] = $name;
 			}
 			$extensions = implode(",", $extensions);
-			Settings::Update('extensions', $extensions);
-			$message = new Notification(tr("Extension \"@s\" was successfully enabled", $name), Notification::SUCCESS);
+			Setting::Update('extensions', $extensions);
+			$message = new Notification($this->tr("Extension \"@s\" was successfully enabled", $name), Notification::SUCCESS);
 			$message->add();
 			return true;
 		}
-		$message = new Notification(tr("Extension \"@s\" doesn't exists", $name), Notification::ERROR);
+		$message = new Notification($this->tr("Extension \"@s\" doesn't exists", $name), Notification::ERROR);
 		$message->add();
 		return false;
 		/**
@@ -305,12 +306,12 @@ class ExtensionHandler{
 
 	final public static function Disable($name){
 		if( !self::IsLoaded($name) ){
-			$message = new Notification(tr("Extension \"@s\" is already disabled", $name), Notification::ERROR);
+			$message = new Notification($this->tr("Extension \"@s\" is already disabled", $name), Notification::ERROR);
 			$message->add();
 			return false;
 		}
 		if( self::IsDefault($name) ){
-			$message = new Notification(tr("Extension \"@s\" can't be disabled", $name), Notification::ERROR);
+			$message = new Notification($this->tr("Extension \"@s\" can't be disabled", $name), Notification::ERROR);
 			$message->add();
 			return false;
 		}
@@ -323,15 +324,15 @@ class ExtensionHandler{
 			$extensions[] = $name;
 		}
 		$extensions = implode(",", $extensions);
-		Settings::Update('extensions', $extensions);
-		$message = new Notification(tr("Extension \"@s\" was successfully disabled", $name), Notification::SUCCESS);
+		Setting::Update('extensions', $extensions);
+		$message = new Notification($this->tr("Extension \"@s\" was successfully disabled", $name), Notification::SUCCESS);
 		$message->add();
 		return true;
 	}
 
 	final public static function Add($name){
 		var_dump($name);
-		$message = new Notification(tr("Extension \"@s\" was successfully added", $name), Notification::SUCCESS);
+		$message = new Notification($this->tr("Extension \"@s\" was successfully added", $name), Notification::SUCCESS);
 		$message->add();
 		return true;
 	}
@@ -340,6 +341,17 @@ class ExtensionHandler{
 		foreach (self::$list as $name => $extension) {
 			$extension->onShutdown();
 		}
+	}
+
+	final public static function GetClasses(){
+		return [
+			'AbstractExtension',
+			'Extension',
+			'ExtensionHandler',
+			'ExtensionInterface',
+			'Theme',
+			'ThemeHandler'
+		];
 	}
 }
 ?>

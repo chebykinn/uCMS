@@ -9,7 +9,9 @@
 namespace uCMS\Core\Extensions;
 use uCMS\Core\Debug;
 use uCMS\Core\uCMS;
-abstract class AbstractExtension{
+use uCMS\Core\Object;
+
+abstract class AbstractExtension extends Object{
 	const INFO = 'extension.info';
 	const PATH = 'content/extensions/';
 	const CORE_PATH = 'core/content/extensions/';
@@ -21,6 +23,7 @@ abstract class AbstractExtension{
 	protected $settings;
 
 	public function __construct($name){
+		parent::__construct();
 		$this->name = $name;
 		$this->loadInfo();
 		$this->checkCoreVersion();
@@ -34,7 +37,7 @@ abstract class AbstractExtension{
 		if( file_exists($this->getFilePath($file)) ){
 			include $this->getFilePath($file);
 		}else{
-			Debug::Log(tr("Failed to open file @s", $this->getFilePath($file)), Debug::LOG_ERROR);
+			Debug::Log($this->tr("Failed to open file @s", $this->getFilePath($file)), Debug::LOG_ERROR);
 		}
 	}
 	
@@ -48,7 +51,7 @@ abstract class AbstractExtension{
 
 	final protected function checkCoreVersion(){
 		if( version_compare(uCMS::CORE_VERSION, $this->coreVersion, '<') ){
-			Debug::Log(tr("Outdated core version @s", $this->name), Debug::LOG_ERROR);
+			Debug::Log($this->tr("Outdated core version @s", $this->name), Debug::LOG_ERROR);
 			throw new \RuntimeException("Outdated core version");
 		}
 	}
