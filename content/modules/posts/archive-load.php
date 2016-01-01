@@ -1,24 +1,14 @@
 <?php
 $id = 0;
+$page = get_current_page();
+
 if(NICE_LINKS){
-	$action2 = isset($url_all[4]) ? $url_all[4] : '';
-	if(!empty($action2)){
-		if($action2 == 'page'){
-			$page = isset($url_all[5]) ? (int) $url_all[5] : 1;
-			if($page <= 0) $page = 1;
-		}
-	}else{
-		$page = 1;
-	}
-}else
-	$page = (isset($_GET['page']) and $_GET['page'] > 0) ? (int) $_GET['page'] : 1;
-	if(NICE_LINKS){
-		$month = isset($url_all[3]) ? (int) $url_all[3] : 0;
-		$year = isset($url_all[2]) ? (int) $url_all[2] : 0;
-	}else{
-		$month = isset($_GET['m']) ? (int) $_GET['m'] : 0;
-		$year = isset($_GET['y']) ? (int) $_GET['y'] : 0;
-	}
+	$month = isset($url_all[3]) ? (int) $url_all[3] : 0;
+	$year = isset($url_all[2]) ? (int) $url_all[2] : 0;
+}else{
+	$month = isset($_GET['m']) ? (int) $_GET['m'] : 0;
+	$year = isset($_GET['y']) ? (int) $_GET['y'] : 0;
+}
 	
 if($month and $year > 0){
 	$count = $udb->num_rows("SELECT `id` FROM `".UC_PREFIX."posts` WHERE year(`date`) = '$year' and month(`date`) = '$month' and `publish` > 0");	
