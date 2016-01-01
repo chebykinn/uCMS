@@ -2,8 +2,8 @@
 namespace uCMS\Core;
 use uCMS\Core\Extensions\FileManager\File;
 
-class uCMS{
-	const CORE_VERSION = "2.0 Alpha 6";
+class uCMS extends Object{
+	const CORE_VERSION = "2.0 Alpha 7";
 	const COMPATIBILITY_VERSION = "2.x";
 	const MIN_PHP_VERSION = "5.4";
 	const MIN_MYSQL_VERSION = "5.0";
@@ -20,7 +20,7 @@ class uCMS{
 	const PUBLIC_PATH = 'pub/';
 
 	public static function GetDirectory(){
-		$storedValue = Settings::Get(Settings::UCMS_DIR);
+		$storedValue = Setting::Get(Setting::UCMS_DIR);
 
 		if( empty($storedValue) ){
 			$url = parse_url(urldecode($_SERVER['REQUEST_URI']));
@@ -30,7 +30,7 @@ class uCMS{
 	}
 
 	public static function GetDomain(){
-		$storedValue = Settings::Get("site_domain");
+		$storedValue = Setting::Get("site_domain");
 		return empty($storedValue) ? $_SERVER['REQUEST_URI'] : $storedValue;
 	}
 
@@ -38,18 +38,52 @@ class uCMS{
 		return self::GetDomain().self::GetDirectory();
 	}
 
+	public static function GetHTTPStatus($url = self::UCMS_HOST){
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL,            $url);
+		curl_setopt($ch, CURLOPT_HEADER,         true);
+		curl_setopt($ch, CURLOPT_NOBODY,         true);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($ch, CURLOPT_TIMEOUT,        1);
+		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 1);
+		$result = curl_exec($ch);
+		$status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+		curl_close($ch);
+		return $status;
+	}
+
+	public static function IsHostAvailable($url = self::UCMS_HOST){
+		$status = self::GetHTTPStatus($url);
+		return ($status == 200); 
+	}
+
+	public static function IsRemoteFileExists($filepath, $host = self::UCMS_HOST){
+		$status = self::GetHTTPStatus($filepath);
+		return ($status == 200);
+	}
+
+	public static function GetRemoteFile($filepath, $host = self::UCMS_HOST, $asString = true){
+		$exists = self::IsRemoteFileExists($filepath, $host);
+		if( !$exists ) return false;
+
+		if( $asString ){
+			$content = @file_get_contents($file);
+		}else{
+			$content = @file($filepath);
+		}
+		return $content;
+	}
+
 	public static function GetLatestVersion(){
 		$file = self::UCMS_HOST.self::PUBLIC_PATH."version";
-		$file_headers = @get_headers($file);
-		$strings = @file($file);
+		$strings = self::GetRemoteFile($file, self::UCMS_HOST, false);
 		if(!empty($strings[0])) return $strings[0];
 		return false;
 	}
 
 	public static function GetUpdateNotes(){
 		$file = self::UCMS_HOST.self::PUBLIC_PATH."notes";
-		$file_headers = @get_headers($file);
-		$text = @file_get_contents($file);
+		$text = self::GetRemoteFile($file);
 		if( !empty($text) ) return $text;
 		return false;
 	}
@@ -127,9 +161,5 @@ class uCMS{
 		}
 		return self::ERR_INVALID_PACKAGE;
 	}
-}
-
-if( !defined("UCMS_DIR") ){
-	define("UCMS_DIR", '/');
 }
 ?>
