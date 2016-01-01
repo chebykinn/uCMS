@@ -473,11 +473,10 @@ function get_url_key_value($key, $default){
  *
 */
 function get_current_page(){
-	if(NICE_LINKS){
-		return intval(get_url_action_value('page', 1));
-	}else{
-		return isset($_GET['page']) ? (int) $_GET['page'] : 1;
-	}
+	$page = NICE_LINKS ? get_url_action_value('page', 1) : isset($_GET['page']) ? $_GET['page'] : 1;
+	$page = intval($page);
+	if( $page <= 0 ) $page = 1;
+	return $page;
 }
 
 /**
