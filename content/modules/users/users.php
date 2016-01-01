@@ -465,8 +465,8 @@ class uSers{
 		unset($_SESSION['password']);
 		unset($_SESSION['login']); 
 		unset($_SESSION['id']);
-		setcookie("id", "", time() - 3600*24*30*12, '/');
-		setcookie("hash", "", time() - 3600*24*30*12, '/');
+		setcookie("id", "", time() - 3600*24*30*12, '/', $_SERVER['SERVER_NAME']);
+		setcookie("hash", "", time() - 3600*24*30*12, '/', $_SERVER['SERVER_NAME']);
 		$event->do_actions("user.logged_out");
 	}
 
@@ -534,8 +534,8 @@ class uSers{
 			if(isset($_SESSION['hash'])) {
 				$hash = $_SESSION['hash'];
 			}
-			if(isset($_COOKIE['id'])) $id = $_COOKIE['id'];
-			if(isset($_COOKIE['hash'])) $hash = $_COOKIE['hash'];
+			if(isset($_COOKIE['id']) && $id == 0) $id = $_COOKIE['id'];
+			if(isset($_COOKIE['hash']) && $hash == 0) $hash = $_COOKIE['hash'];
 			if($id > 0 and $hash != ""){
 				
 				$userdata = $udb->get_row("SELECT `u`.*, `uf`.`value` AS `nickname` FROM `".UC_PREFIX."users` AS `u` FORCE INDEX (PRIMARY)
@@ -1111,8 +1111,12 @@ class uSers{
 				if(file_exists(AVATARS_PATH.$ava['avatar']))
 					unlink(AVATARS_PATH.$ava['avatar']);
 			}
+			$types = array('image/jpeg', 'image/png', 'image/gif');
 			$avatar_dir = ABSPATH.'content/avatars/';
-			if(preg_match('/[.](JPG)|(jpg)|(gif)|(GIF)|(png)|(PNG)$/',$_FILES['avatar']['name'])){	
+			$finfo = finfo_open(FILEINFO_MIME_TYPE);
+			$mime = finfo_file($finfo, $tmp_name);
+			finfo_close($finfo);
+			if(in_array($mime, $types) && preg_match('/[.](JPG)|(jpg)|(gif)|(GIF)|(png)|(PNG)$/',$_FILES['avatar']['name'])){	
 				$filename = $avatar;
 				$source = $tmp_name;	
 				$target = $avatar_dir.$filename;
