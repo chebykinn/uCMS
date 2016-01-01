@@ -1,7 +1,7 @@
 <?php
 namespace uCMS\Core\Extensions;
 use uCMS\Core\Debug;
-use uCMS\Core\Settings;
+use uCMS\Core\Setting;
 use uCMS\Core\Page;
 use uCMS\Core\Notification;
 use uCMS\Core\Admin\ControlPanel;
@@ -27,6 +27,7 @@ class Extension extends AbstractExtension implements ExtensionInterface{
 	private static $defaultList;
 
 	final public function __construct($name){
+		parent::__construct($name);
 		$this->name = $name;
 		$this->loadInfo();
 
@@ -88,16 +89,22 @@ class Extension extends AbstractExtension implements ExtensionInterface{
 		$this->version = $decodedInfo['version'];
 		$this->coreVersion = $decodedInfo['coreVersion'];
 
-		$this->dependencies = !empty($decodedInfo['dependencies']) ? $decodedInfo['dependencies'] : [];
-		$this->info         = !empty($decodedInfo['info'])         ? $decodedInfo['info']         : [];
-		$this->loadAfter    = !empty($decodedInfo['loadAfter'])    ? $decodedInfo['loadAfter']    : [];
-		$this->includes     = !empty($decodedInfo['includes'])     ? $decodedInfo['includes']     : [];
-		$this->actions      = !empty($decodedInfo['actions'])      ? $decodedInfo['actions']      : [];
-		$this->admin        = !empty($decodedInfo['admin'])        ? $decodedInfo['admin']        : [];
-		$this->adminPages   = !empty($decodedInfo['adminPages'])   ? $decodedInfo['adminPages']   : [];
-		$this->settings     = !empty($decodedInfo['settings'])     ? $decodedInfo['settings']     : [];
-		$this->permissions  = !empty($decodedInfo['permissions'])  ? $decodedInfo['permissions']  : [];
-		$this->blocks       = !empty($decodedInfo['blocks'])       ? $decodedInfo['blocks']       : [];
+		$fields = [
+			'dependencies',
+			'info',
+			'loadAfter',
+			'includes',
+			'actions',
+			'admin',
+			'adminPages',
+			'settings',
+			'permissions',
+			'blocks'
+		];
+
+		foreach ($fields as $field) {
+			$this->$field = !empty($decodedInfo[$field]) ? $decodedInfo[$field] : [];
+		}
 		$separatorIndex = 1;
 		$prevAction = Page::INDEX_ACTION;
 		$separator = false;
@@ -183,7 +190,7 @@ class Extension extends AbstractExtension implements ExtensionInterface{
 
 	protected function checkStage(){
 		if( !empty($this->settings) && is_array($this->settings) ){
-			Settings::AddMultiple($this->settings);
+			Setting::AddMultiple($this->settings);
 		}
 		$tables = $this->getInfo('tables');
 
