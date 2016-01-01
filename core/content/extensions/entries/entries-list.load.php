@@ -1,5 +1,5 @@
 <?php
-use uCMS\Core\Settings;
+use uCMS\Core\Setting;
 use uCMS\Core\Page;
 use uCMS\Core\Debug;
 use uCMS\Core\uCMS;
@@ -12,7 +12,7 @@ use uCMS\Core\Extensions\Users\User;
 // get entry types aliases and select $action type
 // if action is not home page, then entries will have url prefix
 $prefix = Page::GetCurrent()->getAction();
-$entriesAmount = (int)Settings::Get('entries_amount');
+$entriesAmount = (int)Setting::Get('entries_amount');
 $commentsEnabled = false;
 $commentsCount = 0;
 $comments = array();
@@ -25,9 +25,9 @@ if( $prefix === Page::INDEX_ACTION ){
 // TODO: consider exclude this block from these actions
 if ( empty($prefix) || ( !in_array($prefix, ExtensionHandler::GetUsedActions()) || $prefix == Entry::ACTION ) ){
 	$found = false;
-	$limit = Settings::Get('entries_per_page');
+	$limit = Setting::Get('entries_per_page');
 	if( empty($prefix) ){
-		$prefix = Settings::Get('list_entry_type');
+		$prefix = Setting::Get('list_entry_type');
 	}
 	$alias = Page::GetCurrent()->getActionValue();
 

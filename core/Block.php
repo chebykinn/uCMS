@@ -98,7 +98,7 @@ class Block extends Model{
 
 	private function prepareData($row){
 		if( !ThemeHandler::IsExists($row->theme) ) $row->theme = "";
-		if( empty($row->theme) ) $row->theme = Settings::Get('theme');
+		if( empty($row->theme) ) $row->theme = Setting::Get('theme');
 
 		if( $row->status == self::ENABLED ){
 			$row->status = ($row->region != "") ? self::ENABLED : self::DISABLED;
@@ -141,7 +141,7 @@ class Block extends Model{
 
 		$result = parent::create($row);
 		if( $result ){
-			Settings::Increment("blocks_amount");
+			Setting::Increment("blocks_amount");
 		}
 		return $result;
 	}
@@ -164,7 +164,7 @@ class Block extends Model{
 	public function delete($row){
 		$result = parent::delete($row);
 		if( $result ){
-			Settings::Decrement("blocks_amount");
+			Setting::Decrement("blocks_amount");
 		}
 		return $result;
 	}

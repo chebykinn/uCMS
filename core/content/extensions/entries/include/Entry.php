@@ -2,7 +2,7 @@
 namespace uCMS\Core\Extensions\Entries;
 use uCMS\Core\Extensions\Users\User;
 use uCMS\Core\Extensions\Users\Group;
-use uCMS\Core\Settings;
+use uCMS\Core\Setting;
 use uCMS\Core\Database\Query;
 use uCMS\Core\ORM\Model;
 use uCMS\Core\Tools;
@@ -24,7 +24,7 @@ class Entry extends Model{
 	}
 
 	public function getLink($row){
-		if( (bool) Settings::Get("clean_url") ){
+		if( (bool) Setting::Get("clean_url") ){
 			return Page::FromAction($row->alias);
 		}else{
 			return Page::FromAction('entry', $row->eid);
@@ -41,7 +41,7 @@ class Entry extends Model{
 	public function getContent($row, $short = false){
 		$captionRegex = "/@-more-@(((.*)-@)?(.*)-@)?/";
 		$class = "more-link";
-		$caption = tr('Continue reading');
+		$caption = $this->tr('Continue reading');
 		if( preg_match("$captionRegex", $row->content, $matches) ){
 			$tag = $matches[0];
 			if( $short ){
@@ -134,7 +134,7 @@ class Entry extends Model{
 
 		$result = parent::create($row);
 		if( $result ){
-			Settings::Increment('entries_amount');
+			Setting::Increment('entries_amount');
 		}
 		return $result;
 	}
@@ -149,7 +149,7 @@ class Entry extends Model{
 	public function delete($row){
 		$result = parent::delete($row);
 		if( $result ){
-			Settings::Decrement('entries_amount');
+			Setting::Decrement('entries_amount');
 		}
 		return $result;
 	}

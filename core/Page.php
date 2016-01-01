@@ -58,7 +58,7 @@ class Page{
 	}
 
 	public static function FromAction($action, $data = ""){
-		$isCleanUrl = (bool)Settings::get(Settings::CLEAN_URL);
+		$isCleanUrl = (bool)Setting::get(Setting::CLEAN_URL);
 		if( $action === self::INDEX_ACTION ) $action = "";
 		$urlAction = "";
 		$urlData = "";
@@ -250,11 +250,11 @@ class Page{
 	}
 
 	public static function Check(){
-		$isCleanUrl = (bool) Settings::Get(Settings::CLEAN_URL);
+		$isCleanUrl = (bool) Setting::Get(Setting::CLEAN_URL);
 
 		if( $isCleanUrl && preg_match('/apache/i', $_SERVER['SERVER_SOFTWARE']) ){
 			if( !in_array('mod_rewrite', apache_get_modules()) ){
-				Settings::Update(Settings::CLEAN_URL, 0);
+				Setting::Update(Setting::CLEAN_URL, 0);
 			}
 		}
 	}

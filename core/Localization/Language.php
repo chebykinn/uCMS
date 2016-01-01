@@ -1,6 +1,6 @@
 <?php
 namespace uCMS\Core\Localization;
-use uCMS\Core\Settings;
+use uCMS\Core\Setting;
 use uCMS\Core\Session;
 use uCMS\Core\uCMS;
 
@@ -30,7 +30,7 @@ class Language{
 
 	public static function GetCurrentLanguage(){
 		$sessionLang = Session::GetCurrent()->get('language');
-		$storedValue = Settings::Get(Settings::LANGUAGE);
+		$storedValue = Setting::Get(Setting::LANGUAGE);
 		if( empty($storedValue) ){
 			if( empty($sessionLang) ) return self::ENGLISH;
 			$language = $sessionLang;
@@ -42,7 +42,7 @@ class Language{
 
 	public static function Init(){
 		$sessionLang = Session::GetCurrent()->get('language');
-		$storedValue = Settings::Get(Settings::LANGUAGE);
+		$storedValue = Setting::Get(Setting::LANGUAGE);
 		if( !self::IsSaved() && empty($storedValue) ) return false;
 		Language::GetCurrent()->load();
 		return true;
@@ -102,12 +102,7 @@ class Language{
 		if( !in_array($lang, $list) ) return false;
 		$localpath = ABSPATH.self::PATH."$lang.po";
 		$remotepath = uCMS::GetRemotePath()."languages/$lang.po";
-		$file_headers = @get_headers($remotepath);
-		if($file_headers[0] == 'HTTP/1.1 404 Not Found') {
-			$exists = false;
-		}else {
-			$exists = true;
-		}
+		$exists = uCMS::IsRemoteFileExists($remotepath);
 
 		if( $exists ){
 			$result = @copy($remotepath, $localpath);
