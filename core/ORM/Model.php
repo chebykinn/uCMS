@@ -8,12 +8,13 @@
 */
 namespace uCMS\Core\ORM;
 use uCMS\Core\Database\Query;
+use uCMS\Core\Object;
 /**
 * This class provides ORM Model for uCMS.
 * 
 * This class is used in uCMS ORM implementation.
 */
-abstract class Model{
+abstract class Model extends Object{
 	/**
 	* @var string $primaryKey Contains ORM table primaryKey.
 	*/
@@ -41,11 +42,10 @@ abstract class Model{
 	/**
 	* @var string $name The name of model.
 	*/
-	private $name;
 	public static $models;
 
-	final public function __construct(){
-		$this->name = (new \ReflectionClass($this))->getShortName();
+	final public function __construct($owner = NULL){
+		parent::__construct($owner);
 		// self::$models[$this->name] = $this->name; // TODO: consider store associations here
 		$this->init();
 	}
@@ -70,7 +70,7 @@ abstract class Model{
 	*/
 	final public function tableName($name = NULL){
 		if ( empty($this->tableName) || $name ){
-			$this->tableName = $name ? $name : strtolower($this->name);
+			$this->tableName = $name ? $name : strtolower($this->_name);
 		}
 		return $this->tableName;
 	}
@@ -371,7 +371,7 @@ abstract class Model{
 		return false;
 	}
 
-	final public function empty(){
+	final public function emptyRow(){
 		return $this->processRow($this, []);
 	}
 }

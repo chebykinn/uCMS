@@ -59,8 +59,13 @@ class Row{
 	}
 
 	public function __call($name, $arguments){
+		$objectMethods = get_class_methods('uCMS\\Core\\Object');
 		if (method_exists($this->model, $name)){
-			return call_user_func_array(array($this->model, $name), array_merge([$this], $arguments));
+			if( !in_array($name, $objectMethods) ){
+				return call_user_func_array([$this->model, $name], array_merge([$this], $arguments));
+			}else{
+				return call_user_func_array([$this->model, $name], $arguments);
+			}
 		}
 	}
 
