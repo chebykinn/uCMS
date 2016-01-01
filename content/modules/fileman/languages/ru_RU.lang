@@ -68,3 +68,4 @@ module.fileman.table.edit.link=Редактировать
 module.fileman.table.manage.rename.button=Переименовать
 module.fileman.table.manage.delete.button=Удалить
 module.fileman.table.empty.label=Пусто
+module.fileman.table.directory.label=Каталог

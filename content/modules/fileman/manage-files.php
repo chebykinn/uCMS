@@ -435,7 +435,7 @@ function manage_files(){
 									<input type="submit" name="rename" value="OK" class="ucms-button-submit">' : 
 									(($move and $_SESSION['files_dir'] == $dir and in_array('dir|'.$files[$i]['name'], $selected_files)) ? '<b>'.$files[$i]['name']."</b>"
 									 : '<a href="?module=fileman&dir='.$dir_url.$files[$i]['name'].'/">'.$files[$i]['name'].'</a></td>'));
-							echo '<td colspan="2">Папка</td>';
+							echo '<td colspan="2">'.$ucms->cout('module.fileman.table.directory.label', true).'</td>';
 						}
 						$id = $files[$i]['type'] != 'directory' ? 'file' : 'directory';
 						echo "<td>".$ucms->date_format($files[$i]['timestamp'])."</td>";

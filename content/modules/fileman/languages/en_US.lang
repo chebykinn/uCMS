@@ -68,3 +68,4 @@ module.fileman.table.edit.link=Edit
 module.fileman.table.manage.rename.button=Rename
 module.fileman.table.manage.delete.button=Delete
 module.fileman.table.empty.label=Empty
+module.fileman.table.directory.label=Directory
