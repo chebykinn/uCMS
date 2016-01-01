@@ -1,5 +1,4 @@
 <?php
-require_once dirname(__DIR__).'/core/functions.php';
 spl_autoload_register(function ($class) {
 
     // project-specific namespace prefix
