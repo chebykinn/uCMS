@@ -37,6 +37,10 @@ class login extends uSers{
 		}else{
 			$reg = "/[^(\w)|(\s)|(\x7F-\xFF)]/";
 			$login = $udb->parse_value(stripslashes($login));
+			$email = '';
+			if( preg_match('/@/', $login) ){
+				$email = $login;
+			}
 			$login = trim(htmlspecialchars($login));
 			$login = preg_replace($reg,'',$login);
 			$password = $udb->parse_value(stripslashes($password));
@@ -54,7 +58,7 @@ class login extends uSers{
 			}
 			else{
 				$password = $this->crypt_password($password); 
-				$usercheck = $udb->get_row("SELECT * FROM `".UC_PREFIX."users` WHERE (`login` = '$login' OR `email` = '$login') AND `password` = '$password' AND `activation` = '1' LIMIT 1");    
+				$usercheck = $udb->get_row("SELECT * FROM `".UC_PREFIX."users` WHERE (`login` = '$login' OR `email` = '$email') AND `password` = '$password' AND `activation` = '1' LIMIT 1");    
 				if(empty($usercheck['id'])){       
 					$tmp = $udb->get_row("SELECT `ip` FROM `".UC_PREFIX."attempts` WHERE `ip` = '$ip' LIMIT 1");
 					if($ip == $tmp[0]){
@@ -90,8 +94,8 @@ class login extends uSers{
 					$udb->query("UPDATE `".UC_PREFIX."attempts` SET `times` = '0' WHERE `ip` = '$ip'");
 					$ucms->update_setting("guests_count", GUESTS_COUNT-1);
 					if (isset($_POST['auto']) and $_POST['auto'] == 1){
-						setcookie("hash", $hash, time() + 60 * 60 * 24 * 30, '/');
-						setcookie("id", $usercheck['id'], time() + 60 * 60 * 24 * 30, '/');
+						setcookie("hash", $hash, time() + 60 * 60 * 24 * 30, '/', $_SERVER['SERVER_NAME']);
+						setcookie("id", $usercheck['id'], time() + 60 * 60 * 24 * 30, '/', $_SERVER['SERVER_NAME']);
 					}
 				}                 
 			}
