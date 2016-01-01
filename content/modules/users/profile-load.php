@@ -4,6 +4,7 @@ $user_messages_page = false;
 $user_edit_page = false;
 $user_posts_page = false;
 $user_comments_page = false;
+$page = get_current_page();
 if(NICE_LINKS){
 	if(is_url_key(2)){
 		$sef_value = $udb->parse_value(get_url_key_value(2, 0));
@@ -21,15 +22,12 @@ if(NICE_LINKS){
 		header("Location: ".UCMS_DIR."/users");
 	} 
 	if(in_url('posts')){
-		$page = (int) get_url_action_value('page', 1);
 		$user_id = $user->get_user_id(get_url_key_value(2, false));
 		$user_posts_page = true;
 	}elseif(in_url('comments')){
-		$page = (int) get_url_action_value('page', 1);
 		$user_id = $user->get_user_id(get_url_key_value(2, false));
 		$user_comments_page = true;
 	}elseif(in_url('messages')){
-		$page = (int) get_url_action_value('page', 1);
 		$user_id = $user->get_user_id(get_url_key_value(2, false));
 		$user_messages_page = true;
 	}elseif(in_url('edit')){
@@ -41,15 +39,12 @@ else{
 	if(isset($_GET['id']) and $_GET['id'] != ''){
 		$user_id = (int) $_GET['id'];
 	}elseif(isset($_GET['posts']) and $_GET['posts'] != ''){
-		$page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
 		$user_id = (int) $_GET['posts'];
 		$user_posts_page = true;
 	}elseif(isset($_GET['comments']) and $_GET['comments'] != ''){
-		$page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
 		$user_id = (int) $_GET['comments'];
 		$user_comments_page = true;
 	}elseif(isset($_GET['messages']) and $_GET['messages'] != ''){
-		$page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
 		$user_id = (int) $_GET['messages'];
 		$user_messages_page = true;
 	}elseif(isset($_GET['edit'])){
@@ -141,6 +136,9 @@ if($profile){
 }
 if(file_exists($theme->get_path().'profile.php'))
 	require $theme->get_path().'profile.php';
-else require UC_DEFAULT_THEMEPATH.'profile.php';
+else{
+	header("Location: /");
+	exit;
+}
 
 ?>
