@@ -18,5 +18,8 @@ if($page <= 0) $page = 1;
 add_title($action, 'module.users.site.title.userlist');
 if(file_exists($theme->get_path().'userlist.php'))
 	require_once $theme->get_path().'userlist.php';
-else require UC_DEFAULT_THEMEPATH.'userlist.php';
+else{
+	header("Location: /");
+	exit;
+}
 ?>
