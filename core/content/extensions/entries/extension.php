@@ -2,7 +2,7 @@
 namespace uCMS\Core\Extensions\Entries;
 use uCMS\Core\Page;
 use uCMS\Core\Extensions\Theme;
-use uCMS\Core\Extensions\ExtensionInterface;
+use uCMS\Core\Extensions\Extension;
 use uCMS\Core\Extensions\ExtensionHandler;
 use uCMS\Core\Block;
 use uCMS\Core\Admin\ControlPanel;
@@ -14,7 +14,7 @@ use uCMS\Core\Installer;
 use uCMS\Core\Extensions\Users\Permission;
 use uCMS\Core\Extensions\Users\Group;
 
-class Entries extends \uCMS\Core\Extensions\Extension implements \uCMS\Core\Extensions\ExtensionInterface {
+class Entries extends Extension{
 
 	public function onLoad(){
 		Permission::Register('manage entries', $this->tr('Manage Entries'), $this->tr('Allow user to add, edit and delete entries.'));
