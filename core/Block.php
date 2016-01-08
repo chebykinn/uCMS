@@ -34,6 +34,7 @@ class Block extends Model{
 		}
 
 		$theme = Theme::GetCurrent()->getName();
+		// TODO: Fix actions selection
 		$blocks = (new Block())->find([
 			'where' => [
 				['status', '=', 1], ['theme', '=', $theme], ['visibility', '=', 1], ['actions', 'LIKE', "%$action%", 'or'],
@@ -98,14 +99,15 @@ class Block extends Model{
 
 	private function prepareData($row){
 		if( !ThemeHandler::IsExists($row->theme) ) $row->theme = "";
-		if( empty($row->theme) ) $row->theme = Setting::Get('theme');
+		if( empty($row->theme) ) $row->theme = Setting::Get(Setting::THEME);
 
 		if( $row->status == self::ENABLED ){
 			$row->status = ($row->region != "") ? self::ENABLED : self::DISABLED;
 		}
 
 		if( empty($row->owner) ){
-			$row->owner = Tools::GetCurrentOwner();
+			if( empty($this->getOwner()) ) return false;
+			$row->owner = $this->getOwner()->getPackage();
 		}
 
 		if( $row->visibility < self::SHOW_EXCEPT ){
@@ -127,10 +129,12 @@ class Block extends Model{
 		if( $row->position < 0 ){
 			$row->position = 0;
 		}
+		return true;
 	}
 
 	public function create($row){
-		$this->prepareData($row);
+		$result = $this->prepareData($row);
+		if( !$result ) return false;
 		$duplicate = (new Block())->count([
 			'theme'  => $row->theme,
 			'region' => $row->region,
@@ -141,7 +145,7 @@ class Block extends Model{
 
 		$result = parent::create($row);
 		if( $result ){
-			Setting::Increment("blocks_amount");
+			Setting::Increment(Setting::BLOCKS_AMOUNT, $this);
 		}
 		return $result;
 	}
@@ -164,7 +168,7 @@ class Block extends Model{
 	public function delete($row){
 		$result = parent::delete($row);
 		if( $result ){
-			Setting::Decrement("blocks_amount");
+			Setting::Decrement(Setting::BLOCKS_AMOUNT, $this);
 		}
 		return $result;
 	}
@@ -183,21 +187,6 @@ class Block extends Model{
 			return self::$list[$theme];
 		}
 		return array();
-	}
-
-	/**
-	* Prepare $value.
-	*
-	* This method allows templates to print variables without safety concern.
-	*
-	* @since 2.0
-	* @param $value Variable to prepare
-	* @api
-	* @return void
-	*/
-	public function prepare($value){
-		// TODO: complex rendering
-		return htmlspecialchars($value);
 	}
 }
 ?>
