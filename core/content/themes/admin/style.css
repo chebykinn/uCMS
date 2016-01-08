@@ -295,6 +295,15 @@ h1, h2{
 	font-weight: bold;
 }
 
+.inner .button{
+	margin: 0 auto;
+	text-align: center;
+	float: none;
+	clear: both;
+	width: 50%;
+}
+
+
 .permissions-block{
 	float: left;
 	width: 50%;
