@@ -1,7 +1,6 @@
 <?php
 use uCMS\Core\Admin\ManagePage;
 use uCMS\Core\Admin\ManageTable;
-use uCMS\Core\Database\Query;
 use uCMS\Core\Setting;
 use uCMS\Core\Form;
 use uCMS\Core\Page;
@@ -14,6 +13,7 @@ use uCMS\Core\Extensions\Comments\Comment;
 use uCMS\Core\Admin\ControlPanel;
 $page = new ManagePage();
 $table = new ManageTable();
+
 $page->addSection('add', 'manage entries', $this->tr('Add New Entry'));
 $page->addSection('edit', 'manage entries', $this->tr('Edit Entry'));
 $page->addSection('type/add', 'manage entries', $this->tr('Add Entry Type'));
@@ -105,12 +105,14 @@ switch ($page->getSection()) {
 		$form->addSelectField($list, "type", $this->tr("Type:"), "", $savedType);
 		$form->addField("tags", "text", $this->tr("Tags:"), "", "", "", false);
 		$form->render();
+		$lang = Setting::Get(Setting::LANGUAGE);
 		?>
 		<script type="text/javascript" src="<?php echo $tinymcePath; ?>"></script>
 		<script>
 		tinymce.init({
 			selector:'textarea',
 			height: 350,
+			language: <?php echo "'$lang'"; ?>,
 			plugins: [
  			  'advlist autolink lists link image charmap print preview anchor',
  			  'searchreplace visualblocks code fullscreen',
