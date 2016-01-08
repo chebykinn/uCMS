@@ -3,20 +3,21 @@ namespace uCMS\Core\Localization;
 use uCMS\Core\Setting;
 use uCMS\Core\Session;
 use uCMS\Core\uCMS;
+use uCMS\Core\Object;
 
-class Language{
+class Language extends Object{
 	const PATH = 'content/languages/';
 	const ENGLISH = 'en_US';
-	private static $instance;
+	private static $instance = NULL;
 	private static $list;
+	private static $packages;
 	private $name;
 	private $langStrings;
 
 	public static function GetCurrent(){
-		if ( is_null( self::$instance ) ){
-			self::$instance = new self();
+		if ( !is_null( self::$instance ) ){
+			return self::$instance;
 		}
-		return self::$instance;
 	}
 
 	public static function IsLoaded(){
@@ -44,6 +45,7 @@ class Language{
 		$sessionLang = Session::GetCurrent()->get('language');
 		$storedValue = Setting::Get(Setting::LANGUAGE);
 		if( !self::IsSaved() && empty($storedValue) ) return false;
+		self::$instance = new self();
 		Language::GetCurrent()->load();
 		return true;
 	}
@@ -61,6 +63,7 @@ class Language{
 	public function load(){
 		if( $this->name == self::ENGLISH ) return true;
 		$languageFile = ABSPATH.self::PATH.$this->name.".po";
+
 		if( !file_exists($languageFile) ){
 			$result = self::DownloadLanguage($this->name);
 			if( !$result ) return false;
@@ -112,16 +115,7 @@ class Language{
 	}
 
 	public function get($string, $args = array()){
-		/*if( empty($this->langStrings[$string]) ){
-			$engFile = ABSPATH.self::PATH.self::ENGLISH.'.po';
-			if( !file_exists($engFile) ){
-				touch($engFile);
-			}
-			$lang = fopen($engFile, 'a');
-			$line = "msgid \"$string\"\nmsgstr \"\"\n\n";
-			fwrite($lang, $line);
-			fclose($lang);
-		}*/
+		$this->insertSourceLine($string);
 		$string = !empty($this->langStrings[$string]) ? $this->langStrings[$string] : $string;
 		$args = func_get_args();
 		$args = array_slice($args, 1);
@@ -132,6 +126,22 @@ class Language{
 			$string = preg_replace($patt, $args, $string, 1);
 		}
 		return $string;
+	}
+
+	private function insertSourceLine($string){
+		if( empty($this->langStrings[$string]) ){
+			$engFile = ABSPATH.self::PATH.self::ENGLISH.'.po';
+			if( !file_exists($engFile) ){
+				touch($engFile);
+			}else{
+				$lines = file($engFile);
+				if( in_array("msgid \"$string\"\n", $lines) ) return;
+			}
+			$lang = fopen($engFile, 'a');
+			$line = "msgid \"$string\"\nmsgstr \"\"\n\n";
+			fwrite($lang, $line);
+			fclose($lang);
+		}
 	}
 
 	private function parseGettextPO(){
