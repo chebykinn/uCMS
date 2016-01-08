@@ -4,7 +4,7 @@ use uCMS\Core\Session;
 use uCMS\Core\Setting;
 use uCMS\Core\Database\Query;
 use uCMS\Core\ORM\Model;
-use uCMS\Core\Tools;
+use uCMS\Core\uCMS;
 use uCMS\Core\Form;
 use uCMS\Core\Page;
 use uCMS\Core\Notification;
@@ -88,7 +88,7 @@ class User extends Model{
 				Session::GetCurrent()->Deauthorize(); // user got wrong cache saved
 			}
 		}
-		$hash = Tools::GenerateHash();
+		$hash = uCMS::GenerateHash();
 		$updateSession = new Query("{sessions}");
 		$updated = $saveCookies ? 0 : time();
 		$updateSession->insert(
@@ -179,7 +179,11 @@ class User extends Model{
 	}
 
 	public function getDate($row){	
-		return Tools::FormatTime($row->created);
+		return uCMS::FormatTime($row->created);
+	}
+
+	public function getProfilePage($row){
+		return Page::FromAction(User::PROFILE_ACTION, $row->name);
 	}
 
 	public function setGID($value){
@@ -216,7 +220,11 @@ class User extends Model{
 		$row->created = time();
 		$result = parent::create($row);
 		if( !$result ) return false;
-		Setting::Increment('users_amount');
+		$amount = Setting::GetRow('users_amount', $this);
+		if( $amount ){
+
+		}
+		Setting::Increment('users_amount', $this);
 	}
 
 	public function delete($row){
@@ -225,7 +233,7 @@ class User extends Model{
 		}
 		$result = parent::delete($row);
 		if( !$result ) return false;
-		Setting::Decrement('users_amount');
+		Setting::Decrement('users_amount', $this);
 	}
 
 

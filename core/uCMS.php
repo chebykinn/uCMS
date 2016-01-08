@@ -1,6 +1,7 @@
 <?php
 namespace uCMS\Core;
 use uCMS\Core\Extensions\FileManager\File;
+use uCMS\Core\Extensions\Users\User;
 
 class uCMS extends Object{
 	const CORE_VERSION = "2.0 Alpha 7";
@@ -160,6 +161,37 @@ class uCMS extends Object{
 			return self::SUCCESS;
 		}
 		return self::ERR_INVALID_PACKAGE;
+	}
+
+	public static function FormatTime($time = 0, $format = ""){
+		if( $time === 0 ) $time = time();
+		if( empty($format) ){
+			$format = Setting::Get('datetime_format');
+		}
+		if( class_exists('User') ){
+			// If user have his own timezone we will use it.
+			$timezone = User::Current()->getTimezone();
+		}
+		if( empty($timezone) ){
+			$timezone = Setting::Get('ucms_timezone');
+		}
+		if( empty($timezone) ) $timezone = 'UTC';
+
+		$datetime = new \DateTime("@$time");
+		// DateTime ignores $timezone parameter when created from timestamp, so
+		// we have to set in explicitly.
+		$datetime->setTimezone(new \DateTimeZone($timezone)); 
+		return $datetime->format($format);
+	}
+
+	public static function GenerateHash($length = 32){
+		$chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPRQSTUVWXYZ0123456789-";
+		$code = "";
+		$clen = strlen($chars) - 1;  
+		while (strlen($code) < $length) {
+			$code .= $chars[mt_rand(0,$clen)];  
+		}
+		return $code;
 	}
 }
 ?>

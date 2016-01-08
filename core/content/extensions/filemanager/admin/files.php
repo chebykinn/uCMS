@@ -3,7 +3,6 @@ use uCMS\Core\Admin\ManagePage;
 use uCMS\Core\Admin\ManageTable;
 use uCMS\Core\Extensions\FileManager\File;
 use uCMS\Core\Setting;
-use uCMS\Core\Tools;
 $page = new ManagePage();
 $table = new ManageTable();
 $page->doActions();
@@ -27,7 +26,7 @@ foreach ($files as $file) {
 			$file->type,
 			$file->size,
 			$file->user->name,
-			Tools::FormatTime($file->changed)
+			$file->getDate()
 		)
 	);
 }

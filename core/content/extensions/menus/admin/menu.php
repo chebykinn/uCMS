@@ -4,7 +4,6 @@ use uCMS\Core\Admin\ManageTable;
 use uCMS\Core\Extensions\Menus\MenuLink;
 use uCMS\Core\Extensions\Menus\Menu;
 use uCMS\Core\Setting;
-use uCMS\Core\Tools;
 $page = new ManagePage();
 $table = new ManageTable();
 $page->doActions();

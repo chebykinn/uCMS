@@ -5,7 +5,7 @@ use uCMS\Core\Database\Query;
 use uCMS\Core\Admin\ControlPanel;
 use uCMS\Core\Extensions\Users\User;
 use uCMS\Core\Setting;
-use uCMS\Core\Tools;
+use uCMS\Core\uCMS;
 $usersPage = new ManagePage();
 $usersTable = new ManageTable();
 $query = new Query("{users}");
@@ -29,12 +29,12 @@ foreach ($users as $user) {
 	$usersTable->setInfo('status', $user->status);
 	$sessions = array();
 	foreach ($user->sessions as $session) {
-		$sessions[] = $this->tr('IP: @s, Created: @s, ', $session->ip, Tools::FormatTime($session->created))
-		.($session->updated == 0 ? $this->tr('Saved') : $this->tr('Updated: @s', Tools::FormatTime($session->updated)));
+		$sessions[] = $this->tr('IP: @s, Created: @s, ', $session->ip, uCMS::FormatTime($session->created))
+		.($session->updated == 0 ? $this->tr('Saved') : $this->tr('Updated: @s', uCMS::FormatTime($session->updated)));
 	}
 	$sessions = implode("<br>", $sessions);
-	$lastlogin = empty($user->lastlogin) ? $this->tr("None") : Tools::FormatTime($user->lastlogin);
-	$visited = empty($user->visited) ? $this->tr("None") : Tools::FormatTime($user->visited);
+	$lastlogin = empty($user->lastlogin) ? $this->tr("None") : uCMS::FormatTime($user->lastlogin);
+	$visited = empty($user->visited) ? $this->tr("None") : uCMS::FormatTime($user->visited);
 	$usersTable->addRow( array(
 		$user->name.'<br><div class="manage-actions">'.
 		$usersTable->manageButtons(array(
@@ -47,7 +47,7 @@ foreach ($users as $user) {
 		$this->tr("Active Sessions:<br>@s<br>Registered: @s", $sessions, $user->ip),
 		$lastlogin,
 		$visited,
-		Tools::FormatTime($user->created)
+		uCMS::FormatTime($user->created)
 		)
 	);
 

@@ -7,7 +7,6 @@ use uCMS\Core\Extensions\Theme;
 use uCMS\Core\Extensions\ThemeHandler;
 use uCMS\Core\Setting;
 use uCMS\Core\Page;
-use uCMS\Core\Tools;
 use uCMS\Core\Notification;
 use uCMS\Core\Block;
 $page = new ManagePage();

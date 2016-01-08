@@ -3,7 +3,6 @@ use uCMS\Core\Admin\ManagePage;
 use uCMS\Core\Admin\ManageTable;
 use uCMS\Core\Extensions\Comments\Comment;
 use uCMS\Core\Setting;
-use uCMS\Core\Tools;
 $page = new ManagePage();
 $table = new ManageTable();
 $page->doActions();
@@ -25,14 +24,14 @@ $comments = (new Comment())->find(array('limit' => $limit));
 foreach ($comments as $comment) {
 	$table->setInfo("idKey", $comment->fid);
 	$table->setInfo("status", $comment->status);
-	$table->addRow( array(
+	$table->addRow( [
 			$comment->content,
 			$comment->name,
 			$comment->entry->title,
 			$comment->email,
 			$comment->ip,
-			Tools::FormatTime($comment->created),
-		)
+			$comment->getDate()
+		]
 	);
 }
 $table->printTable();

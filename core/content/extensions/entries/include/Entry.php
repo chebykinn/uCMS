@@ -5,9 +5,9 @@ use uCMS\Core\Extensions\Users\Group;
 use uCMS\Core\Setting;
 use uCMS\Core\Database\Query;
 use uCMS\Core\ORM\Model;
-use uCMS\Core\Tools;
 use uCMS\Core\Page;
 use uCMS\Core\Cache;
+use uCMS\Core\uCMS;
 class Entry extends Model{
 	const DRAFT = 0;
 	const PUBLISHED = 1;
@@ -34,7 +34,7 @@ class Entry extends Model{
 	public function getDate($row, $fromCreation = false){
 		$time = $fromCreation ? $row->created : $row->changed;
 		
-		return Tools::FormatTime($time);
+		return uCMS::FormatTime($time);
 
 	}
 
@@ -134,7 +134,7 @@ class Entry extends Model{
 
 		$result = parent::create($row);
 		if( $result ){
-			Setting::Increment('entries_amount');
+			Setting::Increment('entries_amount', $this);
 		}
 		return $result;
 	}
@@ -149,7 +149,7 @@ class Entry extends Model{
 	public function delete($row){
 		$result = parent::delete($row);
 		if( $result ){
-			Setting::Decrement('entries_amount');
+			Setting::Decrement('entries_amount', $this);
 		}
 		return $result;
 	}

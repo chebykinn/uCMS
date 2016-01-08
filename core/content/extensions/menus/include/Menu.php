@@ -2,7 +2,6 @@
 namespace uCMS\Core\Extensions\Menus;
 use uCMS\Core\ORM\Model;
 use uCMS\Core\Extensions\Users\User;
-use uCMS\Core\Tools;
 
 class Menu extends Model{
 
@@ -16,7 +15,7 @@ class Menu extends Model{
 	}
 
 	public function render($row, $class = ""){
-		if( !empty($class) ) $class = ' class ="'.Tools::PrepareXSS($class).'"';
+		if( !empty($class) ) $class = ' class ="'.$this->prepare($class).'"';
 		echo "<ul$class>";
 		// TODO: Tree structure
 		$links = is_array($row->links) ? $row->links : [];

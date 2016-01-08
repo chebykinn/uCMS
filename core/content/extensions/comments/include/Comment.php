@@ -1,7 +1,7 @@
 <?php
 namespace uCMS\Core\Extensions\Comments;
 use uCMS\Core\ORM\Model;
-use uCMS\Core\Tools;
+use uCMS\Core\uCMS;
 class Comment extends Model{
 	public function init(){
 		$this->tableName('comments');
@@ -11,7 +11,7 @@ class Comment extends Model{
 	}
 
 	public function getDate($row){	
-		return Tools::FormatTime($row->created);
+		return uCMS::FormatTime($row->created);
 	}
 }
 ?>
