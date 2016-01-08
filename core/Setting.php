@@ -38,7 +38,7 @@ class Setting extends Model{
 	public static function Load(){
 		$list = (new self())->find();
 		if( count($list) < self::DEFAULT_AMOUNT ){
-			Debug::Log(self::Translate("Insufficient amount of settings"), Debug::LOG_CRITICAL);
+			Debug::Log(self::Translate("Insufficient amount of settings"), Debug::LOG_CRITICAL, new self());
 			Loader::GetInstance()->install();
 		}
 		foreach ($list as $setting) {
@@ -56,20 +56,28 @@ class Setting extends Model{
 		}
 	}
 
-	public static function GetRow($name, $owner){
+	public static function GetRow($name, Object $owner){
 		if( !self::IsExists($name) ) return false;
-		if( $owner == NULL || !is_subclass_of($owner, 'uCMS\\Core\\Object') ){
-			return false;
-		}
-		if( $owner->getPackage() != self::$list[$name]->owner ) return false;
+		if( !self::IsOwner($name, $owner) ) return false;
 		self::$list[$name]->assignOwner($owner);
 		return self::$list[$name];
 
 	}
 
+	public static function IsOwner($name, Object $owner){
+		if( !self::IsExists($name) ) return false;
+		if( self::$list[$name]->owner == "" ) return true;
+		if( $owner->getPackage() == Object::CORE_PACKAGE ) return true;
+		if( $owner->getPackage() == self::$list[$name]->owner ) return true;
+		return false;
+	}
+
 	public function create($row){
-		if( empty($this->getOwner()) ) return false;
-		$row->owner = $this->getOwner()->getPackage();
+		if( !empty($this->getOwner()) ){
+			$row->owner = $this->getOwner()->getPackage();
+		}else{
+			$row->owner = '';
+		}
 		$result = parent::create($row);
 		if( $result ){
 			self::$list[$row->name] = $row;
@@ -78,8 +86,9 @@ class Setting extends Model{
 	}
 
 	public function update($row){
-		if( empty($this->getOwner()) ) return false;
-		if( $this->getOwner()->getPackage() != $row->owner ) return false;
+		if( empty($this->getOwner()) && !empty($row->owner) ) return false;
+
+		if( !self::IsOwner($row->name, $this->getOwner()) ) return false;
 		$result = parent::update($row);
 		if( $result ){
 			self::$list[$row->name] = $row;
@@ -88,12 +97,60 @@ class Setting extends Model{
 	}
 
 	public function delete($row){
-		if( empty($this->getOwner()) ) return false;
-		if( $this->getOwner()->getPackage() != $row->owner ) return false;
-		if( isset(self::$list[$row->name]) ){
-			unset(self::$list[$row->name]);
-		}
+		if( empty($this->getOwner()) && !empty($row->owner) ) return false;
+
+		if( !self::IsOwner($row->name, $this->getOwner()) ) return false;
+
+		unset(self::$list[$row->name]);
 		return parent::delete($row);
+	}
+
+	public static function Increment($name, Object $owner){
+		$setting = self::GetRow($name, $owner);
+		if( !$setting ) return false;
+		$setting->value++;
+		$result = $setting->update();
+		return $result;
+	}
+
+	public static function Decrement($name, Object $owner){
+		$setting = self::GetRow($name, $owner);
+		if( !$setting ) return false;
+		$setting->value--;
+		$result = $setting->update();
+		return $result;
+	}
+
+	public static function UpdateValue($name, $value, Object $owner){
+		$setting = self::GetRow($name, $owner);
+		if( !$setting ) return false;
+		$setting->value = $value;
+		return $setting->update();
+	}
+
+	public static function AddMultiple(array $namesAndValues, Object $owner){
+		$package = $owner->getPackage();
+		$query = new Query('{settings}');
+		$rows = [];
+		foreach ($namesAndValues as $name => $value) {
+			if( isset(self::$list[$name]) ) continue;
+			if( empty($name) ) continue;
+			$rows[] = [$name, $value, $owner];
+			self::$list[$name] = [
+				'name' => $name,
+				'value' => $owner->prepareSql($value),
+				'owner' => $package
+			];
+		}
+		if( !empty($rows) ){
+			$query->insert(
+				['name', 'value', 'owner'],
+				$rows,
+				true
+			)->execute();
+			return true;
+		}
+		return false;
 	}
 }
 ?>
