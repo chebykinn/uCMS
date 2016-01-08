@@ -10,21 +10,36 @@ class Debug extends Object{
 	const LOG_WARNING = 3;
 	const LOG_INFO = 4;
 	const LOG_DEBUG = 5;
-	private static $logFile;
+	const LOG_DATETIME_FORMAT = "Y-m-d H:i:s";
+	const ALLOWED_TAGS = '<b><strong><p><br>';
+	private static $logFile = ABSPATH.'content/ucms.log';
 	private static $logLevel = LOG_INFO;
 	private static $blocksAmount = 0;
+	private static $logLinesCount = 0;
 
+
+	/**
+	* Init error handlers.
+	*
+	* This method initialiazes error handles, sets up error logging
+	* and configures PHP's error related variables.
+	*
+	* @since 2.0
+	* @param none
+	* @return void
+	*/
 	public static function Init(){
 		register_shutdown_function('uCMS\\Core\\Debug::ErrorHandler');
 		set_error_handler('uCMS\\Core\\Debug::ErrorHandler');
 		ini_set('display_errors', 0);
-		self::$logFile = ABSPATH.'content/ucms.log';
+		self::$logLinesCount = self::CountLogLines();
 		if(UCMS_DEBUG){ // Debug mode preparation
 			$debugFile = ABSPATH.'content/debug.log';
 			error_reporting(E_ALL);
 			ini_set('log_errors', 1);
 			ini_set('error_log', $debugFile);
 			self::$logLevel = LOG_DEBUG;
+			self::Log(self::Translate('Debug mode enabled'), Debug::LOG_DEBUG, new self());
 		}else{
 			error_reporting(E_ALL ^ (E_DEPRECATED | E_NOTICE | E_STRICT));
 		}
@@ -57,9 +72,11 @@ class Debug extends Object{
 		echo '</pre>';
 	}
 
-	public static function PrintVar($var, $raw = false, $floating = false, $height = 200){
+	public static function PrintVar($var, $raw = false, $floating = false, $trace = false, $height = 200){
 		self::BeginBlock($floating, $height);
-		// debug_print_backtrace();
+		if( $trace ){
+			debug_print_backtrace();
+		}
 		if( !$raw )
 			var_dump($var);
 		else
@@ -67,84 +84,124 @@ class Debug extends Object{
 		self::EndBlock();
 	}
 
-	public static function Log($message, $level = self::LOG_INFO, $logFile = ""){
+
+	public static function Log($message, $level = self::LOG_INFO, Object $sender = NULL, $unique = true, $logFile = ""){
+		if(self::$logLevel < $level) return false;
+
 		if( empty($logFile) ){
 			$logFile = self::$logFile;
 		}
+		$isEmpty = false;
 		$hasFile = file_exists($logFile);
 		if( !file_exists($logFile) && file_exists(dirname($logFile)) && is_writable(dirname($logFile)) ){
 			$hasFile = touch($logFile);
+			$isEmpty = true;
 		}
 
-		if(self::$logLevel > $level){
-			switch ($level) {
-				case self::LOG_DEBUG:
-					$type = '[DEBUG]';
-				break;
+		
+		switch ($level) {
+			case self::LOG_DEBUG:
+				$type = '[DEBUG]';
+			break;
 
-				case self::LOG_INFO:
-					$type = '[INFO]';
-				break;
+			case self::LOG_INFO:
+				$type = '[INFO]';
+			break;
 	
-				case self::LOG_WARNING:
-					$type = '[WARNING]';
-				break;
+			case self::LOG_WARNING:
+				$type = '[WARNING]';
+			break;
 	
-				case self::LOG_ERROR:
-					$type = '[ERROR]';
-				break;
+			case self::LOG_ERROR:
+				$type = '[ERROR]';
+			break;
 	
-				case self::LOG_CRITICAL:
-					$type = '[CRITICAL]';
-				break;
-				
-				default:
-					$type = '[INFO]';
-				break;
-			}
-			$host = Session::GetCurrent()->getHost();
-			$owner = Tools::GetCurrentOwner();
-			// strftime("%Y-%m-%d %H:%M:%S", time())
-			$outMessage = Tools::FormatTime(time(), "Y-m-d H:i:s")." [Host: $host] $type [$owner] $message\n";
+			case self::LOG_CRITICAL:
+				$type = '[CRITICAL]';
+			break;
+			
+			default:
+				$type = '[INFO]';
+			break;
+		}
+		$host = Session::GetCurrent()->getHost();
+		if( $sender != NULL ){
+			$sender = $sender->getPackage().':'.$sender->getObjectName();
+		}else{
+			// TODO: use trace
+			$sender = Object::CORE_PACKAGE;
+		}
+		$message = trim($message);
+		$message = strtr($message, ["\r" => '', "\n" => '<br>']);
 
-			// If error is repeating rapidly this will prevent logs from bloating
-			$lastMessage = self::GetLastMessage();
-			if( !empty($lastMessage) && $lastMessage['text'] !== $message && $hasFile ){
-				$logHandle = @fopen($logFile, 'a');
-				if($logHandle){
-					fwrite($logHandle, $outMessage);
-					fclose($logHandle);
+		$outMessage = uCMS::FormatTime(time(), self::LOG_DATETIME_FORMAT)." [Host: $host] $type [$sender] $message\n";
+
+		// If error is repeating rapidly this will prevent logs from bloating
+		$duplicateIndex = self::FindMessage($message, $logFile);
+		$isUnique = $unique && $duplicateIndex < 0;
+		$isNotRepeating = !$unique && ($duplicateIndex != 0);
+
+		if( $hasFile && ($isEmpty || $isUnique || $isNotRepeating) ){
+			$logHandle = @fopen($logFile, 'a');
+			if( !$logHandle ) return;
+			// Put a lock to prevent race condition
+			if( flock($logHandle, LOCK_EX) ){
+				fwrite($logHandle, $outMessage);
+				if( $logFile == self::$logFile ){
+					self::$logLinesCount++;
 				}
 			}
-			if( $level === self::LOG_CRITICAL && UCMS_DEBUG ){
-				echo "<pre>";
-				$this->p($outMessage);
-				echo "</pre>";
-				die;
-			}
+			fclose($logHandle);
+		}
+		if( $level === self::LOG_CRITICAL && UCMS_DEBUG ){
+			echo "<pre>";
+			echo self::Translate($outMessage);
+			echo "</pre>";
+			die;
 		}
 	}
 
-	public static function GetLogMessage($rawLine){
+	/**
+	* Parse line into log message.
+	*
+	* This method will make log message array from special line, generated by
+	* Debug::Log method.
+	*
+	* @since 2.0
+	* @api
+	* @throws InvalidArgumentException if line is not correct debug log message.
+	* @param string $rawLine Line to parse.
+	* @return array Prepared log message.
+	*/
+	public static function ParseLogMessage($rawLine){
 		$dateOffset = 0;
 		$hostOffset = 3;
 		$typeOffset = 4;
-		$ownerOffset = 5;
+		$senderOffset = 5;
 		$messageOffset = 6;
 		$headerLimit = 7;
+		$brackets = ['[' => '', ']' => ''];
 		$data = explode(" ", $rawLine, $headerLimit);
-		$type = !empty($data[$typeOffset]) ? preg_replace("/\[|\]/", "", $data[$typeOffset]) : 'ERROR';
-		$text = !empty($data[$messageOffset]) ? htmlspecialchars($data[$messageOffset]) : self::Translate('Unknown error');
-		$host = !empty($data[$hostOffset]) ? substr($data[$hostOffset], 0, -1) : self::Translate('Unknown host');
-		$owner = !empty($data[$ownerOffset]) ? htmlspecialchars(preg_replace("/\[|\]/", "", $data[$ownerOffset])) : 'core';
-		$date = (!empty($data[$dateOffset]) && !empty($data[$dateOffset+1]))
-		? $data[$dateOffset].' '.$data[$dateOffset+1] : Tools::FormatTime(time(), "Y-m-d H:i:s");
+
+		for ($i = 0; $i < $headerLimit; $i++) {
+			if( empty($data[$i]) ){
+				throw new \InvalidArgumentException(
+					self::Translate("Wrong line provided, index @s not found", $i)
+				);
+			}
+		}
+
+		$type = strtr($data[$typeOffset], $brackets);
+		$text = strip_tags($data[$messageOffset], self::ALLOWED_TAGS);
+		$host = substr($data[$hostOffset], 0, -1);
+		$sender = strtr($data[$senderOffset], $brackets);
+		$date = $data[$dateOffset].' '.$data[$dateOffset+1];
 		$message = [
-			"type" => $type,
-			"text" => $text,
-			"host" => $host,
-			"owner" => $owner,
-			"date" => $date
+			"type"   => $type,
+			"text"   => $text,
+			"host"   => $host,
+			"sender" => $sender,
+			"date"   => $date
 		];
 		return $message;
 	}
@@ -160,7 +217,8 @@ class Debug extends Object{
 	*/
 	public static function GetLogMessages(){
 		// TODO: offset and limit
-		$journalLines = @file(self::GetLogFile());
+		$logFile = self::GetLogFile();
+		$journalLines = @file($logFile);
 		if(!empty($journalLines)){
 			$journalLines = array_reverse($journalLines);
 		}else{
@@ -171,7 +229,19 @@ class Debug extends Object{
 		$messages = [];
 		foreach ($journalLines as $line) {
 			$id = $count-$i;
-			$message = self::GetLogMessage($line);
+			try{
+				$message = self::ParseLogMessage($line);
+			}catch(\InvalidArgumentException $e){
+				// If message is corrupted, we will fill missing lines
+				// and then add message
+				$message = [
+					'type'   => 'ERROR',
+					'text'   => $line,
+					'host'   => $_SERVER['SERVER_NAME'],
+					'sender' => 'core:Debug',
+					'date'   => uCMS::FormatTime(time(), self::LOG_DATETIME_FORMAT)
+				];
+			}
 			$message['id'] = $id;
 			$messages[] = $message;
 			$i++;
@@ -196,13 +266,16 @@ class Debug extends Object{
 	}
 	
 	/**
-	* Handler for PHP errors
+	* PHP error handler.
 	*
-	* @package uCMS
-	* @since 1.3
-	* @version 2.0
+	* This method handles all PHP errors and adds them to system log.
+	*
+	* @since 2.0
+	* @param string $errno Error number.
+	* @param string $errstr Error message.
+	* @param string $errfile File where error occurred.
+	* @param string $errline Line where error occurred.
 	* @return void
-	*
 	*/
 	public static function ErrorHandler($errno = "", $errstr = "", $errfile = "", $errline = ""){
 		if(empty($errno) && empty($errstr) && empty($errfile) && empty($errline)){
@@ -271,7 +344,7 @@ class Debug extends Object{
 			echo debug_print_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
 			echo '</p>';
 		}
-		self::Log(self::Translate($errTitle.': '.strip_tags($errorMsg)), self::LOG_ERROR);
+		self::Log(self::Translate($errTitle.': '.strip_tags($errorMsg)), self::LOG_ERROR, new self(), false);
 		self::EndBlock();
 		echo "<br>";
 		if($die) die;
@@ -311,6 +384,15 @@ class Debug extends Object{
 		return $line;
 	}
 
+	/**
+	* Clear log file.
+	*
+	* This method is used to clear given log file or system log.
+	*
+	* @since 2.0
+	* @param string $logFile Log to clean instead of system log.
+	* @return bool True if cleaned, false if some error occurred.
+	*/
 	public static function ClearLog($logFile = ""){
 		if( empty($logFile) ){
 			$logFile = self::$logFile;
@@ -320,6 +402,107 @@ class Debug extends Object{
 			return true;
 		}
 		return false;
+	}
+
+	/**
+	* Get message index in log.
+	*
+	* This method is used to get line index of given $message in specified $logFile
+	* or system log. It will start searching from the end of file.
+	*
+	* @since 2.0
+	* @param string $message Message to search.
+	* @param string $logFile Log to search in, instead of system log.
+	* @return int Index of found line, -1 if not found.
+	*/
+	public static function FindMessage($message, $logFile = ''){
+		if( empty($logFile) ){
+			$logFile = self::$logFile;
+		}
+		$handle = @fopen($logFile, 'r');
+		if( !$handle ) return -1;
+			
+		$found = false;
+		$pos = -2;
+		$i = 0;
+		$currentLine = '';
+		
+		if( flock($handle, LOCK_EX) ){
+			while( -1 !== fseek($handle, $pos, SEEK_END) ){
+			    $char = fgetc($handle);
+			    if( PHP_EOL == $char ){
+			    	try{
+			    		$fmsg = self::ParseLogMessage($currentLine);
+			    	}catch(\InvalidArgumentException $e){
+			    		$pos--;
+			    		$i++;
+			    		$currentLine = '';
+			    		continue;
+			    	}
+			    	if( strpos($fmsg['text'], $message) !== false ) {
+			    		$found = true;
+			    		break;
+			    	}
+			    	$i++;
+			        $currentLine = '';
+			    }else{
+			        $currentLine = $char.$currentLine;
+			    }
+			    $pos--;
+			}
+		}
+
+		if( !$found && !empty($currentLine) ){
+			try{
+				$fmsg = self::ParseLogMessage($currentLine);
+			}catch(\InvalidArgumentException $e){
+				return -1;
+			}
+			if( strpos($fmsg['text'], $message) !== false ) {
+				$found = true;
+			}
+		}
+
+		fclose($handle);
+		return ($found ? $i : -1);
+	}
+
+	/**
+	* Count lines in log.
+	*
+	* Count lines in given log or system log.
+	*
+	* @since 2.0
+	* @param string $logFile Log to count instead of system log.
+	* @return int Number of lines.
+	*/
+	public static function CountLogLines($logFile = ''){
+		if( empty($logFile) ){
+			$logFile = self::$logFile;
+		}
+		$chunkSize = 8192;
+		$f = @fopen($logFile, 'rb');
+		if( !$f ) return -1;
+		$lines = 0;
+		while ( !feof($f) ) {
+			$lines += substr_count(fread($f, $chunkSize), "\n");
+		}
+		fclose($f);
+		return $lines;
+	}
+
+	/**
+	* Get number of lines in system log. 
+	*
+	* Get number of lines in system log instead of counting them with
+	* Debug::CountLogLines method.
+	*
+	* @since 2.0
+	* @param none
+	* @return int Number of lines in system log.
+	*/
+	public static function GetLogLinesCount(){
+		return self::$logLinesCount;
 	}
 }
 ?>
