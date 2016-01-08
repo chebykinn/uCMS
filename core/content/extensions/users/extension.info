@@ -49,7 +49,9 @@
 	},
 
 	"permissions": {
-		"manage users": 1
+		"manage users": 1,
+		"view user profiles": [1, 2, 3, 4],
+		"view user list": [1, 2, 3, 4]
 	},
 
 	"settings": {
