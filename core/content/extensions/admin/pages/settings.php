@@ -35,6 +35,6 @@ $form->addField("ucms_dir", "text", $this->tr("μCMS Directory:"), $this->tr("Su
 $form->addSelectField($zones, "ucms_timezone", $this->tr("Time Zone:"), "", Setting::Get("ucms_timezone"), 1, false);
 // TODO: Editable option
 $form->addSelectField($formats, "datetime_format", $this->tr("Date and Time Format:"), "", Setting::Get("datetime_format"), 1, false);
-$form->addField("admin_email", "text", $this->tr("Email of the site's administrator:"), "", Setting::Get("admin_email"), "", false);
+$form->addField("admin_email", "text", $this->tr("Administrator's email:"), "", Setting::Get("admin_email"), "", false);
 $form->render();
 ?>
