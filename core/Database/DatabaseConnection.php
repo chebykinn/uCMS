@@ -3,7 +3,6 @@ namespace uCMS\Core\Database;
 use uCMS\Core\Debug;
 use uCMS\Core\Loader;
 use uCMS\Core\Page;
-use uCMS\Core\Tools;
 use uCMS\Core\Object;
 class DatabaseConnection extends Object{
 	const DISPLAY_QUERY = false;
@@ -39,7 +38,7 @@ class DatabaseConnection extends Object{
 
 	public static function Init(){
 		if( empty($GLOBALS['databases']) || !is_array($GLOBALS['databases']) ){
-			Debug::Log($this->tr("No configuration file was found"), Debug::LOG_CRITICAL);
+			Debug::Log(self::Translate("No configuration file was found"), Debug::LOG_CRITICAL);
 			Loader::GetInstance()->install();
 		}
 
@@ -48,7 +47,7 @@ class DatabaseConnection extends Object{
 				$fields = array('server', 'user', 'password', 'name', 'port', 'prefix');
 				foreach ($fields as $field) {
 					if( !isset($dbData[$field]) ){
-						Debug::Log($this->tr("Wrong configuration file was provided"), Debug::LOG_CRITICAL);
+						Debug::Log(self::Translate("Wrong configuration file was provided"), Debug::LOG_CRITICAL);
 						Loader::GetInstance()->install();
 					}
 				}
@@ -72,10 +71,10 @@ class DatabaseConnection extends Object{
 				}
 
 				if( $e->getCode() == 1045 || $e->getCode() == 1049 ){
-					Debug::Log($this->tr("Wrong configuration file was provided"), Debug::LOG_CRITICAL);
+					Debug::Log(self::Translate("Wrong configuration file was provided"), Debug::LOG_CRITICAL);
 					Loader::GetInstance()->install();
 				}else{
-					Debug::Log($this->tr("Database @s connection error @s: @s", $dbName, $e->getCode(), $e->getMessage()), Debug::LOG_CRITICAL);
+					Debug::Log(self::Translate("Database @s connection error @s: @s", $dbName, $e->getCode(), $e->getMessage()), Debug::LOG_CRITICAL);
 				}
 			}
 		}
@@ -112,6 +111,7 @@ class DatabaseConnection extends Object{
 	}
 
 	public function __construct($server, $login, $password, $dbName, $dbPort, $prefix, $ucmsName, $driver = ""){
+		parent::__construct();
 		$this->dbServer = $server;
 		$this->dbUser = $login;
 		$this->dbPassword = $password;
@@ -134,12 +134,6 @@ class DatabaseConnection extends Object{
 		
 		$this->connection->exec("set names utf8");
 		$this->connection->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
-		//if ($this->connection->connect_errno) {
-		//	throw new Exception("Can't connect to database", $this->connection->connect_errno);
-		//}
-		//if (!$this->connection->set_charset("utf8")) {
-		//	throw new Exception("Can't set database charset");
-		//}
 
 	}
 
@@ -181,7 +175,7 @@ class DatabaseConnection extends Object{
 					echo "<br><h3>Trace:</h3>".$e->getTraceAsString();
 				}
 				Debug::EndBlock();
-				Debug::Log($this->tr('Query failed: @s, error: @s', $sql, $e->getMessage()), Debug::LOG_ERROR);
+				Debug::Log($this->tr('Query failed: @s, error: @s', $sql, $e->getMessage()), Debug::LOG_ERROR, $this);
 				return false;
 			}
 			
@@ -249,7 +243,7 @@ class DatabaseConnection extends Object{
 	}
 
 	public function isTableExists($table){
-		$table = Tools::PrepareSQL($table);
+		$table = $this->prepareSql($table);
 		$exists = true;
 		try{
 			$this->connection->query("SELECT 1 FROM $table LIMIT 1");
