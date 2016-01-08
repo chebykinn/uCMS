@@ -5,9 +5,16 @@ use uCMS\Core\Extensions\Menus\Menu;
 use uCMS\Core\Extensions\Menus\MenuLink;
 use uCMS\Core\Page;
 use uCMS\Core\Setting;
+
+if( !User::Current()->can('view user profiles') ){
+	Page::GoBack();
+}
+
 $user = (new User())->find(['name' => Page::GetCurrent()->getActionValue(), 'limit' => 1]);
 $adminEditLink = Page::ControlPanel("users/edit/$user->uid");
 $logoutLink = Page::FromAction(User::LOGOUT_ACTION);
+
+$isOwnProfile = ($user->name == User::Current()->name);
 
 $profileMenu = (new Menu())->emptyRow();
 

@@ -4,11 +4,16 @@
 <div class="user-profile">
 	<div class="user-sidebar">
 	<div class="user-data">
-		<?php echo $user->getDisplayName(); ?> <a href="<?php echo $logoutLink;?>" title="<?php $this->p('Logout'); ?>"><?php $this->p('Logout'); ?></a>
+		<?php echo $user->getDisplayName();
+		if( $isOwnProfile ){
+		?>
+		<a href="<?php echo $logoutLink;?>" title="<?php $this->p('Logout'); ?>"><?php
+		$this->p('Logout'); ?></a>
+		<?php } ?>
 	</div>
 	<div class="profile-menu">
 	<?php
-	if( $user->name == $currentUser->name ){
+	if( $isOwnProfile ){
 		$profileMenu->render();
 	}
 
