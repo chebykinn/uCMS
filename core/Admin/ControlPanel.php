@@ -6,7 +6,6 @@ use uCMS\Core\Extensions\Users\User;
 use uCMS\Core\Page;
 use uCMS\Core\Debug;
 use uCMS\Core\Setting;
-use uCMS\Core\Tools;
 use uCMS\Core\Notification;
 use uCMS\Core\Object;
 class ControlPanel extends Object{
@@ -190,7 +189,7 @@ class ControlPanel extends Object{
 		$settingsTitle = (self::IsSettingsPage() && !empty($settingsAction) )
 		? self::Translate('Settings').$delimeter : "";
 		$newTitle = $settingsTitle.$title;
-		$siteName = Setting::Get('site_name');
+		$siteName = Setting::Get(Setting::SITE_NAME);
 		Theme::GetCurrent()->setTitle($newTitle.$delimeter.self::TITLE.$delimeter.$siteName);
 		Theme::GetCurrent()->setPageTitle($newTitle);
 	}
@@ -268,30 +267,26 @@ class ControlPanel extends Object{
 		if( !empty($extension) && !empty($pageFile) ){
 			return $pageFile;
 		}else{
-			Debug::Log(self::Translate("Unable to load admin page for action: @s", $currentAction), Debug::LOG_ERROR);
+			Debug::Log(self::Translate("Unable to load admin page for action: @s", $currentAction), Debug::LOG_ERROR, new self());
 			$homePage = Page::FromAction(self::ACTION);
 			$homePage->go();
 		}
 	}
 
-	public static function UpdateSettings(){
+	public static function UpdateSettings($package = ''){
 		// TODO: Consider use some method for multiple changes in one query
 		if( User::Current()->can("update core settings") ){
 			$failures = [];
 			unset($_POST['settings']);
 			foreach ($_POST as $name => $value) {
-				if( !Setting::IsExists($name) ){
-					$failures[] = $name;
-					continue;
-				}
-
 				$setting = Setting::GetRow($name, new self());
 				if( !$setting ){
 					$failures[] = $name;
 				}
 
 				$setting->value = $value;
-				$setting->update();
+				
+				$result = $setting->update();
 			}
 			if( !empty($failures) ){
 				$list = implode("<br>", $failures);
