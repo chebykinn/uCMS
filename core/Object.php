@@ -8,14 +8,12 @@ class Object {
 	protected $_owner = NULL;
 	protected $_package = NULL;
 	protected $_namespace = NULL;
+	const CORE_PACKAGE = 'core';
 
-	public function __construct($owner = NULL){
-		if( !is_subclass_of($owner, 'uCMS\\Core\\Object') && $owner != NULL ) return false;
-		if( is_subclass_of($owner, 'uCMS\\Core\\Object') ){
-			$this->_owner = $owner;
-		}
+	public function __construct(Object $owner = NULL){
+		$this->_owner = $owner;
 		$reflection = new \ReflectionClass($this);
-		$this->_name = mb_strtolower($reflection->getShortName());
+		$this->_name = $reflection->getShortName();
 		$this->_namespace = $reflection->getNamespaceName();
 		$this->_package = $this->findPackage();
 	}
@@ -40,7 +38,7 @@ class Object {
 		$this->_owner = $owner;
 	}
 
-	public function prepareHtml($value){
+	public function prepare($value){
 		return htmlspecialchars($value);
 	}
 
@@ -54,6 +52,9 @@ class Object {
 
 	final public function tr($string){
 		$args = func_get_args();
+		if( !Language::IsLoaded() ){
+			return $string;
+		}
 		return call_user_func_array([Language::GetCurrent(), 'get'], $args);
 	}
 
@@ -70,10 +71,13 @@ class Object {
 		$package = 'core';
 		$extensionClasses = ExtensionHandler::GetClasses();
 		$extensionNamespace = 'uCMS\\Core\\Extensions';
-
 		if( mb_strpos($this->getNamespace(), $extensionNamespace) !== false
 			&& !in_array($this->_name, $extensionClasses) ){
-			$package = $this->_name;
+			$package = str_replace($extensionNamespace.'\\', '', $this->getNamespace());
+			if( mb_strpos($package, "\\") !== false ){
+				$package = mb_substr($package, 0, mb_strpos($package, "\\"));
+			}
+			$package = mb_strtolower($package);
 		}
 		return $package;
 	}
