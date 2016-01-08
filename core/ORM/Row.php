@@ -71,12 +71,11 @@ class Row{
 
 	public function __set($name, $value){
 		$setCallback = "set$name";
-
 		if( method_exists($this->model, $setCallback) ){
 			$value = call_user_func_array(array($this->model, $setCallback), [$value]);
 		}
 
-		if( !empty($value) && $this->$name !== $value ){
+		if( $this->$name !== $value ){
 			$this->addData($name, $value);
 			$this->model->setModified();
 		}
