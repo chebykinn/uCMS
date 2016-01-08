@@ -17,11 +17,11 @@ use uCMS\Core\Extensions\Users\Group;
 class Entries extends Extension{
 
 	public function onLoad(){
-		Permission::Register('manage entries', $this->tr('Manage Entries'), $this->tr('Allow user to add, edit and delete entries.'));
+		Permission::Register('manage entries', $this->tr('Manage Entries'), $this->tr('Allow user to add, edit and delete entries.'), $this);
 	}
 
 	private function addBlocks(){
-		$list = (new Block())->emptyRow();
+		$list = (new Block($this))->emptyRow();
 		$list->name = "entries-list";
 		$list->region = "content";
 		$list->theme = Theme::DEFAULT_THEME;

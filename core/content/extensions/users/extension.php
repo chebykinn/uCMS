@@ -6,7 +6,6 @@ use uCMS\Core\Admin\ControlPanel;
 use uCMS\Core\Database\Query;
 use uCMS\Core\Block;
 use uCMS\Core\Page;
-use uCMS\Core\Tools;
 use uCMS\Core\Setting;
 use uCMS\Core\Installer;
 use uCMS\Core\Session;
@@ -20,7 +19,11 @@ class Users extends \uCMS\Core\Extensions\Extension {
 
 	public function onLoad(){
 		$allowedActions = [User::LOGIN_ACTION, Page::INSTALL_ACTION];
-		Permission::Register('manage users', $this->tr('Manage Users'), $this->tr('Allow user to add, edit and delete other users.'));
+		Permission::Register('manage users',
+			$this->tr('Manage Users'),
+			$this->tr('Allow user to add, edit and delete other users.'),
+			$this
+		);
 		User::CheckAuthorization();
 
 		if( !in_array(Page::GetCurrent()->getAction(), $allowedActions) ){
@@ -100,11 +103,11 @@ class Users extends \uCMS\Core\Extensions\Extension {
 		$admin->status = User::ACTIVE_STATUS;
 		$admin->create();
 		User::Authorize($admin->uid, true);
-		Setting::Update(Setting::SITE_AUTHOR, $admin->name);
+		Setting::UpdateValue(Setting::SITE_AUTHOR, $admin->name, $this);
 	}
 
 	private function addBlocks(){
-		$login = (new Block())->emptyRow();
+		$login = (new Block($this))->emptyRow();
 		$login->name = "login-form";
 		$login->region = "content";
 		$login->theme = Theme::DEFAULT_THEME;
@@ -119,7 +122,7 @@ class Users extends \uCMS\Core\Extensions\Extension {
 		$card->status = Block::ENABLED;
 		$card->create();
 
-		$profile = (new Block())->emptyRow();
+		$profile = (new Block($this))->emptyRow();
 		$profile->name = "user-profile";
 		$profile->region = "content";
 		$profile->theme = Theme::DEFAULT_THEME;
@@ -127,6 +130,15 @@ class Users extends \uCMS\Core\Extensions\Extension {
 		$profile->visibility = Block::SHOW_LISTED;
 		$profile->actions = User::PROFILE_ACTION;
 		$profile->create();
+
+		$list = (new Block($this))->emptyRow();
+		$list->name = "userlist";
+		$list->region = "content";
+		$list->theme = Theme::DEFAULT_THEME;
+		$list->status = Block::ENABLED;
+		$list->visibility = Block::SHOW_LISTED;
+		$list->actions = User::LIST_ACTION;
+		$list->create();
 	}
 
 	private function addMenu(){

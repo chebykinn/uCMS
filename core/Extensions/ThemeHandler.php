@@ -1,6 +1,5 @@
 <?php
 namespace uCMS\Core\Extensions;
-use uCMS\Core\Tools;
 use uCMS\Core\uCMS;
 use uCMS\Core\Setting;
 use uCMS\Core\Block;
@@ -58,8 +57,7 @@ class ThemeHandler extends Object{
 			}
 		}
 
-		Tools::OverrideOwner();
-		Setting::Update(Setting::THEME, $name);
+		Setting::UpdateValue(Setting::THEME, $name, new self());
 
 		return true;
 	}
@@ -122,7 +120,7 @@ class ThemeHandler extends Object{
 	public static function LoadTemplate($name){
 		$file = self::GetTemplate($name);
 		if( empty($file) ){
-			Debug::Log($this->tr("Unable to load template @s", $name), Debug::LOG_ERROR);
+			Debug::Log($this->tr("Unable to load template @s", $name), Debug::LOG_ERROR, $this);
 			return false;
 		}
 
@@ -132,8 +130,8 @@ class ThemeHandler extends Object{
 
 	public static function LoadErrorPage($errorCode){
 		Debug::Log($this->tr("Error @s at: @s", $errorCode,
-						Page::GetCurrent()->getURL()), Debug::LOG_WARNING);
-		$theme = Setting::get('theme');
+						Page::GetCurrent()->getURL()), Debug::LOG_WARNING, $this);
+		$theme = Setting::Get(Setting::THEME);
 		if( empty($theme) ) $theme = self::DEFAULT_THEME;
 		if( !self::IsLoaded() || $theme != self::GetCurrent()->getName() ) {
 			self::ReloadTheme($theme);

@@ -32,7 +32,7 @@ class Theme extends AbstractExtension{
 	*/
 	private $pageTitle, $pageContent;
 
-	public function __construct($name){
+	public function __construct($name = ""){
 		if( empty($name) ) $name = self::DEFAULT_THEME;
 		parent::__construct($name);
 	}
@@ -48,7 +48,7 @@ class Theme extends AbstractExtension{
 
 	public static function GetCurrent(){
 		if ( is_null( self::$instance ) ){
-			Debug::Log($this->tr("Theme is not loaded"), Debug::LOG_CRITICAL);
+			Debug::Log(self::Translate("Theme is not loaded"), Debug::LOG_CRITICAL, new self());
 			return false;
 		}
 		return self::$instance;
@@ -65,9 +65,9 @@ class Theme extends AbstractExtension{
 	}
 
 	public static function LoadErrorPage($errorCode){
-		Debug::Log($this->tr("Error @s at: @s", $errorCode,
-						Page::GetCurrent()->getURL()), Debug::LOG_WARNING);
-		$theme = Setting::get('theme');
+		Debug::Log(self::Translate("Error @s at: @s", $errorCode,
+						Page::GetCurrent()->getURL()), Debug::LOG_WARNING, new self());
+		$theme = Setting::Get(Setting::THEME);
 		if( empty($theme) ) $theme = self::DEFAULT_THEME;
 		if( !self::IsLoaded() || $theme != self::GetCurrent()->getName() ) {
 			self::ReloadTheme($theme);
@@ -75,9 +75,9 @@ class Theme extends AbstractExtension{
 		// TODO: Add HTTP Header
 		// TODO: Fix XSS
 		self::GetCurrent()->setErrorCode($errorCode);
-		self::GetCurrent()->setTitle($this->tr("404 Not Found"));
-		self::GetCurrent()->setPageTitle($this->tr("404 Not Found"));
-		self::GetCurrent()->setPageContent($this->tr("Page \"@s\" was not found.",
+		self::GetCurrent()->setTitle(self::Translate("404 Not Found"));
+		self::GetCurrent()->setPageTitle(self::Translate("404 Not Found"));
+		self::GetCurrent()->setPageContent(self::Translate("Page \"@s\" was not found.",
 			Page::GetCurrent()->getURL()));
 		self::GetCurrent()->setThemeTemplate(self::ERROR_TEMPLATE_NAME);
 	}
@@ -363,21 +363,6 @@ class Theme extends AbstractExtension{
 	*/
 	public function getBlocksMap(){
 		return $this->blocks;
-	}
-
-	/**
-	* Prepare $value.
-	*
-	* This method allows templates to print variables without safety concern.
-	*
-	* @since 2.0
-	* @param $value Variable to prepare
-	* @api
-	* @return void
-	*/
-	public function prepare($value){
-		// TODO: complex rendering
-		return htmlspecialchars($value);
 	}
 }
 ?>

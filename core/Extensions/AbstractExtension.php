@@ -37,7 +37,7 @@ abstract class AbstractExtension extends Object{
 		if( file_exists($this->getFilePath($file)) ){
 			include $this->getFilePath($file);
 		}else{
-			Debug::Log($this->tr("Failed to open file @s", $this->getFilePath($file)), Debug::LOG_ERROR);
+			Debug::Log($this->tr("Failed to open file @s", $this->getFilePath($file)), Debug::LOG_ERROR, $this);
 		}
 	}
 	
@@ -51,7 +51,7 @@ abstract class AbstractExtension extends Object{
 
 	final protected function checkCoreVersion(){
 		if( version_compare(uCMS::CORE_VERSION, $this->coreVersion, '<') ){
-			Debug::Log($this->tr("Outdated core version @s", $this->name), Debug::LOG_ERROR);
+			Debug::Log($this->tr("Outdated core version @s", $this->name), Debug::LOG_ERROR, $this);
 			throw new \RuntimeException("Outdated core version");
 		}
 	}

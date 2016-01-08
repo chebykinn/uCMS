@@ -137,7 +137,7 @@ class Loader extends Object{
 	public function panic($message){
 		$this->error = $message;
 		ThemeHandler::LoadTemplate('panic');
-		Debug::Log($this->error, Debug::LOG_CRITICAL);
+		Debug::Log($this->error, Debug::LOG_CRITICAL, $this);
 		exit;
 	}
 

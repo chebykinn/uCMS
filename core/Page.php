@@ -2,7 +2,7 @@
 namespace uCMS\Core;
 use uCMS\Core\Admin\ControlPanel;
 use uCMS\Core\uCMS;
-class Page{
+class Page extends Object{
 	const INDEX_ACTION = 'home';
 	const OTHER_ACTION = 'other';
 	const INSTALL_ACTION = 'install';
@@ -58,7 +58,7 @@ class Page{
 	}
 
 	public static function FromAction($action, $data = ""){
-		$isCleanUrl = (bool)Setting::get(Setting::CLEAN_URL);
+		$isCleanUrl = (bool)Setting::Get(Setting::CLEAN_URL);
 		if( $action === self::INDEX_ACTION ) $action = "";
 		$urlAction = "";
 		$urlData = "";
@@ -254,7 +254,7 @@ class Page{
 
 		if( $isCleanUrl && preg_match('/apache/i', $_SERVER['SERVER_SOFTWARE']) ){
 			if( !in_array('mod_rewrite', apache_get_modules()) ){
-				Setting::Update(Setting::CLEAN_URL, 0);
+				Setting::UpdateValue(Setting::CLEAN_URL, 0, new self());
 			}
 		}
 	}

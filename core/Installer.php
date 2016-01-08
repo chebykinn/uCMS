@@ -288,12 +288,12 @@ class Installer extends Object{
 			break;
 
 			case self::FINE_STAGE:
-				Setting::Update(Setting::UCMS_MAINTENANCE, '0');
+				Setting::UpdateValue(Setting::UCMS_MAINTENANCE, '0', $this);
 				$this->setTitle($this->tr('Everything\'s Fine'));
 			break;
 
 			case self::DONE_STAGE:
-				Setting::Update(Setting::UCMS_MAINTENANCE, '0');
+				Setting::UpdateValue(Setting::UCMS_MAINTENANCE, '0', $this);
 				$this->setTitle($this->tr('Well done!'));
 			break;
 		}
@@ -327,7 +327,7 @@ class Installer extends Object{
 					$ucmsName
 				);
 				$fields = ["%name%", "%server%", "%port%", "%user%", "%password%", "%prefix%", "%salt%"];
-				$values = [$dbName, $server, $dbPort, $login, $password, $prefix, Tools::GenerateHash()];
+				$values = [$dbName, $server, $dbPort, $login, $password, $prefix, uCMS::GenerateHash()];
 				$config = file_get_contents(ABSPATH.uCMS::CONFIG_SAMPLE);
 				$config = str_replace($fields, $values, $config);
 				$file = @fopen(ABSPATH.uCMS::CONFIG_FILE, "w+");
@@ -447,7 +447,7 @@ class Installer extends Object{
 			$package = ABSPATH.File::UPLOADS_PATH.'update.zip';
 		}
 		//	Backup previous files => Download package => Unpack files => Run install check with new version
-		Setting::Update(Setting::UCMS_MAINTENANCE, '1');
+		Setting::UpdateValue(Setting::UCMS_MAINTENANCE, '1', $this);
 		$this->createBackup($backupPath, $backupName, $currentVersion);
 		$result = $this->extractUpdate($installPath, $package);
 		if( $result != uCMS::SUCCESS ){
@@ -469,7 +469,7 @@ class Installer extends Object{
 			$back->go();
 		}
 		$this->sendRequest('updated');
-		Setting::Update(Setting::UCMS_MAINTENANCE, '0');
+		Setting::UpdateValue(Setting::UCMS_MAINTENANCE, '0', $this);
 	}
 
 	public function printStage(){

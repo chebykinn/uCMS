@@ -9,7 +9,7 @@ use uCMS\Core\Page;
 
 class Menus extends Extension{
 	public function onLoad(){
-		Permission::Register('manage menu links', $this->tr('Manage Menu Links'), $this->tr('Allow user to add, edit and delete menu links.'));
+		Permission::Register('manage menu links', $this->tr('Manage Menu Links'), $this->tr('Allow user to add, edit and delete menu links.'), $this);
 	}
 
 	public function onAdminAction($action){

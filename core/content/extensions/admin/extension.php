@@ -11,13 +11,13 @@ use uCMS\Core\Database\Query;
 class Admin extends \uCMS\Core\Extensions\Extension{
 
 	public function onLoad(){
-		Permission::Register('access site', $this->tr('Access Site'), $this->tr('Allow user to view site pages.'));
-		Permission::Register('access site in maintenance mode', $this->tr('Access Site in maintenance mode.'), $this->tr('Allow user visit site in maintenance mode.'));
-		Permission::Register('access control panel', $this->tr('Access Control Panel'), $this->tr('Allow user to view administration panel.'));
-		Permission::Register('manage extensions', $this->tr('Manage Extensions'), $this->tr('Allow user to add, edit and delete extensions.'));
-		Permission::Register('manage themes', $this->tr('Manage Themes'), $this->tr('Allow user to add, edit and delete themes.'));
-		Permission::Register('manage blocks', $this->tr('Manage Blocks'), $this->tr('Allow user to add, edit and delete blocks.'));
-		Permission::Register('update core settings', $this->tr('Update Core settings'), $this->tr('Allow user to change core settings using control panel.'));
+		Permission::Register('access site', $this->tr('Access Site'), $this->tr('Allow user to view site pages.'), $this);
+		Permission::Register('access site in maintenance mode', $this->tr('Access Site in maintenance mode.'), $this->tr('Allow user visit site in maintenance mode.'), $this);
+		Permission::Register('access control panel', $this->tr('Access Control Panel'), $this->tr('Allow user to view administration panel.'), $this);
+		Permission::Register('manage extensions', $this->tr('Manage Extensions'), $this->tr('Allow user to add, edit and delete extensions.'), $this);
+		Permission::Register('manage themes', $this->tr('Manage Themes'), $this->tr('Allow user to add, edit and delete themes.'), $this);
+		Permission::Register('manage blocks', $this->tr('Manage Blocks'), $this->tr('Allow user to add, edit and delete blocks.'), $this);
+		Permission::Register('update core settings', $this->tr('Update Core settings'), $this->tr('Allow user to change core settings using control panel.'), $this);
 	}
 
 	private function addBlocks(){
@@ -65,7 +65,7 @@ class Admin extends \uCMS\Core\Extensions\Extension{
 				'template' => 'templates/last.php'
 			]
 		];
-		Setting::Update('last_added_models', json_encode($defaultModels));
+		Setting::UpdateValue('last_added_models', json_encode($defaultModels), $this);
 	}
 	
 	protected function checkStage(){

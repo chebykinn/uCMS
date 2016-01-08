@@ -1,7 +1,7 @@
 <?php
 namespace uCMS\Core\Extensions\Users;
 use uCMS\Core\ORM\Model;
-use uCMS\Core\Tools;
+use uCMS\Core\Object;
 class Permission extends Model{
 	private static $list;
 	public function init(){
@@ -10,8 +10,7 @@ class Permission extends Model{
 		$this->belongsTo('\\uCMS\\Core\\Extensions\\Users\\Group');
 	}
 
-	public static function Register($name, $title, $description){
-		$owner = Tools::GetCurrentOwner();
+	public static function Register($name, $title, $description, Object $owner){
 		self::$list[$name] = array('title' => $title, 'description' => $description, 'owner' => $owner);
 	}
 

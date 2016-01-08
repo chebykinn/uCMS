@@ -18,7 +18,7 @@ class FileManager extends \uCMS\Core\Extensions\Extension {
 		Language::PATH,
 		ExtensionHandler::PATH,
 		ThemeHandler::PATH];
-		Permission::Register('manage files', $this->tr('Manage Files'), $this->tr('Allow user to add, edit and delete files.'));
+		Permission::Register('manage files', $this->tr('Manage Files'), $this->tr('Allow user to add, edit and delete files.'), $this);
 	}
 
 	public function onAdminAction($action){

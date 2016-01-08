@@ -190,7 +190,7 @@ class Extension extends AbstractExtension implements ExtensionInterface{
 
 	protected function checkStage(){
 		if( !empty($this->settings) && is_array($this->settings) ){
-			Setting::AddMultiple($this->settings);
+			Setting::AddMultiple($this->settings, $this);
 		}
 		$tables = $this->getInfo('tables');
 

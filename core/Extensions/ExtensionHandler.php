@@ -26,7 +26,9 @@ class ExtensionHandler extends Object{
 	private static $defaultList = ['users', 'admin', 'filemanager', 'menus', 'entries', 'comments', 'search'];
 	
 	final public static function Init(){
-		$externalList = is_array(unserialize(Setting::Get('extensions'))) ? unserialize(Setting::Get('extensions')) : [];
+		$setting = Setting::Get(Setting::EXTENSIONS);
+		$externalList = unserialize($setting);
+		if( !$externalList ) $externalList = [];
 		$extensions = array_merge(self::$defaultList, $externalList);
 		$extensionActions = $extensionAdminActions = [];
 		foreach ($extensions as $extension) {
@@ -44,10 +46,10 @@ class ExtensionHandler extends Object{
 					self::$usedActions = array_merge(self::$usedActions, $extensionActions);
 					self::$usedAdminActions = array_merge(self::$usedAdminActions, $extensionAdminActions);
 				}else{
-					Debug::Log($this->tr("Unable to find extension: @s", $extension), Debug::LOG_ERROR);
+					Debug::Log($this->tr("Unable to find extension: @s", $extension), Debug::LOG_ERROR, $this);
 				}
 			}catch(\Exception $e){
-				Debug::Log($this->tr("Can't load extension: @s, error: @s", $extension, $e->getMessage()), Debug::LOG_ERROR);
+				Debug::Log($this->tr("Can't load extension: @s, error: @s", $extension, $e->getMessage()), Debug::LOG_ERROR, $this);
 			}
 		}
 		self::$usedActions = array_unique(self::$usedActions);
@@ -279,7 +281,7 @@ class ExtensionHandler extends Object{
 					self::$list[$name] = new $name($name);
 					$exists = true;
 				}catch(Exception $e){
-					Debug::Log($this->tr("Can't load extension: @s, error: @s", $extension, $e->getMessage()), Debug::LOG_ERROR);
+					Debug::Log($this->tr("Can't load extension: @s, error: @s", $extension, $e->getMessage()), Debug::LOG_ERROR, $this);
 				}
 			}
 		}
@@ -289,7 +291,7 @@ class ExtensionHandler extends Object{
 				$extensions[] = $name;
 			}
 			$extensions = implode(",", $extensions);
-			Setting::Update('extensions', $extensions);
+			Setting::UpdateValue(Setting::EXTENSIONS, $extensions, $this);
 			$message = new Notification($this->tr("Extension \"@s\" was successfully enabled", $name), Notification::SUCCESS);
 			$message->add();
 			return true;
@@ -324,7 +326,7 @@ class ExtensionHandler extends Object{
 			$extensions[] = $name;
 		}
 		$extensions = implode(",", $extensions);
-		Setting::Update('extensions', $extensions);
+		Setting::UpdateValue(Setting::EXTENSIONS, $extensions, $this);
 		$message = new Notification($this->tr("Extension \"@s\" was successfully disabled", $name), Notification::SUCCESS);
 		$message->add();
 		return true;

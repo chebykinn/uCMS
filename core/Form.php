@@ -38,11 +38,11 @@ class Form extends Object{
 		'select'
 	];
 
-	public function __construct($name, $action = "", $submitCaption = "", $method = "POST", $class = ""){
+	public function __construct($name, $action = "", $submitCaption = "", $method = "POST", $class = "", Object $owner = NULL){
 		$this->name = htmlspecialchars(strip_tags($name));
 		$this->action = strip_tags($action); // TODO: check
 		$this->method = mb_strtolower($method) === "post" ? "POST" : "GET";
-		$this->owner = Tools::GetCurrentOwner();
+		$this->owner = $owner;
 		$this->class = !empty($class) ? htmlspecialchars(strip_tags($class)) : $this->name;
 		if( empty($submitCaption) ){
 			$submitCaption = $this->tr('Submit');
