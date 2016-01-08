@@ -1,6 +1,6 @@
 <?php
 namespace uCMS\Core;
-class Notification{
+class Notification extends Object{
 	private $type;
 	private $message;
 	private $page;
