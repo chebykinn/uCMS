@@ -1,7 +1,7 @@
 <?php
 namespace uCMS\Core;
 use uCMS\Core\Database\Query;
-class Cache{
+class Cache extends Object{
 	private static $blocks;
 
 	public static function Init(){
