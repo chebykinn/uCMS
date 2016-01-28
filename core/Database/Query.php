@@ -2,7 +2,7 @@
 namespace uCMS\Core\Database;
 use uCMS\Core\Debug;
 use uCMS\Core\Object;
-class Query extends Object implements QueryInterface{
+class Query extends Object{
 	private $database;
 	private $sql = "";
 	private $params = array();
