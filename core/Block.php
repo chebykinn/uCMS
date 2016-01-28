@@ -97,7 +97,7 @@ class Block extends Model{
 		}
 	}
 
-	private function prepareData($row){
+	private function prepareFields($row){
 		if( !ThemeHandler::IsExists($row->theme) ) $row->theme = "";
 		if( empty($row->theme) ) $row->theme = Setting::Get(Setting::THEME);
 
@@ -133,7 +133,7 @@ class Block extends Model{
 	}
 
 	public function create($row){
-		$result = $this->prepareData($row);
+		$result = $this->prepareFields($row);
 		if( !$result ) return false;
 		$duplicate = (new Block())->count([
 			'theme'  => $row->theme,
@@ -151,7 +151,7 @@ class Block extends Model{
 	}
 
 	public function update($row){
-		$this->prepareData($row);
+		$this->prepareFields($row);
 
 		$duplicate = (new Block())->count([
 			'theme'  => $row->theme,
