@@ -53,6 +53,13 @@ class Object {
 	final public function tr($string){
 		$args = func_get_args();
 		if( !Language::IsLoaded() ){
+			$args = array_slice($args, 1);
+			if( count($args) > 0 ){
+				foreach ($args as $arg) {
+					$patt[] = "/@s/";
+				}
+				$string = preg_replace($patt, $args, $string, 1);
+			}
 			return $string;
 		}
 		return call_user_func_array([Language::GetCurrent(), 'get'], $args);
