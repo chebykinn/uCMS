@@ -32,7 +32,7 @@ class Page extends Object{
 			$this->query = $url['query'];
 		}
 
-		$this->path = $url['path'];
+		$this->path = isset($url['path']) ? $url['path'] : '/';
 
 		$this->path = preg_replace('@/+@', '/', $this->path);
 		$rawData = str_replace(uCMS::GetDirectory(), "/", $this->path);
