@@ -33,13 +33,13 @@ class Debug extends Object{
 		set_error_handler('uCMS\\Core\\Debug::ErrorHandler');
 		ini_set('display_errors', 0);
 		self::$logLinesCount = self::CountLogLines();
+
 		if(UCMS_DEBUG){ // Debug mode preparation
 			$debugFile = ABSPATH.'content/debug.log';
 			error_reporting(E_ALL);
 			ini_set('log_errors', 1);
 			ini_set('error_log', $debugFile);
 			self::$logLevel = LOG_DEBUG;
-			self::Log(self::Translate('Debug mode enabled'), Debug::LOG_DEBUG, new self());
 		}else{
 			error_reporting(E_ALL ^ (E_DEPRECATED | E_NOTICE | E_STRICT));
 		}
@@ -85,7 +85,7 @@ class Debug extends Object{
 	}
 
 
-	public static function Log($message, $level = self::LOG_INFO, Object $sender = NULL, $unique = true, $logFile = ""){
+	public static function Log($message, $level = self::LOG_INFO, Object $sender = NULL, $logFile = ""){
 		if(self::$logLevel < $level) return false;
 
 		if( empty($logFile) ){
@@ -124,9 +124,9 @@ class Debug extends Object{
 				$type = '[INFO]';
 			break;
 		}
-		$host = Session::GetCurrent()->getHost();
+		$host = Session::GetIPAddress();
 		if( $sender != NULL ){
-			$sender = $sender->getPackage().':'.$sender->getObjectName();
+			$sender = $sender->getPackage().'::'.$sender->getObjectName();
 		}else{
 			// TODO: use trace
 			$sender = Object::CORE_PACKAGE;
@@ -136,12 +136,7 @@ class Debug extends Object{
 
 		$outMessage = uCMS::FormatTime(time(), self::LOG_DATETIME_FORMAT)." [Host: $host] $type [$sender] $message\n";
 
-		// If error is repeating rapidly this will prevent logs from bloating
-		$duplicateIndex = self::FindMessage($message, $logFile);
-		$isUnique = $unique && $duplicateIndex < 0;
-		$isNotRepeating = !$unique && ($duplicateIndex != 0);
-
-		if( $hasFile && ($isEmpty || $isUnique || $isNotRepeating) ){
+		if( $hasFile ){
 			$logHandle = @fopen($logFile, 'a');
 			if( !$logHandle ) return;
 			// Put a lock to prevent race condition
@@ -238,7 +233,7 @@ class Debug extends Object{
 					'type'   => 'ERROR',
 					'text'   => $line,
 					'host'   => $_SERVER['SERVER_NAME'],
-					'sender' => 'core:Debug',
+					'sender' => 'core::Debug',
 					'date'   => uCMS::FormatTime(time(), self::LOG_DATETIME_FORMAT)
 				];
 			}
@@ -344,7 +339,7 @@ class Debug extends Object{
 			echo debug_print_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
 			echo '</p>';
 		}
-		self::Log(self::Translate($errTitle.': '.strip_tags($errorMsg)), self::LOG_ERROR, new self(), false);
+		self::Log(self::Translate($errTitle.': '.strip_tags($errorMsg)), self::LOG_ERROR, new self());
 		self::EndBlock();
 		echo "<br>";
 		if($die) die;
@@ -482,7 +477,7 @@ class Debug extends Object{
 		}
 		$chunkSize = 8192;
 		$f = @fopen($logFile, 'rb');
-		if( !$f ) return -1;
+		if( !$f ) return 0;
 		$lines = 0;
 		while ( !feof($f) ) {
 			$lines += substr_count(fread($f, $chunkSize), "\n");
