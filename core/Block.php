@@ -110,6 +110,9 @@ class Block extends Model{
 			$row->owner = $this->getOwner()->getPackage();
 		}
 
+		if( $row->actions == NULL ) $row->actions = "";
+
+		if( $row->visibility == NULL ) $row->visibility = self::SHOW_EXCEPT;
 		if( $row->visibility < self::SHOW_EXCEPT ){
 			$row->visibility = self::SHOW_EXCEPT;
 		}
@@ -118,6 +121,7 @@ class Block extends Model{
 			$row->visibility = self::SHOW_MANUAL;
 		}
 
+		if( $row->cache == NULL ) $row->cache = self::CACHE_NONE;
 		if( $row->cache < self::CACHE_NONE ){
 			$row->cache = self::CACHE_NONE;
 		}
