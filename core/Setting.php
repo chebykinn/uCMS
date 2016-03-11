@@ -116,6 +116,8 @@ class Setting extends Model{
 	public static function Decrement($name, Object $owner){
 		$setting = self::GetRow($name, $owner);
 		if( !$setting ) return false;
+		// Prevent counter from going below zero
+		if( $setting->value == 0 ) return true;
 		$setting->value--;
 		$result = $setting->update();
 		return $result;
@@ -135,13 +137,14 @@ class Setting extends Model{
 		foreach ($namesAndValues as $name => $value) {
 			if( isset(self::$list[$name]) ) continue;
 			if( empty($name) ) continue;
-			$rows[] = [$name, $value, $owner];
-			self::$list[$name] = [
-				'name' => $name,
-				'value' => $owner->prepareSql($value),
-				'owner' => $package
-			];
+			$rows[] = [$name, $value, $package];
+			self::$list[$name] = (new self())->emptyRow();
+
+			self::$list[$name]->name = $name;
+			self::$list[$name]->value = $owner->prepareSql($value);
+			self::$list[$name]->owner = $package;
 		}
+
 		if( !empty($rows) ){
 			$query->insert(
 				['name', 'value', 'owner'],
