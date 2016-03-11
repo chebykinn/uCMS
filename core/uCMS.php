@@ -22,10 +22,15 @@ class uCMS extends Object{
 
 	public static function GetDirectory(){
 		$storedValue = Setting::Get(Setting::UCMS_DIR);
-
 		if( empty($storedValue) ){
 			$url = parse_url(urldecode($_SERVER['REQUEST_URI']));
-			$storedValue = $url['path'];
+			$abs = ABSPATH;
+			$path = $url['path'];
+			if( mb_strpos($path, $abs) ){
+				$storedValue = $path;
+			}else{
+				$storedValue = '/';
+			}
 		}
 		return $storedValue;
 	}
