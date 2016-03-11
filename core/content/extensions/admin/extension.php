@@ -23,8 +23,8 @@ class Admin extends \uCMS\Core\Extensions\Extension{
 	private function addBlocks(){
 		$actions = ControlPanel::ACTION.'/'.Page::INDEX_ACTION;
 
-		$lastAdded = (new Block())->emptyRow();
-		$stats = (new Block())->emptyRow();
+		$lastAdded = (new Block($this))->emptyRow();
+		$stats = (new Block($this))->emptyRow();
 
 		$lastAdded->name = "last-added";
 		$stats->name = "stats";

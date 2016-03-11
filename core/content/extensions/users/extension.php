@@ -24,6 +24,16 @@ class Users extends \uCMS\Core\Extensions\Extension {
 			$this->tr('Allow user to add, edit and delete other users.'),
 			$this
 		);
+		Permission::Register('view user profiles',
+			$this->tr('View user profiles'),
+			$this->tr('Allow user to view profiles.'),
+			$this
+		);
+		Permission::Register('view user list',
+			$this->tr('View user list'),
+			$this->tr('Allow user to view list of users.'),
+			$this
+		);
 		User::CheckAuthorization();
 
 		if( !in_array(Page::GetCurrent()->getAction(), $allowedActions) ){
@@ -115,7 +125,7 @@ class Users extends \uCMS\Core\Extensions\Extension {
 		$login->actions = User::LOGIN_ACTION;
 		$login->status = Block::ENABLED;
 		$login->create();
-		$card = (new Block())->emptyRow();
+		$card = (new Block($this))->emptyRow();
 		$card->name = "user-card";
 		$card->region = "right-sidebar";
 		$card->theme = Theme::DEFAULT_THEME;
@@ -150,10 +160,10 @@ class Users extends \uCMS\Core\Extensions\Extension {
 			$userMenu->description = 'User actions, displayed at the user card in sidebar.';
 			$userMenu->create();
 
-			$profileLink  = (new MenuLink())->emptyRow();
-			$userlistLink = (new MenuLink())->emptyRow();
-			$logoutLink   = (new MenuLink())->emptyRow();
-			$cpanelLink   = (new MenuLink())->emptyRow();
+			$profileLink  = (new MenuLink($this))->emptyRow();
+			$userlistLink = (new MenuLink($this))->emptyRow();
+			$logoutLink   = (new MenuLink($this))->emptyRow();
+			$cpanelLink   = (new MenuLink($this))->emptyRow();
 
 			$profileLink->menu = $userlistLink->menu =
 			$logoutLink->menu = $cpanelLink->menu = 'user-menu';
@@ -315,8 +325,7 @@ class Users extends \uCMS\Core\Extensions\Extension {
 				],
 				'theme' => [
 					'type' => 'varchar',
-					'size' => 'big',
-					'not null' => true
+					'size' => 'big'
 				],
 				'avatar' => [
 					'type' => 'int',
@@ -324,8 +333,7 @@ class Users extends \uCMS\Core\Extensions\Extension {
 				],
 				'language' => [
 					'type' => 'varchar',
-					'size' => 'small',
-					'not null' => true
+					'size' => 'small'
 				],
 				'timezone' => [
 					'type' => 'varchar',

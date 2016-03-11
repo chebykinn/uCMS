@@ -17,14 +17,13 @@ class Menus extends Extension{
 	}
 
 	private function addBlocks(){
-		$navMenu = (new Block())->emptyRow();
+		$navMenu = (new Block($this))->emptyRow();
 		$navMenu->name = "navigation";
 		$navMenu->region = "navigation";
 		$navMenu->theme = Theme::DEFAULT_THEME;
 		$navMenu->status = Block::ENABLED;
 		$navMenu->create();
-
-		$quickActions = (new Block())->emptyRow();
+		$quickActions = (new Block($this))->emptyRow();
 		$quickActions->name = "quick-actions";
 		$quickActions->region = "dashboard-left-side";
 		$quickActions->actions = ControlPanel::ACTION.'/'.Page::INDEX_ACTION;
@@ -104,8 +103,7 @@ class Menus extends Extension{
 				],
 				'permission' => [
 					'type' => 'varchar',
-					'size' => 'big',
-					'not null' => true
+					'size' => 'big'
 				],
 				'uid' => [
 					'type' => 'int',
