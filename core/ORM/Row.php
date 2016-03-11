@@ -75,6 +75,11 @@ class Row{
 			$value = call_user_func_array(array($this->model, $setCallback), [$value]);
 		}
 
+		// Save old key to be able to locate row in database
+		if( $name === $this->model->primaryKey() ){
+			$this->_oldkey = $this->$name;
+		}
+
 		if( $this->$name !== $value ){
 			$this->addData($name, $value);
 			$this->model->setModified();

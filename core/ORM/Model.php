@@ -355,7 +355,16 @@ abstract class Model extends Object{
 			$query = new Query('{'.$this->tableName().'}');
 			$key = $this->primaryKey();
 			if( !isset($data[$key]) ) return false;
-			$result = $query->update($data)->condition($key, '=', $data[$key])->execute();
+
+			// If model key was changed, old value will be stored in _oldkey
+			if( isset($row->_oldkey) ){
+				$id = $row->_oldkey;
+				unset($data['_oldkey']);
+			}else{
+				$id = $data[$key];
+			}
+
+			$result = $query->update($data)->condition($key, '=', $id)->execute();
 			return $result;
 		}
 		return false;
