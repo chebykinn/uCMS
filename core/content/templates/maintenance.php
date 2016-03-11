@@ -5,11 +5,11 @@ use uCMS\Core\Setting;
 <html>
 <head>
 <meta charset="utf-8">
-<title><?php echo $this->tr('Site on Maintenance').' — '.htmlspecialchars(Setting::Get('site_title')); ?></title>
+<title><?php echo self::Translate('Site on Maintenance').' — '.htmlspecialchars(Setting::Get('site_title')); ?></title>
 </head>
 <body>
 <?php
-$this->p('@s is on maintenance.', Setting::Get('site_name'));
+echo self::Translate('@s is on maintenance.', Setting::Get('site_name'));
 ?>
 </body>
 </html>
