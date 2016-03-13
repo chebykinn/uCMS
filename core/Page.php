@@ -227,6 +227,10 @@ class Page extends Object{
 		/**
 		* @todo add some checks
 		*/
+
+		// Prevent infinite redirect loops
+		if( (string)Page::GetCurrent() === $url ) return;
+
 		session_write_close();
 		if(headers_sent()){
 			echo '<script type="text/javascript">';
