@@ -62,6 +62,16 @@ class Page extends Object{
 		if( $action === self::INDEX_ACTION ) $action = "";
 		$urlAction = "";
 		$urlData = "";
+
+		// If action contains slash, we split everything after it to data
+		if( mb_strpos($action, '/') !== false && empty($data) ){
+			$page = explode('/', $action, 2);
+			if( isset($page[1]) ){
+				$action = $page[0];
+				$data = $page[1];
+			}
+		}
+
 		if( !empty($action) ){
 			$urlAction = ($isCleanUrl ? "$action/" : "?action=$action");
 		}
