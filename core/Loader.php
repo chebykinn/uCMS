@@ -115,7 +115,7 @@ class Loader extends Object{
 		}
 
 		Cache::Init();
-		Session::GetCurrent()->load();
+		Session::Load();
 		ExtensionHandler::Init();
 
 		Page::Check();
@@ -233,7 +233,7 @@ class Loader extends Object{
 		if( empty($this->error) ){
 			ExtensionHandler::Shutdown();
 			$this->stopLoadTimer();
-			Session::GetCurrent()->save();
+			Session::Save();
 			DatabaseConnection::Shutdown();
 		}
 	}

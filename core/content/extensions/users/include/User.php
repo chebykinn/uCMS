@@ -5,6 +5,7 @@ use uCMS\Core\Setting;
 use uCMS\Core\Database\Query;
 use uCMS\Core\ORM\Model;
 use uCMS\Core\uCMS;
+use uCMS\Core\Debug;
 use uCMS\Core\Form;
 use uCMS\Core\Page;
 use uCMS\Core\Notification;
@@ -69,8 +70,8 @@ class User extends Model{
 	}
 
 	public function isLoggedIn($row){
-		$sid = Session::GetCurrent()->getUID();
-		return ( !empty($row->uid) && !empty($row->name) && !empty($sid) );
+		if( !Session::IsAuthorized() ) return false;
+		return ( !empty($row->uid) && !empty($row->name) );
 	}
 
 	public function can($row, $permission){
@@ -82,10 +83,10 @@ class User extends Model{
 
 	public static function Authorize($userID, $saveCookies = false){
 		if( !self::IsExists($userID) ) return false; // fail if user doesn't exists
-		if( Session::GetCurrent()->isAuthorized() ){
-			if( Session::GetCurrent()->getUID() === intval($userID) ) return false; //fail if user already logged in
+		if( Session::IsAuthorized() ){
+			if( Session::GetCurrent()->uid === intval($userID) ) return false; //fail if user already logged in
 			else{
-				Session::GetCurrent()->Deauthorize(); // user got wrong cache saved
+				Session::Deauthorize(); // user got wrong cache saved
 			}
 		}
 		$hash = uCMS::GenerateHash();
@@ -93,22 +94,22 @@ class User extends Model{
 		$updated = $saveCookies ? 0 : time();
 		$updateSession->insert(
 			['sid', 'uid', 'ip', 'updated', 'created'],
-			[[$hash, $userID, Session::getCurrent()->getIPAddress(), $updated, time()]]
+			[[$hash, $userID, Session::GetIPAddress(), $updated, time()]]
 		)->execute();
 		$lastlogin = new Query("{users}");
 		$lastlogin->update(['lastlogin' => time()])->where()->condition("uid", '=', $userID)->execute();
 		//save cookies if needed
 		if( $saveCookies ){
-			Session::GetCurrent()->saveID($hash); //save cookie for year
+			Session::SaveID($hash); //save cookie for year
 		}
-		Session::GetCurrent()->authorize($hash);
+		Session::Authorize($hash);
 		return true;
 	}
 
 	public static function Deauthorize($userID = 0){
 		if( $userID == User::Current()->uid || $userID === 0 ){
-			Session::GetCurrent()->deauthorize();
-			Session::GetCurrent()->destroy();
+			Session::Deauthorize();
+			Session::Destroy();
 		}
 	}
 
@@ -122,12 +123,14 @@ class User extends Model{
 	}
 
 	public static function CheckAuthorization(){
-		$uid = Session::GetCurrent()->getUID();
-		$hash = Session::GetCurrent()->getID();
-		if( $uid > 0 ){
-			self::$currentUser = (new User)->find($uid); //set current user to $uid
-			if( is_null(self::$currentUser) || self::$currentUser->uid == 0 ){
-				Session::GetCurrent()->deauthorize();
+		if( Session::IsAuthorized() ) { 
+			$uid = Session::GetCurrent()->uid;
+			$hash = Session::GetCurrent()->sid;
+			if( $uid > 0 ){
+				self::$currentUser = (new User)->find($uid); //set current user to $uid
+				if( is_null(self::$currentUser) || self::$currentUser->uid == 0 ){
+					Session::Deauthorize();
+				}
 			}
 		}
 
@@ -152,15 +155,17 @@ class User extends Model{
 		$saveCookies = (bool) $saveCookies;
 		$query = new Query("{users}");
 		$check = $query->select("uid")->where()->condition("name", "=", $login)->_or()->condition("email", "=", $login)->limit(1)->execute();
+
 		if( !empty($check) ){
 			$id = $check[0]['uid'];
 			$result = self::Authorize($id, $saveCookies);
 		}else{
 			// TODO: login attempts
+			Debug::Log(self::Translate("Failed authentication"), Debug::LOG_ERROR, new self());
 		}
 
 		if( !$result ){
-			$error = new Notification($this->tr("Wrong username or password"), Notification::ERROR);
+			$error = new Notification(self::Translate("Wrong username or password"), Notification::ERROR);
 			$error->add();
 		}
 		return $result;

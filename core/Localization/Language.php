@@ -25,12 +25,12 @@ class Language extends Object{
 	}
 
 	public static function IsSaved(){
-		$sessionLang = Session::GetCurrent()->get('language');
+		$sessionLang = Session::Get('language');
 		return !empty($sessionLang);
 	}
 
 	public static function GetCurrentLanguage(){
-		$sessionLang = Session::GetCurrent()->get('language');
+		$sessionLang = Session::Get('language');
 		$storedValue = Setting::Get(Setting::LANGUAGE);
 		if( empty($storedValue) ){
 			if( empty($sessionLang) ) return self::ENGLISH;
@@ -42,7 +42,7 @@ class Language extends Object{
 	}
 
 	public static function Init(){
-		$sessionLang = Session::GetCurrent()->get('language');
+		$sessionLang = Session::Get('language');
 		$storedValue = Setting::Get(Setting::LANGUAGE);
 		if( !self::IsSaved() && empty($storedValue) ) return false;
 		self::$instance = new self();

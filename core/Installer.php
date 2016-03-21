@@ -164,7 +164,7 @@ class Installer extends Object{
 	* @return bool State of language preference.
 	*/
 	public function isLanguageSet(){
-		$language = Session::GetCurrent()->get('language');
+		$language = Session::Get('language');
 		return !empty($language);
 	}
 
@@ -240,7 +240,7 @@ class Installer extends Object{
 				$this->setTitle($this->tr('Select Language'));
 				if( $isPosted ){
 					$language = isset($_POST['language']) ? $_POST['language'] : 'en_US';
-					Session::GetCurrent()->set('language', $language);
+					Session::Set('language', $language);
 					$nextStage = self::WELCOME_STAGE;
 				}
 			break;
@@ -375,9 +375,9 @@ class Installer extends Object{
 		$this->setTitle($this->tr('Checking State...'));
 		// If update process was started
 		if( isset($_POST['update']) && isset($_POST['action']) ){
-			Session::GetCurrent()->set('update-action', $_POST['action']);
+			Session::Set('update-action', $_POST['action']);
 			if( isset($_POST['package']) ){
-				Session::GetCurrent()->set('update-package', $_POST['package']);
+				Session::Set('update-package', $_POST['package']);
 			}
 			$nextStage = self::UPDATE_STAGE;
 		}else{
@@ -415,10 +415,10 @@ class Installer extends Object{
 
 	private function prepareUpdateStage(){
 		$this->setTitle($this->tr('Update in Process'));
-		$action = Session::GetCurrent()->get('update-action');
-		$package = Session::GetCurrent()->get('update-package');
-		Session::GetCurrent()->delete('update-action');
-		Session::GetCurrent()->delete('update-package');
+		$action = Session::Get('update-action');
+		$package = Session::Get('update-package');
+		Session::DeleteKey('update-action');
+		Session::DeleteKey('update-package');
 		$currentVersion = uCMS::CORE_VERSION;
 		$installPath = ABSPATH;
 		$backupPath = ABSPATH.File::UPLOADS_PATH;
@@ -487,12 +487,12 @@ class Installer extends Object{
 	}
 
 	public function sendRequest($name){
-		Session::GetCurrent()->set("installer_request_$name", true);
+		Session::Set("installer_request_$name", true);
 	}
 
 	public function isRequested($name){
-		if( Session::GetCurrent()->have("installer_request_$name") ){
-			Session::GetCurrent()->delete("installer_request_$name");
+		if( Session::Have("installer_request_$name") ){
+			Session::DeleteKey("installer_request_$name");
 			return true;
 		}
 		return false;
@@ -662,7 +662,7 @@ class Installer extends Object{
 
 	private function addSettings($name, $description, $title, $domain, $ucmsDir){
 		$query = new Query("{settings}");
-		$language = Session::GetCurrent()->get('language');
+		$language = Session::Get('language');
 		$query->insert(['name', 'value', 'owner', 'changed'], 
 			[
 				[Setting::ADMIN_EMAIL,         '',           'core', 0],
@@ -843,8 +843,7 @@ class Installer extends Object{
 				],
 				'sessiondata' => [
 					'type' => 'blob',
-					'size' => 'big',
-					'not null' => true
+					'size' => 'big'
 				],
 				'created' => [
 					'type' => 'int',

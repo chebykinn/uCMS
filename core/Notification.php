@@ -24,7 +24,7 @@ class Notification extends Object{
 			$data['message'] = $this->message;
 			$data['type'] = $this->type;
 			$data['page'] = $this->page;
-			Session::GetCurrent()->push('ucms_notifications', $data);
+			Session::Push('ucms_notifications', $data);
 		}
 
 	}
@@ -46,8 +46,8 @@ class Notification extends Object{
 	} 
 
 	public static function ShowPending(){
-		if( Session::GetCurrent()->have('ucms_notifications') ){
-			$notifications = Session::GetCurrent()->get('ucms_notifications');
+		if( Session::Have('ucms_notifications') ){
+			$notifications = Session::Get('ucms_notifications');
 			if( !is_array($notifications) ) return;
 			// var_dump($notifications);
 			foreach ($notifications as $notification) {
@@ -56,12 +56,12 @@ class Notification extends Object{
 				*/
 				echo '<div class="'.$notification['type'].'">'.$notification['message'].'</div>';
 			}
-			Session::GetCurrent()->delete('ucms_notifications');
+			Session::DeleteKey('ucms_notifications');
 		}
 	}
 
 	public static function ClearPending(){
-		Session::GetCurrent()->delete('ucms_notifications');
+		Session::DeleteKey('ucms_notifications');
 	}
 }
 ?>
