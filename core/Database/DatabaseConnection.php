@@ -7,25 +7,9 @@ use uCMS\Core\Object;
 class DatabaseConnection extends Object{
 	const DISPLAY_QUERY = false;
 	const DEFAULT_NAME = 'default';
-	const ERR_TABLE_NOT_EXIST = "42S02";
-	const ERR_DRIVER_NOT_LOADED = 10000;
-	const SCHEMA_CORRECT = 0;
-	const ERR_SCHEMA_WRONG_KEY = 200;
-	const ERR_SCHEMA_NO_FIELDS = 300;
-	const ERR_SCHEMA_NO_FIELD_NAME = 400;
-	const ERR_SCHEMA_WRONG_FIELD = 500;
-	const ERR_SCHEMA_WRONG_FIELD_VALUE = 600;
-	const ERR_SCHEMA_WRONG_TYPE = 700;
-	const ERR_SCHEMA_WRONG_SIZE = 800;
-	const ERR_SCHEMA_NO_TYPE = 900;
-	const ERR_SCHEMA_NO_PRECISION = 1000;
-	const ERR_SCHEMA_NO_SCALE = 1100;
-	const ERR_SCHEMA_WRONG_ENGINE = 1200;
-	const ERR_SCHEMA_WRONG_VALUE = 1300;
-
 	private static $default;
 	private static $databases = [];
-	private static $supportedDrivers = ['mysql'];
+	private static $supportedDrivers = ['mysql', 'pgsql'];
 	private $dbServer, $dbUser, $dbPassword, $dbName;
 	private $driver;
 	private $tables;
@@ -35,6 +19,7 @@ class DatabaseConnection extends Object{
 	private $prefix;
 	private $ucmsName;
 	private $lastStatement = NULL;
+	private $driverClass = "";
 
 	public static function Init(){
 		if( empty($GLOBALS['databases']) || !is_array($GLOBALS['databases']) ){
@@ -51,6 +36,11 @@ class DatabaseConnection extends Object{
 						Loader::GetInstance()->install();
 					}
 				}
+				if( !empty($dbData["driver"]) ){
+					$driver = $dbData["driver"];
+				}else{
+					$driver = self::$supportedDrivers[0];
+				}
 				$database = new DatabaseConnection(
 					$dbData["server"], 
 					$dbData["user"], 
@@ -58,33 +48,32 @@ class DatabaseConnection extends Object{
 					$dbData["name"], 
 					$dbData["port"], 
 					$dbData["prefix"],
-					$dbName
+					$dbName,
+					$driver,
+					$dbData
 				);
-				
-				/**
-				* @todo check mysql version
-				*/
-				self::$databases[$dbName] = $database;
-			}catch(\Exception $e){
-				if( $e->getCode() === self::ERR_DRIVER_NOT_LOADED ){
-					Loader::GetInstance()->panic($e->getMessage());
-				}
 
-				if( $e->getCode() == 1045 || $e->getCode() == 1049 ){
-					Debug::Log(self::Translate("Wrong configuration file was provided"), Debug::LOG_CRITICAL);
-					Loader::GetInstance()->install();
-				}else{
-					Debug::Log(self::Translate("Database @s connection error @s: @s", $dbName, $e->getCode(), $e->getMessage()), Debug::LOG_CRITICAL);
-				}
+				self::$databases[$dbName] = $database;
+			}
+			catch(\PDOException $e){
+				Debug::Log(self::Translate("Unable to connect to database \"@s\": <br><pre>@s</pre>", $dbName, $e->getMessage()), Debug::LOG_CRITICAL);
+				Loader::GetInstance()->install();
+			}
+			catch(\RuntimeException $e){
+				Loader::GetInstance()->panic($e->getMessage());
+			}
+			catch(\UnderflowException $e){
+				Loader::GetInstance()->panic($e->getMessage());
+			}
+			catch(\Exception $e){
+				Loader::GetInstance()->panic($e->getMessage());
 			}
 		}
 		unset($GLOBALS['databases']); // We don't want to have global variables, so we delete this
 	}
 
-	public function checkDriver(){
-		if (!extension_loaded('pdo_'.$this->driver)) {
-			throw new \RuntimeException($this->tr("Database Connection Error, @s driver is not loaded", $this->driver), self::ERR_DRIVER_NOT_LOADED);
-		}
+	public function getDriver(){
+		return $this->driver;
 	}
 
 	public function isConnected(){
@@ -110,7 +99,7 @@ class DatabaseConnection extends Object{
 		}
 	}
 
-	public function __construct($server, $login, $password, $dbName, $dbPort, $prefix, $ucmsName, $driver = ""){
+	public function __construct($server, $login, $password, $dbName, $dbPort, $prefix, $ucmsName, $driver = "", $dbData = []){
 		parent::__construct();
 		$this->dbServer = $server;
 		$this->dbUser = $login;
@@ -119,8 +108,11 @@ class DatabaseConnection extends Object{
 		$this->dbPort = (int) $dbPort;
 		$this->prefix = $prefix;
 		$this->ucmsName = $ucmsName;
-		$this->driver = (!empty($driver) && in_array($driver, self::$supportedDrivers)) ? $driver : 'mysql';
-		$this->checkDriver();
+		$driver = (!empty($driver) && in_array($driver, self::$supportedDrivers)) ? $driver : 'mysql';
+		$this->driverClass = __NAMESPACE__."\\Driver\\$driver\\Driver";
+		$this->driver = new $this->driverClass();
+		$this->driver->check();
+		$this->driver->setup($dbData);
 		$this->connect();
 		$this->connected = true;
 		if($ucmsName == self::DEFAULT_NAME){
@@ -130,20 +122,29 @@ class DatabaseConnection extends Object{
 	}
 
 	public function connect(){
-		$this->connection = new \PDO($this->driver.":host=$this->dbServer;port=$this->dbPort;dbname=$this->dbName;charset=utf8", $this->dbUser, $this->dbPassword);
-		
-		$this->connection->exec("set names utf8");
-		$this->connection->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+		$dsn = $this->driver->name.":host=$this->dbServer;port=$this->dbPort;dbname=$this->dbName";
+		$opt = [
+			\PDO::ATTR_ERRMODE            => \PDO::ERRMODE_EXCEPTION,
+			\PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC
+		];
+		$this->connection = new \PDO($dsn, $this->dbUser, $this->dbPassword, $opt);
+		$version = $this->connection->getAttribute(\PDO::ATTR_SERVER_VERSION);
+
+		if( version_compare($version, $this->driver::MIN_VERSION, '<') ){
+			throw new \UnderflowException($this->tr("@s: Outdated version @s. Minimum required: @s",
+											$this->driver->name, $version, $this->driver::MIN_VERSION));
+		}
+		$this->driver->prepareConnection($this->connection);
 
 	}
 
 	public function close(){
-		$this->connection = null; 
+		$this->connection = NULL; 
 	}
 
-	public function doQuery($sql, $params = array()){
+	public function doQuery($sql, $params = []){
 		if($sql == "") return false;
-		$result = $this->connection->prepare($sql, array(\PDO::ATTR_CURSOR => \PDO::CURSOR_FWDONLY));
+		$result = $this->connection->prepare($sql, [\PDO::ATTR_CURSOR => \PDO::CURSOR_FWDONLY]);
 		if(self::DISPLAY_QUERY) {
 			Debug::BeginBlock(false);
 			echo $sql;
@@ -159,13 +160,9 @@ class DatabaseConnection extends Object{
 			$this->lastStatement = $result;
 			$this->queriesCount++;
 		}catch(\PDOException $e){
-			if( $e->getCode() === self::ERR_TABLE_NOT_EXIST ){
-				// TODO: debug mode
-				// TODO: check only if this is installed table
+			if( $e->getCode() === ($this->driverClass)::ERR_TABLE_NOT_EXIST && !UCMS_DEBUG ){
 				$check = Page::Install('check');
-				if( Page::GetCurrent()->getAction() !== Page::INSTALL_ACTION ){
-					$check->go();
-				}
+				$check->go();
 			}else{
 				Debug::BeginBlock();
 				echo "<h2>".$this->tr("Query failed")."</h2><br>";
@@ -180,7 +177,6 @@ class DatabaseConnection extends Object{
 			}
 			
 		}
-		// $result->close();
 		return $result;
 	}
 
@@ -204,7 +200,7 @@ class DatabaseConnection extends Object{
 		}
 
 		if( is_object($query) && $query instanceof \PDOStatement ){
-			return $query->fetch($outType); //param
+			return $query->fetch($outType);
 		}
 		return false;
 	}
@@ -231,33 +227,19 @@ class DatabaseConnection extends Object{
 
 	public function checkDefaultTables(){
 		if( $this->ucmsName === self::DEFAULT_NAME ){
-			$data = array();
+			$data = [];
 			$exists = false;
 			foreach ($this->tables as $table) {
-				$fullTable = $this->prefix.$table;
-				$exists = $this->isTableExists($fullTable);
+				$query = new Query("{$table}", [], $this->ucmsName);
+				$exists = $query->tableExists()->execute();
 				$data[$table] = $exists;
 			}
 			return $data;
 		}
 	}
 
-	public function isTableExists($table){
-		$table = $this->prepareSql($table);
-		$exists = true;
-		try{
-			$this->connection->query("SELECT 1 FROM $table LIMIT 1");
-			$exists = true;
-		}catch(\PDOException $e){
-			if( $e->getCode() === self::ERR_TABLE_NOT_EXIST ){
-				$exists = false;
-			}
-		}
-		return $exists;
-	}
-
 	public function setDefaultTables(){
-		$this->tables = array('settings', 'blocks', 'cache', 'ips', 'sessions');
+		$this->tables = ['settings', 'blocks', 'cache', 'ips', 'sessions'];
 	}
 
 	public function getuCMSName(){
@@ -300,23 +282,35 @@ class DatabaseConnection extends Object{
 		$hasType = false;
 
 		foreach ($schema as $key => $value) {
-			if( !in_array($key, $baseKeys) ) return self::ERR_SCHEMA_WRONG_KEY;
-			if( in_array($key, $arrayKeys) && !is_array($value) ) return self::ERR_SCHEMA_WRONG_VALUE;
+			if( !in_array($key, $baseKeys) ){
+				throw new \ArgumentException("Wrong key in schema: @s", $key);
+			}
+			if( in_array($key, $arrayKeys) && !is_array($value) ){
+				throw new \ArgumentException("Value for key @s should be an array", $key);
+			}
 			if( $key === 'fields' ){
-				if( count($value) == 0 ) return self::ERR_SCHEMA_NO_FIELDS;
+				if( count($value) == 0 ){
+					throw new \ArgumentException("No fields in schema");
+				}
 				$hasFields = true;
 				foreach ($value as $columnName => $columnData) {
 					$precisionSet = -1;
 					$scaleSet = -1;
-					if( $columnName == "" ) return self::ERR_SCHEMA_NO_FIELD_NAME;
+					if( $columnName == "" ){
+						throw new \ArgumentException("Empty field name");
+					}
 					$hasType = false;
 					foreach ($columnData as $fieldKey => $fieldValue) {
 						if( is_int($fieldKey) ) continue;
-						if( !in_array($fieldKey, $keys) ) return self::ERR_SCHEMA_WRONG_FIELD;
+						if( !in_array($fieldKey, $keys) ){
+							throw new \ArgumentException("Wrong key @s in column @s", $fieldKey, $columnName);
+						}
 						
 						if( $fieldKey === 'type' ){
 							
-							if( !in_array($fieldValue, $types) ) return self::ERR_SCHEMA_WRONG_TYPE;
+							if( !in_array($fieldValue, $types) ){
+								throw new \ArgumentException("Wrong type @s in column @s", $fieldValue, $columnName);
+							}
 							if( $fieldValue == 'numeric' ){
 								// We set flags to search precision and scale columns
 								$precisionSet = 0;
@@ -326,7 +320,9 @@ class DatabaseConnection extends Object{
 						}
 
 						if( $fieldKey === 'size' ){
-							if( !in_array($fieldValue, $sizes) ) return self::ERR_SCHEMA_WRONG_SIZE;
+							if( !in_array($fieldValue, $sizes) ){
+								throw new \ArgumentException("Wrong size @s in column @s", $fieldValue, $columnName);
+							}
 						}
 	
 						if( $fieldKey === 'precision' ){
@@ -337,54 +333,26 @@ class DatabaseConnection extends Object{
 							$scaleSet = 1;
 						}
 					}
-					if( !$hasType ) return self::ERR_SCHEMA_NO_TYPE;
-					if( $precisionSet == 0 ) return self::ERR_SCHEMA_NO_PRECISION;
-					if( $scaleSet == 0 ) return self::ERR_SCHEMA_NO_SCALE;
+					if( !$hasType ) {
+						throw new \ArgumentException("No type specified for column @s", $columnName);
+					}
+					
+					if( $precisionSet == 0 ){
+						throw new \ArgumentException("No precision specified for numeric type in column @s", $columnName);
+					}
+
+					if( $scaleSet == 0 ){
+						throw new \ArgumentException("No scale specified for numeric type in column @s", $columnName);
+					}
 				}
 			}
 
 			if( $key == 'mysql_engine' ){
-				if( !in_array($value, $engines) ) return self::ERR_SCHEMA_WRONG_ENGINE;
+				if( !in_array($value, $engines) ){
+					throw new \ArgumentException("Wrong MySQL engine", $value);
+				}
 			}
 		}
-		return self::SCHEMA_CORRECT;
 	}
-
-	public function getSQLSize($type, $size, $precision = 0, $scale = 0){
-		// TODO: Call driver-specific method
-		$types = ['varchar', 'char', 'int', 'serial', 'float', 'numeric', 'text', 'blob', 'datetime'];
-		$sizes = ['tiny', 'small', 'medium', 'normal', 'big'];
-		if( !in_array($type, $types) ) return 0;
-		if( !in_array($size, $sizes) ) return 0;
-		if( $type == 'serial' || $type == 'int '){
-			$prefix = $size != 'normal' ? $size : '';
-			return $prefix.'int';
-		}
-
-		if( $type == 'float' ){
-			if( $size == 'big' ) return 'double';
-			return 'float';
-		}
-
-		if( $type == 'numeric' ){
-			return "decimal($precision, $scale)";
-		}
-
-		if( $type == 'varchar' ){
-			$length = 64;
-			if( $size == 'big')
-				$length = 255;
-			return $type."($length)";
-		}
-
-		if( $type == 'text' || $type == 'blob' ){
-			$prefix = ($size != 'big' && $size != 'small' && $size != 'normal') ? $size : '';
-			if( $size == 'big' ) $prefix = 'long';
-			return $prefix.$type;
-		}
-
-		return $type;
-	}
-
 }
 ?>
