@@ -96,7 +96,7 @@ if(isset($query) and $query != '' and $table_name){
 					$results[$i]['relevance'] = 0;
 					$wordWeight = 0;
 					foreach ($keywords as $word) {
-						$reg = "/($word)/i";
+						$reg = "/(".preg_quote($word).")/i";
 						foreach ($columns_to_search as $column) {
 							$wordWeight += preg_match_all($reg, $results[$i][$column], $out);
 							$wordWeight += preg_match_all($reg, $results[$i][$column], $out);
@@ -311,7 +311,8 @@ function explodeQuery($query) {
 }
 
 function highlightWord($word, $string) {
-	$replacement = "<span style='color:black; background: yellow;'>".$word."</span>";
+	$word = preg_quote($word);
+	$replacement = "<span style='color:black; background: yellow;'>".htmlspecialchars($word)."</span>";
 	if(preg_match ("/^(.*)".$word."(.*).(jpg|png|gif|bmp)/", $string)){
 		$result = $string;
 	}else{
