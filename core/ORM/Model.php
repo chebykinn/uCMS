@@ -8,13 +8,19 @@
 */
 namespace uCMS\Core\ORM;
 use uCMS\Core\Database\Query;
+use uCMS\Core\Database\DatabaseConnection;
 use uCMS\Core\Object;
+use uCMS\Core\Debug;
 /**
 * This class provides ORM Model for uCMS.
 * 
 * This class is used in uCMS ORM implementation.
 */
 abstract class Model extends Object{
+	/**
+	* @var DatabaseConnection $database Contains database to use for tables.
+	*/
+	private $database;
 	/**
 	* @var string $primaryKey Contains ORM table primaryKey.
 	*/
@@ -48,6 +54,7 @@ abstract class Model extends Object{
 		parent::__construct($owner);
 		// self::$models[$this->name] = $this->name; // TODO: consider store associations here
 		$this->init();
+		$this->database();
 	}
 
 	/**
@@ -60,6 +67,24 @@ abstract class Model extends Object{
 	* @return void
 	*/
 	abstract public function init();
+
+	/**
+	* Get or set uCMS database.
+	*
+	* @since 2.0
+	* @param DatabaseConnection $name New database.
+	* @return DatabaseConnection Database object or null.
+	*/
+	final public function database(DatabaseConnection $db = NULL){
+		if ( empty($this->database) ){
+			$this->database = $db == NULL ? DatabaseConnection::GetDefault() : $db;
+			if( !$this->database->isConnected() ){
+				Debug::Log($this->tr("No connection to database."), Debug::LOG_CRITICAL, $this);
+				return NULL;
+			}
+		}
+		return $this->database;
+	}
 
 	/**
 	* Get or set table name.
@@ -212,6 +237,8 @@ abstract class Model extends Object{
 	}
 
 	final public function find($conditions = array()){
+		if( $this->database() == NULL ) return NULL;
+
 		$usedKeys = array('columns', 'where', 'start', 'limit', 'orders', 'noOrder');
 		// If we got a number we will try to select row by ID
 		if( is_numeric($conditions) || is_string($conditions) ){
@@ -223,7 +250,7 @@ abstract class Model extends Object{
 		}
 
 		// Creating query
-		$query = new Query('{'.$this->tableName().'}');
+		$query = new Query('{'.$this->tableName().'}', [], $this->database());
 		$start = NULL;
 		// TODO: Consider set default limit ?
 		$limit = NULL;
@@ -332,12 +359,19 @@ abstract class Model extends Object{
 		return 0;
 	}
 
+	protected function prepareFields($row){
+		if( $this->database() == NULL ) return false;
+		if( !$this->modified ) return false;
+		return true;
+	}
+
 	public function create($row){
-		if( !$this->exists && $this->modified ){
+		$isPrepared = $this->prepareFields($row);
+		if( !$this->exists && $isPrepared ){
 			$data = $row->getColumns();
 			$columns = array_keys($data);
 			$values = array_values($data);
-			$query = new Query('{'.$this->tableName().'}');
+			$query = new Query('{'.$this->tableName().'}', [], $this->database());
 			$key = $this->primaryKey();
 			if( isset($data[$key]) ){
 				$check = $query->select($key)->condition($key, '=', $data[$key])->execute('count');
@@ -350,9 +384,10 @@ abstract class Model extends Object{
 	}
 
 	public function update($row){
-		if( $this->exists && $this->modified ){
+		$isPrepared = $this->prepareFields($row);
+		if( $this->exists && $isPrepared ){
 			$data = $row->getColumns();
-			$query = new Query('{'.$this->tableName().'}');
+			$query = new Query('{'.$this->tableName().'}', [], $this->database());
 			$key = $this->primaryKey();
 			if( !isset($data[$key]) ) return false;
 
@@ -371,9 +406,10 @@ abstract class Model extends Object{
 	}
 
 	public function delete($row){
+		if( $this->database() == NULL ) return false;
 		if( $this->exists ){
 			$key = $this->primaryKey();
-			$query = new Query('{'.$this->tableName().'}');
+			$query = new Query('{'.$this->tableName().'}', [], $this->database());
 			$result = $query->delete()->condition($key, '=', $row->$key)->execute();
 			return $result;
 		}
