@@ -137,7 +137,9 @@ class Language extends Object{
 				$lines = file($engFile);
 				if( in_array("msgid \"$string\"\n", $lines) ) return;
 			}
-			$lang = fopen($engFile, 'a');
+			if( !is_writable($engFile) ) return;
+			$lang = @fopen($engFile, 'a');
+			if( !$lang ) return;
 			$line = "msgid \"$string\"\nmsgstr \"\"\n\n";
 			fwrite($lang, $line);
 			fclose($lang);
@@ -145,7 +147,6 @@ class Language extends Object{
 	}
 
 	private function parseGettextPO(){
-		// $file = 
 	}
 
 	private function getFromPO($string){
