@@ -45,7 +45,7 @@ class Debug extends Object{
 		}
 	}
 
-	public static function BeginBlock($floating = true, $height = 200){
+	public static function BeginBlock($floating = false, $height = 200){
 		$height = intval($height);
 		$css = ThemeHandler::GetTemplate('ucms.css', false, true);
 		$style = file_get_contents($css);
@@ -54,11 +54,11 @@ class Debug extends Object{
 		if( $floating ){
 			$blockStyle = '
 			<style type="text/css">'.$style.'
-				#'.$blockID.'{
-					position: fixed;
-					top: '.$position.';
-					max-height: '.$height.';
-				}
+	#'.$blockID.'{
+		position: fixed;
+		top: '.$position.';
+		max-height: '.$height.';
+	}
 			</style>';
 		}else{
 			$blockStyle = '<style type="text/css">'.$style.'</style>';
@@ -98,30 +98,30 @@ class Debug extends Object{
 			$isEmpty = true;
 		}
 
-		
+
 		switch ($level) {
 			case self::LOG_DEBUG:
-				$type = '[DEBUG]';
+	$type = '[DEBUG]';
 			break;
 
 			case self::LOG_INFO:
-				$type = '[INFO]';
+	$type = '[INFO]';
 			break;
-	
+
 			case self::LOG_WARNING:
-				$type = '[WARNING]';
+	$type = '[WARNING]';
 			break;
-	
+
 			case self::LOG_ERROR:
-				$type = '[ERROR]';
+	$type = '[ERROR]';
 			break;
-	
+
 			case self::LOG_CRITICAL:
-				$type = '[CRITICAL]';
+	$type = '[CRITICAL]';
 			break;
-			
+
 			default:
-				$type = '[INFO]';
+	$type = '[INFO]';
 			break;
 		}
 		$host = Session::GetIPAddress();
@@ -141,10 +141,10 @@ class Debug extends Object{
 			if( !$logHandle ) return;
 			// Put a lock to prevent race condition
 			if( flock($logHandle, LOCK_EX) ){
-				fwrite($logHandle, $outMessage);
-				if( $logFile == self::$logFile ){
-					self::$logLinesCount++;
-				}
+	fwrite($logHandle, $outMessage);
+	if( $logFile == self::$logFile ){
+		self::$logLinesCount++;
+	}
 			}
 			fclose($logHandle);
 		}
@@ -180,9 +180,9 @@ class Debug extends Object{
 
 		for ($i = 0; $i < $headerLimit; $i++) {
 			if( empty($data[$i]) ){
-				throw new \InvalidArgumentException(
-					self::Translate("Wrong line provided, index @s not found", $i)
-				);
+	throw new \InvalidArgumentException(
+		self::Translate("Wrong line provided, index @s not found", $i)
+	);
 			}
 		}
 
@@ -225,17 +225,17 @@ class Debug extends Object{
 		foreach ($journalLines as $line) {
 			$id = $count-$i;
 			try{
-				$message = self::ParseLogMessage($line);
+	$message = self::ParseLogMessage($line);
 			}catch(\InvalidArgumentException $e){
-				// If message is corrupted, we will fill missing lines
-				// and then add message
-				$message = [
-					'type'   => 'ERROR',
-					'text'   => $line,
-					'host'   => $_SERVER['SERVER_NAME'],
-					'sender' => 'core::Debug',
-					'date'   => uCMS::FormatTime(time(), self::LOG_DATETIME_FORMAT)
-				];
+	// If message is corrupted, we will fill missing lines
+	// and then add message
+	$message = [
+		'type'   => 'ERROR',
+		'text'   => $line,
+		'host'   => $_SERVER['SERVER_NAME'],
+		'sender' => 'core::Debug',
+		'date'   => uCMS::FormatTime(time(), self::LOG_DATETIME_FORMAT)
+	];
 			}
 			$message['id'] = $id;
 			$messages[] = $message;
@@ -259,7 +259,7 @@ class Debug extends Object{
 			self::$logLevel = self::LOG_DEBUG;
 		}
 	}
-	
+
 	/**
 	* PHP error handler.
 	*
@@ -280,9 +280,8 @@ class Debug extends Object{
 			$errfile = $error["file"];
 			$errline = $error["line"];
 		}
-
 		if (!(error_reporting() & $errno) || error_reporting() === 0) {
-			return;
+			return true;
 		}
 		$die = false;
 		echo "<br>";
@@ -292,7 +291,7 @@ class Debug extends Object{
 			case E_RECOVERABLE_ERROR:
 				$errTitle = "PHP Catchable Fatal Error";
 			break;
-			
+
 			case E_NOTICE:
 				$errTitle = "PHP Notice";
 			break;
@@ -356,16 +355,16 @@ class Debug extends Object{
 
 		$f = fopen(self::$logFile, 'r');
 		$cursor = -1;
-		
+
 		fseek($f, $cursor, SEEK_END);
 		$char = fgetc($f);
-		
+
 		// Trim trailing newline chars of the file
 		while ($char === "\n" || $char === "\r") {
 			fseek($f, $cursor--, SEEK_END);
 			$char = fgetc($f);
 		}
-		
+
 		// Read until the start of file or first newline char
 		while ($char !== false && $char !== "\n" && $char !== "\r") {
 			// Prepend the new char
@@ -393,7 +392,9 @@ class Debug extends Object{
 			$logFile = self::$logFile;
 		}
 		if( file_exists($logFile) ){
-			unlink($logFile);
+			if( !@unlink($logFile) ){
+				throw new \RuntimeException(self::Translate("Unable to delete log file."));
+			}
 			return true;
 		}
 		return false;
@@ -416,45 +417,45 @@ class Debug extends Object{
 		}
 		$handle = @fopen($logFile, 'r');
 		if( !$handle ) return -1;
-			
+
 		$found = false;
 		$pos = -2;
 		$i = 0;
 		$currentLine = '';
-		
+
 		if( flock($handle, LOCK_EX) ){
 			while( -1 !== fseek($handle, $pos, SEEK_END) ){
-			    $char = fgetc($handle);
-			    if( PHP_EOL == $char ){
-			    	try{
-			    		$fmsg = self::ParseLogMessage($currentLine);
-			    	}catch(\InvalidArgumentException $e){
-			    		$pos--;
-			    		$i++;
-			    		$currentLine = '';
-			    		continue;
-			    	}
-			    	if( strpos($fmsg['text'], $message) !== false ) {
-			    		$found = true;
-			    		break;
-			    	}
-			    	$i++;
-			        $currentLine = '';
-			    }else{
-			        $currentLine = $char.$currentLine;
-			    }
-			    $pos--;
+	   $char = fgetc($handle);
+	   if( PHP_EOL == $char ){
+		try{
+			$fmsg = self::ParseLogMessage($currentLine);
+		}catch(\InvalidArgumentException $e){
+			$pos--;
+			$i++;
+			$currentLine = '';
+			continue;
+		}
+		if( strpos($fmsg['text'], $message) !== false ) {
+			$found = true;
+			break;
+		}
+		$i++;
+		   $currentLine = '';
+	   }else{
+		   $currentLine = $char.$currentLine;
+	   }
+	   $pos--;
 			}
 		}
 
 		if( !$found && !empty($currentLine) ){
 			try{
-				$fmsg = self::ParseLogMessage($currentLine);
+	$fmsg = self::ParseLogMessage($currentLine);
 			}catch(\InvalidArgumentException $e){
-				return -1;
+	return -1;
 			}
 			if( strpos($fmsg['text'], $message) !== false ) {
-				$found = true;
+	$found = true;
 			}
 		}
 
@@ -487,7 +488,7 @@ class Debug extends Object{
 	}
 
 	/**
-	* Get number of lines in system log. 
+	* Get number of lines in system log.
 	*
 	* Get number of lines in system log instead of counting them with
 	* Debug::CountLogLines method.
