@@ -2,6 +2,7 @@
 namespace uCMS\Core\Extensions\FileManager;
 use uCMS\Core\ORM\Model;
 use uCMS\Core\uCMS;
+use uCMS\Core\Debug;
 use uCMS\Core\Extensions\Users\User;
 class File extends Model{
 	const CONTENT_PATH = 'content/';
@@ -25,7 +26,7 @@ class File extends Model{
 		return (file_exists($path) && is_file($path));
 	}
 
-	public function prepareFields($row){
+	protected function prepareFields($row){
 		if( empty($row->name) ) return false;
 
 		if( !isset($row->status) ){
@@ -63,6 +64,7 @@ class File extends Model{
 		if( !isset($row->changed) ){
 			$row->changed = filemtime($row->getPath());
 		}
+		return true;
 	}
 
 	public function getPath($row){
@@ -70,9 +72,6 @@ class File extends Model{
 	}
 
 	public function create($row){
-		$result = $this->prepareFields($row);
-		if( !$result ) return false;
-
 		$result = parent::create($row);
 		if( !$result ) return false;
 
@@ -85,9 +84,6 @@ class File extends Model{
 	}
 
 	public function update($row){
-		$result = $this->prepareFields($row);
-		if( !$result ) return false;
-
 		$result = parent::update($row);
 		if( !$result ) return false;
 
