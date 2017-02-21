@@ -76,7 +76,7 @@ class Row{
 		}
 
 		// Save old key to be able to locate row in database
-		if( $name === $this->model->primaryKey() ){
+		if( $name === $this->model->primaryKey() && isset($this->$name) ){
 			$this->_oldkey = $this->$name;
 		}
 
