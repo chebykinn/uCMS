@@ -167,7 +167,7 @@ class Theme extends AbstractExtension{
 		$styleList = $this->getInfo('style');
 		if( empty($styleList) ) return;
 		if( !is_array($styleList) ) $styleList = [$styleList];
-		$extensions = ExtensionHandler::GetList();
+		$extensions = ExtensionHandler::GetLoaded();
 		foreach ($extensions as $name) {
 			$extension = ExtensionHandler::Get($name);
 			$styles = $extension->getInfo('styles');
@@ -184,7 +184,7 @@ class Theme extends AbstractExtension{
 				$cssHref = $css;
 			}
 			if( file_exists($this->getFilePath($css)) ){
-				$cssHref = $this->getURLFilePath($css);	
+				$cssHref = $this->getURLFilePath($css);
 			}
 			if( empty($cssHref) ) continue;
 			print '<link rel="stylesheet" type="text/css" href="'.$cssHref.'">'."\n";
@@ -196,7 +196,7 @@ class Theme extends AbstractExtension{
 		$scriptList = $this->getInfo('script');
 		if( empty($scriptList) ) return;
 		if( !is_array($scriptList) ) $scriptList = [$scriptList];
-		$extensions = ExtensionHandler::GetList();
+		$extensions = ExtensionHandler::GetLoaded();
 		foreach ($extensions as $name) {
 			$extension = ExtensionHandler::Get($name);
 			$scripts = $extension->getInfo('scripts');
