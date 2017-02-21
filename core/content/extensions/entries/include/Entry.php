@@ -100,7 +100,7 @@ class Entry extends Model{
 		return $editLink;
 	}
 
-	public function prepareFields($row){
+	protected function prepareFields($row){
 		if( empty($row->title) || empty($row->content) ){
 			return false;
 		}
@@ -129,20 +129,10 @@ class Entry extends Model{
 	}
 
 	public function create($row){
-		$result = $this->prepareFields($row);
-		if( !$result ) return false;
-
 		$result = parent::create($row);
 		if( $result ){
 			Setting::Increment('entries_amount', $this);
 		}
-		return $result;
-	}
-
-	public function update($row){
-		$result = $this->prepareFields($row);
-		if( !$result ) return false;
-		$result = parent::update($row);
 		return $result;
 	}
 
