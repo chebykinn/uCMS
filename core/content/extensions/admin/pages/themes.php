@@ -58,7 +58,7 @@ $table->printTable();
 
 function enable($name){
 	if( !ThemeHandler::IsExists($name) ){
-		$error = new Notification($this->tr("Error: There is no such theme."));
+		$error = new Notification("Error: There is no such theme.");
 		$error->add();
 		return false;
 	}
@@ -67,9 +67,9 @@ function enable($name){
 	}catch(\Exception $e){
 		return false;
 	}
-	$displayName = $this->tr($theme->getInfo('displayname'));
+	$displayName = $theme->getInfo('displayname');
 	ThemeHandler::ChangeTheme($name);
-	$success = new Notification($this->tr("Theme \"@s\" was successfully activated.",  $displayName));
+	$success = new Notification("Theme \"@s\" was successfully activated.",  $displayName);
 	$success->add();
 	return true;
 }
