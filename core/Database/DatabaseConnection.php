@@ -86,8 +86,12 @@ class DatabaseConnection extends Object{
 		}
 	}
 
+	public static function HasDatabase($name){
+		return ( isset(self::$databases[$name]) );
+	}
+
 	public static function GetDatabase($name){
-		if( isset(self::$databases[$name]) ){
+		if( self::hasDatabase($name) ){
 			return self::$databases[$name];
 		}
 		return self::$default;
@@ -144,6 +148,12 @@ class DatabaseConnection extends Object{
 
 	public function doQuery($sql, $params = []){
 		if($sql == "") return false;
+			// 	\uCMS\Core\Debug::PrintVar($this->ucmsName);
+			// 	\uCMS\Core\Debug::PrintVar('conn:<br>');
+			// 	\uCMS\Core\Debug::PrintVar($this->connection);
+			// 	Debug::BeginBlock(false);
+			// debug_print_backtrace();
+			// Debug::EndBlock();
 		$result = $this->connection->prepare($sql, [\PDO::ATTR_CURSOR => \PDO::CURSOR_FWDONLY]);
 		if(self::DISPLAY_QUERY) {
 			Debug::BeginBlock(false);
