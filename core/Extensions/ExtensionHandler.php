@@ -46,20 +46,25 @@ class ExtensionHandler extends Object{
 					self::$usedActions = array_merge(self::$usedActions, $extensionActions);
 					self::$usedAdminActions = array_merge(self::$usedAdminActions, $extensionAdminActions);
 				}else{
-					Debug::Log($this->tr("Unable to find extension: @s", $extension), Debug::LOG_ERROR, $this);
+					Debug::Log(self::Translate("Unable to find extension: @s", $extension), Debug::LOG_ERROR, new self());
 				}
 			}catch(\Exception $e){
-				Debug::Log($this->tr("Can't load extension: @s, error: @s", $extension, $e->getMessage()), Debug::LOG_ERROR, $this);
+				Debug::Log(self::Translate("Can't load extension: @s, error: @s", $extension, $e->getMessage()), Debug::LOG_ERROR, new self());
 			}
 		}
 		self::$usedActions = array_unique(self::$usedActions);
 		self::$usedAdminActions = array_unique(self::$usedAdminActions);
 	}
 
-	final public static function GetExtensionClass($name){
-		if( !self::IsExtention($name) ) return "";
+	final private static function BuildExtensionClassName($name){
 		$namespace = self::IsDefault($name) ? __NAMESPACE__ : "uCMS\\Extensions";
 		$extensionClass = "$namespace\\$name\\$name";
+		return $extensionClass;
+	}
+
+	final public static function GetExtensionClass($name){
+		if( !self::IsExtension($name) ) return "";
+		$extensionClass = self::BuildExtensionClassName($name);
 		if( class_exists($extensionClass) ){
 			return $extensionClass;
 		}
@@ -163,13 +168,9 @@ class ExtensionHandler extends Object{
 		if( !empty(self::$list[$name]) ){
 			return self::$list[$name];
 		}
-		if( self::isExists($name) ){
-			try{
-				$extension = new Extension($name);
-				return $extension;
-			}catch(\Exception $e){
-				return NULL;
-			}
+		if( self::IsExists($name) && self::IsExtension($name) ){
+			$extension = new Extension($name);
+			return $extension;
 		}
 		return NULL;
 	}
@@ -182,9 +183,8 @@ class ExtensionHandler extends Object{
 		return in_array($name, self::GetList());
 	}
 
-	final public static function IsExtention($name){
+	final public static function IsExtension($name){
 		if( !is_object($name) ){
-
 			// If it is default extension we are checking extension file in core directory.
 			if( in_array($name, self::$defaultList) ){
 				return require_once(ABSPATH.self::CORE_PATH."$name/extension.php");
@@ -198,15 +198,12 @@ class ExtensionHandler extends Object{
 		
 			// Otherwise, we check if extension have its class, derived from Extension and implements ExtensionInterface
 			if ( $dataExists ){
-				$class = self::GetExtensionClass($name);
-				if( empty($class) ) return false;
-
 				include_once(ABSPATH.self::PATH.$name.'/extension.php');
-
+				$class = self::BuildExtensionClassName($name);
 				return ( 
-					class_exists($name) 
-					&& is_subclass_of($name, __NAMESPACE__."\\Extension") 
-					&& in_array(__NAMESPACE__."\\ExtensionInterface", class_implements($name))
+					class_exists($class) 
+					&& is_subclass_of($class, __NAMESPACE__."\\Extension") 
+					&& in_array(__NAMESPACE__."\\ExtensionInterface", class_implements($class))
 				);
 	
 			}
@@ -226,7 +223,7 @@ class ExtensionHandler extends Object{
 		$extdirs = file_exists(ABSPATH.self::PATH) ? scandir(ABSPATH.self::PATH) : [];
 		$directories = array_merge(scandir(ABSPATH.self::CORE_PATH), $extdirs);
 		foreach ($directories as $extension) {
-			if( self::IsExtention($extension) ){
+			if( self::IsExtension($extension) ){
 				$names[] = $extension;
 			}
 		}
@@ -251,7 +248,7 @@ class ExtensionHandler extends Object{
 	}
 
 	final public static function Delete($name){
-		if( self::IsDefault($name) || !self::IsExtention($name) ){
+		if( self::IsDefault($name) || !self::IsExtension($name) ){
 			$message = new Notification($this->tr("Unable to delete extension \"@s\"", $name), Notification::ERROR);
 			$message->add();
 			return false;
