@@ -12,12 +12,12 @@ class Query extends Object implements QueryInterface{
 	protected $fetchType = 'assoc';
 	protected $placeholderIndex = 0;
 
-	public function __construct($sql, $params = array(), $database = NULL){
+	public function __construct($sql, $params = array(), DatabaseConnection $database = NULL){
 		parent::__construct();
-		$this->database = DatabaseConnection::GetDatabase($database);
-		if( empty($this->database) ){
+		$this->database = $database == NULL ? DatabaseConnection::GetDefault() : $database;
+		if( !$this->database->isConnected() ){
 			Debug::Log($this->tr("No connection to the database"), Debug::LOG_ERROR, $this);
-			return;
+			return;	
 		}
 		$driver = $this->database->getDriver();
 		$driverClass = __NAMESPACE__."\\Driver\\{$driver->name}\\Query";
