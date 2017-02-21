@@ -11,17 +11,24 @@ class MenuLink extends Model{
 	}
 
 	public function getLink($row){
-		$data = "";
 		$action = $row->link;
+		// TODO: Allowed protocols
 		if( preg_match("/^(https?):\/\//", $action) || $row->external ){
 			return $action;
 		}
-		$page = explode('/', $row->link, 2);
-		if( isset($page[1]) ){
-			$action = $page[0];
-			$data = $page[1];
+		if( $row->link instanceof Page ){
+			return $row->link;
 		}
-		return Page::FromAction($action, $data);
+
+		return Page::FromAction($action);
+	}
+
+	protected function prepareFields($row){
+		if( empty($row->owner) ){
+			if( empty($this->getOwner()) ) return false;
+			$row->owner = $this->getOwner()->getPackage();
+		}
+		return true;
 	}
 
 	public function isCurrentPage($row){

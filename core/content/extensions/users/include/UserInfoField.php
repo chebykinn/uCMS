@@ -11,20 +11,11 @@ class UserInfoField extends Model{
 		$this->hasMany('\\uCMS\\Core\\Extensions\\Users\\UserInfo', ['bind' => 'values']);
 	}
 
-	public function prepareFields($row){
+	protected function prepareFields($row){
 		if( empty($row->type) || !in_array($row->type, self::$types) ){
 			$row->type = 'string';
 		}
-	}
-
-	public function create($row){
-		$this->prepareFields($row);
-		return parent::create($row);
-	}
-
-	public function update($row){
-		$this->prepareFields($row);
-		return parent::update($row);
+		return true;
 	}
 }
 
