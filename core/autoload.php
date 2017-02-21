@@ -16,7 +16,7 @@ spl_autoload_register(function ($class) {
     // get the relative class name
     $relative_class = substr($class, $len);
     $level = substr_count($relative_class, "\\");
-    if( $level > 1 ){
+    if( $level > 1 && strpos($relative_class, "Extensions") !== false ){
         // prevent autoload from content directory
     	return;
     }
