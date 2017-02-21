@@ -24,9 +24,13 @@ $extensionsTable->addColumn($this->tr('Extension'), true, 'manage extensions', '
 $extensionsTable->addColumn($this->tr('Description'), true, 'manage extensions', 0, true );
 $extensionsTable->setInfo("amount", count(ExtensionHandler::GetList()));
 foreach ($extensions as $extension) {
-	$dependencies = "";
-	$extensionObject = ExtensionHandler::Get($extension);
-	if( empty($extensionObject) ){
+	$dependencies = [];
+	try{
+		$extensionObject = ExtensionHandler::Get($extension);
+		if( empty($extensionObject) ){
+			continue;
+		}
+	}catch(\Exception $e){
 		continue;
 	}
 	if( is_array($extensionObject->getDependenciesList()) ){

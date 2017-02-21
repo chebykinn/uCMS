@@ -6,8 +6,12 @@ use uCMS\Core\Notification;
 use uCMS\Core\Admin\ManageTable;
 
 if( isset($_POST['clear-journal']) ){
-	Debug::ClearLog();
-	$msg = new Notification($this->tr('Journal was successfully cleared.'), Notification::SUCCESS);
+	try{
+		Debug::ClearLog();
+		$msg = new Notification($this->tr('Journal was successfully cleared.'), Notification::SUCCESS);
+	}catch(\RuntimeException $e){
+		$msg = new Notification($e->getMessage(), Notification::ERROR);
+	}
 	$msg->add();
 	Page::Refresh();
 }
