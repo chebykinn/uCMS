@@ -21,18 +21,17 @@ $profileMenu = (new Menu())->emptyRow();
 $links = [];
 $infoPageLink = (new MenuLink())->emptyRow();
 $infoPageLink->title = $this->tr('Profile');
-$infoPageLink->link = Page::FromAction(User::PROFILE_ACTION, $user->name);
+$infoPageLink->link = User::PROFILE_ACTION.'/'.$user->name;
 $links[] = $infoPageLink;
-
 $editLink = (new MenuLink())->emptyRow();
 $editLink->title = $this->tr('Edit info');
-$editLink->link = Page::FromAction(User::PROFILE_ACTION, ($user->name).'/edit');
+$editLink->link = User::PROFILE_ACTION.'/'.($user->name).'/edit';
 $links[] = $editLink;
 
 if( Setting::Get('enable_user_messaging') ){
 	$messagesLink = (new MenuLink())->emptyRow();
 	$messagesLink->title = $this->tr('Messages');
-	$messagesLink->link = Page::FromAction(User::PROFILE_ACTION, ($user->name).'/messages');
+	$messagesLink->link = User::PROFILE_ACTION.'/'.($user->name).'/messages';
 	$links[] = $messagesLink;
 }
 
