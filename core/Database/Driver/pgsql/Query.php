@@ -377,50 +377,6 @@ class Query extends \uCMS\Core\Database\Query{
 		$sql .= "\n)";
 
 		$sql .= ";\n";
-		/*$keysRegex = "/[^a-zA-Z0-9,.\s]/i";
-		if( isset($schema['primary key']) || isset($schema['unique keys']) || isset($schema['indexes']) || $needIncrement ){
-			$sql .= "ALTER TABLE ONLY {$this->table}\n";
-			$isFirst = true;
-			if( isset($schema['primary key']) ){
-				$key = $schema['primary key'];
-				if( is_array($key) ){
-					$key = implode(', ', $key);
-				}
-				$key = preg_replace($keysRegex, '', $key);
-				$sql .= "ADD CONSTRAINT key PRIMARY KEY ($key)";
-				$isFirst = false;
-			}
-
-			if( isset($schema['unique keys']) ){
-				foreach ($schema['unique keys'] as $name => $keys) {
-					if( is_array($keys) ){
-						$keys = implode(', ', $keys);
-					}
-					$name = preg_replace("/[^a-zA-Z0-9]/i", '', $name);
-					$keys = preg_replace($keysRegex, '', $keys);
-					$sql .= (!$isFirst ? ",\n" : "")."ADD UNIQUE KEY $name ($keys)";
-					$isFirst = false;
-				}
-			}
-
-			if( isset($schema['indexes']) ){
-				foreach ($schema['indexes'] as $name => $keys) {
-					if( is_array($keys) ){
-						$keys = implode(', ', $keys);
-					}
-					$name = preg_replace("/[^a-zA-Z0-9]/i", '', $name);
-					$keys = preg_replace($keysRegex, '', $keys);
-					$sql .= (!$isFirst ? ",\n" : "")."ADD KEY $name ($keys)";
-					$isFirst = false;
-				}
-			}
-
-			if( $needIncrement ){
-				$sql .= (!$isFirst ? ",\n" : "")."MODIFY $serialSpec AUTO_INCREMENT, AUTO_INCREMENT=1";
-			}
-
-			$sql .= ";\n";
-		}*/
 		$this->sql = $sql;
 		return $this;
 	}
