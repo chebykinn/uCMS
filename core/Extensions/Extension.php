@@ -193,7 +193,6 @@ class Extension extends AbstractExtension implements ExtensionInterface{
 			Setting::AddMultiple($this->settings, $this);
 		}
 		$tables = $this->getInfo('tables');
-
 		if( !empty($tables) && is_array($tables) ){
 			$missing = $this->checkTables($tables);
 			if( !empty($missing) ){
@@ -244,7 +243,6 @@ class Extension extends AbstractExtension implements ExtensionInterface{
 	}
 
 	protected function prepareStage(){
-		
 		if( Installer::GetInstance()->isRequested($this->name.'_need_tables') ){
 			$needForm = false;
 			$schemas = $this->getSchemas();
@@ -256,8 +254,11 @@ class Extension extends AbstractExtension implements ExtensionInterface{
 			foreach ($missingTables as $table) {
 				if( !isset($schemas[$table]) ) continue;
 				$query = new Query('{'.$table.'}');
-				$query->createTable($schemas[$table])->execute();
-
+				$result = $query->createTable($schemas[$table])->execute();
+				if( !$result ){
+					Debug::Log($this->tr("Failed to create table"), Debug::LOG_CRITICAL);
+					return;
+				}
 				// If we need to fill the table, we call method to fill it
 				// or to notify us, that installer needs form to fill it
 				if( in_array($table, $tablesToFill) ){
