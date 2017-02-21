@@ -22,10 +22,10 @@ class ControlPanel extends Object{
 		self::LoadSidebar();
 		if( self::IsActive() ){
 			self::$action = Page::GetCurrent()->getActionData();
-			if( empty(self::$action) ) self::$action = 'home'; 
+			if( empty(self::$action) ) self::$action = 'home';
 		}
 	}
-	
+
 	public static function GetDefaultActions(){
 		return array_keys(self::$defaultItems);
 	}
@@ -35,11 +35,11 @@ class ControlPanel extends Object{
 		if( User::Current()->can('access control panel') ){
 			$currentAction = self::GetAction();
 			$baseAction = self::GetBaseAction();
-			$settingsAction = self::GetSettingsAction(); 
+			$settingsAction = self::GetSettingsAction();
 			if( (empty($extensionActions) || !is_array($extensionActions)) ) {
 				$extensionActions = array();
 			}
-			
+
 			if( !in_array($currentAction, $extensionActions) && empty($settingsAction) ){
 				$currentAction = $baseAction;
 			}
@@ -149,7 +149,7 @@ class ControlPanel extends Object{
 		}
 		$prevWeight = 0;
 		$prevAfter = 'home';
-		
+
 		self::SetWeight($allItems);
 		uasort($allItems, __NAMESPACE__.'\\ControlPanel::sort');
 
@@ -285,7 +285,7 @@ class ControlPanel extends Object{
 				}
 
 				$setting->value = $value;
-				
+
 				$result = $setting->update();
 			}
 			if( !empty($failures) ){
